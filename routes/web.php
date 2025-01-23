@@ -7,6 +7,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\PasswordController;
+
 use App\Http\Controllers\SeasonController;
 use App\Http\Livewire\About;
 use App\Http\Livewire\Accordion;
@@ -131,6 +134,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -165,7 +169,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/{product}/renew', [ProductController::class, 'renew'])->name('products.renew');
     Route::get('/products/{product}/complete-data', [ProductController::class, 'completeData'])->name('products.completeData');
     Route::post('/products/{product}/submit-complete-data', [ProductController::class, 'submitCompleteData'])->name('products.submitCompleteData');
-    
+    Route::post('/products/variants/reschedule', [ProductController::class, 'reschedule'])->name('products.reschedule');
+    Route::post('/products/variants/update-receiving', [ProductController::class, 'updateReceivingQuantity'])->name('products.variants.updateReceiving');
+
 
 
 
@@ -177,6 +183,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+        Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+
     Route::get('index', Index::class);
     Route::get('index2', Index2::class);
     Route::get('index3', Index3::class);

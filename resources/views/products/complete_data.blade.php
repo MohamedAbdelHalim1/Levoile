@@ -79,8 +79,6 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Color Name</th>
-                                        <th>Expected Delivery</th>
-                                        <th>Quantity</th>
                                         <th>SKU</th>
                                     </tr>
                                 </thead>
@@ -88,8 +86,7 @@
                                     @foreach($product->productColors as $productColor)
                                         <tr>
                                             <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-                                            <td>{{ $productColor->expected_delivery ?? 'N/A' }}</td>
-                                            <td>{{ $productColor->quantity ?? 'N/A' }}</td>
+                                           
                                             <td>
                                                 <input type="text" name="colors[{{ $productColor->color_id }}][sku]"
                                                     class="form-control" value="{{ $productColor->sku }}">

@@ -12,9 +12,6 @@ class ProductColor extends Model
     protected $fillable = [
         'product_id',
         'color_id',
-        'expected_delivery',
-        'quantity',
-        'receiving_quantity',
         'sku',
     ];
 
@@ -22,9 +19,13 @@ class ProductColor extends Model
     {
         return $this->belongsTo(Product::class);
     }
-
     public function color()
     {
         return $this->belongsTo(Color::class);
+    }
+
+    public function productcolorvariants()
+    {
+        return $this->hasMany(ProductColorVariant::class);
     }
 }

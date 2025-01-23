@@ -69,10 +69,17 @@
                             </thead>
                             <tbody>
                                 @foreach($product->productColors as $productColor)
+                                    @php
+                                        $variant = $productColor->productcolorvariants->first();
+                                    @endphp
                                     <tr>
                                         <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-                                        <td>{{ $productColor->expected_delivery ?? 'N/A' }}</td>
-                                        <td>{{ $productColor->quantity ?? 'N/A' }}</td>
+                                        @if ($variant)
+                                            <td>{{ $variant->expected_delivery ?? 'N/A' }}</td>
+                                            <td>{{ $variant->quantity ?? 'N/A' }}</td>
+                                        @else
+                                            <td colspan="2">{{ __('No Variants Available') }}</td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
