@@ -45,34 +45,37 @@
                                     <table class="table table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>{{ __('Color') }}</th>
-                                                <th>{{ __('Quantity') }}</th>
+                                                <th>{{ __('Color Name') }}</th>
                                                 <th>{{ __('Expected Delivery') }}</th>
+                                                <th>{{ __('Quantity') }}</th>
                                                 <th>{{ __('Remaining Days') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($product->productColors as $productColor)
                                                 @php
-                                                    $remainingDays = \Carbon\Carbon::parse(
-                                                        $productColor->expected_delivery,
-                                                    )->diffInDays(now(), false);
+                                                    $variant = $productColor->productcolorvariants->first();
+                                                    $remainingDays = $variant ? \Carbon\Carbon::parse($variant->expected_delivery)->diffInDays(now(), false) : null;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $productColor->color->name }}</td>
-                                                    <td>{{ $productColor->quantity }}</td>
-                                                    <td>{{ $productColor->expected_delivery }}</td>
-                                                    <td>
-                                                        @if ($remainingDays > 0)
-                                                            <span class="badge bg-danger">{{ $remainingDays }}
-                                                                {{ __('days overdue') }}</span>
-                                                        @elseif ($remainingDays === 0)
-                                                            <span class="badge bg-warning">{{ __('Due today') }}</span>
-                                                        @else
-                                                            <span class="badge bg-success">{{ abs($remainingDays) }}
-                                                                {{ __('days remaining') }}</span>
-                                                        @endif
-                                                    </td>
+                                                    @if ($variant)
+                                                        <td>{{ $variant->expected_delivery }}</td>
+                                                        <td>{{ $variant->quantity }}</td>
+                                                        <td>
+                                                            @if ($remainingDays > 0)
+                                                                <span class="badge bg-danger">{{ $remainingDays }}
+                                                                    {{ __('days overdue') }}</span>
+                                                            @elseif ($remainingDays === 0)
+                                                                <span class="badge bg-warning">{{ __('Due today') }}</span>
+                                                            @else
+                                                                <span class="badge bg-success">{{ abs($remainingDays) }}
+                                                                    {{ __('days remaining') }}</span>
+                                                            @endif
+                                                        </td>
+                                                    @else
+                                                        <td colspan="3">{{ __('No Variants Available') }}</td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -88,7 +91,7 @@
                                     @elseif ($product->status === 'Cancel')
                                         <span class="badge bg-danger">{{ __('Cancel') }}</span>
                                     @elseif ($product->status === 'Pending')
-                                        <span class="badge bg-warning">{{ __('Pending') }}</span>    
+                                        <span class="badge bg-warning">{{ __('Pending') }}</span>
                                     @endif
                                 </td>
                                 <td>
