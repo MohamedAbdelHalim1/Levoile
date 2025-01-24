@@ -15,21 +15,72 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with([
+        // Fetch all unique filterable data
+        $categories = Category::all();
+        $seasons = Season::all();
+        $factories = Factory::all();
+        $colors = Color::all();
+    
+        // Start the query for fetching products
+        $query = Product::with([
             'category',
             'season',
             'factory',
             'productColors.color',
             'productColors.productcolorvariants' => function ($query) {
-                $query->orderBy('expected_delivery', 'asc'); // Ensure the first variant is fetched
+                $query->orderBy('expected_delivery', 'asc');
             }
-        ])->get();
-
-        return view('products.index', compact('products'));
+        ]);
+    
+        // Apply filters based on user input
+        if ($request->filled('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', $request->category);
+            });
+        }
+    
+        if ($request->filled('season')) {
+            $query->whereHas('season', function ($q) use ($request) {
+                $q->where('name', $request->season);
+            });
+        }
+    
+        if ($request->filled('factory')) {
+            $query->whereHas('factory', function ($q) use ($request) {
+                $q->where('name', $request->factory);
+            });
+        }
+    
+        if ($request->filled('color')) {
+            $query->whereHas('productColors.color', function ($q) use ($request) {
+                $q->where('name', $request->color);
+            });
+        }
+    
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+    
+        if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
+            $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
+                if ($request->filled('expected_delivery_start')) {
+                    $q->where('expected_delivery', '>=', $request->expected_delivery_start);
+                }
+                if ($request->filled('expected_delivery_end')) {
+                    $q->where('expected_delivery', '<=', $request->expected_delivery_end);
+                }
+            });
+        }
+    
+        // Fetch the filtered products
+        $products = $query->get();
+    
+        return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors'));
     }
-
+    
+    
     public function receive(Product $product)
     {
         // Eager load necessary relationships, including ProductColorVariants
@@ -74,36 +125,36 @@ class ProductController extends Controller
         ]);
 
 
-    
+
         try {
             // Find the variant
-            $variant = ProductColorVariant::findOrFail($validated['variant_id']);  
-    
+            $variant = ProductColorVariant::findOrFail($validated['variant_id']);
+
             // Ensure the productcolor relationship is loaded
             if (!$variant->productcolor) {
                 throw new \Exception("Product color not found for this variant.");
             }
-    
+
             // Ensure the product relationship is loaded
             $product = $variant->productcolor->product ?? null;
             if (!$product) {
                 throw new \Exception("Product not found for this product color.");
             }
-    
+
             // Update receiving quantity
-            $variant->receiving_quantity = $validated['receiving_quantity'];  
+            $variant->receiving_quantity = $validated['receiving_quantity'];
             $variant->save();
-    
+
             // If there is no remaining quantity, update the product status and return success
             if ($validated['remaining_quantity'] == 0) {
                 $this->updateProductStatus($product);
-    
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Receiving quantity updated successfully. Product status set to Complete.',
                 ]);
             }
-    
+
             // If remaining quantity > 0 and new_expected_delivery is provided, create a new variant
             if ($validated['remaining_quantity'] > 0 && $validated['new_expected_delivery']) {
                 ProductColorVariant::create([
@@ -113,16 +164,16 @@ class ProductController extends Controller
                     'receiving_quantity' => null,
                     'parent_id' => $variant->id,
                 ]);
-    
+
                 // Update product status
                 $this->updateProductStatus($product);
-    
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Reschedule successful, and receiving quantity updated.',
                 ]);
             }
-    
+
             throw new \Exception('Invalid reschedule request. Ensure all inputs are correct.');
         } catch (\Exception $e) {
             return response()->json([
@@ -131,33 +182,86 @@ class ProductController extends Controller
             ], 500);
         }
     }
-    
+
     protected function updateProductStatus(Product $product)
     {
-        $totalQuantity = 0;
-        $totalReceived = 0;
-
+        // Initialize flags to track statuses
+        $hasNotReceived = false;
+        $allNotReceived = true;
+    
         foreach ($product->productColors as $productColor) {
             foreach ($productColor->productcolorvariants as $variant) {
-                if($variant->parent_id == null)
-                {
-                    $totalQuantity += $variant->quantity;
+                if ($variant->status === 'Not Received') {
+                    $hasNotReceived = true;
+                } else {
+                    $allNotReceived = false; // If one variant is not "Not Received", it's not all
                 }
-                $totalReceived += $variant->receiving_quantity ?? 0;
             }
         }
-
-
-        if ($totalReceived === $totalQuantity) {
-            $product->status = 'Complete';
-        } elseif ($totalReceived > 0) {
+    
+        // Determine the product status based on the variants' statuses
+        if ($allNotReceived) {
+            $product->status = 'New';
+        } elseif ($hasNotReceived) {
             $product->status = 'Partial';
         } else {
-            $product->status = 'New';
+            $product->status = 'Complete';
         }
-
+    
         $product->save();
     }
+    
+
+    public function markReceived(Request $request)
+    {
+        $validated = $request->validate([
+            'variant_id' => 'required|exists:product_color_variants,id',
+            'remaining_quantity' => 'required|integer|min:0',
+            'new_expected_delivery' => 'nullable|date',
+        ]);
+
+        try {
+            $variant = ProductColorVariant::findOrFail($validated['variant_id']);
+            $product = $variant->productcolor->product;
+
+            // Handle Rescheduling
+            if (!empty($validated['new_expected_delivery'])) {
+                // Update the current variant as "Partially Received"
+                $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
+                $variant->status = 'Partially Received';
+                $variant->save();
+
+                // Create a new variant for the remaining quantity
+                ProductColorVariant::create([
+                    'product_color_id' => $variant->product_color_id,
+                    'expected_delivery' => $validated['new_expected_delivery'],
+                    'quantity' => $validated['remaining_quantity'],
+                    'receiving_quantity' => null,
+                    'parent_id' => $variant->id,
+                    'status' => 'Not Received',
+                ]);
+            } else {
+                // Fully receive the current variant
+                $variant->receiving_quantity = $variant->quantity - $validated['remaining_quantity'];
+                $variant->status = 'Received';
+                $variant->save();
+            }
+
+            // Update the product status
+            $this->updateProductStatus($product);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product color marked as received successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
 
 

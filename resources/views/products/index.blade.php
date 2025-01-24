@@ -10,13 +10,101 @@
                 </div>
             @endif
 
-            <div class="flex justify-end mb-4">
-                <a href="{{ route('products.create') }}" class="btn btn-success">
-                    {{ __('Add New Product') }}
-                </a>
+            <!-- Filters Section -->
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
+                <form method="GET" action="{{ route('products.index') }}">
+                    <div class="row">
+                        <!-- Category Filter -->
+                        <div class="col-md-3">
+                            <label for="categoryFilter">{{ __('Category') }}</label>
+                            <select name="category" id="categoryFilter" class="form-select">
+                                <option value="">{{ __('All Categories') }}</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->name }}" {{ request('category') == $category->name ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+            
+                        <!-- Season Filter -->
+                        <div class="col-md-3">
+                            <label for="seasonFilter">{{ __('Season') }}</label>
+                            <select name="season" id="seasonFilter" class="form-select">
+                                <option value="">{{ __('All Seasons') }}</option>
+                                @foreach ($seasons as $season)
+                                    <option value="{{ $season->name }}" {{ request('season') == $season->name ? 'selected' : '' }}>
+                                        {{ $season->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+            
+                        <!-- Factory Filter -->
+                        <div class="col-md-3">
+                            <label for="factoryFilter">{{ __('Factory') }}</label>
+                            <select name="factory" id="factoryFilter" class="form-select">
+                                <option value="">{{ __('All Factories') }}</option>
+                                @foreach ($factories as $factory)
+                                    <option value="{{ $factory->name }}" {{ request('factory') == $factory->name ? 'selected' : '' }}>
+                                        {{ $factory->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+            
+                        <!-- Color Filter -->
+                        <div class="col-md-3">
+                            <label for="colorFilter">{{ __('Color') }}</label>
+                            <select name="color" id="colorFilter" class="form-select">
+                                <option value="">{{ __('All Colors') }}</option>
+                                @foreach ($colors as $color)
+                                    <option value="{{ $color->name }}" {{ request('color') == $color->name ? 'selected' : '' }}>
+                                        {{ $color->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+            
+                        <!-- Status Filter -->
+                        <div class="col-md-3 mt-3">
+                            <label for="statusFilter">{{ __('Status') }}</label>
+                            <select name="status" id="statusFilter" class="form-select">
+                                <option value="">{{ __('All Status') }}</option>
+                                <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>{{ __('New') }}</option>
+                                <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>{{ __('Partial') }}</option>
+                                <option value="Complete" {{ request('status') == 'Complete' ? 'selected' : '' }}>{{ __('Complete') }}</option>
+                                <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>{{ __('Cancel') }}</option>
+                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                            </select>
+                        </div>
+            
+                        <!-- Expected Delivery Date Range -->
+                        <div class="col-md-6 mt-3">
+                            <label for="expectedDeliveryStart">{{ __('Expected Delivery Date Range') }}</label>
+                            <div class="input-group">
+                                <input type="date" name="expected_delivery_start" id="expectedDeliveryStart" class="form-control" value="{{ request('expected_delivery_start') }}">
+                                <span class="input-group-text">-</span>
+                                <input type="date" name="expected_delivery_end" id="expectedDeliveryEnd" class="form-control" value="{{ request('expected_delivery_end') }}">
+                            </div>
+                        </div>
+            
+                        <!-- Filter and Reset Buttons -->
+                        <div class="col-md-3 mt-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">{{ __('Filter') }}</button>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('Reset') }}</a>
+                        </div>
+                    </div>
+                </form>
             </div>
+            
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="flex justify-end mb-4">
+                    <a href="{{ route('products.create') }}" class="btn btn-success">
+                        {{ __('Add New Product') }}
+                    </a>
+                </div>
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
@@ -49,13 +137,18 @@
                                                 <th>{{ __('Expected Delivery') }}</th>
                                                 <th>{{ __('Quantity') }}</th>
                                                 <th>{{ __('Remaining Days') }}</th>
+                                                <th>{{ __('Status') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($product->productColors as $productColor)
                                                 @php
-                                                    $variant = $productColor->productcolorvariants->first();
-                                                    $remainingDays = $variant ? \Carbon\Carbon::parse($variant->expected_delivery)->diffInDays(now(), false) : null;
+                                                    $variant = $productColor->productcolorvariants->last();
+                                                    $remainingDays = $variant
+                                                        ? \Carbon\Carbon::parse(
+                                                            $variant->expected_delivery,
+                                                        )->diffInDays(now(), false)
+                                                        : null;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $productColor->color->name }}</td>
@@ -71,6 +164,17 @@
                                                             @else
                                                                 <span class="badge bg-success">{{ abs($remainingDays) }}
                                                                     {{ __('days remaining') }}</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($variant->status === 'Received')
+                                                                <span class="badge bg-success">{{ __('Received') }}</span>
+                                                            @elseif ($variant->status === 'Partially Received')
+                                                                <span
+                                                                    class="badge bg-pink">{{ __('Partially Received') }}</span>
+                                                            @elseif ($variant->status === 'Not Received')
+                                                                <span
+                                                                    class="badge bg-danger">{{ __('Not Received') }}</span>
                                                             @endif
                                                         </td>
                                                     @else
@@ -199,4 +303,96 @@
             }
         });
     </script>
+
+
+    {{-- <script>
+        $(document).ready(function() {
+            function filterTable() {
+                const category = $('#categoryFilter').val().toLowerCase();
+                const season = $('#seasonFilter').val().toLowerCase();
+                const factory = $('#factoryFilter').val().toLowerCase();
+                const color = $('#colorFilter').val().toLowerCase();
+                const status = $('#statusFilter').val().toLowerCase();
+                const startDate = $('#expectedDeliveryStart').val();
+                const endDate = $('#expectedDeliveryEnd').val();
+
+                $('#file-datatable tbody tr').each(function() {
+                    const row = $(this);
+
+                    // Extract row-level data for filtering
+                    const rowCategory = row.find('td:nth-child(4)').text().toLowerCase();
+                    const rowSeason = row.find('td:nth-child(5)').text().toLowerCase();
+                    const rowFactory = row.find('td:nth-child(6)').text().toLowerCase();
+                    const rowStatus = row.find('td:nth-child(8) span').text().toLowerCase();
+
+                    // Nested color table filtering
+                    let matchesColor = !color; // Default to true if no color filter is selected
+                    let matchesDate = true; // Default to true if no date range is applied
+                    let hasMatchingNestedRows = false; // Tracks if the nested table has any visible rows
+
+                    // Loop through nested rows in the color table
+                    row.find('td:nth-child(7) table tbody tr').each(function() {
+                        const nestedRow = $(this);
+                        const nestedColor = nestedRow.find('td:nth-child(1)').text().toLowerCase();
+                        const nestedDate = nestedRow.find('td:nth-child(2)').text();
+
+                        // Check if nested row matches the color filter
+                        const isColorMatch = !color || nestedColor.includes(color);
+
+                        // Check if nested row matches the date range filter
+                        const isDateMatch =
+                            (!startDate || nestedDate >= startDate) &&
+                            (!endDate || nestedDate <= endDate);
+
+                        // If both color and date match, show this nested row
+                        if (isColorMatch && isDateMatch) {
+                            matchesColor = true;
+                            hasMatchingNestedRows = true;
+                            nestedRow.show();
+                        } else {
+                            nestedRow.hide();
+                        }
+                    });
+
+                    // Row-level filters
+                    const matchesCategory = !category || rowCategory.includes(category);
+                    const matchesSeason = !season || rowSeason.includes(season);
+                    const matchesFactory = !factory || rowFactory.includes(factory);
+                    const matchesStatus = !status || rowStatus.includes(status);
+
+                    // Show or hide the entire row based on all conditions
+                    if (
+                        matchesCategory &&
+                        matchesSeason &&
+                        matchesFactory &&
+                        matchesStatus &&
+                        matchesColor &&
+                        (hasMatchingNestedRows || !
+                        color) // Keep row visible if there are no color filters applied
+                    ) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            }
+
+            function resetFilters() {
+                // Reset all filters
+                $('#categoryFilter, #seasonFilter, #factoryFilter, #colorFilter, #statusFilter').val('');
+                $('#expectedDeliveryStart, #expectedDeliveryEnd').val('');
+
+                // Show all rows and reset nested tables
+                $('#file-datatable tbody tr').each(function() {
+                    const row = $(this);
+                    row.show();
+                    row.find('td:nth-child(7) table tbody tr').show(); // Show all nested rows
+                });
+            }
+
+            // Attach events to Filter and Reset buttons
+            $('#applyFilterBtn').on('click', filterTable);
+            $('#resetFilterBtn').on('click', resetFilters);
+        });
+    </script> --}}
 @endsection

@@ -171,6 +171,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/{product}/submit-complete-data', [ProductController::class, 'submitCompleteData'])->name('products.submitCompleteData');
     Route::post('/products/variants/reschedule', [ProductController::class, 'reschedule'])->name('products.reschedule');
     Route::post('/products/variants/update-receiving', [ProductController::class, 'updateReceivingQuantity'])->name('products.variants.updateReceiving');
+    Route::post('/products/variants/mark-received', [ProductController::class, 'markReceived'])->name('variants.markReceived');
 
 
 

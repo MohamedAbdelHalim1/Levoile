@@ -49,6 +49,9 @@
 
                         <h3>Material Availability:</h3>
                         <p>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</p>
+
+                        <h3>Status:</h3>
+                        <p>{{ $product->status }}</p>
                     </div>
                 </div>
 
@@ -65,18 +68,28 @@
                                     <th>Color Name</th>
                                     <th>Expected Delivery</th>
                                     <th>Quantity</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($product->productColors as $productColor)
                                     @php
-                                        $variant = $productColor->productcolorvariants->first();
+                                        $variant = $productColor->productcolorvariants->last();
                                     @endphp
                                     <tr>
                                         <td>{{ $productColor->color->name ?? 'N/A' }}</td>
                                         @if ($variant)
                                             <td>{{ $variant->expected_delivery ?? 'N/A' }}</td>
                                             <td>{{ $variant->quantity ?? 'N/A' }}</td>
+                                            <td>
+                                                @if ($variant->status === 'Received')
+                                                    <span class="badge bg-success">{{ __('Received') }}</span>
+                                                @elseif ($variant->status === 'Partially Received')
+                                                    <span class="badge bg-pink">{{ __('Partially Received') }}</span>
+                                                @elseif ($variant->status === 'Not Received')
+                                                    <span class="badge bg-danger">{{ __('Not Received') }}</span>
+                                                @endif
+                                            </td>
                                         @else
                                             <td colspan="2">{{ __('No Variants Available') }}</td>
                                         @endif

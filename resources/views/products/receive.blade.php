@@ -58,22 +58,31 @@
             background-color: #6735dc;
             color: white;
         }
+
+
+        /* CSS for Print */
+        @media print {
+            .btn, .action-column { /* Hide print button and action column */
+                display: none !important;
+            }
+
+            .product-details, .table {
+                page-break-inside: avoid; /* Prevent splitting content across pages */
+            }
+
+            .status-badge {
+                display: none !important; /* Hide floating badge */
+            }
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="p-4 position-relative">
-        <!-- Product Status Badge -->
-        <div
-            class="status-badge 
-        @if ($product->status === 'Complete') status-complete
-        @elseif ($product->status === 'Partial') status-partial
-        @else status-new @endif">
-            {{ $product->status }}
-        </div>
-
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
+                <button class="btn btn-primary" onclick="window.print()" style="float: right;">Print</button>
+
                 <div>
                     <div class="row">
                         <div class="col-md-12 d-flex">
@@ -97,6 +106,15 @@
                                     <span>{{ $product->have_stock ? 'Yes' : 'No' }} -
                                         {{ $product->material_name ?? 'No material Identified' }}</span>
                                 </div>
+                                <div class="key-value">
+                                    <span>Status:</span>
+                                    <span class="badge
+                                        @if ($product->status === 'Complete') bg-success
+                                        @elseif ($product->status === 'Partial') bg-warning
+                                        @else bg-primary @endif">
+                                        {{ $product->status }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,7 +133,8 @@
                                         <th>Expected Delivery</th>
                                         <th>Quantity</th>
                                         <th>Receiving Quantity</th>
-                                        <th>Action</th>
+                                        <th>Status</th>
+                                        <th class="action-column">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,6 +150,15 @@
                                                         data-original-quantity="{{ $variant->quantity }}"
                                                         value="{{ $variant->receiving_quantity }}" min="1"
                                                         @if ($variant->receiving_quantity) disabled @endif>
+                                                </td>
+                                                <td>
+                                                    @if ($variant->status === 'Received')
+                                                        <span class="badge bg-success">{{ __('Received') }}</span>
+                                                    @elseif ($variant->status === 'Partially Received')
+                                                        <span class="badge bg-pink">{{ __('Partially Received') }}</span>
+                                                    @elseif ($variant->status === 'Not Received')
+                                                        <span class="badge bg-danger">{{ __('Not Received') }}</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-info validate-btn"
@@ -153,7 +181,7 @@
     </div>
 
     <!-- Reschedule Modal -->
-    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="rescheduleForm">
@@ -179,106 +207,200 @@
                 </form>
             </div>
         </div>
+    </div> --}}
+    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="rescheduleForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Remaining Quantity</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Remaining Quantity Field -->
+                        <div class="mb-3">
+                            <label for="remainingQuantity" class="form-label">Remaining Quantity</label>
+                            <input type="number" id="remainingQuantity" class="form-control" readonly>
+                        </div>
+
+                        <!-- Caution Text -->
+                        <small class="text-danger">
+                            Will you accept this Receiving Quantity? If you click Submit, this product color will be
+                            considered as Completely Received.
+                        </small>
+
+                        <!-- Submit Button -->
+                        <div class="mt-3">
+                            <button type="button" id="submitReceiving" class="btn btn-success w-100">
+                                Submit and Mark as Received
+                            </button>
+                        </div>
+
+                        <!-- Reschedule Checkbox -->
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="rescheduleCheckbox">
+                            <label class="form-check-label" for="rescheduleCheckbox">
+                                Want to Reschedule Rest Of Quantity?
+                            </label>
+                        </div>
+
+                        <!-- Expected Delivery Date and Redirect Button -->
+                        <div id="expectedDeliveryContainer" class="mt-3 d-none">
+                            <label for="newExpectedDelivery" class="form-label">New Expected Delivery</label>
+                            <input type="date" id="newExpectedDelivery" name="new_expected_delivery"
+                                class="form-control">
+
+                            <!-- Redirect Button for Reschedule -->
+                            <div class="mt-3">
+                                <button type="button" id="rescheduleBtn" class="btn btn-primary w-100 d-none">
+                                    Reschedule and Mark as Received
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
+
 @endsection
 
 @section('scripts')
-    <script>
-        $(document).ready(function() {
-            // Enable/disable Validate button based on receiving quantity
-            $(document).on("input", ".receiving-quantity", function() {
-                const validateButton = $(this).closest("tr").find(".validate-btn");
-                const quantityInput = $(this);
-                const enteredQuantity = parseInt(quantityInput.val());
-                const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
+<script>
+    $(document).ready(function () {
+        // Enable/disable Validate button based on receiving quantity
+        $(document).on("input", ".receiving-quantity", function () {
+            const validateButton = $(this).closest("tr").find(".validate-btn");
+            const quantityInput = $(this);
+            const enteredQuantity = parseInt(quantityInput.val());
+            const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
-                // Check if entered quantity is greater than expected
-                if (enteredQuantity > originalQuantity) {
-                    alert("You entered a quantity greater than the expected quantity!");
-                    quantityInput.val(""); // Reset the input value
-                    validateButton.prop("disabled", true); // Disable the Validate button
-                    return;
-                }
+            // Check if entered quantity is valid
+            if (enteredQuantity > originalQuantity) {
+                alert("You entered a quantity greater than the expected quantity!");
+                quantityInput.val(""); // Reset the input value
+                validateButton.prop("disabled", true); // Disable the Validate button
+                return;
+            }
 
-                // Enable/disable the Validate button based on valid input
-                validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
-            });
+            // Enable/disable the Validate button based on valid input
+            validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
+        });
 
-            // Handle Validate button click
-            $(document).on("click", ".validate-btn", function() {
-                const variantId = $(this).data("variant-id");
-                const quantityInput = $(`.receiving-quantity[data-variant-id="${variantId}"]`);
-                const enteredQuantity = parseInt(quantityInput.val());
-                const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
+        // Handle Validate button click
+        $(document).on("click", ".validate-btn", function () {
+            const variantId = $(this).data("variant-id");
+            const row = $(this).closest("tr");
+            const remainingQuantity = parseInt(row.find(".receiving-quantity").val());
+            const originalQuantity = parseInt(row.find(".receiving-quantity").data("original-quantity"));
 
-                if (enteredQuantity > 0 && enteredQuantity <= originalQuantity) {
-                    const remainingQuantity = originalQuantity - enteredQuantity;
-                    if (remainingQuantity === 0) {
-                        // Directly update receiving quantity
-                        $.ajax({
-                            url: "/products/variants/reschedule",
-                            type: "POST",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                variant_id: variantId,
-                                receiving_quantity: enteredQuantity,
-                                remaining_quantity: 0, // No remaining quantity
-                            },
-                            success: function(response) {
-                                alert(response.message);
-                                location.reload();
-                            },
-                            error: function(xhr) {
-                                alert("Error: " + xhr.responseJSON.message);
-                            },
-                        });
-                    } else if (remainingQuantity > 0) {
-                        // Show reschedule modal for remaining quantity
-                        $("#remainingQuantity").val(remainingQuantity);
-                        $("#rescheduleModal").data("variant-id", variantId);
-                        $("#rescheduleModal").data("receiving-quantity", enteredQuantity);
-                        $("#rescheduleModal").modal("show");
-                    }
-                }
-            });
+            if (!remainingQuantity || remainingQuantity <= 0) {
+                alert("Please enter a valid receiving quantity.");
+                return;
+            }
 
-            // Reschedule form submission
-            $("#rescheduleForm").on("submit", function(e) {
-                e.preventDefault();
+            // Populate modal and adjust visibility of fields
+            $("#rescheduleModal").data("variant-id", variantId);
+            const remaining = originalQuantity - remainingQuantity;
+            $("#remainingQuantity").val(remaining);
 
-                const variantId = $("#rescheduleModal").data("variant-id");
-                const receivingQuantity = $("#rescheduleModal").data("receiving-quantity");
-                const remainingQuantity = $("#remainingQuantity").val();
-                const newExpectedDelivery = $("#newExpectedDelivery").val();
+            // Hide reschedule fields if no remaining quantity
+            if (remaining === 0) {
+                $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
+                $("#expectedDeliveryContainer").addClass("d-none");
+            } else {
+                $("#rescheduleCheckbox").closest(".form-check").removeClass("d-none");
+                $("#expectedDeliveryContainer").addClass("d-none"); // Ensure it starts hidden
+            }
 
-                if (!newExpectedDelivery) {
-                    alert("Please provide a new expected delivery date.");
-                    return;
-                }
+            $("#rescheduleModal").modal("show");
+        });
 
-                $.ajax({
-                    url: "/products/variants/reschedule",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        variant_id: variantId,
-                        receiving_quantity: receivingQuantity,
-                        remaining_quantity: remainingQuantity,
-                        new_expected_delivery: newExpectedDelivery,
-                    },
-                    success: function(response) {
-                        if (response.status === "success") {
-                            alert(response.message);
-                            location.reload();
-                        } else {
-                            alert("Error: " + response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        alert("Error: " + xhr.responseJSON.message);
-                    },
-                });
+        // Handle Reschedule Checkbox toggle
+        $("#rescheduleCheckbox").on("change", function () {
+            const isChecked = $(this).is(":checked");
+            if (isChecked) {
+                $("#expectedDeliveryContainer").removeClass("d-none");
+                $("#rescheduleBtn").removeClass("d-none");
+            } else {
+                $("#expectedDeliveryContainer").addClass("d-none");
+                $("#rescheduleBtn").addClass("d-none");
+            }
+        });
+
+        // Handle Submit and Mark as Received button click
+        $("#submitReceiving").on("click", function () {
+            const submitButton = $(this);
+            const variantId = $("#rescheduleModal").data("variant-id");
+            const remainingQuantity = parseInt($("#remainingQuantity").val());
+            const isRescheduleChecked = $("#rescheduleCheckbox").is(":checked");
+            const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
+
+            // Disable the button to prevent multiple submissions
+            submitButton.prop("disabled", true);
+
+            // AJAX request to handle the submission
+            $.ajax({
+                url: "/products/variants/mark-received",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    variant_id: variantId,
+                    remaining_quantity: remainingQuantity,
+                    new_expected_delivery: newExpectedDelivery,
+                },
+                success: function (response) {
+                    alert(response.message);
+                    location.reload(); // Reload the page upon success
+                },
+                error: function (xhr) {
+                    alert("Error: " + xhr.responseJSON.message);
+                    submitButton.prop("disabled", false); // Re-enable the button on error
+                },
             });
         });
-    </script>
+
+        // Handle Reschedule and Mark as Received button click
+        $("#rescheduleBtn").on("click", function () {
+            const rescheduleButton = $(this);
+            const variantId = $("#rescheduleModal").data("variant-id");
+            const remainingQuantity = parseInt($("#remainingQuantity").val());
+            const newExpectedDelivery = $("#newExpectedDelivery").val();
+
+            if (!newExpectedDelivery) {
+                alert("Please provide a new expected delivery date.");
+                return;
+            }
+
+            // Disable the button to prevent multiple submissions
+            rescheduleButton.prop("disabled", true);
+
+            // AJAX request to handle rescheduling
+            $.ajax({
+                url: "/products/variants/mark-received",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    variant_id: variantId,
+                    remaining_quantity: remainingQuantity,
+                    new_expected_delivery: newExpectedDelivery,
+                },
+                success: function (response) {
+                    alert(response.message);
+                    location.reload(); // Reload the page upon success
+                },
+                error: function (xhr) {
+                    alert("Error: " + xhr.responseJSON.message);
+                    rescheduleButton.prop("disabled", false); // Re-enable the button on error
+                },
+            });
+        });
+    });
+</script>
+
 @endsection
