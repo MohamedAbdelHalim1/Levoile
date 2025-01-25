@@ -3,13 +3,14 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\PasswordController;
 
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Livewire\About;
 use App\Http\Livewire\Accordion;
@@ -135,6 +136,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -172,7 +174,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/variants/reschedule', [ProductController::class, 'reschedule'])->name('products.reschedule');
     Route::post('/products/variants/update-receiving', [ProductController::class, 'updateReceivingQuantity'])->name('products.variants.updateReceiving');
     Route::post('/products/variants/mark-received', [ProductController::class, 'markReceived'])->name('variants.markReceived');
-
+    Route::get('/receiving-report', [ReportController::class, 'index'])->name('reports.receive');
 
 
 

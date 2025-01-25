@@ -111,10 +111,14 @@
 @endsection
 
 @section('scripts')
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+   <!-- SELECT2 JS -->
+   <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
+
+
 <script>
     $(document).ready(function () {
         // Initialize selectpicker

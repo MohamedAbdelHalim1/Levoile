@@ -21,224 +21,138 @@
                 </svg></div>
             <ul class="side-menu">
                 <li class="sub-category">
-                    <h3>Operations</h3>
+                    <h3>العمليات</h3>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="fe fe-layers side-menu__icon"></i><span class="side-menu__label">Categories</span><i
-                            class="angle fe fe-chevron-right"></i></a>
+                <!-- Products Section -->
+                <li class="slide {{ request()->routeIs('products.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-box side-menu__icon"></i>
+                        <span class="side-menu__label">المنتجات</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
                     <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="tab-menu-heading p-0 pb-2 border-0">
-                                <div class="tabs-menu">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#side1" class="active" data-bs-toggle="tab"><i
-                                                    class="fe fe-monitor"></i>
-                                                <p>Home</p>
-                                            </a></li>
-                                        <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-square"></i>
-                                                <p>Setting</p>
-                                            </a></li>
-                                        <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-calendar"></i>
-                                                <p>Events</p>
-                                            </a></li>
-                                        <li><a href="#side4" data-bs-toggle="tab"><i class="fe fe-user"></i>
-                                                <p>Follower</p>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side1">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Categories</a>
-                                            </li>
-                                            <li><a class="slide-item" href="{{ route('categories.index') }}">All
-                                                    Categories</a></li>
-                                            <li><a class="slide-item" href="{{ route('categories.create') }}">Add
-                                                    Category</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('products.index') ? 'active' : '' }}"
+                                href="{{ route('products.index') }}">
+                                جميع المنتجات
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('products.create') ? 'active' : '' }}"
+                                href="{{ route('products.create') }}">
+                                اضافة منتج
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="fe fe-calendar side-menu__icon"></i><span class="side-menu__label">Seasons</span><i
-                            class="angle fe fe-chevron-right"></i></a>
+                <!-- Categories Section -->
+                <li class="slide {{ request()->routeIs('categories.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-layers side-menu__icon"></i>
+                        <span class="side-menu__label">الفئات</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
                     <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="tab-menu-heading p-0 pb-2 border-0">
-                                <div class="tabs-menu">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#side1" class="active" data-bs-toggle="tab"><i
-                                                    class="fe fe-monitor"></i>
-                                                <p>Home</p>
-                                            </a></li>
-                                        <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-square"></i>
-                                                <p>Setting</p>
-                                            </a></li>
-                                        <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-calendar"></i>
-                                                <p>Events</p>
-                                            </a></li>
-                                        <li><a href="#side4" data-bs-toggle="tab"><i class="fe fe-user"></i>
-                                                <p>Follower</p>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side1">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Seasons</a>
-                                            </li>
-                                            <li><a class="slide-item" href="{{ route('seasons.index') }}">All
-                                                    Seasons</a></li>
-                                            <li><a class="slide-item" href="{{ route('seasons.create') }}">Add
-                                                    Season</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('categories.index') ? 'active' : '' }}"
+                                href="{{ route('categories.index') }}">
+                                جميع الفئات
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('categories.create') ? 'active' : '' }}"
+                                href="{{ route('categories.create') }}">
+                                اضافة فئة
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="fe fe-package side-menu__icon"></i><span class="side-menu__label">Factories</span><i
-                            class="angle fe fe-chevron-right"></i></a>
+                <!-- Seasons Section -->
+                <li class="slide {{ request()->routeIs('seasons.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-calendar side-menu__icon"></i>
+                        <span class="side-menu__label">المواسم</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
                     <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="tab-menu-heading p-0 pb-2 border-0">
-                                <div class="tabs-menu">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#side1" class="active" data-bs-toggle="tab"><i
-                                                    class="fe fe-monitor"></i>
-                                                <p>Home</p>
-                                            </a></li>
-                                        <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-square"></i>
-                                                <p>Setting</p>
-                                            </a></li>
-                                        <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-calendar"></i>
-                                                <p>Events</p>
-                                            </a></li>
-                                        <li><a href="#side4" data-bs-toggle="tab"><i class="fe fe-user"></i>
-                                                <p>Follower</p>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side1">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Factories</a>
-                                            </li>
-                                            <li><a class="slide-item" href="{{ route('factories.index') }}">All
-                                                    Factories</a></li>
-                                            <li><a class="slide-item" href="{{ route('factories.create') }}">Add
-                                                    Factory</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('seasons.index') ? 'active' : '' }}"
+                                href="{{ route('seasons.index') }}">
+                                جميع المواسم
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('seasons.create') ? 'active' : '' }}"
+                                href="{{ route('seasons.create') }}">
+                                اضافة مواسم
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="fe fe-droplet side-menu__icon"></i><span class="side-menu__label">Colors</span><i
-                            class="angle fe fe-chevron-right"></i></a>
+                <!-- Factories Section -->
+                <li class="slide {{ request()->routeIs('factories.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-package side-menu__icon"></i>
+                        <span class="side-menu__label">المصانع</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
                     <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="tab-menu-heading p-0 pb-2 border-0">
-                                <div class="tabs-menu">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#side1" class="active" data-bs-toggle="tab"><i
-                                                    class="fe fe-monitor"></i>
-                                                <p>Home</p>
-                                            </a></li>
-                                        <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-square"></i>
-                                                <p>Setting</p>
-                                            </a></li>
-                                        <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-calendar"></i>
-                                                <p>Events</p>
-                                            </a></li>
-                                        <li><a href="#side4" data-bs-toggle="tab"><i class="fe fe-user"></i>
-                                                <p>Follower</p>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side1">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Colors</a>
-                                            </li>
-                                            <li><a class="slide-item" href="{{ route('colors.index') }}">All
-                                                    Colors</a></li>
-                                            <li><a class="slide-item" href="{{ route('colors.create') }}">Add
-                                                    Color</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('factories.index') ? 'active' : '' }}"
+                                href="{{ route('factories.index') }}">
+                                جميع المصانع
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('factories.create') ? 'active' : '' }}"
+                                href="{{ route('factories.create') }}">
+                                اضافة مصانع
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li class="slide">
-                    <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="fe fe-box side-menu__icon"></i><span class="side-menu__label">Products</span><i
-                            class="angle fe fe-chevron-right"></i></a>
+                <!-- Colors Section -->
+                <li class="slide {{ request()->routeIs('colors.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-droplet side-menu__icon"></i>
+                        <span class="side-menu__label">الألوان</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
                     <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="tab-menu-heading p-0 pb-2 border-0">
-                                <div class="tabs-menu">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#side1" class="active" data-bs-toggle="tab"><i
-                                                    class="fe fe-monitor"></i>
-                                                <p>Home</p>
-                                            </a></li>
-                                        <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-square"></i>
-                                                <p>Setting</p>
-                                            </a></li>
-                                        <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-calendar"></i>
-                                                <p>Events</p>
-                                            </a></li>
-                                        <li><a href="#side4" data-bs-toggle="tab"><i class="fe fe-user"></i>
-                                                <p>Follower</p>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side1">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Products</a>
-                                            </li>
-                                            <li><a class="slide-item" href="{{ route('products.index') }}">All
-                                                    Products</a></li>
-                                            <li><a class="slide-item" href="{{ route('products.create') }}">Add
-                                                    Product</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('colors.index') ? 'active' : '' }}"
+                                href="{{ route('colors.index') }}">
+                                جميع الألوان
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('colors.create') ? 'active' : '' }}"
+                                href="{{ route('colors.create') }}">
+                                اضافة ألوان
+                            </a>
                         </li>
                     </ul>
                 </li>
 
+                <li class="sub-category">
+                    <h3>التقارير</h3>
+                </li>
+                <!-- Reports Section -->
+                <li class="slide {{ request()->routeIs('reports.*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="fe fe-box side-menu__icon"></i>
+                        <span class="side-menu__label">التقارير</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li>
+                            <a class="slide-item {{ request()->routeIs('reports.receive') ? 'active' : '' }}"
+                                href="{{ route('reports.receive') }}">
+                                المستلمين
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                     width="24" height="24" viewBox="0 0 24 24">

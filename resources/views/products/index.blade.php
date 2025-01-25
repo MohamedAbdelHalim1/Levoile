@@ -20,75 +20,86 @@
                             <select name="category" id="categoryFilter" class="form-select">
                                 <option value="">{{ __('All Categories') }}</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->name }}" {{ request('category') == $category->name ? 'selected' : '' }}>
+                                    <option value="{{ $category->name }}"
+                                        {{ request('category') == $category->name ? 'selected' : '' }}>
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-            
+
                         <!-- Season Filter -->
                         <div class="col-md-3">
                             <label for="seasonFilter">{{ __('Season') }}</label>
                             <select name="season" id="seasonFilter" class="form-select">
                                 <option value="">{{ __('All Seasons') }}</option>
                                 @foreach ($seasons as $season)
-                                    <option value="{{ $season->name }}" {{ request('season') == $season->name ? 'selected' : '' }}>
+                                    <option value="{{ $season->name }}"
+                                        {{ request('season') == $season->name ? 'selected' : '' }}>
                                         {{ $season->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-            
+
                         <!-- Factory Filter -->
                         <div class="col-md-3">
                             <label for="factoryFilter">{{ __('Factory') }}</label>
                             <select name="factory" id="factoryFilter" class="form-select">
                                 <option value="">{{ __('All Factories') }}</option>
                                 @foreach ($factories as $factory)
-                                    <option value="{{ $factory->name }}" {{ request('factory') == $factory->name ? 'selected' : '' }}>
+                                    <option value="{{ $factory->name }}"
+                                        {{ request('factory') == $factory->name ? 'selected' : '' }}>
                                         {{ $factory->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-            
+
                         <!-- Color Filter -->
                         <div class="col-md-3">
                             <label for="colorFilter">{{ __('Color') }}</label>
                             <select name="color" id="colorFilter" class="form-select">
                                 <option value="">{{ __('All Colors') }}</option>
                                 @foreach ($colors as $color)
-                                    <option value="{{ $color->name }}" {{ request('color') == $color->name ? 'selected' : '' }}>
+                                    <option value="{{ $color->name }}"
+                                        {{ request('color') == $color->name ? 'selected' : '' }}>
                                         {{ $color->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-            
+
                         <!-- Status Filter -->
                         <div class="col-md-3 mt-3">
                             <label for="statusFilter">{{ __('Status') }}</label>
                             <select name="status" id="statusFilter" class="form-select">
                                 <option value="">{{ __('All Status') }}</option>
-                                <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>{{ __('New') }}</option>
-                                <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>{{ __('Partial') }}</option>
-                                <option value="Complete" {{ request('status') == 'Complete' ? 'selected' : '' }}>{{ __('Complete') }}</option>
-                                <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>{{ __('Cancel') }}</option>
-                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
+                                    {{ __('New') }}</option>
+                                <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>
+                                    {{ __('Partial') }}</option>
+                                <option value="Complete" {{ request('status') == 'Complete' ? 'selected' : '' }}>
+                                    {{ __('Complete') }}</option>
+                                <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>
+                                    {{ __('Cancel') }}</option>
+                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
+                                    {{ __('Pending') }}</option>
                             </select>
                         </div>
-            
+
                         <!-- Expected Delivery Date Range -->
                         <div class="col-md-6 mt-3">
                             <label for="expectedDeliveryStart">{{ __('Expected Delivery Date Range') }}</label>
                             <div class="input-group">
-                                <input type="date" name="expected_delivery_start" id="expectedDeliveryStart" class="form-control" value="{{ request('expected_delivery_start') }}">
+                                <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
+                                    class="form-control" value="{{ request('expected_delivery_start') }}">
                                 <span class="input-group-text">-</span>
-                                <input type="date" name="expected_delivery_end" id="expectedDeliveryEnd" class="form-control" value="{{ request('expected_delivery_end') }}">
+                                <input type="date" name="expected_delivery_end" id="expectedDeliveryEnd"
+                                    class="form-control" value="{{ request('expected_delivery_end') }}">
                             </div>
                         </div>
-            
+
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">{{ __('Filter') }}</button>
@@ -97,7 +108,7 @@
                     </div>
                 </form>
             </div>
-            
+
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="flex justify-end mb-4">
@@ -123,7 +134,7 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td><img src="{{ asset($product->photo) }}" alt="Product Image"
-                                        style="width: 100px; height: auto;"></td>
+                                        style="width: 200px; height: auto;"></td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->code ?? 'N/A' }}</td>
                                 <td>{{ $product->category->name }}</td>
@@ -199,28 +210,30 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('products.show', $product->id) }}"
-                                        class="btn btn-primary">{{ __('Show') }}</a>
-                                    <a href="{{ route('products.edit', $product->id) }}"
-                                        class="btn btn-secondary">{{ __('Edit') }}</a>
-                                    <a href="{{ route('products.receive', $product->id) }}"
-                                        class="btn btn-success">{{ __('Receive') }}</a>
-                                    <a href="{{ route('products.completeData', $product->id) }}"
-                                        class="btn btn-info">{{ __('Complete Data') }}</a>
-                                    @if ($product->status === 'Cancel')
-                                        <a href="javascript:void(0);" class="btn btn-warning renew-btn"
-                                            data-id="{{ $product->id }}">{{ __('Re-New') }}</a>
-                                    @else
-                                        <a href="javascript:void(0);" class="btn btn-warning cancel-btn"
-                                            data-id="{{ $product->id }}">{{ __('Cancel') }}</a>
-                                    @endif
-                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                        class="d-inline"
-                                        onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
-                                    </form>
+                                    <div class="d-flex flex-column gap-2">
+                                        <a href="{{ route('products.show', $product->id) }}"
+                                            class="btn btn-primary w-100">{{ __('Show') }}</a>
+                                        <a href="{{ route('products.edit', $product->id) }}"
+                                            class="btn btn-secondary w-100">{{ __('Edit') }}</a>
+                                        <a href="{{ route('products.receive', $product->id) }}"
+                                            class="btn btn-success w-100">{{ __('Receive') }}</a>
+                                        <a href="{{ route('products.completeData', $product->id) }}"
+                                            class="btn btn-info w-100">{{ __('Complete Data') }}</a>
+                                        @if ($product->status === 'Cancel')
+                                            <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
+                                                data-id="{{ $product->id }}">{{ __('Re-New') }}</a>
+                                        @else
+                                            <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
+                                                data-id="{{ $product->id }}">{{ __('Cancel') }}</a>
+                                        @endif
+                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-danger w-100">{{ __('Delete') }}</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

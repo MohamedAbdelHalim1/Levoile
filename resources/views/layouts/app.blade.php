@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="rtl">
 	<head>
 
 		<!-- META DATA -->
@@ -38,7 +38,7 @@
 
 	</head>
 
-	<body class="app sidebar-mini ltr">
+	<body class="app sidebar-mini rtl">
 
 		<!--- GLOBAL LOADER -->
 		<div id="global-loader" >
