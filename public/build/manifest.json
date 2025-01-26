@@ -1,0 +1,211 @@
+{
+  "_switcher-styles-11cf792f.js": {
+    "file": "assets/switcher-styles-11cf792f.js"
+  },
+  "resources/assets/js/accordiation.js": {
+    "file": "assets/accordiation-c63be62b.js",
+    "isEntry": true,
+    "src": "resources/assets/js/accordiation.js"
+  },
+  "resources/assets/js/advancedform.js": {
+    "file": "assets/advancedform-f3381134.js",
+    "isEntry": true,
+    "src": "resources/assets/js/advancedform.js"
+  },
+  "resources/assets/js/alerts.js": {
+    "file": "assets/alerts-ae1708fc.js",
+    "isEntry": true,
+    "src": "resources/assets/js/alerts.js"
+  },
+  "resources/assets/js/blog-edit.js": {
+    "file": "assets/blog-edit-b52f1fe0.js",
+    "isEntry": true,
+    "src": "resources/assets/js/blog-edit.js"
+  },
+  "resources/assets/js/carousel.js": {
+    "file": "assets/carousel-79461a7c.js",
+    "isEntry": true,
+    "src": "resources/assets/js/carousel.js"
+  },
+  "resources/assets/js/cart.js": {
+    "file": "assets/cart-5a6a0012.js",
+    "isEntry": true,
+    "src": "resources/assets/js/cart.js"
+  },
+  "resources/assets/js/chart.js": {
+    "file": "assets/chart-b9afdbb3.js",
+    "isEntry": true,
+    "src": "resources/assets/js/chart.js"
+  },
+  "resources/assets/js/chat.js": {
+    "file": "assets/chat-76524013.js",
+    "isEntry": true,
+    "src": "resources/assets/js/chat.js"
+  },
+  "resources/assets/js/checkout.js": {
+    "file": "assets/checkout-5e3c770e.js",
+    "isEntry": true,
+    "src": "resources/assets/js/checkout.js"
+  },
+  "resources/assets/js/colorpicker.js": {
+    "file": "assets/colorpicker-ff3f558b.js",
+    "isEntry": true,
+    "src": "resources/assets/js/colorpicker.js"
+  },
+  "resources/assets/js/echarts.js": {
+    "file": "assets/echarts-759f23de.js",
+    "isEntry": true,
+    "src": "resources/assets/js/echarts.js"
+  },
+  "resources/assets/js/flatpickr.js": {
+    "file": "assets/flatpickr-43a066d2.js",
+    "isEntry": true,
+    "src": "resources/assets/js/flatpickr.js"
+  },
+  "resources/assets/js/flot.js": {
+    "file": "assets/flot-cb5b807e.js",
+    "isEntry": true,
+    "src": "resources/assets/js/flot.js"
+  },
+  "resources/assets/js/form-editor2.js": {
+    "file": "assets/form-editor2-74106454.js",
+    "isEntry": true,
+    "src": "resources/assets/js/form-editor2.js"
+  },
+  "resources/assets/js/form-elements.js": {
+    "file": "assets/form-elements-5c3e450e.js",
+    "isEntry": true,
+    "src": "resources/assets/js/form-elements.js"
+  },
+  "resources/assets/js/form-validation.js": {
+    "file": "assets/form-validation-03850a53.js",
+    "isEntry": true,
+    "src": "resources/assets/js/form-validation.js"
+  },
+  "resources/assets/js/formelementadvnced.js": {
+    "file": "assets/formelementadvnced-63dbca0c.js",
+    "isEntry": true,
+    "src": "resources/assets/js/formelementadvnced.js"
+  },
+  "resources/assets/js/fullcalendar.js": {
+    "file": "assets/fullcalendar-5be6e205.js",
+    "isEntry": true,
+    "src": "resources/assets/js/fullcalendar.js"
+  },
+  "resources/assets/js/index1.js": {
+    "file": "assets/index1-ff39d5a7.js",
+    "isEntry": true,
+    "src": "resources/assets/js/index1.js"
+  },
+  "resources/assets/js/index2.js": {
+    "file": "assets/index2-046ce3bf.js",
+    "isEntry": true,
+    "src": "resources/assets/js/index2.js"
+  },
+  "resources/assets/js/index3.js": {
+    "file": "assets/index3-4ac90f68.js",
+    "isEntry": true,
+    "src": "resources/assets/js/index3.js"
+  },
+  "resources/assets/js/index4.js": {
+    "file": "assets/index4-9cdddaf7.js",
+    "isEntry": true,
+    "src": "resources/assets/js/index4.js"
+  },
+  "resources/assets/js/index5.js": {
+    "file": "assets/index5-934f338d.js",
+    "isEntry": true,
+    "src": "resources/assets/js/index5.js"
+  },
+  "resources/assets/js/jquery.sparkline.js": {
+    "file": "assets/jquery.sparkline-853575d1.js",
+    "isEntry": true,
+    "src": "resources/assets/js/jquery.sparkline.js"
+  },
+  "resources/assets/js/jvectormap.js": {
+    "file": "assets/jvectormap-302ea301.js",
+    "isEntry": true,
+    "src": "resources/assets/js/jvectormap.js"
+  },
+  "resources/assets/js/map-leafleft.js": {
+    "file": "assets/map-leafleft-ec2eeb42.js",
+    "isEntry": true,
+    "src": "resources/assets/js/map-leafleft.js"
+  },
+  "resources/assets/js/mapelmaps.js": {
+    "file": "assets/mapelmaps-05802a9d.js",
+    "isEntry": true,
+    "src": "resources/assets/js/mapelmaps.js"
+  },
+  "resources/assets/js/modal.js": {
+    "file": "assets/modal-854cdf1d.js",
+    "isEntry": true,
+    "src": "resources/assets/js/modal.js"
+  },
+  "resources/assets/js/morris.js": {
+    "file": "assets/morris-780f2fc8.js",
+    "isEntry": true,
+    "src": "resources/assets/js/morris.js"
+  },
+  "resources/assets/js/nvd3.js": {
+    "file": "assets/nvd3-6b2e450f.js",
+    "isEntry": true,
+    "src": "resources/assets/js/nvd3.js"
+  },
+  "resources/assets/js/rangeslider.js": {
+    "file": "assets/rangeslider-825717dc.js",
+    "isEntry": true,
+    "src": "resources/assets/js/rangeslider.js"
+  },
+  "resources/assets/js/select2.js": {
+    "file": "assets/select2-ce090cef.js",
+    "isEntry": true,
+    "src": "resources/assets/js/select2.js"
+  },
+  "resources/assets/js/summernote.js": {
+    "file": "assets/summernote-104c3c0c.js",
+    "isEntry": true,
+    "src": "resources/assets/js/summernote.js"
+  },
+  "resources/assets/js/sweet-alert.js": {
+    "file": "assets/sweet-alert-55561e39.js",
+    "isEntry": true,
+    "src": "resources/assets/js/sweet-alert.js"
+  },
+  "resources/assets/js/table-data.js": {
+    "file": "assets/table-data-363338eb.js",
+    "isEntry": true,
+    "src": "resources/assets/js/table-data.js"
+  },
+  "resources/assets/js/themeColors.js": {
+    "file": "assets/themeColors-29ec62c8.js",
+    "imports": [
+      "_switcher-styles-11cf792f.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/js/themeColors.js"
+  },
+  "resources/assets/switcher/js/switcher.js": {
+    "file": "assets/switcher-bbf71b35.js",
+    "isEntry": true,
+    "src": "resources/assets/switcher/js/switcher.js"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-a8e284b4.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-4678d81f.js",
+    "imports": [
+      "_switcher-styles-11cf792f.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-1404224e.css",
+    "isEntry": true,
+    "src": "resources/sass/app.scss"
+  }
+}

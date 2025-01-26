@@ -1,0 +1,1 @@
+(function(){$(".select2").select2({minimumResultsForSearch:1/0}),window.addEventListener("load",function(){var a=document.getElementsByClassName("needs-validation");Array.prototype.filter.call(a,function(e){e.addEventListener("submit",function(t){e.checkValidity()===!1&&(t.preventDefault(),t.stopPropagation()),e.classList.add("was-validated")},!1)})},!1)})();

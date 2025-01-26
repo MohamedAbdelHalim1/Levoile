@@ -1,0 +1,1 @@
+(function(t){var r={mode:"wizard",autoButtonsNextClass:"btn btn-primary float-end",autoButtonsPrevClass:"btn btn-info",stepNumberClass:"badge rounded-circle bg-primary me-1 mb-1",onSubmit:function(){return alert("Form submitted!"),!0}};t("#form").accWizard(r)})(jQuery);

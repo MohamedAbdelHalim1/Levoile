@@ -1,0 +1,1 @@
+$(function(){$("#palce-order").click(function(){$("body").removeClass("timer-alert"),swal({title:"Are you sure?",text:"Your will not be able to recover order details!",type:"warning",showCancelButton:!0,confirmButtonClass:"btn btn-danger",confirmButtonText:"Yes, conform!",closeOnConfirm:!1},function(){swal("Congratulations!","Your order is placed.","success")})})});

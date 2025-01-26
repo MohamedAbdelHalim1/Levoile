@@ -23,7 +23,7 @@
         <!-- APP SCSS -->
         @vite(['resources/sass/app.scss'])
 
-        
+
 
         <!-- ICONS CSS -->
         <link href="{{asset('build/assets/iconfonts/icons.css')}}" rel="stylesheet">
@@ -77,7 +77,7 @@
                 </div>
                 <!-- END MAIN-CONTENT -->
             </div>
-            
+
             @yield('modal-page-content1')
 
             <!-- RIGHT-SIDEBAR -->
@@ -94,7 +94,7 @@
         <!-- END PAGE-->
 
         <!-- SCRIPTS -->
-        
+
         @include('layouts.components.scripts')
 
         <!-- STICKY JS -->
@@ -106,7 +106,7 @@
 
         <!-- APP JS -->
 		@vite('resources/js/app.js')
-        
+
 
         <!-- END SCRIPTS -->
 

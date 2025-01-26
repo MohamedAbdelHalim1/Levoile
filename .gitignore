@@ -1,0 +1,16 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+/storage/cache
+/storage/framework/
+/storage/debugbar
+.env
+.env.backup
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+/docker_services/processor/node_modules/
+vite.config.js

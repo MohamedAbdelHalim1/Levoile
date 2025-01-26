@@ -17,7 +17,7 @@ function switcherEvents() {
 				{
 					direction: "rtl",
 				}
-			); 
+			);
 			$('.fc-theme-standard').removeClass('fc-direction-ltr');
 			$('.fc-theme-standard').addClass('fc-direction-rtl');
 			$('.fc-header-toolbar').removeClass('fc-toolbar-ltr');
@@ -54,7 +54,7 @@ function switcherEvents() {
 				{
 					direction: "ltr",
 				}
-			); 
+			);
 			$('.fc-theme-standard').addClass('fc-direction-ltr');
 			$('.fc-theme-standard').removeClass('fc-direction-rtl');
 			$('.fc-header-toolbar').addClass('fc-toolbar-ltr');
@@ -74,7 +74,7 @@ function switcherEvents() {
 			if (document.querySelector('body').classList.contains('horizontal')&& !(document.querySelector('body').classList.contains('bg-account'))) {
 				checkHoriMenu();
 			}
-		} 
+		}
 	});
 	/***************** LTR End*********************/
 
@@ -95,7 +95,7 @@ function switcherEvents() {
 
 			localStorage.setItem('spariclightMode', true)
 			localStorage.removeItem('sparicdarkMode', false)
-		} 
+		}
 	});
 	/***************** LIGHT THEME End *********************/
 
@@ -121,8 +121,8 @@ function switcherEvents() {
 
 			localStorage.setItem('sparicdarkMode', true);
 			localStorage.removeItem('spariclightMode', false);
-			
-		} 
+
+		}
 	});
 	/***************** Dark THEME End*********************/
 
@@ -163,7 +163,7 @@ function switcherEvents() {
 			localStorage.removeItem("sparicdoublemenutabs");
 
 			responsive();
-		} 
+		}
 	});
 	/***************** VERTICAL-MENU End*********************/
 
@@ -553,7 +553,7 @@ function switcherEvents() {
 			$('body').removeClass('double-menu');
 			$('body').removeClass('center-logo');
 			$('body').removeClass('default-logo');
-			
+
 			localStorage.setItem("sparicdoublemenutabs", true);
 			localStorage.removeItem("sparicdefaultmenu");
 			localStorage.removeItem("sparicclosedmenu");
@@ -619,7 +619,7 @@ function switcherEvents() {
 			localStorage.removeItem("sparicdarkmenu");
 		}
 	});
-	
+
 	$(document).on("click", '#myonoffswitch4', function () {
 		if (this.checked) {
 			$('body').addClass('color-menu');
@@ -630,7 +630,7 @@ function switcherEvents() {
 			localStorage.removeItem("sparicdarkmenu");
 		}
 	});
-	
+
 	$(document).on("click", '#myonoffswitch5', function () {
 		if (this.checked) {
 			$('body').addClass('dark-menu');
@@ -652,7 +652,7 @@ function switcherEvents() {
 			localStorage.setItem("spariclightheader", true);
 			localStorage.removeItem("spariccolorheader");
 			localStorage.removeItem("sparicdarkheader");
-		} 
+		}
 	});
 
 	$(document).on("click", '#myonoffswitch7', function () {
@@ -818,7 +818,7 @@ switcherEvents();
 			{
 				direction: "rtl",
 			}
-		); 
+		);
 		$("head link#style").attr("href", $(this));
 		(document.getElementById("style")?.setAttribute("href", "http://127.0.0.1:8000/build/assets/plugins/bootstrap/css/bootstrap.rtl.min.css"));
 
@@ -874,7 +874,7 @@ switcherEvents();
 		$('body').removeClass('sideicon-menu');
 		$('body').removeClass('double-menu');
 		$('body').removeClass('double-menu-tabs');
-		
+
 		// $('#slide-left').removeClass('d-none');
 		// $('#slide-right').removeClass('d-none');
 		if (document.querySelector('body').classList.contains('horizontal')&& !(document.querySelector('body').classList.contains('bg-account'))) {
@@ -1020,7 +1020,7 @@ switcherEvents();
 	let bodynunito = $('body').hasClass('font-family-1');
 	if (bodynunito) {
 		$('body').addClass('font-family-1');
-		
+
 	}
 	/***************** NUNITO FONT FAMILY HAs Class *********************/
 
@@ -1069,20 +1069,20 @@ export function checkOptions() {
 		$('#myonoffswitch111').prop('checked', true);
 	}
 
-	//RTL 
+	//RTL
 	if (document.querySelector('body').classList.contains('rtl')) {
 		$('#myonoffswitch55').prop('checked', true);
 	}
 
-	// light header 
+	// light header
 	if (document.querySelector('body').classList.contains('light-header')) {
 		$('#myonoffswitch6').prop('checked', true);
 	}
-	// color header 
+	// color header
 	if (document.querySelector('body').classList.contains('color-header')) {
 		$('#myonoffswitch7').prop('checked', true);
 	}
-	// dark header 
+	// dark header
 	if (document.querySelector('body').classList.contains('dark-header')) {
 		$('#myonoffswitch8').prop('checked', true);
 	}
