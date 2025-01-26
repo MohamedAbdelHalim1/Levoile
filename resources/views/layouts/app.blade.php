@@ -11,7 +11,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- TITLE -->
-		<title> Levoile ERP </title>
+		<title> نظام الإدارة لفوال </title>
 
         <!-- FAVICON -->
         <link rel="icon" href="{{asset('build/assets/images/brand/logo.png')}}" type="image/x-icon" >

@@ -81,7 +81,7 @@
     <div class="p-4 position-relative">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
-                <button class="btn btn-primary" onclick="window.print()" style="float: right;">Print</button>
+                <button class="btn btn-primary" onclick="window.print()" style="float: right;">طباعه</button>
 
                 <div>
                     <div class="row">
@@ -90,24 +90,24 @@
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                             @endif
                             <div class="product-details">
-                                <div class="key-value"><span>Code:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>Description:</span> <span>{{ $product->description }}</span>
+                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
+                                <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>Category:</span><span>{{ $product->category->name ?? 'N/A' }}</span>
+                                    <span>الفئة:</span><span>{{ $product->category->name ?? 'N/A' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>Season:</span><span>{{ $product->season->name ?? 'N/A' }}</span>
+                                    <span>الموسم:</span><span>{{ $product->season->name ?? 'N/A' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>Factory:</span><span>{{ $product->factory->name ?? 'N/A' }}</span>
+                                    <span>المصنع:</span><span>{{ $product->factory->name ?? 'N/A' }}</span>
                                 </div>
-                                <div class="key-value"><span>Material Availability:</span>
-                                    <span>{{ $product->have_stock ? 'Yes' : 'No' }} -
-                                        {{ $product->material_name ?? 'No material Identified' }}</span>
+                                <div class="key-value"><span>متوفر:</span>
+                                    <span>{{ $product->have_stock ? 'نعم' : 'لا' }} -
+                                        {{ $product->material_name ?? 'لا مواد متوفرة' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>Status:</span>
+                                    <span>الحالة:</span>
                                     <span class="badge
                                         @if ($product->status === 'Complete') bg-success
                                         @elseif ($product->status === 'Partial') bg-warning
@@ -121,29 +121,29 @@
 
                     <hr>
 
-                    <h2>Colors</h2>
+                    <h2>الالوان</h2>
                     @if ($product->productColors->isEmpty())
-                        <p>No colors available for this product.</p>
+                        <p>لا يوجد ألوان لهذا المنتج</p>
                     @else
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Color Name</th>
-                                        <th>Expected Delivery</th>
-                                        <th>Quantity</th>
-                                        <th>Receiving Quantity</th>
-                                        <th>Status</th>
-                                        <th class="action-column">Action</th>
+                                        <th>اللون</th>
+                                        <th>تاريخ التوصيل</th>
+                                        <th>الكمية</th>
+                                        <th>الكمية المستلمة</th>
+                                        <th>الحالة</th>
+                                        <th class="action-column">العمليات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($product->productColors as $productColor)
                                         @foreach ($productColor->productcolorvariants as $variant)
                                             <tr>
-                                                <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-                                                <td>{{ $variant->expected_delivery ?? 'N/A' }}</td>
-                                                <td>{{ $variant->quantity ?? 'N/A' }}</td>
+                                                <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
+                                                <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
+                                                <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
                                                 <td>
                                                     <input type="number" class="form-control receiving-quantity"
                                                         data-variant-id="{{ $variant->id }}"
@@ -153,16 +153,16 @@
                                                 </td>
                                                 <td>
                                                     @if ($variant->status === 'Received')
-                                                        <span class="badge bg-success">{{ __('Received') }}</span>
+                                                        <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
                                                     @elseif ($variant->status === 'Partially Received')
-                                                        <span class="badge bg-pink">{{ __('Partially Received') }}</span>
+                                                        <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
                                                     @elseif ($variant->status === 'Not Received')
-                                                        <span class="badge bg-danger">{{ __('Not Received') }}</span>
+                                                        <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-info validate-btn"
-                                                        data-variant-id="{{ $variant->id }}" disabled>Validate</button>
+                                                        data-variant-id="{{ $variant->id }}" disabled>تأكيد</button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -173,7 +173,7 @@
                     @endif
 
                     <div class="mt-4">
-                        <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to Products</a>
+                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
                     </div>
                 </div>
             </div>
@@ -213,26 +213,25 @@
             <div class="modal-content">
                 <form id="rescheduleForm">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Remaining Quantity</h5>
+                        <h5 class="modal-title" id="rescheduleModalLabel">اعاده جدوله الكمية المتبقية</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- Remaining Quantity Field -->
                         <div class="mb-3">
-                            <label for="remainingQuantity" class="form-label">Remaining Quantity</label>
+                            <label for="remainingQuantity" class="form-label">الكمية المتبقية</label>
                             <input type="number" id="remainingQuantity" class="form-control" readonly>
                         </div>
 
                         <!-- Caution Text -->
                         <small class="text-danger">
-                            Will you accept this Receiving Quantity? If you click Submit, this product color will be
-                            considered as Completely Received.
+                           هل تريد الاكتفاء بالكميه المتسلمه واعتبار ان اللون تم استلامه بالكامل؟
                         </small>
 
                         <!-- Submit Button -->
                         <div class="mt-3">
                             <button type="button" id="submitReceiving" class="btn btn-success w-100">
-                                Submit and Mark as Received
+                                نعم واعتبار ان اللون تم استلامه بالكامل
                             </button>
                         </div>
 
@@ -240,27 +239,27 @@
                         <div class="form-check mt-4">
                             <input class="form-check-input" type="checkbox" id="rescheduleCheckbox">
                             <label class="form-check-label" for="rescheduleCheckbox">
-                                Want to Reschedule Rest Of Quantity?
+                                تريد الاعاده الجدوله الكميه المتبقية؟
                             </label>
                         </div>
 
                         <!-- Expected Delivery Date and Redirect Button -->
                         <div id="expectedDeliveryContainer" class="mt-3 d-none">
-                            <label for="newExpectedDelivery" class="form-label">New Expected Delivery</label>
+                            <label for="newExpectedDelivery" class="form-label">تاريخ التوصيل المتوقع</label>
                             <input type="date" id="newExpectedDelivery" name="new_expected_delivery"
                                 class="form-control">
 
                             <!-- Redirect Button for Reschedule -->
                             <div class="mt-3">
                                 <button type="button" id="rescheduleBtn" class="btn btn-primary w-100 d-none">
-                                    Reschedule and Mark as Received
+                                    اعاده جدوله الكميه المتبقية
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
                     </div>
                 </form>
             </div>
@@ -282,7 +281,7 @@
 
             // Check if entered quantity is valid
             if (enteredQuantity > originalQuantity) {
-                alert("You entered a quantity greater than the expected quantity!");
+                alert("هذه الكمية غير صحيحه");
                 quantityInput.val(""); // Reset the input value
                 validateButton.prop("disabled", true); // Disable the Validate button
                 return;
@@ -300,7 +299,7 @@
             const originalQuantity = parseInt(row.find(".receiving-quantity").data("original-quantity"));
 
             if (!remainingQuantity || remainingQuantity <= 0) {
-                alert("Please enter a valid receiving quantity.");
+                alert("الرجاء ادخال كمية صحيحة");
                 return;
             }
 
@@ -373,7 +372,7 @@
             const newExpectedDelivery = $("#newExpectedDelivery").val();
 
             if (!newExpectedDelivery) {
-                alert("Please provide a new expected delivery date.");
+                alert("الرجاء ادخال تاريخ التسليم");
                 return;
             }
 

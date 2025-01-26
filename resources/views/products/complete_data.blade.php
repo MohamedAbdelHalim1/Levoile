@@ -62,21 +62,21 @@
                                     style="width:450px;">
                             @endif
                             <div class="product-details">
-                                <div class="key-value"><span>Code:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>Description:</span> <span>{{ $product->description }}</span>
+                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
+                                <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
                                 </div>
-                                <div class="key-value"><span>Category:</span>
+                                <div class="key-value"><span>الفئة:</span>
                                     <span>{{ $product->category->name ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>Season:</span>
+                                <div class="key-value"><span>الموسم:</span>
                                     <span>{{ $product->season->name ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>Factory:</span>
+                                <div class="key-value"><span>المصنع:</span>
                                     <span>{{ $product->factory->name ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>Material Availability:</span>
+                                <div class="key-value"><span>متوفر:</span>
                                     <span>{{ $product->have_stock ? 'Yes' : 'No' }} -
                                         {{ $product->material_name ?? 'No material Identified' }}</span></div>
-                                <div class="key-value"><span>Marker Number:</span>
+                                <div class="key-value"><span>العلامة التجارية:</span>
                                     <span>{{ $product->marker_number }}</span></div>
-                                <div class="key-value"><span>Status:</span> <span>{{ $product->status }}</span></div>
+                                <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
                             </div>
                         </div>
                     </div>
@@ -86,39 +86,42 @@
                     <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
                         @csrf
 
-                        <h2>Additional Details</h2>
+                        <h2>معلومات المنتج الاضافيه</h2>
                         <div class="mb-4">
-                            <label for="name">Name</label>
+                            <label for="name">ألاسم</label>
                             <input type="text" id="name" name="name" class="form-control"
                                 value="{{ $product->name }}">
                         </div>
                         <div class="mb-4">
-                            <label for="store_launch">Store Launch</label>
+                            <label for="store_launch"> طرح المتج</label>
                             <input type="text" id="store_launch" name="store_launch" class="form-control"
                                 value="{{ $product->store_launch }}">
                         </div>
                         <div class="mb-4">
-                            <label for="price">Price</label>
+                            <label for="price">السعر</label>
                             <input type="number" id="price" name="price" class="form-control" step="0.01"
                                 value="{{ $product->price }}">
                         </div>
 
-                        <h2>Colors</h2>
+                        <h2>الالوان</h2>
                         @if ($product->productColors->isEmpty())
-                            <p>No colors available for this product.</p>
+                            <p>لا توجد الالوان</p>
                         @else
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th>Color Name</th>
-                                            <th>SKU</th>
+                                            <th>اللون</th>
+                                            <th>الكميه</th>
+                                            <th>الكود</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($product->productColors as $productColor)
                                             <tr>
                                                 <td>{{ $productColor->color->name ?? 'N/A' }}</td>
+
+                                                <td> {{ $productColor->quantity }}</td>
 
                                                 <td>
                                                     <input type="text" name="colors[{{ $productColor->color_id }}][sku]"
@@ -132,9 +135,9 @@
                         @endif
 
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to Products</a>
-                            <button id="printButton" type="button" class="btn btn-success">Print</button>
+                            <button type="submit" class="btn btn-primary">اضافه</button>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                            <button id="printButton" type="button" class="btn btn-success">طباعه</button>
                         </div>
                     </form>
                 </div>

@@ -22,7 +22,7 @@ class ColorController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255', 'code' => 'nullable|string|max:255']);
         Color::create($request->all());
-        return redirect()->route('colors.index')->with('success', 'Color added successfully.');
+        return redirect()->route('colors.index')->with('success', 'تم الإضافة بنجاح');
     }
 
     public function show(Color $color)
@@ -39,12 +39,12 @@ class ColorController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255', 'code' => 'nullable|string|max:255']);
         $color->update($request->all());
-        return redirect()->route('colors.index')->with('success', 'Color updated successfully.');
+        return redirect()->route('colors.index')->with('success', 'تم التعديل بنجاح');
     }
 
     public function destroy(Color $color)
     {
         $color->delete();
-        return redirect()->route('colors.index')->with('success', 'Color deleted successfully.');
+        return redirect()->route('colors.index')->with('success', 'تم الحذف بنجاح');
     }
 }

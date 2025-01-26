@@ -16,20 +16,20 @@
                 </div>
             @endif
 
-            <h1>{{ __('Edit Product') }}</h1>
+            <h1>{{ __('تعديل منتج') }}</h1>
             <form id="update-product-form" action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <!-- Product Description -->
                 <div class="mb-3">
-                    <label for="description" class="form-label">{{ __('Description') }}</label>
+                    <label for="description" class="form-label">{{ __('الوصف') }}</label>
                     <textarea class="form-control" id="description" name="description" required>{{ $product->description }}</textarea>
                 </div>
 
                 <!-- Product Category -->
                 <div class="mb-3">
-                    <label for="category_id" class="form-label">{{ __('Category') }}</label>
+                    <label for="category_id" class="form-label">{{ __('الفئة') }}</label>
                     <select class="selectpicker form-control" id="category_id" name="category_id" data-live-search="true" required>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
 
                 <!-- Product Season -->
                 <div class="mb-3">
-                    <label for="season_id" class="form-label">{{ __('Season') }}</label>
+                    <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
                     <select class="selectpicker form-control" id="season_id" name="season_id" data-live-search="true" required>
                         @foreach ($seasons as $season)
                             <option value="{{ $season->id }}" {{ $product->season_id == $season->id ? 'selected' : '' }}>
@@ -53,7 +53,7 @@
 
                 <!-- Product Factory -->
                 <div class="mb-3">
-                    <label for="factory_id" class="form-label">{{ __('Factory') }}</label>
+                    <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
                     <select class="selectpicker form-control" id="factory_id" name="factory_id" data-live-search="true" required>
                         @foreach ($factories as $factory)
                             <option value="{{ $factory->id }}" {{ $product->factory_id == $factory->id ? 'selected' : '' }}>
@@ -65,7 +65,7 @@
 
                 <!-- Product Photo -->
                 <div class="mb-3">
-                    <label for="photo" class="form-label">{{ __('Photo') }}</label>
+                    <label for="photo" class="form-label">{{ __('الصورة') }}</label>
                     <input type="file" class="form-control" id="photo" name="photo">
                     @if ($product->photo)
                         <img src="{{ asset($product->photo) }}" alt="Product Image" class="mt-3" style="max-width: 200px;">
@@ -74,33 +74,33 @@
 
                 <!-- Marker Number -->
                 <div class="mb-3">
-                    <label for="marker_number" class="form-label">{{ __('Marker Number') }}</label>
+                    <label for="marker_number" class="form-label">{{ __('العلامه التجاريه') }}</label>
                     <input type="text" class="form-control" id="marker_number" name="marker_number" value="{{ $product->marker_number }}" required>
                 </div>
 
                 <!-- Have Stock -->
                 <div class="mb-3">
-                    <label>{{ __('Material Availability?') }}</label>
+                    <label>{{ __('متوفر؟') }}</label>
                     <div class="d-flex align-items-center">
                         <div class="form-check me-3">
                             <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" {{ $product->have_stock ? 'checked' : '' }} required>
-                            <label for="stock_yes" class="form-check-label">{{ __('Yes') }}</label>
+                            <label for="stock_yes" class="form-check-label">{{ __('نعم') }}</label>
                         </div>
                         <div class="form-check me-3">
                             <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
-                            <label for="stock_no" class="form-check-label">{{ __('No') }}</label>
+                            <label for="stock_no" class="form-check-label">{{ __('لا') }}</label>
                         </div>
                         <div class="flex-grow-1">
-                            <input type="text" class="form-control" id="material_name" name="material_name" value="{{ $product->material_name ?? '' }}" placeholder="{{ __('Material Name') }}">
+                            <input type="text" class="form-control" id="material_name" name="material_name" value="{{ $product->material_name ?? '' }}" placeholder="{{ __('اسم المواد') }}">
                         </div>
                     </div>
                 </div>
 
                 <!-- Add New Color -->
                 <div class="mb-3">
-                    <label for="new_color_id" class="form-label">{{ __('Add New Color') }}</label>
+                    <label for="new_color_id" class="form-label">{{ __('اللون') }}</label>
                     <select class="selectpicker form-control" id="new_color_id" data-live-search="true">
-                        <option value="">{{ __('Select a color') }}</option>
+                        <option value="">{{ __('اختر لون') }}</option>
                         @foreach ($colors as $color)
                             <option value="{{ $color->id }}">{{ $color->name }}</option>
                         @endforeach
@@ -112,10 +112,10 @@
                     <table class="table table-bordered" id="color-details-table">
                         <thead class="table-dark">
                             <tr>
-                                <th>{{ __('Color Name') }}</th>
-                                <th>{{ __('Expected Delivery') }}</th>
-                                <th>{{ __('Quantity') }}</th>
-                                <th>{{ __('Actions') }}</th>
+                                <th>{{ __('اللون') }}</th>
+                                <th>{{ __('تاريخ الاستلام') }}</th>
+                                <th>{{ __('الكمية') }}</th>
+                                <th>{{ __('العمليات') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,7 +135,7 @@
                                         <input type="number" class="form-control" name="colors[{{ $productColor->color_id }}][quantity]" value="{{ $variant->quantity ?? '' }}" min="1" required>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-danger delete-color" data-id="{{ $productColor->id }}">{{ __('Delete') }}</button>
+                                        <button type="button" class="btn btn-danger delete-color" data-id="{{ $productColor->id }}">{{ __('حذف') }}</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -143,7 +143,7 @@
                     </table>
                 </div>
 
-                <button type="submit" class="btn btn-primary">{{ __('Update Product') }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('تحديث') }}</button>
             </form>
         </div>
     </div>
@@ -165,7 +165,7 @@
 
             if (colorId) {
                 if ($('#color-details-table tbody').find(`tr[data-color-id="${colorId}"]`).length > 0) {
-                    alert("This color is already added.");
+                    alert("هذا اللون مضاف من قبل");
                     return;
                 }
 
@@ -182,7 +182,7 @@
                             <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger remove-row">{{ __('Remove') }}</button>
+                            <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
                         </td>
                     </tr>
                 `;
@@ -200,7 +200,7 @@
             const colorId = $(this).data('id');
             const row = $(this).closest('tr');
 
-            if (confirm('Are you sure you want to delete this color?')) {
+            if (confirm('هل أنت متأكد من حذف هذا اللون؟')) {
                 $.ajax({
                     url: `/product-color/${colorId}`,
                     type: 'DELETE',

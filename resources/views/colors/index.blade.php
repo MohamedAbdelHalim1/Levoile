@@ -12,7 +12,7 @@
 
         <div class="flex justify-end mb-4">
             <a href="{{ route('colors.create') }}" class="btn btn-success">
-                {{ __('Add New Color') }}
+                {{ __('أضافة لون جديد') }}
             </a>
         </div>
 
@@ -20,9 +20,9 @@
             <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                 <thead>
                     <tr>
-                        <th>{{ __('Name') }}</th>
-                        <th>{{ __('Code') }}</th>
-                        <th>{{ __('Actions') }}</th>
+                        <th>{{ __('ألاسم') }}</th>
+                        <th>{{ __('الكود') }}</th>
+                        <th>{{ __('العمليات') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,12 +31,12 @@
                             <td>{{ $color->name }}</td>
                             <td>{{ $color->code ?? 'N/A' }}</td>
                             <td>
-                                <a href="{{ route('colors.show', $color->id) }}" class="btn btn-primary">{{ __('Show') }}</a>
-                                <a href="{{ route('colors.edit', $color->id) }}" class="btn btn-secondary">{{ __('Edit') }}</a>
-                                <form action="{{ route('colors.destroy', $color->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this color?')">
+                                <a href="{{ route('colors.show', $color->id) }}" class="btn btn-primary">{{ __('عرض') }}</a>
+                                <a href="{{ route('colors.edit', $color->id) }}" class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                <form action="{{ route('colors.destroy', $color->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا اللون؟')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                                    <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
                                 </form>
                             </td>
                         </tr>

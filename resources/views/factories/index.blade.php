@@ -12,7 +12,7 @@
 
         <div class="flex justify-end mb-4">
             <a href="{{ route('factories.create') }}" class="btn btn-success">
-                {{ __('Add New Factory') }}
+                {{ __('أضافة مصنع جديد') }}
             </a>
         </div>
 
@@ -20,8 +20,8 @@
             <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                 <thead>
                     <tr>
-                        <th>{{ __('Name') }}</th>
-                        <th>{{ __('Actions') }}</th>
+                        <th>{{ __('ألاسم') }}</th>
+                        <th>{{ __('العمليات') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,12 +29,12 @@
                         <tr>
                             <td>{{ $factory->name }}</td>
                             <td>
-                                <a href="{{ route('factories.show', $factory->id) }}" class="btn btn-primary">{{ __('Show') }}</a>
-                                <a href="{{ route('factories.edit', $factory->id) }}" class="btn btn-secondary">{{ __('Edit') }}</a>
-                                <form action="{{ route('factories.destroy', $factory->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this factory?')">
+                                <a href="{{ route('factories.show', $factory->id) }}" class="btn btn-primary">{{ __('عرض') }}</a>
+                                <a href="{{ route('factories.edit', $factory->id) }}" class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                <form action="{{ route('factories.destroy', $factory->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا المصنع؟')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                                    <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
                                 </form>
                             </td>
                         </tr>

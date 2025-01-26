@@ -132,13 +132,13 @@ class ProductController extends Controller
 
             // Ensure the productcolor relationship is loaded
             if (!$variant->productcolor) {
-                throw new \Exception("Product color not found for this variant.");
+                throw new \Exception("لا يوجد لون لهذا المنتج");
             }
 
             // Ensure the product relationship is loaded
             $product = $variant->productcolor->product ?? null;
             if (!$product) {
-                throw new \Exception("Product not found for this product color.");
+                throw new \Exception("لا يوجد منتج لهذا اللون");
             }
 
             // Update receiving quantity
@@ -151,7 +151,7 @@ class ProductController extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Receiving quantity updated successfully. Product status set to Complete.',
+                    'message' => 'تم استلام الكميه وتعديل الحاله لمكتمل',
                 ]);
             }
 
@@ -170,7 +170,7 @@ class ProductController extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Reschedule successful, and receiving quantity updated.',
+                    'message' => 'تم اعاده الجدوله بنجاح',
                 ]);
             }
 
@@ -252,7 +252,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Product color marked as received successfully.',
+                'message' => 'تم وضع علامة على لون المنتج بأنه تم استلامه بنجاح.',
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -273,7 +273,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Product has been successfully canceled.',
+                'message' => 'تم الغاء المنتج بنجاح.',
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -290,7 +290,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Product has been successfully renewed.',
+                'message' => 'تم تفعيل المنتج بنجاح.',
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -341,7 +341,7 @@ class ProductController extends Controller
             // Commit transaction
             DB::commit();
 
-            return redirect()->route('products.index')->with('success', 'Product data completed successfully.');
+            return redirect()->route('products.index')->with('success', 'تم اكتمال البيانات بنجاح.');
         } catch (\Exception $e) {
             // Rollback transaction on error
             DB::rollBack();
@@ -441,7 +441,7 @@ class ProductController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('products.index')->with('success', 'Product created successfully!');
+            return redirect()->route('products.index')->with('success', 'تم  الاضافه بنجاح.');
         } catch (\Exception $e) {
             // Rollback the transaction on error
             DB::rollBack();
@@ -558,7 +558,7 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('products.edit', $product->id)->with('success', 'Product updated successfully!');
+            return redirect()->route('products.edit', $product->id)->with('success', 'تم التعديل بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
@@ -583,7 +583,7 @@ class ProductController extends Controller
             // Delete the product from the database
             $product->delete();
 
-            return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+            return redirect()->route('products.index')->with('success', 'تم الحذف بنجاح');
         } catch (\Exception $e) {
             return redirect()->route('products.index')->with('error', 'An error occurred: ' . $e->getMessage());
         }
@@ -595,7 +595,7 @@ class ProductController extends Controller
             $productColor = ProductColor::findOrFail($id);
             $productColor->delete();
 
-            return response()->json(['status' => 'success', 'message' => 'Color deleted successfully!']);
+            return response()->json(['status' => 'success', 'message' => 'تم الحذف بنجاح.']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }

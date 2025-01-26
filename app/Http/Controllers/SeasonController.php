@@ -22,7 +22,7 @@ class SeasonController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255','code' => 'nullable|string|max:255']);
         Season::create($request->all());
-        return redirect()->route('seasons.index')->with('success', 'Season added successfully.');
+        return redirect()->route('seasons.index')->with('success', 'نم الإضافة بنجاح');
     }
 
     public function show(Season $season)
@@ -39,12 +39,12 @@ class SeasonController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255','code' => 'nullable|string|max:255']);
         $season->update($request->all());
-        return redirect()->route('seasons.index')->with('success', 'Season updated successfully.');
+        return redirect()->route('seasons.index')->with('success', 'تم التعديل بنجاح');
     }
 
     public function destroy(Season $season)
     {
         $season->delete();
-        return redirect()->route('seasons.index')->with('success', 'Season deleted successfully.');
+        return redirect()->route('seasons.index')->with('success', 'تم الحذف بنجاح');
     }
 }

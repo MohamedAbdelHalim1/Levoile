@@ -22,22 +22,22 @@
                                     </div>
                                     <form method="POST" action="{{ url('login') }}">
                                         @csrf
-                                        <h3>Login</h3>
-                                        <p class="text-muted">Sign In to your account</p>
+                                        <h3>تسجيل الدخول</h3>
+                                        <p class="text-muted">سجل الدخول في حسابك</p>
                                         <div class="input-group mb-3">
                                             <span class="input-group-addon bg-white"><i
                                                     class="fa fa-user text-dark"></i></span>
-                                            <input type="text" class="form-control" placeholder="Email" name="email">
+                                            <input type="text" class="form-control" placeholder="الايميل" name="email">
                                         </div>
                                         <div class="input-group mb-4">
                                             <span class="input-group-addon bg-white"><i
                                                     class="fa fa-unlock-alt text-dark"></i></span>
-                                            <input type="password" class="form-control" placeholder="Password"
+                                            <input type="password" class="form-control" placeholder="كلمة المرور"
                                                 name="password">
                                         </div>
                                         <div class="row">
                                             <div>
-                                                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                                                <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
                                             </div>
                                         </div>
                                     </form>

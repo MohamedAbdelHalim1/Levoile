@@ -16,9 +16,9 @@
                     <div class="row">
                         <!-- Category Filter -->
                         <div class="col-md-3">
-                            <label for="categoryFilter">{{ __('Category') }}</label>
+                            <label for="categoryFilter">{{ __('الفئة') }}</label>
                             <select name="category" id="categoryFilter" class="form-select">
-                                <option value="">{{ __('All Categories') }}</option>
+                                <option value="">{{ __('كل الفئات') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
                                         {{ request('category') == $category->name ? 'selected' : '' }}>
@@ -30,9 +30,9 @@
 
                         <!-- Season Filter -->
                         <div class="col-md-3">
-                            <label for="seasonFilter">{{ __('Season') }}</label>
+                            <label for="seasonFilter">{{ __('الموسم') }}</label>
                             <select name="season" id="seasonFilter" class="form-select">
-                                <option value="">{{ __('All Seasons') }}</option>
+                                <option value="">{{ __('كل المواسم') }}</option>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->name }}"
                                         {{ request('season') == $season->name ? 'selected' : '' }}>
@@ -44,9 +44,9 @@
 
                         <!-- Factory Filter -->
                         <div class="col-md-3">
-                            <label for="factoryFilter">{{ __('Factory') }}</label>
+                            <label for="factoryFilter">{{ __('المصنع') }}</label>
                             <select name="factory" id="factoryFilter" class="form-select">
-                                <option value="">{{ __('All Factories') }}</option>
+                                <option value="">{{ __('كل المصانع') }}</option>
                                 @foreach ($factories as $factory)
                                     <option value="{{ $factory->name }}"
                                         {{ request('factory') == $factory->name ? 'selected' : '' }}>
@@ -58,9 +58,9 @@
 
                         <!-- Color Filter -->
                         <div class="col-md-3">
-                            <label for="colorFilter">{{ __('Color') }}</label>
+                            <label for="colorFilter">{{ __('اللون') }}</label>
                             <select name="color" id="colorFilter" class="form-select">
-                                <option value="">{{ __('All Colors') }}</option>
+                                <option value="">{{ __('كل الألوان') }}</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->name }}"
                                         {{ request('color') == $color->name ? 'selected' : '' }}>
@@ -72,25 +72,25 @@
 
                         <!-- Status Filter -->
                         <div class="col-md-3 mt-3">
-                            <label for="statusFilter">{{ __('Status') }}</label>
+                            <label for="statusFilter">{{ __('الحالة') }}</label>
                             <select name="status" id="statusFilter" class="form-select">
-                                <option value="">{{ __('All Status') }}</option>
+                                <option value="">{{ __('كل الحالات') }}</option>
                                 <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
-                                    {{ __('New') }}</option>
+                                    {{ __('جديد') }}</option>
                                 <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>
-                                    {{ __('Partial') }}</option>
+                                    {{ __(' جزئي') }}</option>
                                 <option value="Complete" {{ request('status') == 'Complete' ? 'selected' : '' }}>
-                                    {{ __('Complete') }}</option>
+                                    {{ __(' مكتمل') }}</option>
                                 <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>
-                                    {{ __('Cancel') }}</option>
+                                    {{ __('ملغي') }}</option>
                                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
-                                    {{ __('Pending') }}</option>
+                                    {{ __('قيد الانتظار') }}</option>
                             </select>
                         </div>
 
                         <!-- Expected Delivery Date Range -->
                         <div class="col-md-6 mt-3">
-                            <label for="expectedDeliveryStart">{{ __('Expected Delivery Date Range') }}</label>
+                            <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
                             <div class="input-group">
                                 <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
                                     class="form-control" value="{{ request('expected_delivery_start') }}">
@@ -102,8 +102,8 @@
 
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary me-2">{{ __('Filter') }}</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('Reset') }}</a>
+                            <button type="submit" class="btn btn-primary me-2">{{ __('عرض') }}</button>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('إلغاء') }}</a>
                         </div>
                     </div>
                 </form>
@@ -113,21 +113,21 @@
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('products.create') }}" class="btn btn-success">
-                        {{ __('Add New Product') }}
+                        {{ __('إضافة منتج') }}
                     </a>
                 </div>
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('Image') }}</th>
-                            <th>{{ __('Description') }}</th>
-                            <th>{{ __('Code') }}</th>
-                            <th>{{ __('Category') }}</th>
-                            <th>{{ __('Season') }}</th>
-                            <th>{{ __('Factory') }}</th>
-                            <th>{{ __('Colors') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('Actions') }}</th>
+                            <th>{{ __('الصورة') }}</th>
+                            <th>{{ __('الوصف') }}</th>
+                            <th>{{ __('الكود') }}</th>
+                            <th>{{ __('الفئة') }}</th>
+                            <th>{{ __('الموسم') }}</th>
+                            <th>{{ __('المصنع') }}</th>
+                            <th>{{ __('الألوان') }}</th>
+                            <th>{{ __('الحالة') }}</th>
+                            <th>{{ __('العمليات') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,11 +144,11 @@
                                     <table class="table table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>{{ __('Color Name') }}</th>
-                                                <th>{{ __('Expected Delivery') }}</th>
-                                                <th>{{ __('Quantity') }}</th>
-                                                <th>{{ __('Remaining Days') }}</th>
-                                                <th>{{ __('Status') }}</th>
+                                                <th>{{ __('اللون') }}</th>
+                                                <th>{{ __('تاريخ التوصيل') }}</th>
+                                                <th>{{ __('الكمية') }}</th>
+                                                <th>{{ __('الايام المتبقية') }}</th>
+                                                <th>{{ __('الحالة') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -169,27 +169,27 @@
                                                         <td>
                                                             @if ($remainingDays > 0)
                                                                 <span class="badge bg-danger">{{ $remainingDays }}
-                                                                    {{ __('days overdue') }}</span>
+                                                                    {{ __('أيام تأخير') }}</span>
                                                             @elseif ($remainingDays === 0)
-                                                                <span class="badge bg-warning">{{ __('Due today') }}</span>
+                                                                <span class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
                                                             @else
                                                                 <span class="badge bg-success">{{ abs($remainingDays) }}
-                                                                    {{ __('days remaining') }}</span>
+                                                                    {{ __('أيام متبقية') }}</span>
                                                             @endif
                                                         </td>
                                                         <td>
                                                             @if ($variant->status === 'Received')
-                                                                <span class="badge bg-success">{{ __('Received') }}</span>
+                                                                <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
                                                             @elseif ($variant->status === 'Partially Received')
                                                                 <span
-                                                                    class="badge bg-pink">{{ __('Partially Received') }}</span>
+                                                                    class="badge bg-pink">{{ __('استلام جزئي') }}</span>
                                                             @elseif ($variant->status === 'Not Received')
                                                                 <span
-                                                                    class="badge bg-danger">{{ __('Not Received') }}</span>
+                                                                    class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
                                                             @endif
                                                         </td>
                                                     @else
-                                                        <td colspan="3">{{ __('No Variants Available') }}</td>
+                                                        <td colspan="3">{{ __('لا يوجد بيانات') }}</td>
                                                     @endif
                                                 </tr>
                                             @endforeach
@@ -198,40 +198,40 @@
                                 </td>
                                 <td>
                                     @if ($product->status === 'New')
-                                        <span class="badge bg-primary">{{ __('New') }}</span>
+                                        <span class="badge bg-primary">{{ __('جديد') }}</span>
                                     @elseif ($product->status === 'Partial')
-                                        <span class="badge bg-pink">{{ __('Partial') }}</span>
+                                        <span class="badge bg-pink">{{ __('جزئي') }}</span>
                                     @elseif ($product->status === 'Complete')
-                                        <span class="badge bg-success">{{ __('Complete') }}</span>
+                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
                                     @elseif ($product->status === 'Cancel')
-                                        <span class="badge bg-danger">{{ __('Cancel') }}</span>
+                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
                                     @elseif ($product->status === 'Pending')
-                                        <span class="badge bg-warning">{{ __('Pending') }}</span>
+                                        <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-2">
                                         <a href="{{ route('products.show', $product->id) }}"
-                                            class="btn btn-primary w-100">{{ __('Show') }}</a>
+                                            class="btn btn-primary w-100">{{ __('عرض') }}</a>
                                         <a href="{{ route('products.edit', $product->id) }}"
-                                            class="btn btn-secondary w-100">{{ __('Edit') }}</a>
+                                            class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
                                         <a href="{{ route('products.receive', $product->id) }}"
-                                            class="btn btn-success w-100">{{ __('Receive') }}</a>
+                                            class="btn btn-success w-100">{{ __('استلام') }}</a>
                                         <a href="{{ route('products.completeData', $product->id) }}"
-                                            class="btn btn-info w-100">{{ __('Complete Data') }}</a>
+                                            class="btn btn-info w-100">{{ __('تكميل البيانات') }}</a>
                                         @if ($product->status === 'Cancel')
                                             <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
-                                                data-id="{{ $product->id }}">{{ __('Re-New') }}</a>
+                                                data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>
                                         @else
                                             <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
-                                                data-id="{{ $product->id }}">{{ __('Cancel') }}</a>
+                                                data-id="{{ $product->id }}">{{ __('الغاء') }}</a>
                                         @endif
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST"
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="btn btn-danger w-100">{{ __('Delete') }}</button>
+                                                class="btn btn-danger w-100">{{ __('مسح') }}</button>
                                         </form>
                                     </div>
                                 </td>
@@ -269,7 +269,7 @@
         $(document).on('click', '.cancel-btn', function() {
             const productId = $(this).data('id');
 
-            if (confirm('Are you sure you want to cancel this product?')) {
+            if (confirm('هل أنت متأكد من الغاء هذا المنتج؟')) {
                 $.ajax({
                     url: `/products/${productId}/cancel`,
                     type: 'POST',
@@ -294,7 +294,7 @@
         $(document).on('click', '.renew-btn', function() {
             const productId = $(this).data('id');
 
-            if (confirm('Are you sure you want to re-new this product?')) {
+            if (confirm('هل أنت متأكد من تفعيل هذا المنتج؟')) {
                 $.ajax({
                     url: `/products/${productId}/renew`,
                     type: 'POST',

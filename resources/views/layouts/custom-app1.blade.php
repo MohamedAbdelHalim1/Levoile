@@ -10,7 +10,7 @@
         <meta name="keywords" content="admin dashboard, admin dashboard laravel, admin panel template, blade template, blade template laravel, bootstrap template, dashboard laravel, laravel admin, laravel admin dashboard, laravel admin panel, laravel admin template, laravel bootstrap admin template, laravel bootstrap template, laravel template, vite laravel template, vite admin template, vite laravel admin, vite laravel admin dashboard, vite laravel bootstrap admin template">
 
         <!-- TITLE -->
-		<title> Levoile ERP </title>
+		<title> نظام الإدارة لفوال </title>
 
         <!-- FAVICON -->
         <link rel="icon" href="{{asset('build/assets/images/brand/logo.png')}}" type="image/x-icon" >

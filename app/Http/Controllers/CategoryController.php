@@ -38,7 +38,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category added successfully.');
+        return redirect()->route('categories.index')->with('success', 'تم الإضافة بنجاح');
     }
 
     /**
@@ -70,7 +70,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('categories.index')->with('success', 'تم التعديل بنجاح');
     }
 
     /**
@@ -79,6 +79,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('categories.index')->with('success', 'تم الحذف بنجاح');
     }
 }

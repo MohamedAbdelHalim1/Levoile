@@ -1,10 +1,10 @@
 <section>
     <header>
         <h2 class="h5 text-dark">
-            {{ __('Profile Information') }}
+            {{ __('معلومات الحساب') }}
         </h2>
         <p class="mt-2 text-muted">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("تحديث المعلومات الخاصة بحسابك") }}
         </p>
     </header>
 
@@ -18,7 +18,7 @@
 
         <!-- Name Field -->
         <div class="mb-3">
-            <label for="name" class="form-label">{{ __('Name') }}</label>
+            <label for="name" class="form-label">{{ __('الاسم') }}</label>
             <input 
                 type="text" 
                 id="name" 
@@ -38,7 +38,7 @@
 
         <!-- Email Field -->
         <div class="mb-3">
-            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <label for="email" class="form-label">{{ __('البريد الالكتروني') }}</label>
             <input 
                 type="email" 
                 id="email" 
@@ -78,12 +78,12 @@
         <!-- Save Button -->
         <div class="d-flex align-items-center gap-3">
             <button type="submit" class="btn btn-primary">
-                {{ __('Save') }}
+                {{ __('حفظ') }}
             </button>
 
             @if (session('status') === 'profile-updated')
                 <p class="text-success small mb-0 ms-3">
-                    {{ __('Saved.') }}
+                    {{ __('تم حفظ المعلومات الخاصة بحسابك') }}
                 </p>
             @endif
         </div>

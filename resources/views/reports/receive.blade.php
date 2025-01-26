@@ -15,9 +15,9 @@
                 <div class="row">
                     <!-- Category Filter -->
                     <div class="col-md-3">
-                        <label for="categoryFilter">{{ __('Category') }}</label>
+                        <label for="categoryFilter">{{ __('الفئة') }}</label>
                         <select id="categoryFilter" class="form-select">
-                            <option value="">{{ __('All Categories') }}</option>
+                            <option value="">{{ __('كل الفئات') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.category.name')->unique()->filter() as $category)
                                 <option value="{{ $category }}">{{ $category }}</option>
                             @endforeach
@@ -26,9 +26,9 @@
 
                     <!-- Season Filter -->
                     <div class="col-md-3">
-                        <label for="seasonFilter">{{ __('Season') }}</label>
+                        <label for="seasonFilter">{{ __('الموسم') }}</label>
                         <select id="seasonFilter" class="form-select">
-                            <option value="">{{ __('All Seasons') }}</option>
+                            <option value="">{{ __('كل المواسم') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.season.name')->unique()->filter() as $season)
                                 <option value="{{ $season }}">{{ $season }}</option>
                             @endforeach
@@ -37,9 +37,9 @@
 
                     <!-- Factory Filter -->
                     <div class="col-md-3">
-                        <label for="factoryFilter">{{ __('Factory') }}</label>
+                        <label for="factoryFilter">{{ __('المصنع') }}</label>
                         <select id="factoryFilter" class="form-select">
-                            <option value="">{{ __('All Factories') }}</option>
+                            <option value="">{{ __('كل المصانع') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.factory.name')->unique()->filter() as $factory)
                                 <option value="{{ $factory }}">{{ $factory }}</option>
                             @endforeach
@@ -48,42 +48,42 @@
 
                     <!-- Status Filter -->
                     <div class="col-md-3">
-                        <label for="statusFilter">{{ __('Status') }}</label>
+                        <label for="statusFilter">{{ __('الحالة') }}</label>
                         <select id="statusFilter" class="form-select">
-                            <option value="">{{ __('All Status') }}</option>
-                            <option value="New">{{ __('New') }}</option>
-                            <option value="Partial">{{ __('Partial') }}</option>
-                            <option value="Complete">{{ __('Complete') }}</option>
-                            <option value="Cancel">{{ __('Cancel') }}</option>
-                            <option value="Pending">{{ __('Pending') }}</option>
+                            <option value="">{{ __('كل الحالات') }}</option>
+                            <option value="New">{{ __('جديد') }}</option>
+                            <option value="Partial">{{ __('جزئي') }}</option>
+                            <option value="Complete">{{ __('مكتمل') }}</option>
+                            <option value="Cancel">{{ __('ملغي') }}</option>
+                            <option value="Pending">{{ __('قيد الانتظار') }}</option>
                         </select>
                     </div>
 
                     <!-- Variant Status Filter -->
                     <div class="col-md-3 mt-3">
-                        <label for="variantStatusFilter">{{ __('Variant Status') }}</label>
+                        <label for="variantStatusFilter">{{ __('حالة اللون') }}</label>
                         <select id="variantStatusFilter" class="form-select">
-                            <option value="">{{ __('All Variant Status') }}</option>
-                            <option value="Received">{{ __('Received') }}</option>
-                            <option value="Partially Received">{{ __('Partially Received') }}</option>
-                            <option value="Not Received">{{ __('Not Received') }}</option>
+                            <option value="">{{ __('كل الحالات') }}</option>
+                            <option value="Received">{{ __('تم الاستلام') }}</option>
+                            <option value="Partially Received">{{ __('استلام جزئي') }}</option>
+                            <option value="Not Received">{{ __('لم يتم الاستلام') }}</option>
                         </select>
                     </div>
 
                     <!-- Expected Delivery Date Range -->
                     <div class="col-md-6 mt-3">
-                        <label for="expectedDeliveryStart">{{ __('Expected Delivery Date Range') }}</label>
+                        <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
                         <div class="input-group">
-                            <input type="date" id="expectedDeliveryStart" class="form-control" placeholder="{{ __('Start Date') }}">
+                            <input type="date" id="expectedDeliveryStart" class="form-control" placeholder="{{ __('بداية التاريخ') }}">
                             <span class="input-group-text">-</span>
-                            <input type="date" id="expectedDeliveryEnd" class="form-control" placeholder="{{ __('End Date') }}">
+                            <input type="date" id="expectedDeliveryEnd" class="form-control" placeholder="{{ __('نهاية التاريخ') }}">
                         </div>
                     </div>
 
                     <!-- Filter and Reset Buttons -->
                     <div class="col-md-3 mt-3 d-flex align-items-end">
-                        <button id="applyFilterBtn" class="btn btn-primary me-2">{{ __('Filter') }}</button>
-                        <button id="resetFilterBtn" class="btn btn-secondary">{{ __('Reset') }}</button>
+                        <button id="applyFilterBtn" class="btn btn-primary me-2">{{ __('عرض') }}</button>
+                        <button id="resetFilterBtn" class="btn btn-secondary">{{ __('الغاء') }}</button>
                     </div>
                 </div>
             </div>
@@ -93,20 +93,20 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('Image') }}</th>
-                            <th>{{ __('Description') }}</th>
-                            <th>{{ __('Code') }}</th>
-                            <th>{{ __('Category') }}</th>
-                            <th>{{ __('Season') }}</th>
-                            <th>{{ __('Store Launch') }}</th>
-                            <th>{{ __('Factory') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('SKU') }}</th>
-                            <th>{{ __('Color') }}</th>
-                            <th>{{ __('Expected Delivery') }}</th>
-                            <th>{{ __('Quantity') }}</th>
-                            <th>{{ __('Received') }}</th>
-                            <th>{{ __('Variant Status') }}</th>
+                            <th>{{ __('الصورة') }}</th>
+                            <th>{{ __('الوصف') }}</th>
+                            <th>{{ __('الكود') }}</th>
+                            <th>{{ __('الفئة') }}</th>
+                            <th>{{ __('الموسم') }}</th>
+                            <th>{{ __('موعد الطرح') }}</th>
+                            <th>{{ __('المصنع') }}</th>
+                            <th>{{ __('الحاله') }}</th>
+                            <th>{{ __('الرقم التسلسلي') }}</th>
+                            <th>{{ __('اللون') }}</th>
+                            <th>{{ __('تاريخ التوصيل') }}</th>
+                            <th>{{ __('الكمية') }}</th>
+                            <th>{{ __('الكمية المستلمة') }}</th>
+                            <th>{{ __('حالة اللون') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,44 +116,44 @@
                                 @if ($variant->productcolor->product->photo)
                                     <img src="{{ asset($variant->productcolor->product->photo) }}" alt="Product Image" style="width: 100px; height: auto;">
                                 @else
-                                    {{ __('No Image') }}
+                                    {{ __('لا يتوفر صورة') }}
                                 @endif
                             </td>
-                            <td>{{ $variant->productcolor->product->description ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->product->code ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->product->category->name ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->product->season->name ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->product->store_launch ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->product->factory->name ?? __('N/A') }}</td>
+                            <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>
                             <td>
                                 @if ($variant->productcolor->product->status === 'New')
-                                    <span class="badge bg-primary">{{ __('New') }}</span>
+                                    <span class="badge bg-primary">{{ __('جديد') }}</span>
                                 @elseif ($variant->productcolor->product->status === 'Partial')
-                                    <span class="badge bg-warning">{{ __('Partial') }}</span>
+                                    <span class="badge bg-warning">{{ __('جزئي') }}</span>
                                 @elseif ($variant->productcolor->product->status === 'Complete')
-                                    <span class="badge bg-success">{{ __('Complete') }}</span>
+                                    <span class="badge bg-success">{{ __('مكتمل') }}</span>
                                 @elseif ($variant->productcolor->product->status === 'Cancel')
-                                    <span class="badge bg-danger">{{ __('Cancel') }}</span>
+                                    <span class="badge bg-danger">{{ __('ملغي') }}</span>
                                 @elseif ($variant->productcolor->product->status === 'Pending')
-                                    <span class="badge bg-info">{{ __('Pending') }}</span>
+                                    <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
                                 @else
-                                    {{ $variant->productcolor->product->status ?? __('N/A') }}
+                                    {{ $variant->productcolor->product->status ?? __('لا يوجد') }}
                                 @endif
                             </td>
-                            <td>{{ $variant->productcolor->sku ?? __('N/A') }}</td>
-                            <td>{{ $variant->productcolor->color->name ?? __('N/A') }}</td>
-                            <td>{{ $variant->expected_delivery ?? __('N/A') }}</td>
+                            <td>{{ $variant->productcolor->sku ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->color->name ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->expected_delivery ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->quantity ?? 0 }}</td>
                             <td>{{ $variant->receiving_quantity ?? 0 }}</td>
                             <td>
                                 @if ($variant->status === 'Received')
-                                    <span class="badge bg-success">{{ __('Received') }}</span>
+                                    <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
                                 @elseif ($variant->status === 'Partially Received')
-                                    <span class="badge bg-warning">{{ __('Partially Received') }}</span>
+                                    <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
                                 @elseif ($variant->status === 'Not Received')
-                                    <span class="badge bg-danger">{{ __('Not Received') }}</span>
+                                    <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
                                 @else
-                                    {{ $variant->status ?? __('N/A') }}
+                                    {{ $variant->status ?? __('لا يوجد') }}
                                 @endif
                             </td>
                         </tr>

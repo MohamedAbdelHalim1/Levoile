@@ -21,7 +21,7 @@ class FactoryController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         Factory::create($request->all());
-        return redirect()->route('factories.index')->with('success', 'Factory added successfully.');
+        return redirect()->route('factories.index')->with('success', 'تم الإضافة بنجاح');
     }
 
     public function show(Factory $factory)
@@ -38,12 +38,12 @@ class FactoryController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         $factory->update($request->all());
-        return redirect()->route('factories.index')->with('success', 'Factory updated successfully.');
+        return redirect()->route('factories.index')->with('success', 'تم التعديل بنجاح');
     }
 
     public function destroy(Factory $factory)
     {
         $factory->delete();
-        return redirect()->route('factories.index')->with('success', 'Factory deleted successfully.');
+        return redirect()->route('factories.index')->with('success', 'تم الحذف بنجاح');
     }
 }

@@ -6,12 +6,12 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <!-- Factory Card -->
         <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
-            <h1>Factory Details</h1>
+            <h1>تفاصيل المصنع</h1>
             <div class="d-flex mb-3">
-                <label class="form-label text-lg"><strong><b>Name:</b></strong></label>
+                <label class="form-label text-lg"><strong><b>ألاسم:</b></strong></label>
                 <p class="ms-3">{{ $factory->name }}</p>
             </div>
-            <a href="{{ route('factories.index') }}" class="btn btn-secondary">Back to Factories</a>
+            <a href="{{ route('factories.index') }}" class="btn btn-secondary">العود للقائمة</a>
         </div>
     </div>
 </div>
