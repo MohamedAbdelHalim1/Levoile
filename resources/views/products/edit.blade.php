@@ -78,11 +78,11 @@
                     <label>{{ __('متوفر؟') }}</label>
                     <div class="d-flex align-items-center">
                         <div class="form-check me-3">
-                            <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" {{ $product->have_stock ? 'checked' : '' }} required>
+                            <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input mr-2" {{ $product->have_stock ? 'checked' : '' }} required>
                             <label for="stock_yes" class="form-check-label">{{ __('نعم') }}</label>
                         </div>
                         <div class="form-check me-3">
-                            <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
+                            <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input mr-2" {{ !$product->have_stock ? 'checked' : '' }}>
                             <label for="stock_no" class="form-check-label">{{ __('لا') }}</label>
                         </div>
                         <div class="flex-grow-1">
