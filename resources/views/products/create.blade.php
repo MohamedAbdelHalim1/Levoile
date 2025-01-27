@@ -113,55 +113,56 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
     <script>
-        $(document).ready(function() {
-            // Initialize selectpicker
-            if ($('.selectpicker').length > 0) {
-                $('.selectpicker').selectpicker();
-            }
+        $(document).ready(function () {
+            // Initialize selectpicker only once
+            $('.selectpicker').each(function () {
+                if (!$(this).data('selectpicker-initialized')) {
+                    $(this).selectpicker();
+                    $(this).data('selectpicker-initialized', true); // Mark as initialized
+                }
+            });
+    
             // Handle color dropdown selection
-            $('#color_id').on('change', function() {
+            $('#color_id').on('change', function () {
                 let colorId = $(this).val();
                 let colorName = $(this).find('option:selected').text();
-
+    
                 if (colorId) {
                     // Check if the color already exists in the table
                     if ($('#color-details-table tbody').find(`tr[data-color-id="${colorId}"]`).length > 0) {
                         alert("هذا اللون مضاف من قبل");
                         return;
                     }
-
+    
                     // Add row to the table
                     let rowHtml = `
-                    <tr data-color-id="${colorId}">
-                        <td>
-                            <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
-                            ${colorName}
-                        </td>
-                        <td>
-                            <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
-                        </td>
-                    </tr>
-                `;
+                        <tr data-color-id="${colorId}">
+                            <td>
+                                <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
+                                ${colorName}
+                            </td>
+                            <td>
+                                <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
+                            </td>
+                        </tr>
+                    `;
                     $('#color-details-table tbody').append(rowHtml);
                     $('#color_id').val('').selectpicker('refresh'); // Reset dropdown
                 }
             });
-
+    
             // Handle remove button
-            $(document).on('click', '.remove-row', function() {
+            $(document).on('click', '.remove-row', function () {
                 $(this).closest('tr').remove();
             });
         });
     </script>
+    
 @endsection
