@@ -106,12 +106,6 @@
                                         <input type="number" id="price" name="price" class="form-control"
                                             step="0.01" value="{{ $product->price }}">
                                     </div>
-                                    <div class="mt-4">
-                                        <button type="submit" class="btn btn-primary">اضافه</button>
-                                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده
-                                            للقائمه</a>
-                                        <button id="printButton" type="button" class="btn btn-success">طباعه</button>
-                                    </div>
                                 </div>
                                 <!-- Colors Table -->
                                 <h2>الالوان</h2>
@@ -143,7 +137,12 @@
                                         </table>
                                     </div>
                                 @endif
-
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">اضافه</button>
+                                    <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده
+                                        للقائمه</a>
+                                    <button id="printButton" type="button" class="btn btn-success">طباعه</button>
+                                </div>
                             </form>
                         </div>
                     </div>
