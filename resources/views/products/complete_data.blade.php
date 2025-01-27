@@ -5,14 +5,13 @@
         .product-image {
             max-width: 150px;
             height: auto;
-            float: left;
+            margin-bottom: 20px;
         }
 
         .product-details {
-            margin-left: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .key-value {
@@ -26,6 +25,10 @@
         }
 
         .table-responsive {
+            margin-top: 20px;
+        }
+
+        .additional-info {
             margin-top: 20px;
         }
 
@@ -52,12 +55,13 @@
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
                 <div>
                     <div class="row">
-                        <div class="col-md-12 d-flex">
+                        <!-- Left Section: Image and Details -->
+                        <div class="col-md-6 d-flex">
                             @if ($product->photo)
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image"
-                                    style="width:450px;">
+                                    style="width:350px;">
                             @endif
-                            <div class="product-details">
+                            <div class="product-details ms-4">
                                 <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
                                 <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span></div>
                                 <div class="key-value"><span>الفئة:</span>
@@ -73,69 +77,70 @@
                                 <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
                             </div>
                         </div>
+
+                        <!-- Right Section: Form -->
+                        <div class="col-md-6">
+                            <h2>معلومات المنتج الاضافيه</h2>
+                            <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="name">ألاسم</label>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            value="{{ $product->name }}">
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="store_launch">طرح المنتج</label>
+                                        <input type="text" id="store_launch" name="store_launch" class="form-control"
+                                            value="{{ $product->store_launch }}">
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="price">السعر</label>
+                                        <input type="number" id="price" name="price" class="form-control" step="0.01"
+                                            value="{{ $product->price }}">
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-primary">اضافه</button>
+                                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                                        <button id="printButton" type="button" class="btn btn-success">طباعه</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
                     <hr>
 
-                    <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
-                        @csrf
-
-                        <!-- Additional Product Information -->
-                        <h2>معلومات المنتج الاضافيه</h2>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="name">ألاسم</label>
-                                <input type="text" id="name" name="name" class="form-control"
-                                    value="{{ $product->name }}">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="store_launch">طرح المتج</label>
-                                <input type="text" id="store_launch" name="store_launch" class="form-control"
-                                    value="{{ $product->store_launch }}">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="price">السعر</label>
-                                <input type="number" id="price" name="price" class="form-control" step="0.01"
-                                    value="{{ $product->price }}">
-                            </div>
-                        </div>
-
-                        <!-- Colors Table -->
-                        <h2>الالوان</h2>
-                        @if ($product->productColors->isEmpty())
-                            <p>لا توجد الالوان</p>
-                        @else
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="table-dark">
+                    <!-- Colors Table -->
+                    <h2>الالوان</h2>
+                    @if ($product->productColors->isEmpty())
+                        <p>لا توجد الالوان</p>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>اللون</th>
+                                        <th>الكميه</th>
+                                        <th>الكود</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($product->productColors as $productColor)
                                         <tr>
-                                            <th>اللون</th>
-                                            <th>الكميه</th>
-                                            <th>الكود</th>
+                                            <td>{{ $productColor->color->name ?? 'N/A' }}</td>
+                                            <td>{{ $productColor->quantity }}</td>
+                                            <td>
+                                                <input type="text" name="colors[{{ $productColor->color_id }}][sku]"
+                                                    class="form-control" value="{{ $productColor->sku }}">
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($product->productColors as $productColor)
-                                            <tr>
-                                                <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-                                                <td>{{ $productColor->quantity }}</td>
-                                                <td>
-                                                    <input type="text" name="colors[{{ $productColor->color_id }}][sku]"
-                                                        class="form-control" value="{{ $productColor->sku }}">
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">اضافه</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
-                            <button id="printButton" type="button" class="btn btn-success">طباعه</button>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
+                    @endif
+
                 </div>
             </div>
         </div>
