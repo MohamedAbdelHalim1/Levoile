@@ -27,7 +27,7 @@
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
                                             {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
                                     </td>
-                                    <td colspan="3" class="text-center">N/A</td>
+                                    <td colspan="3" class="text-center"></td>
                                 @else
                                     <!-- Render all columns -->
                                     <td>
