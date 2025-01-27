@@ -62,16 +62,22 @@
 
         /* CSS for Print */
         @media print {
-            .btn, .action-column { /* Hide print button and action column */
+
+            .btn,
+            .action-column {
+                /* Hide print button and action column */
                 display: none !important;
             }
 
-            .product-details, .table {
-                page-break-inside: avoid; /* Prevent splitting content across pages */
+            .product-details,
+            .table {
+                page-break-inside: avoid;
+                /* Prevent splitting content across pages */
             }
 
             .status-badge {
-                display: none !important; /* Hide floating badge */
+                display: none !important;
+                /* Hide floating badge */
             }
         }
     </style>
@@ -108,7 +114,8 @@
                                 </div>
                                 <div class="key-value">
                                     <span>الحالة:</span>
-                                    <span class="badge
+                                    <span
+                                        class="badge
                                         @if ($product->status === 'Complete') bg-success
                                         @elseif ($product->status === 'Partial') bg-warning
                                         @else bg-primary @endif">
@@ -163,6 +170,9 @@
                                                 <td>
                                                     <button type="button" class="btn btn-info validate-btn"
                                                         data-variant-id="{{ $variant->id }}" disabled>تأكيد</button>
+                                                    <button type="button" class="btn btn-warning edit-btn"
+                                                        data-variant-id="{{ $variant->id }}">تعديل</button>
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -225,7 +235,7 @@
 
                         <!-- Caution Text -->
                         <small class="text-danger">
-                           هل تريد الاكتفاء بالكميه المتسلمه واعتبار ان اللون تم استلامه بالكامل؟
+                            هل تريد الاكتفاء بالكميه المتسلمه واعتبار ان اللون تم استلامه بالكامل؟
                         </small>
 
                         <!-- Submit Button -->
@@ -270,136 +280,149 @@
 @endsection
 
 @section('scripts')
-<script>
-    $(document).ready(function () {
-        // Enable/disable Validate button based on receiving quantity
-        $(document).on("input", ".receiving-quantity", function () {
-            const validateButton = $(this).closest("tr").find(".validate-btn");
-            const quantityInput = $(this);
-            const enteredQuantity = parseInt(quantityInput.val());
-            const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
+    <script>
+        $(document).ready(function() {
+            // Enable/disable Validate button based on receiving quantity
+            $(document).on("input", ".receiving-quantity", function() {
+                const validateButton = $(this).closest("tr").find(".validate-btn");
+                const quantityInput = $(this);
+                const enteredQuantity = parseInt(quantityInput.val());
+                const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
-            // Check if entered quantity is valid
-            if (enteredQuantity > originalQuantity) {
-                alert("هذه الكمية غير صحيحه");
-                quantityInput.val(""); // Reset the input value
-                validateButton.prop("disabled", true); // Disable the Validate button
-                return;
-            }
+                // Check if entered quantity is valid
+                if (enteredQuantity > originalQuantity) {
+                    alert("هذه الكمية غير صحيحه");
+                    quantityInput.val(""); // Reset the input value
+                    validateButton.prop("disabled", true); // Disable the Validate button
+                    return;
+                }
 
-            // Enable/disable the Validate button based on valid input
-            validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
-        });
+                // Enable/disable the Validate button based on valid input
+                validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
+            });
+            // Handle "تعديل" button click
+            $(document).on("click", ".edit-btn", function() {
+                const row = $(this).closest("tr");
+                const quantityInput = row.find(".receiving-quantity");
 
-        // Handle Validate button click
-        $(document).on("click", ".validate-btn", function () {
-            const variantId = $(this).data("variant-id");
-            const row = $(this).closest("tr");
-            const remainingQuantity = parseInt(row.find(".receiving-quantity").val());
-            const originalQuantity = parseInt(row.find(".receiving-quantity").data("original-quantity"));
+                // Enable the input field
+                quantityInput.prop("disabled", false);
 
-            if (!remainingQuantity || remainingQuantity <= 0) {
-                alert("الرجاء ادخال كمية صحيحة");
-                return;
-            }
+                // Enable the "تأكيد" button
+                const validateButton = row.find(".validate-btn");
+                validateButton.prop("disabled", false);
+            });
 
-            // Populate modal and adjust visibility of fields
-            $("#rescheduleModal").data("variant-id", variantId);
-            const remaining = originalQuantity - remainingQuantity;
-            $("#remainingQuantity").val(remaining);
+            // Handle Validate button click
+            $(document).on("click", ".validate-btn", function() {
+                const variantId = $(this).data("variant-id");
+                const row = $(this).closest("tr");
+                const remainingQuantity = parseInt(row.find(".receiving-quantity").val());
+                const originalQuantity = parseInt(row.find(".receiving-quantity").data(
+                    "original-quantity"));
 
-            // Hide reschedule fields if no remaining quantity
-            if (remaining === 0) {
-                $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
-                $("#expectedDeliveryContainer").addClass("d-none");
-            } else {
-                $("#rescheduleCheckbox").closest(".form-check").removeClass("d-none");
-                $("#expectedDeliveryContainer").addClass("d-none"); // Ensure it starts hidden
-            }
+                if (!remainingQuantity || remainingQuantity <= 0) {
+                    alert("الرجاء ادخال كمية صحيحة");
+                    return;
+                }
 
-            $("#rescheduleModal").modal("show");
-        });
+                // Populate modal and adjust visibility of fields
+                $("#rescheduleModal").data("variant-id", variantId);
+                const remaining = originalQuantity - remainingQuantity;
+                $("#remainingQuantity").val(remaining);
 
-        // Handle Reschedule Checkbox toggle
-        $("#rescheduleCheckbox").on("change", function () {
-            const isChecked = $(this).is(":checked");
-            if (isChecked) {
-                $("#expectedDeliveryContainer").removeClass("d-none");
-                $("#rescheduleBtn").removeClass("d-none");
-            } else {
-                $("#expectedDeliveryContainer").addClass("d-none");
-                $("#rescheduleBtn").addClass("d-none");
-            }
-        });
+                // Hide reschedule fields if no remaining quantity
+                if (remaining === 0) {
+                    $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
+                    $("#expectedDeliveryContainer").addClass("d-none");
+                } else {
+                    $("#rescheduleCheckbox").closest(".form-check").removeClass("d-none");
+                    $("#expectedDeliveryContainer").addClass("d-none"); // Ensure it starts hidden
+                }
 
-        // Handle Submit and Mark as Received button click
-        $("#submitReceiving").on("click", function () {
-            const submitButton = $(this);
-            const variantId = $("#rescheduleModal").data("variant-id");
-            const remainingQuantity = parseInt($("#remainingQuantity").val());
-            const isRescheduleChecked = $("#rescheduleCheckbox").is(":checked");
-            const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
+                $("#rescheduleModal").modal("show");
+            });
 
-            // Disable the button to prevent multiple submissions
-            submitButton.prop("disabled", true);
+            // Handle Reschedule Checkbox toggle
+            $("#rescheduleCheckbox").on("change", function() {
+                const isChecked = $(this).is(":checked");
+                if (isChecked) {
+                    $("#expectedDeliveryContainer").removeClass("d-none");
+                    $("#rescheduleBtn").removeClass("d-none");
+                } else {
+                    $("#expectedDeliveryContainer").addClass("d-none");
+                    $("#rescheduleBtn").addClass("d-none");
+                }
+            });
 
-            // AJAX request to handle the submission
-            $.ajax({
-                url: "/products/variants/mark-received",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    variant_id: variantId,
-                    remaining_quantity: remainingQuantity,
-                    new_expected_delivery: newExpectedDelivery,
-                },
-                success: function (response) {
-                    alert(response.message);
-                    location.reload(); // Reload the page upon success
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseJSON.message);
-                    submitButton.prop("disabled", false); // Re-enable the button on error
-                },
+            // Handle Submit and Mark as Received button click
+            $("#submitReceiving").on("click", function() {
+                const submitButton = $(this);
+                const variantId = $("#rescheduleModal").data("variant-id");
+                const remainingQuantity = parseInt($("#remainingQuantity").val());
+                const isRescheduleChecked = $("#rescheduleCheckbox").is(":checked");
+                const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
+
+                // Disable the button to prevent multiple submissions
+                submitButton.prop("disabled", true);
+
+                // AJAX request to handle the submission
+                $.ajax({
+                    url: "/products/variants/mark-received",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        variant_id: variantId,
+                        remaining_quantity: remainingQuantity,
+                        new_expected_delivery: newExpectedDelivery,
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload(); // Reload the page upon success
+                    },
+                    error: function(xhr) {
+                        alert("Error: " + xhr.responseJSON.message);
+                        submitButton.prop("disabled", false); // Re-enable the button on error
+                    },
+                });
+            });
+
+            // Handle Reschedule and Mark as Received button click
+            $("#rescheduleBtn").on("click", function() {
+                const rescheduleButton = $(this);
+                const variantId = $("#rescheduleModal").data("variant-id");
+                const remainingQuantity = parseInt($("#remainingQuantity").val());
+                const newExpectedDelivery = $("#newExpectedDelivery").val();
+
+                if (!newExpectedDelivery) {
+                    alert("الرجاء ادخال تاريخ التسليم");
+                    return;
+                }
+
+                // Disable the button to prevent multiple submissions
+                rescheduleButton.prop("disabled", true);
+
+                // AJAX request to handle rescheduling
+                $.ajax({
+                    url: "/products/variants/mark-received",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        variant_id: variantId,
+                        remaining_quantity: remainingQuantity,
+                        new_expected_delivery: newExpectedDelivery,
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload(); // Reload the page upon success
+                    },
+                    error: function(xhr) {
+                        alert("Error: " + xhr.responseJSON.message);
+                        rescheduleButton.prop("disabled",
+                            false); // Re-enable the button on error
+                    },
+                });
             });
         });
-
-        // Handle Reschedule and Mark as Received button click
-        $("#rescheduleBtn").on("click", function () {
-            const rescheduleButton = $(this);
-            const variantId = $("#rescheduleModal").data("variant-id");
-            const remainingQuantity = parseInt($("#remainingQuantity").val());
-            const newExpectedDelivery = $("#newExpectedDelivery").val();
-
-            if (!newExpectedDelivery) {
-                alert("الرجاء ادخال تاريخ التسليم");
-                return;
-            }
-
-            // Disable the button to prevent multiple submissions
-            rescheduleButton.prop("disabled", true);
-
-            // AJAX request to handle rescheduling
-            $.ajax({
-                url: "/products/variants/mark-received",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    variant_id: variantId,
-                    remaining_quantity: remainingQuantity,
-                    new_expected_delivery: newExpectedDelivery,
-                },
-                success: function (response) {
-                    alert(response.message);
-                    location.reload(); // Reload the page upon success
-                },
-                error: function (xhr) {
-                    alert("Error: " + xhr.responseJSON.message);
-                    rescheduleButton.prop("disabled", false); // Re-enable the button on error
-                },
-            });
-        });
-    });
-</script>
-
+    </script>
 @endsection

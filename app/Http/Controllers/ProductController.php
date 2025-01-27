@@ -461,17 +461,16 @@ class ProductController extends Controller
                 'factory',
                 'productColors.color',
                 'productColors.productcolorvariants' => function ($query) {
-                    $query->orderBy('expected_delivery', 'asc'); // Ensure the first variant is fetched
+                    $query->with(['children'])->orderBy('expected_delivery', 'asc');
                 }
             ])->findOrFail($id);
-
+    
             return view('products.show', compact('product'));
         } catch (\Exception $e) {
             return redirect()->route('products.index')->with('error', 'Product not found or an error occurred: ' . $e->getMessage());
         }
     }
-
-
+    
 
 
     public function edit($id)

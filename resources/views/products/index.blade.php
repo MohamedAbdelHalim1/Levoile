@@ -171,7 +171,8 @@
                                                                 <span class="badge bg-danger">{{ $remainingDays }}
                                                                     {{ __('أيام تأخير') }}</span>
                                                             @elseif ($remainingDays === 0)
-                                                                <span class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
+                                                                <span
+                                                                    class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
                                                             @else
                                                                 <span class="badge bg-success">{{ abs($remainingDays) }}
                                                                     {{ __('أيام متبقية') }}</span>
@@ -179,10 +180,10 @@
                                                         </td>
                                                         <td>
                                                             @if ($variant->status === 'Received')
-                                                                <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                                            @elseif ($variant->status === 'Partially Received')
                                                                 <span
-                                                                    class="badge bg-pink">{{ __('استلام جزئي') }}</span>
+                                                                    class="badge bg-success">{{ __('تم الاستلام') }}</span>
+                                                            @elseif ($variant->status === 'Partially Received')
+                                                                <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
                                                             @elseif ($variant->status === 'Not Received')
                                                                 <span
                                                                     class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
@@ -215,8 +216,10 @@
                                             class="btn btn-primary w-100">{{ __('عرض') }}</a>
                                         <a href="{{ route('products.edit', $product->id) }}"
                                             class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
-                                        <a href="{{ route('products.receive', $product->id) }}"
-                                            class="btn btn-success w-100">{{ __('استلام') }}</a>
+                                        @if ($product->status !== 'Complete')
+                                            <a href="{{ route('products.receive', $product->id) }}"
+                                                class="btn btn-success w-100">{{ __('استلام') }}</a>
+                                        @endif
                                         <a href="{{ route('products.completeData', $product->id) }}"
                                             class="btn btn-info w-100">{{ __('تكميل البيانات') }}</a>
                                         @if ($product->status === 'Cancel')

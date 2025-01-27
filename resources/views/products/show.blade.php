@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if($product->photo)
-                            <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image" style="width:400px; height: auto; ">
+                            <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image" style="width:400px; height: auto;">
                         @else
                             <p><i>لا يوجد صورة</i></p>
                         @endif
@@ -73,12 +73,10 @@
                             </thead>
                             <tbody>
                                 @foreach($product->productColors as $productColor)
-                                    @php
-                                        $variant = $productColor->productcolorvariants->last();
-                                    @endphp
-                                    <tr>
-                                        <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
-                                        @if ($variant)
+                                    @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
+                                        <!-- Parent Row -->
+                                        <tr>
+                                            <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
                                             <td>{{ $variant->expected_delivery ?? 'لا يوجد' }}</td>
                                             <td>{{ $variant->quantity ?? 'لا يوجد' }}</td>
                                             <td>
@@ -90,10 +88,28 @@
                                                     <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
                                                 @endif
                                             </td>
-                                        @else
-                                            <td colspan="2">{{ __('لا يوجد') }}</td>
+                                        </tr>
+
+                                        <!-- Render children recursively -->
+                                        @if ($variant->children->isNotEmpty())
+                                            @foreach ($variant->children as $child)
+                                                <tr>
+                                                    <td style="padding-left: 30px;">{{ $productColor->color->name ?? 'لا يوجد' }}</td>
+                                                    <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
+                                                    <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
+                                                    <td>
+                                                        @if ($child->status === 'Received')
+                                                            <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
+                                                        @elseif ($child->status === 'Partially Received')
+                                                            <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
+                                                        @elseif ($child->status === 'Not Received')
+                                                            <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endif
-                                    </tr>
+                                    @endforeach
                                 @endforeach
                             </tbody>
                         </table>
