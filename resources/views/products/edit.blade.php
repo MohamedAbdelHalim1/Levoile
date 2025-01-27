@@ -79,7 +79,7 @@
                     <div class="d-flex align-items-center gap-3">
                         <div class="form-check">
                             <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" {{ $product->have_stock ? 'checked' : '' }} required>
-                            <label for="stock_yes" class="form-check-label">{{ __('نعم') }}</label>
+                            <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('نعم') }}</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
