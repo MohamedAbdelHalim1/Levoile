@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -15,7 +14,7 @@
 
                     <div class="mb-3">
                         <label for="category_id" class="form-label">{{ __('الفئة') }}</label>
-                        <select class="form-control selectpicker" id="category_id" name="category_id" data-live-search="true" required>
+                        <select class="form-control" id="category_id" name="category_id" required>
                             <option value="">{{ __('اختر فئة') }}</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -25,7 +24,7 @@
 
                     <div class="mb-3">
                         <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
-                        <select class="form-control selectpicker" id="season_id" name="season_id" data-live-search="true" required>
+                        <select class="form-control" id="season_id" name="season_id" required>
                             <option value="">{{ __('اختر الموسم') }}</option>
                             @foreach ($seasons as $season)
                                 <option value="{{ $season->id }}">{{ $season->name }}</option>
@@ -35,7 +34,7 @@
 
                     <div class="mb-3">
                         <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                        <select class="form-control selectpicker" id="factory_id" name="factory_id" data-live-search="true" required>
+                        <select class="form-control" id="factory_id" name="factory_id" required>
                             <option value="">{{ __('اختر المصنع') }}</option>
                             @foreach ($factories as $factory)
                                 <option value="{{ $factory->id }}">{{ $factory->name }}</option>
@@ -73,7 +72,7 @@
                     <!-- Color Selection -->
                     <div class="mb-3">
                         <label for="color_id" class="form-label">{{ __(' اللون') }}</label>
-                        <select class="form-control selectpicker" id="color_id" data-live-search="true">
+                        <select class="form-control" id="color_id">
                             <option value="">{{ __('اختر اللون') }}</option>
                             @foreach ($colors as $color)
                                 <option value="{{ $color->id }}">{{ $color->name }}</option>
@@ -104,56 +103,55 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Tom Select
+            new TomSelect('#category_id', { placeholder: "اختر الفئة" });
+            new TomSelect('#season_id', { placeholder: "اختر الموسم" });
+            new TomSelect('#factory_id', { placeholder: "اختر المصنع" });
+            new TomSelect('#color_id', { placeholder: "اختر اللون" });
 
-<script>
-    $(document).ready(function() {
-        // Initialize selectpicker
-        $('.selectpicker').selectpicker();
+            // Handle color dropdown selection
+            document.querySelector('#color_id').addEventListener('change', function () {
+                let colorId = this.value;
+                let colorName = this.options[this.selectedIndex].text;
 
-        // Handle color dropdown selection
-        $('#color_id').on('change', function() {
-            let colorId = $(this).val();
-            let colorName = $(this).find('option:selected').text();
+                if (colorId) {
+                    // Check if the color already exists in the table
+                    if (document.querySelector(`[data-color-id="${colorId}"]`)) {
+                        alert("هذا اللون مضاف من قبل");
+                        return;
+                    }
 
-            if (colorId) {
-                // Check if the color already exists in the table
-                if ($('#color-details-table tbody').find(`tr[data-color-id="${colorId}"]`).length > 0) {
-                    alert("هذا اللون مضاف من قبل");
-                    return;
+                    // Add row to the table
+                    let rowHtml = `
+                        <tr data-color-id="${colorId}">
+                            <td>
+                                <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
+                                ${colorName}
+                            </td>
+                            <td>
+                                <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
+                            </td>
+                        </tr>
+                    `;
+                    document.querySelector('#color-details-table tbody').insertAdjacentHTML('beforeend', rowHtml);
+                    this.value = ''; // Reset dropdown
                 }
+            });
 
-                // Add row to the table
-                let rowHtml = `
-                    <tr data-color-id="${colorId}">
-                        <td>
-                            <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
-                            ${colorName}
-                        </td>
-                        <td>
-                            <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
-                        </td>
-                    </tr>
-                `;
-                $('#color-details-table tbody').append(rowHtml);
-                $('#color_id').val('').selectpicker('refresh'); // Reset dropdown
-            }
+            // Handle remove button
+            document.querySelector('#color-details-table').addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-row')) {
+                    e.target.closest('tr').remove();
+                }
+            });
         });
-
-        // Handle remove button
-        $(document).on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-        });
-    });
-</script>
-
+    </script>
 @endsection
-
