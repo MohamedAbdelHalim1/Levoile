@@ -18,6 +18,7 @@
 		<link rel="shortcut icon" href="{{asset('build/assets/images/brand/logo.png')}}" type="image/x-icon">
 
         <!-- BOOTSTRAP CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 	    <link id="style" href="{{asset('build/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
         <!-- APP SCSS -->
@@ -108,10 +109,7 @@
 		@vite('resources/js/app.js')
 
 
-        <!-- END SCRIPTS -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      
 
 	</body>
 </html>
