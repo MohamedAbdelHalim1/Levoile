@@ -62,17 +62,22 @@ class RoleController extends Controller
     public function editPermissions(Role $role)
     {
         $permissions = Permission::all();
-        $rolePermissions = $role->role_permissions->pluck('permission_id')->toArray();
-
+    
+        // Fetch role permissions with both `permission_id` and `action`
+        $rolePermissions = $role->role_permissions->map(function ($rolePermission) {
+            return $rolePermission->permission_id . '_' . $rolePermission->action;
+        })->toArray();
+    
         return view('roles.permissions', compact('role', 'permissions', 'rolePermissions'));
     }
+    
 
     public function updatePermissions(Request $request, Role $role)
     {
         // Extract permissions from the input
         $permissions = $request->input('permissions', []);
     
-        // Split the permission action (view, add, edit, delete) from the ID
+        // Process permissions into a structured array
         $processedPermissions = [];
         foreach ($permissions as $permission) {
             [$id, $action] = explode('_', $permission);
@@ -97,5 +102,6 @@ class RoleController extends Controller
     
         return redirect()->route('roles.index')->with('success', 'Permissions updated successfully!');
     }
+    
     
 }
