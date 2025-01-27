@@ -1,3 +1,5 @@
+@extends('layouts.app')
+
 @section('styles')
     <style>
         .product-image {
