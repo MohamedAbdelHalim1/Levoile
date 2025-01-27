@@ -92,7 +92,7 @@
                                             echo '</tr>';
 
                                             // Render children
-                                            if ($variant->children->isNotEmpty()) {
+                                            if ($variant->children && $variant->children->isNotEmpty()) {
                                                 foreach ($variant->children as $child) {
                                                     renderRow($child, $level + 1);
                                                 }
