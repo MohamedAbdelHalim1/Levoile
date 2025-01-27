@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
 <div class="p-2">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -26,7 +25,7 @@
                 <!-- Product Category -->
                 <div class="mb-3">
                     <label for="category_id" class="form-label">{{ __('الفئة') }}</label>
-                    <select class="selectpicker form-control" id="category_id" name="category_id" data-live-search="true" required>
+                    <select id="category_id" name="category_id" required>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
@@ -38,7 +37,7 @@
                 <!-- Product Season -->
                 <div class="mb-3">
                     <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
-                    <select class="selectpicker form-control" id="season_id" name="season_id" data-live-search="true" required>
+                    <select id="season_id" name="season_id" required>
                         @foreach ($seasons as $season)
                             <option value="{{ $season->id }}" {{ $product->season_id == $season->id ? 'selected' : '' }}>
                                 {{ $season->name }}
@@ -50,7 +49,7 @@
                 <!-- Product Factory -->
                 <div class="mb-3">
                     <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                    <select class="selectpicker form-control" id="factory_id" name="factory_id" data-live-search="true" required>
+                    <select id="factory_id" name="factory_id" required>
                         @foreach ($factories as $factory)
                             <option value="{{ $factory->id }}" {{ $product->factory_id == $factory->id ? 'selected' : '' }}>
                                 {{ $factory->name }}
@@ -95,7 +94,7 @@
                 <!-- Add New Color -->
                 <div class="mb-3">
                     <label for="new_color_id" class="form-label">{{ __('اللون') }}</label>
-                    <select class="selectpicker form-control" id="new_color_id" data-live-search="true">
+                    <select id="new_color_id">
                         <option value="">{{ __('اختر لون') }}</option>
                         @foreach ($colors as $color)
                             <option value="{{ $color->id }}">{{ $color->name }}</option>
@@ -116,19 +115,16 @@
                         </thead>
                         <tbody>
                             @foreach ($product->productColors as $productColor)
-                                @php
-                                    $variant = $productColor->productcolorvariants->first();
-                                @endphp
                                 <tr data-color-id="{{ $productColor->color_id }}">
                                     <td>
                                         <input type="hidden" name="colors[{{ $productColor->color_id }}][color_id]" value="{{ $productColor->color_id }}">
                                         {{ $productColor->color->name }}
                                     </td>
                                     <td>
-                                        <input type="date" class="form-control" name="colors[{{ $productColor->color_id }}][expected_delivery]" value="{{ $variant->expected_delivery ?? '' }}" required>
+                                        <input type="date" class="form-control" name="colors[{{ $productColor->color_id }}][expected_delivery]" value="{{ $productColor->expected_delivery ?? '' }}" required>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" name="colors[{{ $productColor->color_id }}][quantity]" value="{{ $variant->quantity ?? '' }}" min="1" required>
+                                        <input type="number" class="form-control" name="colors[{{ $productColor->color_id }}][quantity]" value="{{ $productColor->quantity ?? '' }}" min="1" required>
                                     </td>
                                     <td>
                                         <button type="button" class="btn btn-danger delete-color" data-id="{{ $productColor->id }}">{{ __('حذف') }}</button>
@@ -145,25 +141,27 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
 <script>
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker();
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Tom Select for all select elements
+        new TomSelect("#category_id", { searchField: "text" });
+        new TomSelect("#season_id", { searchField: "text" });
+        new TomSelect("#factory_id", { searchField: "text" });
+        new TomSelect("#new_color_id", { searchField: "text" });
 
         // Add new color
-        $('#new_color_id').on('change', function () {
-            let colorId = $(this).val();
-            let colorName = $(this).find('option:selected').text();
+        document.getElementById("new_color_id").addEventListener("change", function () {
+            const colorId = this.value;
+            const colorName = this.options[this.selectedIndex].text;
 
             if (colorId) {
-                if ($('#color-details-table tbody').find(`tr[data-color-id="${colorId}"]`).length > 0) {
+                if (document.querySelector(`#color-details-table tbody tr[data-color-id="${colorId}"]`)) {
                     alert("هذا اللون مضاف من قبل");
                     return;
                 }
 
-                let rowHtml = `
+                const rowHtml = `
                     <tr data-color-id="${colorId}">
                         <td>
                             <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
@@ -180,41 +178,44 @@
                         </td>
                     </tr>
                 `;
-                $('#color-details-table tbody').append(rowHtml);
+                document.querySelector("#color-details-table tbody").insertAdjacentHTML("beforeend", rowHtml);
+                this.value = "";
             }
         });
 
-        // Remove color
-        $(document).on('click', '.remove-row', function () {
-            $(this).closest('tr').remove();
+        // Remove color row
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains("remove-row")) {
+                e.target.closest("tr").remove();
+            }
         });
 
         // Delete color via AJAX
-        $(document).on('click', '.delete-color', function () {
-            const colorId = $(this).data('id');
-            const row = $(this).closest('tr');
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains("delete-color")) {
+                const colorId = e.target.dataset.id;
+                const row = e.target.closest("tr");
 
-            if (confirm('هل أنت متأكد من حذف هذا اللون؟')) {
-                $.ajax({
-                    url: `/product-color/${colorId}`,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            row.remove();
-                            alert(response.message);
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function (xhr) {
-                        alert('Error: ' + xhr.responseJSON.message);
-                    }
-                });
+                if (confirm("هل أنت متأكد من حذف هذا اللون؟")) {
+                    fetch(`/product-color/${colorId}`, {
+                        method: "DELETE",
+                        headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                row.remove();
+                                alert(data.message);
+                            } else {
+                                alert("Error: " + data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            alert("Error: " + error.message);
+                        });
+                }
             }
         });
     });
 </script>
-
 @endsection
-
