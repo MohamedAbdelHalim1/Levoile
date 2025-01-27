@@ -20,13 +20,33 @@
                     <tbody>
                         @foreach ($permissions as $permission)
                             <tr>
-                                <td>{{ ucfirst($permission->access) }}</td>
-                                @foreach (['view', 'add', 'edit', 'delete'] as $action)
+                                <td>{{ $permission->access }}</td>
+                                @if (in_array($permission->access, ['إكمال بيانات المنتج', 'استلام منتج', 'إلغاء منتج']))
+                                    <!-- Only show "View" column -->
                                     <td>
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
                                             {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
                                     </td>
-                                @endforeach
+                                    <td colspan="3" class="text-center">N/A</td>
+                                @else
+                                    <!-- Render all columns -->
+                                    <td>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
+                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
+                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
+                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
+                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
