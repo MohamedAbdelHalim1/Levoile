@@ -30,14 +30,22 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role_id' => $validated['role_id'],
-        ]);
+        if (!$validated) {
+            return redirect()->back()->withInput()->withErrors($request->all());
+        }
 
-        return redirect()->route('users.index')->with('success', 'User created successfully!');
+        try {
+            User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role_id' => $validated['role_id'],
+            ]);
+
+            return redirect()->route('users.index')->with('success', 'User created successfully!');
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
     public function show(User $user)
