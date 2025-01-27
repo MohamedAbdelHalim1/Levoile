@@ -4,17 +4,14 @@
     <style>
         .product-image {
             max-width: 100%;
-            /* Allow the image to scale dynamically */
             height: auto;
             max-height: 500px;
-            /* Optional, to limit height */
             object-fit: cover;
-            /* Ensure the image maintains proportions */
             margin-bottom: 20px;
         }
 
         .product-details {
-            padding-left: 20px; /* Adds spacing between the image and details */
+            margin-left: 10px; /* Reduced spacing to move closer to the image */
         }
 
         .key-value {
@@ -29,6 +26,11 @@
 
         .table-responsive {
             margin-top: 20px;
+        }
+
+        .form-control,
+        .table {
+            width: 100%; /* Ensure the inputs and table take the full width */
         }
 
         .additional-info {
@@ -65,7 +67,7 @@
                     </div>
 
                     <!-- Middle Section: Details -->
-                    <div class="col-md-4 product-details">
+                    <div class="col-md-3 product-details">
                         <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
                         <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span></div>
                         <div class="key-value"><span>الفئة:</span>
@@ -87,7 +89,7 @@
                     </div>
 
                     <!-- Right Section: Form -->
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <h2>معلومات المنتج الاضافيه</h2>
                         <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
                             @csrf
@@ -119,7 +121,6 @@
                                         <thead class="table-dark">
                                             <tr>
                                                 <th>اللون</th>
-                                                <th>الكميه</th>
                                                 <th>الكود</th>
                                             </tr>
                                         </thead>
@@ -127,7 +128,6 @@
                                             @foreach ($product->productColors as $productColor)
                                                 <tr>
                                                     <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-                                                    <td>{{ $productColor->quantity }}</td>
                                                     <td>
                                                         <input type="text"
                                                             name="colors[{{ $productColor->color_id }}][sku]"
