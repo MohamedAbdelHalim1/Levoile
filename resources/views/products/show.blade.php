@@ -8,8 +8,18 @@
         margin-bottom: 20px;
         border-radius: 10px;
     }
+
     .table-responsive {
         overflow-x: auto;
+    }
+
+    .arrow {
+        display: flex;
+        align-items: center;
+    }
+
+    .arrow svg {
+        margin-right: 5px;
     }
 </style>
 @endsection
@@ -72,37 +82,45 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    if (!function_exists('renderRow')) {
-                                        function renderRow($variant, $level = 0) {
-                                            $padding = $level * 20; // Indentation based on level
-                                            echo '<tr>';
-                                            echo '<td style="padding-left: ' . $padding . 'px;">' . ($variant->productcolor->color->name ?? 'لا يوجد') . '</td>';
-                                            echo '<td>' . ($variant->expected_delivery ?? 'لا يوجد') . '</td>';
-                                            echo '<td>' . ($variant->quantity ?? 'لا يوجد') . '</td>';
-                                            echo '<td>';
-                                            if ($variant->status === 'Received') {
-                                                echo '<span class="badge bg-success">تم الاستلام</span>';
-                                            } elseif ($variant->status === 'Partially Received') {
-                                                echo '<span class="badge bg-pink">استلام جزئي</span>';
-                                            } elseif ($variant->status === 'Not Received') {
-                                                echo '<span class="badge bg-danger">لم يتم الاستلام</span>';
-                                            }
-                                            echo '</td>';
-                                            echo '</tr>';
-
-                                            // Render children
-                                            if ($variant->children && $variant->children->isNotEmpty()) {
-                                                foreach ($variant->children as $child) {
-                                                    renderRow($child, $level + 1);
-                                                }
-                                            }
-                                        }
-                                    }
-                                @endphp
                                 @foreach($product->productColors as $productColor)
                                     @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
-                                        @php renderRow($variant); @endphp
+                                        <tr>
+                                            <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
+                                            <td>{{ $variant->expected_delivery ?? 'لا يوجد' }}</td>
+                                            <td>{{ $variant->quantity ?? 'لا يوجد' }}</td>
+                                            <td>
+                                                @if ($variant->status === 'Received')
+                                                    <span class="badge bg-success">تم الاستلام</span>
+                                                @elseif ($variant->status === 'Partially Received')
+                                                    <span class="badge bg-pink">استلام جزئي</span>
+                                                @elseif ($variant->status === 'Not Received')
+                                                    <span class="badge bg-danger">لم يتم الاستلام</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @if ($variant->children && $variant->children->isNotEmpty())
+                                            @foreach ($variant->children as $child)
+                                                <tr>
+                                                    <td class="arrow">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M10.146 4.146a.5.5 0 0 1 .708.708L7.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5z"/>
+                                                        </svg>
+                                                        {{ $child->productcolor->color->name ?? 'لا يوجد' }}
+                                                    </td>
+                                                    <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
+                                                    <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
+                                                    <td>
+                                                        @if ($child->status === 'Received')
+                                                            <span class="badge bg-success">تم الاستلام</span>
+                                                        @elseif ($child->status === 'Partially Received')
+                                                            <span class="badge bg-pink">استلام جزئي</span>
+                                                        @elseif ($child->status === 'Not Received')
+                                                            <span class="badge bg-danger">لم يتم الاستلام</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                 @endforeach
                             </tbody>
