@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-check">
                             <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
-                            <label for="stock_no" class="form-check-label">{{ __('لا') }}</label>
+                            <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('لا') }}</label>
                         </div>
                         <div class="flex-grow-1">
                             <input type="text" class="form-control" id="material_name" name="material_name" value="{{ $product->material_name ?? '' }}" placeholder="{{ __('اسم المواد') }}">
