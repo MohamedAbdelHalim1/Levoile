@@ -72,36 +72,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($product->productColors as $productColor)
-                                    @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
-                                        <!-- Render parent and children rows -->
-                                        @php
-                                            function renderRow($variant, $level = 0) {
-                                                $padding = $level * 20; // Indentation based on level
-                                                echo '<tr>';
-                                                echo '<td style="padding-left: ' . $padding . 'px;">' . ($variant->productcolor->color->name ?? 'لا يوجد') . '</td>';
-                                                echo '<td>' . ($variant->expected_delivery ?? 'لا يوجد') . '</td>';
-                                                echo '<td>' . ($variant->quantity ?? 'لا يوجد') . '</td>';
-                                                echo '<td>';
-                                                if ($variant->status === 'Received') {
-                                                    echo '<span class="badge bg-success">تم الاستلام</span>';
-                                                } elseif ($variant->status === 'Partially Received') {
-                                                    echo '<span class="badge bg-pink">استلام جزئي</span>';
-                                                } elseif ($variant->status === 'Not Received') {
-                                                    echo '<span class="badge bg-danger">لم يتم الاستلام</span>';
-                                                }
-                                                echo '</td>';
-                                                echo '</tr>';
+                                @php
+                                    if (!function_exists('renderRow')) {
+                                        function renderRow($variant, $level = 0) {
+                                            $padding = $level * 20; // Indentation based on level
+                                            echo '<tr>';
+                                            echo '<td style="padding-left: ' . $padding . 'px;">' . ($variant->productcolor->color->name ?? 'لا يوجد') . '</td>';
+                                            echo '<td>' . ($variant->expected_delivery ?? 'لا يوجد') . '</td>';
+                                            echo '<td>' . ($variant->quantity ?? 'لا يوجد') . '</td>';
+                                            echo '<td>';
+                                            if ($variant->status === 'Received') {
+                                                echo '<span class="badge bg-success">تم الاستلام</span>';
+                                            } elseif ($variant->status === 'Partially Received') {
+                                                echo '<span class="badge bg-pink">استلام جزئي</span>';
+                                            } elseif ($variant->status === 'Not Received') {
+                                                echo '<span class="badge bg-danger">لم يتم الاستلام</span>';
+                                            }
+                                            echo '</td>';
+                                            echo '</tr>';
 
-                                                // Render children
-                                                if ($variant->children->isNotEmpty()) {
-                                                    foreach ($variant->children as $child) {
-                                                        renderRow($child, $level + 1);
-                                                    }
+                                            // Render children
+                                            if ($variant->children->isNotEmpty()) {
+                                                foreach ($variant->children as $child) {
+                                                    renderRow($child, $level + 1);
                                                 }
                                             }
-                                            renderRow($variant);
-                                        @endphp
+                                        }
+                                    }
+                                @endphp
+                                @foreach($product->productColors as $productColor)
+                                    @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
+                                        @php renderRow($variant); @endphp
                                     @endforeach
                                 @endforeach
                             </tbody>
