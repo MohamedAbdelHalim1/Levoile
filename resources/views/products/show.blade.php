@@ -74,41 +74,34 @@
                             <tbody>
                                 @foreach($product->productColors as $productColor)
                                     @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
-                                        <!-- Parent Row -->
-                                        <tr>
-                                            <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
-                                            <td>{{ $variant->expected_delivery ?? 'لا يوجد' }}</td>
-                                            <td>{{ $variant->quantity ?? 'لا يوجد' }}</td>
-                                            <td>
-                                                @if ($variant->status === 'Received')
-                                                    <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                                @elseif ($variant->status === 'Partially Received')
-                                                    <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
-                                                @elseif ($variant->status === 'Not Received')
-                                                    <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
-                                                @endif
-                                            </td>
-                                        </tr>
+                                        <!-- Render parent and children rows -->
+                                        @php
+                                            function renderRow($variant, $level = 0) {
+                                                $padding = $level * 20; // Indentation based on level
+                                                echo '<tr>';
+                                                echo '<td style="padding-left: ' . $padding . 'px;">' . ($variant->productcolor->color->name ?? 'لا يوجد') . '</td>';
+                                                echo '<td>' . ($variant->expected_delivery ?? 'لا يوجد') . '</td>';
+                                                echo '<td>' . ($variant->quantity ?? 'لا يوجد') . '</td>';
+                                                echo '<td>';
+                                                if ($variant->status === 'Received') {
+                                                    echo '<span class="badge bg-success">تم الاستلام</span>';
+                                                } elseif ($variant->status === 'Partially Received') {
+                                                    echo '<span class="badge bg-pink">استلام جزئي</span>';
+                                                } elseif ($variant->status === 'Not Received') {
+                                                    echo '<span class="badge bg-danger">لم يتم الاستلام</span>';
+                                                }
+                                                echo '</td>';
+                                                echo '</tr>';
 
-                                        <!-- Render children recursively -->
-                                        @if ($variant->children->isNotEmpty())
-                                            @foreach ($variant->children as $child)
-                                                <tr>
-                                                    <td style="padding-left: 30px;">{{ $productColor->color->name ?? 'لا يوجد' }}</td>
-                                                    <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
-                                                    <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
-                                                    <td>
-                                                        @if ($child->status === 'Received')
-                                                            <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                                        @elseif ($child->status === 'Partially Received')
-                                                            <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
-                                                        @elseif ($child->status === 'Not Received')
-                                                            <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
+                                                // Render children
+                                                if ($variant->children->isNotEmpty()) {
+                                                    foreach ($variant->children as $child) {
+                                                        renderRow($child, $level + 1);
+                                                    }
+                                                }
+                                            }
+                                            renderRow($variant);
+                                        @endphp
                                     @endforeach
                                 @endforeach
                             </tbody>
