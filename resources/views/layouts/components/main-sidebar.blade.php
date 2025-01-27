@@ -221,7 +221,7 @@
                                         <ul class="sidemenu-list">
                                             <li class="side-menu-label1"><a href="javascript:void(0)">المستخدمين</a></li>
                                             <li><a href="{{ route('roles.index') }}" class="slide-item">وظائف المستخدمين</a></li>
-                                            <li><a href="{{url('users.index')}}" class="slide-item">المستخدمين</a></li>
+                                            <li><a href="{{route('users.index')}}" class="slide-item">المستخدمين</a></li>
                                         </ul>
                                     </div>
                                 </div>
