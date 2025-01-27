@@ -24,27 +24,27 @@
                                 @if (in_array($permission->access, ['إكمال بيانات المنتج', 'استلام منتج', 'إلغاء منتج']))
                                     <!-- Only show "View" column -->
                                     <td>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_view" 
+                                            {{ in_array($permission->id . '_view', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                     <td colspan="3" class="text-center"></td>
                                 @else
                                     <!-- Render all columns -->
                                     <td>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_view" 
+                                            {{ in_array($permission->id . '_view', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_add" 
+                                            {{ in_array($permission->id . '_add', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_edit" 
+                                            {{ in_array($permission->id . '_edit', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                     <td>
-                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_delete" 
+                                            {{ in_array($permission->id . '_delete', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
                                 @endif
                             </tr>

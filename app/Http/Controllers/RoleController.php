@@ -69,19 +69,33 @@ class RoleController extends Controller
 
     public function updatePermissions(Request $request, Role $role)
     {
+        // Extract permissions from the input
         $permissions = $request->input('permissions', []);
-
+    
+        // Split the permission action (view, add, edit, delete) from the ID
+        $processedPermissions = [];
+        foreach ($permissions as $permission) {
+            [$id, $action] = explode('_', $permission);
+            $processedPermissions[] = [
+                'role_id' => $role->id,
+                'permission_id' => $id,
+                'action' => $action,
+            ];
+        }
+    
         // Remove old permissions
         RolePermission::where('role_id', $role->id)->delete();
-
+    
         // Add new permissions
-        foreach ($permissions as $permissionId) {
+        foreach ($processedPermissions as $perm) {
             RolePermission::create([
-                'role_id' => $role->id,
-                'permission_id' => $permissionId,
+                'role_id' => $perm['role_id'],
+                'permission_id' => $perm['permission_id'],
+                'action' => $perm['action'],
             ]);
         }
-
+    
         return redirect()->route('roles.index')->with('success', 'Permissions updated successfully!');
     }
+    
 }
