@@ -11,7 +11,8 @@
         }
 
         .product-details {
-            margin-left: 10px; /* Reduced spacing to move closer to the image */
+            margin-left: 10px;
+            /* Reduced spacing to move closer to the image */
         }
 
         .key-value {
@@ -30,7 +31,8 @@
 
         .form-control,
         .table {
-            width: 100%; /* Ensure the inputs and table take the full width */
+            width: 100%;
+            /* Ensure the inputs and table take the full width */
         }
 
         .additional-info {
@@ -38,6 +40,7 @@
         }
 
         @media print {
+
             button,
             a.btn {
                 display: none !important;
@@ -64,10 +67,6 @@
                         @if ($product->photo)
                             <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                         @endif
-                    </div>
-
-                    <!-- Middle Section: Details -->
-                    <div class="col-md-3 product-details">
                         <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
                         <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span></div>
                         <div class="key-value"><span>الفئة:</span>
@@ -80,16 +79,19 @@
                             <span>{{ $product->factory->name ?? 'N/A' }}</span>
                         </div>
                         <div class="key-value"><span>متوفر:</span>
-                            <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span>
+                            <span>{{ $product->have_stock ? 'Yes' : 'No' }} -
+                                {{ $product->material_name ?? 'No material Identified' }}</span>
                         </div>
                         <div class="key-value"><span>العلامة التجارية:</span>
                             <span>{{ $product->marker_number }}</span>
                         </div>
                         <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
+
                     </div>
 
+
                     <!-- Right Section: Form -->
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         <h2>معلومات المنتج الاضافيه</h2>
                         <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
                             @csrf
@@ -106,8 +108,8 @@
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="price">السعر</label>
-                                    <input type="number" id="price" name="price" class="form-control"
-                                        step="0.01" value="{{ $product->price }}">
+                                    <input type="number" id="price" name="price" class="form-control" step="0.01"
+                                        value="{{ $product->price }}">
                                 </div>
                             </div>
 
