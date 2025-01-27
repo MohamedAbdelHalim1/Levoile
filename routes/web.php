@@ -11,7 +11,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\UserController;
 use App\Http\Livewire\About;
 use App\Http\Livewire\Accordion;
 use App\Http\Livewire\AddProduct;
@@ -126,7 +128,10 @@ use App\Http\Livewire\Typography;
 use App\Http\Livewire\UsersList;
 use App\Http\Livewire\Widgets;
 use App\Http\Livewire\Wishlist;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -175,8 +180,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/variants/update-receiving', [ProductController::class, 'updateReceivingQuantity'])->name('products.variants.updateReceiving');
     Route::post('/products/variants/mark-received', [ProductController::class, 'markReceived'])->name('variants.markReceived');
     Route::get('/receiving-report', [ReportController::class, 'index'])->name('reports.receive');
+    Route::resource('users', UserController::class);
+    Route::resource('roles', RoleController::class);
 
-
+    Route::get('roles/{role}/permissions', [RoleController::class, 'editPermissions'])->name('roles.permissions');
+    Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 
 
 

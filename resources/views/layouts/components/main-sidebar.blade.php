@@ -204,6 +204,32 @@
                         </li>
                     </ul>
                 </li>
+
+                <li class="sub-category">
+                    <h3>المستخدمين</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                            class="side-menu__icon ri-database-2-line"></i><span
+                            class="side-menu__label">المستخدمين</span><i
+                            class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="panel sidetab-menu">
+                            <div class="panel-body tabs-menu-body p-0 border-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="side">
+                                        <ul class="sidemenu-list">
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">المستخدمين</a></li>
+                                            <li><a href="{{ route('roles.index') }}" class="slide-item">وظائف المستخدمين</a></li>
+                                            <li><a href="{{url('users.index')}}" class="slide-item">المستخدمين</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                                                            width="24" height="24" viewBox="0 0 24 24">
