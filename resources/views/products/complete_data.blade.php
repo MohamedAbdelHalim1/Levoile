@@ -30,21 +30,17 @@
         }
 
         @media print {
-
             button,
             a.btn {
                 display: none !important;
-                /* Hide buttons */
             }
 
             .product-image {
                 max-width: 50%;
-                /* Ensure images scale appropriately */
             }
 
             body {
                 background-color: white;
-                /* Remove background colors */
             }
         }
     </style>
@@ -63,8 +59,7 @@
                             @endif
                             <div class="product-details">
                                 <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
-                                <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
-                                </div>
+                                <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span></div>
                                 <div class="key-value"><span>الفئة:</span>
                                     <span>{{ $product->category->name ?? 'N/A' }}</span></div>
                                 <div class="key-value"><span>الموسم:</span>
@@ -72,8 +67,7 @@
                                 <div class="key-value"><span>المصنع:</span>
                                     <span>{{ $product->factory->name ?? 'N/A' }}</span></div>
                                 <div class="key-value"><span>متوفر:</span>
-                                    <span>{{ $product->have_stock ? 'Yes' : 'No' }} -
-                                        {{ $product->material_name ?? 'No material Identified' }}</span></div>
+                                    <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span></div>
                                 <div class="key-value"><span>العلامة التجارية:</span>
                                     <span>{{ $product->marker_number }}</span></div>
                                 <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
@@ -86,23 +80,27 @@
                     <form action="{{ route('products.submitCompleteData', $product->id) }}" method="POST">
                         @csrf
 
+                        <!-- Additional Product Information -->
                         <h2>معلومات المنتج الاضافيه</h2>
-                        <div class="mb-4">
-                            <label for="name">ألاسم</label>
-                            <input type="text" id="name" name="name" class="form-control"
-                                value="{{ $product->name }}">
-                        </div>
-                        <div class="mb-4">
-                            <label for="store_launch"> طرح المتج</label>
-                            <input type="text" id="store_launch" name="store_launch" class="form-control"
-                                value="{{ $product->store_launch }}">
-                        </div>
-                        <div class="mb-4">
-                            <label for="price">السعر</label>
-                            <input type="number" id="price" name="price" class="form-control" step="0.01"
-                                value="{{ $product->price }}">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="name">ألاسم</label>
+                                <input type="text" id="name" name="name" class="form-control"
+                                    value="{{ $product->name }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="store_launch">طرح المتج</label>
+                                <input type="text" id="store_launch" name="store_launch" class="form-control"
+                                    value="{{ $product->store_launch }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="price">السعر</label>
+                                <input type="number" id="price" name="price" class="form-control" step="0.01"
+                                    value="{{ $product->price }}">
+                            </div>
                         </div>
 
+                        <!-- Colors Table -->
                         <h2>الالوان</h2>
                         @if ($product->productColors->isEmpty())
                             <p>لا توجد الالوان</p>
@@ -120,9 +118,7 @@
                                         @foreach ($product->productColors as $productColor)
                                             <tr>
                                                 <td>{{ $productColor->color->name ?? 'N/A' }}</td>
-
-                                                <td> {{ $productColor->quantity }}</td>
-
+                                                <td>{{ $productColor->quantity }}</td>
                                                 <td>
                                                     <input type="text" name="colors[{{ $productColor->color_id }}][sku]"
                                                         class="form-control" value="{{ $productColor->sku }}">
@@ -148,15 +144,10 @@
 
 @section('scripts')
 <script>
-    document.getElementById('printButton').addEventListener('click', function () {
-        // Hide buttons before printing
+    document.getElementById('printButton').addEventListener('click', function() {
         const buttons = document.querySelectorAll('button, a.btn');
         buttons.forEach(button => button.style.display = 'none');
-
-        // Trigger print
         window.print();
-
-        // Show buttons after printing
         buttons.forEach(button => button.style.display = '');
     });
 </script>
