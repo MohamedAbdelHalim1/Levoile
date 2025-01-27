@@ -60,7 +60,7 @@
                         <div class="col-md-6 d-flex">
                             @if ($product->photo)
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image"
-                                    style="width:350px;">
+                                    style="width:550px;">
                             @endif
                             <div class="product-details ms-4">
                                 <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
