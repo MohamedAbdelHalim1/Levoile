@@ -13,13 +13,13 @@
         overflow-x: auto;
     }
 
-    .nested {
+    .arrow {
         display: flex;
         align-items: center;
     }
 
-    .nested svg {
-        margin-left: 5px;
+    .arrow svg {
+        margin-right: 5px;
     }
 </style>
 @endsection
@@ -99,18 +99,27 @@
                                             </td>
                                         </tr>
                                         @if ($variant->children && $variant->children->isNotEmpty())
-                                            <tr>
-                                                <td colspan="4">
-                                                    <div class="nested">
+                                            @foreach ($variant->children as $child)
+                                                <tr>
+                                                    <td class="arrow">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                                             <path fill-rule="evenodd" d="M10.146 4.146a.5.5 0 0 1 .708.708L7.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5z"/>
                                                         </svg>
-                                                        {{ $variant->children->first()->productcolor->color->name ?? 'لا يوجد' }} | 
-                                                        {{ $variant->children->first()->expected_delivery ?? 'لا يوجد' }} | 
-                                                        {{ $variant->children->first()->quantity ?? 'لا يوجد' }}
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                        {{ $child->productcolor->color->name ?? 'لا يوجد' }}
+                                                    </td>
+                                                    <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
+                                                    <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
+                                                    <td>
+                                                        @if ($child->status === 'Received')
+                                                            <span class="badge bg-success">تم الاستلام</span>
+                                                        @elseif ($child->status === 'Partially Received')
+                                                            <span class="badge bg-pink">استلام جزئي</span>
+                                                        @elseif ($child->status === 'Not Received')
+                                                            <span class="badge bg-danger">لم يتم الاستلام</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endif
                                     @endforeach
                                 @endforeach
