@@ -57,11 +57,11 @@
                         <div class="d-flex align-items-center">
                             <div class="form-check me-3">
                                 <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" required>
-                                <label for="stock_yes" class="form-check-label">{{ __('نعم') }}</label>
+                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('نعم') }}</label>
                             </div>
                             <div class="form-check me-3">
                                 <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input">
-                                <label for="stock_no" class="form-check-label">{{ __('لا') }}</label>
+                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('لا') }}</label>
                             </div>
                             <div class="flex-grow-1">
                                 <input type="text" class="form-control" id="material_name" name="material_name" placeholder="{{ __('اسم المواد ') }}" required>
