@@ -137,9 +137,16 @@
                                 <td>
                                     <div class="d-flex flex-column align-items-center">
                                         <span class="fw-bold">{{ $product->code ?? 'لا يوجد كود' }}</span>
-                                        <img src="{{ asset($product->photo) }}" alt="Product Image" style="width: 200px; height: auto;" class="mt-2">
+                                        
+                                        @if ($product->photo && file_exists(public_path($product->photo)))
+                                            <a href="{{ asset($product->photo) }}" target="_blank">
+                                                <img src="{{ asset($product->photo) }}" alt="Product Image" style="width: 200px; height: auto;" class="mt-2">
+                                            </a>
+                                        @else
+                                            <p class="text-muted mt-2">لا توجد صورة</p>
+                                        @endif
                                     </div>
-                                </td>
+                                </td>                                
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->season->name }}</td>
@@ -266,7 +273,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // Apply Tom Select to all dropdowns with class 'ts-filter'
             document.querySelectorAll(".ts-filter").forEach(select => {
                 new TomSelect(select, {
@@ -277,7 +284,6 @@
             });
         });
     </script>
-
 @endsection
 
 @section('scripts')
