@@ -135,6 +135,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($product->productColors as $productColor)
+                                    @php
+                                        $variant = $productColor->productcolorvariants->last(); // Get the latest variant
+                                    @endphp
                                     <tr data-color-id="{{ $productColor->color_id }}">
                                         <td>
                                             <input type="hidden" name="colors[{{ $productColor->color_id }}][color_id]"
@@ -144,12 +147,12 @@
                                         <td>
                                             <input type="date" class="form-control"
                                                 name="colors[{{ $productColor->color_id }}][expected_delivery]"
-                                                value="{{ $productColor->expected_delivery ?? '' }}" required>
+                                                value="{{ $variant ? $variant->expected_delivery : '' }}" required>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control"
                                                 name="colors[{{ $productColor->color_id }}][quantity]"
-                                                value="{{ $productColor->quantity ?? '' }}" min="1" required>
+                                                value="{{ $variant ? $variant->quantity : '' }}" min="1" required>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger delete-color"
@@ -158,6 +161,7 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            
                         </table>
                     </div>
 
