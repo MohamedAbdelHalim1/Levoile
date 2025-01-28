@@ -123,7 +123,6 @@
                         <tr>
                             <th>{{ __('الصورة') }}</th>
                             <th>{{ __('الوصف') }}</th>
-                            <th>{{ __('الكود') }}</th>
                             <th>{{ __('الفئه') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('المصنع') }}</th>
@@ -135,10 +134,12 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
-                                <td><img src="{{ asset($product->photo) }}" alt="Product Image"
-                                        style="width: 200px; height: auto;"></td>
+                                <td>
+                                    {{ $product->code ?? 'لا يوجد كود' }}
+                                    <img src="{{ asset($product->photo) }}" alt="Product Image"
+                                        style="width: 200px; height: auto;" class="mt-2">
+                                    </td>
                                 <td>{{ $product->description }}</td>
-                                <td>{{ $product->code ?? 'N/A' }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->season->name }}</td>
                                 <td>{{ $product->factory->name }}</td>
