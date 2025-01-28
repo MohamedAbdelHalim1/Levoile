@@ -16,8 +16,8 @@
     <title> نظام الإدارة لفوال </title>
 
     <!-- FAVICON -->
-    <link rel="icon" href="{{ asset('build/assets/images/brand/logo.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('build/assets/images/brand/logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/products/logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('images/products/logo.png') }}" type="image/x-icon">
 
     <!-- BOOTSTRAP CSS -->
     <link id="style" href="{{ asset('build/assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
