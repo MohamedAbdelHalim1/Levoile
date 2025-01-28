@@ -126,7 +126,7 @@
                         <div class="product-details">
                             <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span></div>
-                            <div class="key-value"><span>الفئة:</span> <span>{{ $product->category->name ?? 'N/A' }}</span></div>
+                            <div class="key-value"><span>الفئه:</span> <span>{{ $product->category->name ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>الموسم:</span> <span>{{ $product->season->name ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>المصنع:</span> <span>{{ $product->factory->name ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>متوفر:</span> <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span></div>

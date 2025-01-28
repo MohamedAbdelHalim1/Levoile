@@ -24,7 +24,7 @@
 
                 <!-- Product Category -->
                 <div class="mb-3">
-                    <label for="category_id" class="form-label">{{ __('الفئة') }}</label>
+                    <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
                     <select id="category_id" name="category_id" required>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>

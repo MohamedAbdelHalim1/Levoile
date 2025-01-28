@@ -10,10 +10,10 @@
                 </div>
             @endif
 
-            @if (auth()->user()->hasPermission('إضافة فئة'))
+            @if (auth()->user()->hasPermission('إضافة فئه'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('categories.create') }}" class="btn btn-success">
-                        {{ __('أضافة فئة جديدة') }}
+                        {{ __('أضافة فئه جديدة') }}
                     </a>
                 </div>
             @endif
@@ -22,7 +22,7 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('أسم الفئة') }}</th>
+                            <th>{{ __('أسم الفئه') }}</th>
                             <th>{{ __('العمليات') }}</th>
                         </tr>
                     </thead>
@@ -31,18 +31,18 @@
                             <tr>
                                 <td>{{ $category->name }}</td>
                                 <td>
-                                    @if (auth()->user()->hasPermission('عرض فئة'))
+                                    @if (auth()->user()->hasPermission('عرض فئه'))
                                         <a href="{{ route('categories.show', $category->id) }}"
                                             class="btn btn-primary">{{ __('عرض') }}</a>
                                     @endif
 
-                                    @if (auth()->user()->hasPermission('تعديل فئة'))
+                                    @if (auth()->user()->hasPermission('تعديل فئه'))
                                         <a href="{{ route('categories.edit', $category->id) }}"
                                             class="btn btn-secondary">{{ __('تعديل') }}</a>
                                     @endif
-                                    @if (auth()->user()->hasPermission('حذف فئة'))
+                                    @if (auth()->user()->hasPermission('حذف فئه'))
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الفئة؟')">
+                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الفئه؟')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>

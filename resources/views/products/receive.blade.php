@@ -100,7 +100,7 @@
                                 <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>الفئة:</span><span>{{ $product->category->name ?? 'N/A' }}</span>
+                                    <span>الفئه:</span><span>{{ $product->category->name ?? 'N/A' }}</span>
                                 </div>
                                 <div class="key-value">
                                     <span>الموسم:</span><span>{{ $product->season->name ?? 'N/A' }}</span>

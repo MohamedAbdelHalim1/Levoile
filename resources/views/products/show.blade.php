@@ -45,7 +45,7 @@
                         <h3>الكود:</h3>
                         <p>{{ $product->code ?? 'N/A' }}</p>
 
-                        <h3>الفئة:</h3>
+                        <h3>الفئه:</h3>
                         <p>{{ $product->category->name ?? 'N/A' }}</p>
 
                         <h3>الموسم:</h3>

@@ -13,9 +13,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="category_id" class="form-label">{{ __('الفئة') }}</label>
+                        <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
                         <select class="form-control" id="category_id" name="category_id" required>
-                            <option value="">{{ __('اختر فئة') }}</option>
+                            <option value="">{{ __('اختر فئه') }}</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach

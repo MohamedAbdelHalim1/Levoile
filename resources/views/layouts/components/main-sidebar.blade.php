@@ -75,7 +75,7 @@
                 @if (auth()->user()->hasPermission('عرض الفئات') ||
                         auth()->user()->hasPermission('تعديل الفئات') ||
                         auth()->user()->hasPermission('حذف الفئات') ||
-                        auth()->user()->hasPermission('إضافة فئة') ||
+                        auth()->user()->hasPermission('إضافة فئه') ||
                         auth()->user()->hasPermission('عرض موسم') ||
                         auth()->user()->hasPermission('تعديل موسم') ||
                         auth()->user()->hasPermission('حذف موسم') ||
@@ -100,7 +100,7 @@
                     @if (auth()->user()->hasPermission('عرض الفئات') ||
                             auth()->user()->hasPermission('تعديل الفئات') ||
                             auth()->user()->hasPermission('حذف الفئات') ||
-                            auth()->user()->hasPermission('إضافة فئة'))
+                            auth()->user()->hasPermission('إضافة فئه'))
                         <li class="slide">
                             <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                     class="side-menu__icon ri-database-2-line"></i><span
@@ -244,7 +244,7 @@
                     @endif
                 @endif
 
-                @if (auth()->user()->hasPermission('إضافة فئة') ||
+                @if (auth()->user()->hasPermission('إضافة فئه') ||
                         auth()->user()->hasPermission('إضافة موسم') ||
                         auth()->user()->hasPermission('إضافة مصنع') ||
                         auth()->user()->hasPermission('إضافة لون') ||
@@ -253,11 +253,11 @@
                         <h3>الاعدادات</h3>
                     </li>
 
-                    @if (auth()->user()->hasPermission('إضافة فئة'))
+                    @if (auth()->user()->hasPermission('إضافة فئه'))
                         <li class="slide">
                             <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                     class="side-menu__icon ri-database-2-line"></i><span
-                                    class="side-menu__label">إضافة فئة</span><i
+                                    class="side-menu__label">إضافة فئه</span><i
                                     class="angle fe fe-chevron-right"></i></a>
                             <ul class="slide-menu">
                                 <li class="panel sidetab-menu">
@@ -266,10 +266,10 @@
                                             <div class="tab-pane active" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
-                                                            فئة</a>
+                                                            فئه</a>
                                                     </li>
                                                     <li><a href="{{ route('categories.create') }}"
-                                                            class="slide-item"> إضافة فئة </a>
+                                                            class="slide-item"> إضافة فئه </a>
                                                     </li>
                                                 </ul>
                                             </div>
