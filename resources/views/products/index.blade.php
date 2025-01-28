@@ -164,10 +164,10 @@
                                     </div>
                                 </td>
                                 <td>{{ $product->description }}</td>
-                                <td>{{ $product->category->name }}</td>
-                                <td>{{ $product->material->name }}</td>
-                                <td>{{ $product->season->name }}</td>
-                                <td>{{ $product->factory->name }}</td>
+                                <td>{{ $product->category->name ?? 'لا يوجد' }}</td>
+                                <td>{{ $product->material->name ?? 'لا يوجد' }}</td>
+                                <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
+                                <td>{{ $product->factory->name ?? 'لا يوجد' }}</td>
                                 <td>
                                     <table class="table table-bordered mb-0">
                                         <thead>
