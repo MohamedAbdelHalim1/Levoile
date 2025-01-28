@@ -14,7 +14,7 @@
             @if (auth()->user()->hasPermission('إضافة دور'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('roles.create') }}" class="btn btn-success">
-                        {{ __('اضافة دور') }}
+                        {{ __('إضافة دور') }}
                     </a>
                 </div>
             @endif

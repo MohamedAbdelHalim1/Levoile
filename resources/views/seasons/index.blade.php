@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة موسم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('seasons.create') }}" class="btn btn-success">
-                        {{ __('اضافة موسم') }}
+                        {{ __('إضافة موسم') }}
                     </a>
                 </div>
             @endif

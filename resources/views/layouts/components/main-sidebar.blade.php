@@ -3,10 +3,8 @@
     <div class="app-sidebar">
         <div class="side-header">
             <a class="header-brand1" href="{{ url('index') }}">
-                <img src="{{ asset('images/products/logo.png') }}" class="header-brand-img main-logo"
-                    alt="Sparic logo">
-                <img src="{{ asset('images/products/logo.png') }}" class="header-brand-img darklogo"
-                    alt="Sparic logo">
+                <img src="{{ asset('images/products/logo.png') }}" class="header-brand-img main-logo" alt="Sparic logo">
+                <img src="{{ asset('images/products/logo.png') }}" class="header-brand-img darklogo" alt="Sparic logo">
                 <img src="{{ asset('build/assets/images/brand/icon.png') }}" class="header-brand-img icon-logo"
                     alt="Sparic logo">
                 <img src="{{ asset('build/assets/images/brand/icon2.png') }}" class="header-brand-img icon-logo2"
@@ -73,146 +71,330 @@
                         </ul>
                     </li>
                 @endif
-                <li class="sub-category">
-                    <h3>الاعدادات الرئيسية</h3>
-                </li>
 
                 @if (auth()->user()->hasPermission('عرض الفئات') ||
                         auth()->user()->hasPermission('تعديل الفئات') ||
                         auth()->user()->hasPermission('حذف الفئات') ||
-                        auth()->user()->hasPermission('اضافة فئة'))
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">الفئات</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel sidetab-menu">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side">
-                                            <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">الفئات</a>
-                                                </li>
-                                                <li><a href="{{ route('categories.index') }}" class="slide-item"> كل
-                                                        الفئات</a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-                @if (auth()->user()->hasPermission('عرض موسم') ||
+                        auth()->user()->hasPermission('إضافة فئة') ||
+                        auth()->user()->hasPermission('عرض موسم') ||
                         auth()->user()->hasPermission('تعديل موسم') ||
                         auth()->user()->hasPermission('حذف موسم') ||
-                        auth()->user()->hasPermission('اضافة موسم'))
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">المواسم</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel">
-                                <div class="panel-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side">
-                                            <ul class="sidemenu-list">
-                                                <li><a href="{{ route('seasons.index') }}" class="slide-item"> كل
-                                                        المواسم</a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-
-                @if (auth()->user()->hasPermission('عرض مصنع') ||
+                        auth()->user()->hasPermission('إضافة موسم') ||
+                        auth()->user()->hasPermission('عرض مصنع') ||
                         auth()->user()->hasPermission('تعديل مصنع') ||
                         auth()->user()->hasPermission('حذف مصنع') ||
-                        auth()->user()->hasPermission('اضافة مصنع'))
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">المصانع</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel sidetab-menu">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side">
-                                            <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">المصانع</a>
-                                                </li>
-                                                <li><a href="{{ route('factories.index') }}" class="slide-item"> كل
-                                                        المصانع</a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-
-                @if (auth()->user()->hasPermission('عرض لون') ||
+                        auth()->user()->hasPermission('إضافة مصنع') ||
+                        auth()->user()->hasPermission('عرض لون') ||
                         auth()->user()->hasPermission('تعديل لون') ||
                         auth()->user()->hasPermission('حذف لون') ||
-                        auth()->user()->hasPermission('اضافة لون'))
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">الألوان</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side">
-                                            <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">الألوان</a>
-                                                </li>
-                                                <li><a href="{{ route('colors.index') }}" class="slide-item"> كل
-                                                        الألوان</a></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                @endif
-
-                @if (auth()->user()->hasPermission('عرض خامة') ||
+                        auth()->user()->hasPermission('إضافة لون') ||
+                        auth()->user()->hasPermission('عرض خامة') ||
                         auth()->user()->hasPermission('تعديل خامة') ||
                         auth()->user()->hasPermission('حذف خامة') ||
-                        auth()->user()->hasPermission('اضافة خامة'))
-                    <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">الخامات</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel sidetab-menu">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side">
-                                            <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">الخامات</a>
-                                                </li>
-                                                <li><a href="{{ url('carasds') }}" class="slide-item"> كل الخامات</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                        auth()->user()->hasPermission('إضافة خامة'))
 
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                    <li class="sub-category">
+                        <h3>الاعدادات الرئيسية</h3>
                     </li>
+
+                    @if (auth()->user()->hasPermission('عرض الفئات') ||
+                            auth()->user()->hasPermission('تعديل الفئات') ||
+                            auth()->user()->hasPermission('حذف الفئات') ||
+                            auth()->user()->hasPermission('إضافة فئة'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">الفئات</span><i class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a
+                                                            href="javascript:void(0)">الفئات</a>
+                                                    </li>
+                                                    <li><a href="{{ route('categories.index') }}" class="slide-item"> كل
+                                                            الفئات</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                    @if (auth()->user()->hasPermission('عرض موسم') ||
+                            auth()->user()->hasPermission('تعديل موسم') ||
+                            auth()->user()->hasPermission('حذف موسم') ||
+                            auth()->user()->hasPermission('إضافة موسم'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">المواسم</span><i class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel">
+                                    <div class="panel-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li><a href="{{ route('seasons.index') }}" class="slide-item"> كل
+                                                            المواسم</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermission('عرض مصنع') ||
+                            auth()->user()->hasPermission('تعديل مصنع') ||
+                            auth()->user()->hasPermission('حذف مصنع') ||
+                            auth()->user()->hasPermission('إضافة مصنع'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">المصانع</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a
+                                                            href="javascript:void(0)">المصانع</a>
+                                                    </li>
+                                                    <li><a href="{{ route('factories.index') }}" class="slide-item">
+                                                            كل
+                                                            المصانع</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermission('عرض لون') ||
+                            auth()->user()->hasPermission('تعديل لون') ||
+                            auth()->user()->hasPermission('حذف لون') ||
+                            auth()->user()->hasPermission('إضافة لون'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">الألوان</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a
+                                                            href="javascript:void(0)">الألوان</a>
+                                                    </li>
+                                                    <li><a href="{{ route('colors.index') }}" class="slide-item"> كل
+                                                            الألوان</a></li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermission('عرض خامة') ||
+                            auth()->user()->hasPermission('تعديل خامة') ||
+                            auth()->user()->hasPermission('حذف خامة') ||
+                            auth()->user()->hasPermission('إضافة خامة'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">الخامات</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a
+                                                            href="javascript:void(0)">الخامات</a>
+                                                    </li>
+                                                    <li><a href="{{ url('carasds') }}" class="slide-item"> كل
+                                                            الخامات</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
                 @endif
+
+                @if (auth()->user()->hasPermission('إضافة فئة') ||
+                        auth()->user()->hasPermission('إضافة موسم') ||
+                        auth()->user()->hasPermission('إضافة مصنع') ||
+                        auth()->user()->hasPermission('إضافة لون') ||
+                        auth()->user()->hasPermission('إضافة خامه'))
+                    <li class="sub-category">
+                        <h3>الاعدادات</h3>
+                    </li>
+
+                    @if (auth()->user()->hasPermission('إضافة فئة'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">إضافة فئة</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
+                                                            فئة</a>
+                                                    </li>
+                                                    <li><a href="{{ route('categories.create') }}"
+                                                            class="slide-item"> إضافة فئة </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                    @if (auth()->user()->hasPermission('إضافة موسم'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">إضافة موسم</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
+                                                            موسم</a>
+                                                    </li>
+                                                    <li><a href="{{ route('seasons.create') }}" class="slide-item">
+                                                            إضافة موسم </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermission('إضافة مصنع'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">إضافة مصنع</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
+                                                            مصنع</a>
+                                                    </li>
+                                                    <li><a href="{{ route('factories.create') }}" class="slide-item">
+                                                            إضافة مصنع </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                    @if (auth()->user()->hasPermission('إضافة لون'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">إضافة لون</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
+                                                            لون</a>
+                                                    </li>
+                                                    <li><a href="{{ route('factories.create') }}" class="slide-item">
+                                                            إضافة لون </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    @if (auth()->user()->hasPermission('إضافة خامه'))
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                    class="side-menu__icon ri-database-2-line"></i><span
+                                    class="side-menu__label">إضافة خامة</span><i
+                                    class="angle fe fe-chevron-right"></i></a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
+                                                            خامة</a>
+                                                    </li>
+                                                    <li><a href="{{ route('factories.create') }}" class="slide-item">
+                                                            إضافة خامة </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+
+                @endif
+
+
                 @if (auth()->user()->hasPermission('عرض التقارير'))
                     <li class="sub-category">
                         <h3>التقارير</h3>
@@ -247,12 +429,12 @@
 
                 @if (auth()->user()->hasPermission('عرض مستخدم') ||
                         auth()->user()->hasPermission('حذف مستخدم') ||
-                        auth()->user()->hasPermission('اضافة مستخدم') ||
+                        auth()->user()->hasPermission('إضافة مستخدم') ||
                         auth()->user()->hasPermission('تفعيل مستخدم') ||
                         auth()->user()->hasPermission('عرض دور') ||
                         auth()->user()->hasPermission('تعديل دور') ||
                         auth()->user()->hasPermission('حذف دور') ||
-                        auth()->user()->hasPermission('اضافة دور') ||
+                        auth()->user()->hasPermission('إضافة دور') ||
                         auth()->user()->hasPermission('تعديل صلاحيات مستخدم'))
                     <li class="sub-category">
                         <h3>المستخدمين</h3>
