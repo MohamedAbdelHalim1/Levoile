@@ -27,7 +27,6 @@
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_view" 
                                             {{ in_array($permission->id . '_view', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
-                                    <td colspan="3" class="text-center"></td>
                                 @else
                                     <!-- Render all columns -->
                                     <td>
