@@ -19,7 +19,7 @@
                     <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" required>
                 </div>
 
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="password" class="form-label">رقم المرور</label>
                     <input type="password" name="password" id="password" class="form-control">
                 </div>
@@ -27,7 +27,7 @@
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label">تأكيد رقم المرور</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
-                </div>
+                </div> --}}
 
                 <div class="mb-3">
                     <label for="role_id" class="form-label">الدور</label>

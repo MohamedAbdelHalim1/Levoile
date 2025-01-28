@@ -138,8 +138,8 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">التقارير</span><i class="angle fe fe-chart"></i></a>
+                                class="side-menu__icon ri-bar-chart-line"></i><span
+                                class="side-menu__label">التقارير</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
