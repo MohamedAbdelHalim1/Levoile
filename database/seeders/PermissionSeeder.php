@@ -14,10 +14,10 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             // Category
-            ['access' => 'إضافة تصنيف'],
-            ['access' => 'تعديل تصنيف'],
-            ['access' => 'عرض تصنيف'],
-            ['access' => 'حذف تصنيف'],
+            ['access' => 'إضافة فئه'],
+            ['access' => 'تعديل فئه'],
+            ['access' => 'عرض فئه'],
+            ['access' => 'حذف فئه'],
 
             // Season
             ['access' => 'إضافة موسم'],
@@ -47,7 +47,9 @@ class PermissionSeeder extends Seeder
             ['access' => 'إضافة منتج'],
             ['access' => 'تعديل منتج'],
             ['access' => 'حذف منتج'],
+            ['access' => 'عرض منتج'],
             ['access' => 'إلغاء منتج'],
+            ['access' => 'تفعيل منتج'],
             ['access' => 'استلام منتج'],
             ['access' => 'إكمال بيانات المنتج'],
 
@@ -57,7 +59,6 @@ class PermissionSeeder extends Seeder
             // Users
             ['access' => 'إضافة مستخدم'],
             ['access' => 'تعديل مستخدم'],
-            ['access' => 'عرض مستخدم'],
             ['access' => 'حذف مستخدم'],
 
             // Roles
@@ -65,6 +66,8 @@ class PermissionSeeder extends Seeder
             ['access' => 'تعديل دور'],
             ['access' => 'عرض دور'],
             ['access' => 'حذف دور'],
+            ['access' => 'تعديل صلاحيات مستخدم'],
+
         ];
 
         foreach ($permissions as $permission) {

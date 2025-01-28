@@ -111,11 +111,13 @@
 
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="flex justify-end mb-4">
-                    <a href="{{ route('products.create') }}" class="btn btn-success">
-                        {{ __('إضافة منتج') }}
-                    </a>
-                </div>
+                @if (auth()->user()->hasPermission('إضافة منتج'))
+                    <div class="flex justify-end mb-4">
+                        <a href="{{ route('products.create') }}" class="btn btn-success">
+                            {{ __('إضافة منتج') }}
+                        </a>
+                    </div>
+                @endif
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
@@ -212,30 +214,45 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-2">
-                                        <a href="{{ route('products.show', $product->id) }}"
-                                            class="btn btn-primary w-100">{{ __('عرض') }}</a>
-                                        <a href="{{ route('products.edit', $product->id) }}"
-                                            class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
-                                        @if ($product->status !== 'Complete')
-                                            <a href="{{ route('products.receive', $product->id) }}"
-                                                class="btn btn-success w-100">{{ __('استلام') }}</a>
+                                        @if (auth()->user()->hasPermission('عرض منتج'))
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="btn btn-primary w-100">{{ __('عرض') }}</a>
                                         @endif
-                                        <a href="{{ route('products.completeData', $product->id) }}"
-                                            class="btn btn-info w-100">{{ __('تكميل البيانات') }}</a>
+                                        @if (auth()->user()->hasPermission('تعديل منتج'))
+                                            <a href="{{ route('products.edit', $product->id) }}"
+                                                class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
+                                        @endif
+                                        @if (auth()->user()->hasPermission('استلام منتج'))
+                                            @if ($product->status !== 'Complete')
+                                                <a href="{{ route('products.receive', $product->id) }}"
+                                                    class="btn btn-success w-100">{{ __('استلام') }}</a>
+                                            @endif
+                                        @endif
+                                        @if (auth()->user()->hasPermission('اكمال بيانات المنتج'))
+                                            <a href="{{ route('products.completeData', $product->id) }}"
+                                                class="btn btn-info w-100">{{ __('استكمال البيانات') }}</a>
+                                        @endif
+
                                         @if ($product->status === 'Cancel')
-                                            <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
-                                                data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>
+                                            @if (auth()->user()->hasPermission('تفعيل منتج'))
+                                                <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
+                                                    data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>
+                                            @endif
                                         @else
-                                            <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
-                                                data-id="{{ $product->id }}">{{ __('الغاء') }}</a>
+                                            @if (auth()->user()->hasPermission('الغاء منتج'))
+                                                <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
+                                                    data-id="{{ $product->id }}">{{ __('الغاء') }}</a>
+                                            @endif
                                         @endif
-                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="btn btn-danger w-100">{{ __('مسح') }}</button>
-                                        </form>
+                                        @if (auth()->user()->hasPermission('حذف منتج'))
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="btn btn-danger w-100">{{ __('مسح') }}</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
