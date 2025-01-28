@@ -43,22 +43,22 @@
                         <p>{{ $product->description }}</p>
 
                         <h3>الكود:</h3>
-                        <p>{{ $product->code ?? 'N/A' }}</p>
+                        <p>{{ $product->code ?? 'لا يوجد' }}</p>
 
-                        <h3>الفئه:</h3>
-                        <p>{{ $product->category->name ?? 'N/A' }}</p>
+                        <h3>القسم:</h3>
+                        <p>{{ $product->category->name ?? 'لا يوجد' }}</p>
 
                         <h3>الموسم:</h3>
-                        <p>{{ $product->season->name ?? 'N/A' }}</p>
+                        <p>{{ $product->season->name ?? 'لا يوجد' }}</p>
 
                         <h3>المصنع:</h3>
-                        <p>{{ $product->factory->name ?? 'N/A' }}</p>
+                        <p>{{ $product->factory->name ?? 'لا يوجد' }}</p>
 
                         <h3> رقم الماركر:</h3>
                         <p>{{ $product->marker_number }}</p>
 
                         <h3> حالة مخزون الخامات:</h3>
-                        <p>{{ $product->have_stock ? 'نعم' : 'لا' }} - {{ $product->material_name ?? 'لا مواد متوفرة' }}</p>
+                        <p>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} - {{ $product->material_name ?? 'لا مواد متوفرة' }}</p>
 
                         <h3>الحالة:</h3>
                         <p>{{ $product->status }}</p>

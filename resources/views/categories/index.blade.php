@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة فئه'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('categories.create') }}" class="btn btn-success">
-                        {{ __('أضافة فئه جديدة') }}
+                        {{ __('أضافة قسم جديدة') }}
                     </a>
                 </div>
             @endif
@@ -22,7 +22,7 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('أسم الفئه') }}</th>
+                            <th>{{ __('أسم القسم') }}</th>
                             <th>{{ __('العمليات') }}</th>
                         </tr>
                     </thead>

@@ -16,9 +16,9 @@
                     <div class="row">
                         <!-- Category Filter -->
                         <div class="col-md-3">
-                            <label for="categoryFilter">{{ __('الفئه') }}</label>
+                            <label for="categoryFilter">{{ __('القسم') }}</label>
                             <select name="category" id="categoryFilter" class="ts-filter">
-                                <option value="">{{ __('كل الفئات') }}</option>
+                                <option value="">{{ __('كل الاقسام') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
                                         {{ request('category') == $category->name ? 'selected' : '' }}>
@@ -123,7 +123,7 @@
                         <tr>
                             <th>{{ __('الصورة') }}</th>
                             <th>{{ __('الوصف') }}</th>
-                            <th>{{ __('الفئه') }}</th>
+                            <th>{{ __('القسم') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('المصنع') }}</th>
                             <th>{{ __('الألوان') }}</th>
