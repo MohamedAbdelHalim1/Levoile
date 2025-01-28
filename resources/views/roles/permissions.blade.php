@@ -21,7 +21,7 @@
                         @foreach ($permissions as $permission)
                             <tr>
                                 <td>{{ $permission->access }}</td>
-                                @if (in_array($permission->access, ['إكمال بيانات المنتج', 'استلام منتج', 'إلغاء منتج']))
+                                @if (in_array($permission->access, ['إكمال بيانات المنتج', 'استلام منتج', 'إلغاء منتج' , 'تفعيل منتج' , 'تعديل صلاحيات مستخدم']))
                                     <!-- Only show "View" column -->
                                     <td>
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_view" 
