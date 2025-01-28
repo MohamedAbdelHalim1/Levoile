@@ -91,9 +91,9 @@
 
                 <div>
                     <div class="row">
-                        <div class="col-md-12 d-flex justify-content-around">
+                        <div class="col-md-12 d-flex">
                             @if ($product->photo)
-                                <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
+                                <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image m-3">
                             @endif
                             <div class="product-details">
                                 <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span>
