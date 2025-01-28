@@ -230,7 +230,7 @@
                                                     <li class="side-menu-label1"><a
                                                             href="javascript:void(0)">الخامات</a>
                                                     </li>
-                                                    <li><a href="{{ url('carasds') }}" class="slide-item"> كل
+                                                    <li><a href="#" class="slide-item"> كل
                                                             الخامات</a>
                                                     </li>
                                                 </ul>
@@ -287,7 +287,7 @@
                                     class="side-menu__label">إضافة موسم</span><i
                                     class="angle fe fe-chevron-right"></i></a>
                             <ul class="slide-menu">
-                                <li class="panel sidetab-menu">
+                                <li class="panel">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
                                             <div class="tab-pane active" id="side">
@@ -342,7 +342,7 @@
                                     class="side-menu__label">إضافة لون</span><i
                                     class="angle fe fe-chevron-right"></i></a>
                             <ul class="slide-menu">
-                                <li class="panel sidetab-menu">
+                                <li class="panel">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
                                             <div class="tab-pane active" id="side">
@@ -378,7 +378,7 @@
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             خامة</a>
                                                     </li>
-                                                    <li><a href="{{ route('factories.create') }}" class="slide-item">
+                                                    <li><a href="#" class="slide-item">
                                                             إضافة خامة </a>
                                                     </li>
                                                 </ul>
