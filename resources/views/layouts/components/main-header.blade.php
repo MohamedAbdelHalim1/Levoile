@@ -376,7 +376,7 @@
 														</div>
 													</div>
 													<a class="dropdown-item text-dark fw-semibold border-top" href="{{url('profile')}}">
-														<i class="dropdown-icon fe fe-user"></i> Profile
+														<i class="dropdown-icon fe fe-user"></i> الحساب
 													</a>
 													{{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
 														<i class="dropdown-icon fe fe-mail"></i> Inbox
@@ -394,7 +394,7 @@
 													</form>
 													
 													<a class="dropdown-item text-dark fw-semibold" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-														<i class="dropdown-icon fe fe-log-out"></i> Sign out
+														<i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
 													</a>
 												</div>
 											</div>
