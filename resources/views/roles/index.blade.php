@@ -14,7 +14,7 @@
             @if (auth()->user()->hasPermission('إضافة دور'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('roles.create') }}" class="btn btn-success">
-                        {{ __('Create Role') }}
+                        {{ __('اضافة دور') }}
                     </a>
                 </div>
             @endif
@@ -23,8 +23,8 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Actions</th>
+                            <th>الاسم</th>
+                            <th>العمليات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,22 +33,22 @@
                                 <td>{{ $role->name }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض دور'))
-                                        <a href="{{ route('roles.show', $role->id) }}" class="btn btn-primary">Show
-                                            Users</a>
+                                        <a href="{{ route('roles.show', $role->id) }}" class="btn btn-primary">
+                                            عرض المستخدمين</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل دور'))
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-secondary">Edit</a>
+                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-secondary">تعديل</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل صلاحيات مستخدم'))
                                         <a href="{{ route('roles.permissions', $role->id) }}"
-                                            class="btn btn-info">Permissions</a>
+                                            class="btn btn-info">تعديل الصلاحيات</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف دور'))
                                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                            style="display: inline-block;" onsubmit="return confirm('Are you sure?');">
+                                            style="display: inline-block;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الدور؟');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-danger">حذف</button>
                                         </form>
                                     @endif
                                 </td>

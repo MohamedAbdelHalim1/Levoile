@@ -6,15 +6,15 @@
         <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
             <form method="POST" action="{{ route('roles.updatePermissions', $role->id) }}">
                 @csrf
-                <h3>Assign Permissions for Role: {{ $role->name }}</h3>
+                <h3>ادخال صلاحيات دور: {{ $role->name }}</h3>
                 <table class="table table-bordered mt-4">
                     <thead>
                         <tr>
-                            <th>Module Name</th>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th>اسم الصلاحيات</th>
+                            <th>عرض</th>
+                            <th>اضافة</th>
+                            <th>تعديل</th>
+                            <th>حذف</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <button type="submit" class="btn btn-primary mt-4">Update Permissions</button>
+                <button type="submit" class="btn btn-primary mt-4">تعديل</button>
             </form>
         </div>
     </div>

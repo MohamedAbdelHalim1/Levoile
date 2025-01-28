@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة مستخدم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('users.create') }}" class="btn btn-success">
-                        {{ __('Create User') }}
+                        {{ __('انشاء مستخدم') }}
                     </a>
                 </div>
             @endif
@@ -22,10 +22,10 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
+                            <th>الاسم</th>
+                            <th>البريد الالكتروني</th>
+                            <th>الدور</th>
+                            <th>العمليات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,7 +36,7 @@
                                 <td>{{ $user->role->name ?? 'N/A' }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('تعديل مستخدم'))
-                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">Edit</a>
+                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">تعديل</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف مستخدم'))
                                         <form action="{{ route('users.destroy', $user->id) }}" method="POST"
@@ -44,7 +44,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('Are you sure?')">Delete</button>
+                                                onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">حذف</button>
                                         </form>
                                     @endif
                                 </td>
