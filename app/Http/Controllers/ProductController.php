@@ -457,7 +457,7 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             // Rollback the transaction on error
             DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            dd($e);
         }
     }
 
