@@ -28,7 +28,7 @@ class RoleController extends Controller
 
         Role::create($validated);
 
-        return redirect()->route('roles.index')->with('success', 'Role created successfully!');
+        return redirect()->route('roles.index')->with('success', 'تم الإضافة بنجاح');
     }
     public function show(Role $role)
     {
@@ -49,14 +49,14 @@ class RoleController extends Controller
 
         $role->update($validated);
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
+        return redirect()->route('roles.index')->with('success', 'تم التعديل بنجاح');
     }
 
     public function destroy(Role $role)
     {
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully!');
+        return redirect()->route('roles.index')->with('success', 'تم الحذف بنجاح');
     }
 
     public function editPermissions(Role $role)
@@ -100,7 +100,7 @@ class RoleController extends Controller
             ]);
         }
     
-        return redirect()->route('roles.index')->with('success', 'Permissions updated successfully!');
+        return redirect()->route('roles.index')->with('success', 'تم التعديل بنجاح');
     }
     
     

@@ -42,7 +42,7 @@ class UserController extends Controller
                 'role_id' => $validated['role_id'],
             ]);
 
-            return redirect()->route('users.index')->with('success', 'User created successfully!');
+            return redirect()->route('users.index')->with('success', 'تم الإضافة بنجاح');
         } catch (\Exception $e) {
             dd($e);
         }
@@ -76,12 +76,12 @@ class UserController extends Controller
             'role_id' => $validated['role_id'],
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully!');
+        return redirect()->route('users.index')->with('success', 'تم التعديل بنجاح');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully!');
+        return redirect()->route('users.index')->with('success', 'تم الحذف بنجاح');
     }
 }
