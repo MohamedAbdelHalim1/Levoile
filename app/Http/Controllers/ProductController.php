@@ -575,7 +575,7 @@ class ProductController extends Controller
             return redirect()->route('products.edit', $product->id)->with('success', 'تم التعديل بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            dd($e);
         }
     }
 
