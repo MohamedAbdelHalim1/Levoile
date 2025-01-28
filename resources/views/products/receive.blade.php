@@ -91,7 +91,7 @@
 
                 <div>
                     <div class="row">
-                        <div class="col-md-12 d-flex">
+                        <div class="col-md-12 d-flex justify-content-arround">
                             @if ($product->photo)
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                             @endif
