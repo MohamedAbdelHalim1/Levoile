@@ -263,7 +263,7 @@
                                 <li class="panel sidetab-menu">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
-                                            <div class="tab-pane active" id="side">
+                                            <div class="tab-pane" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             فئة</a>
@@ -290,7 +290,7 @@
                                 <li class="panel">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
-                                            <div class="tab-pane active" id="side">
+                                            <div class="tab-pane" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             موسم</a>
@@ -318,7 +318,7 @@
                                 <li class="panel sidetab-menu">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
-                                            <div class="tab-pane active" id="side">
+                                            <div class="tab-pane" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             مصنع</a>
@@ -345,7 +345,7 @@
                                 <li class="panel">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
-                                            <div class="tab-pane active" id="side">
+                                            <div class="tab-pane" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             لون</a>
@@ -373,7 +373,7 @@
                                 <li class="panel sidetab-menu">
                                     <div class="panel-body tabs-menu-body p-0 border-0">
                                         <div class="tab-content">
-                                            <div class="tab-pane active" id="side">
+                                            <div class="tab-pane" id="side">
                                                 <ul class="sidemenu-list">
                                                     <li class="side-menu-label1"><a href="javascript:void(0)">إضافة
                                                             خامة</a>
