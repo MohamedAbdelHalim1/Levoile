@@ -178,7 +178,7 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon ri-database-2-line"></i><span
+                                class="side-menu__icon fe fe-user"></i><span
                                 class="side-menu__label">المستخدمين</span><i
                                 class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
