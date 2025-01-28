@@ -88,18 +88,6 @@
                             </select>
                         </div>
 
-                        <!-- Expected Delivery Date Range -->
-                        <div class="col-md-6 mt-3">
-                            <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
-                            <div class="input-group">
-                                <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
-                                    class="form-control" value="{{ request('expected_delivery_start') }}">
-                                <span class="input-group-text">-</span>
-                                <input type="date" name="expected_delivery_end" id="expectedDeliveryEnd"
-                                    class="form-control" value="{{ request('expected_delivery_end') }}">
-                            </div>
-                        </div>
-
                         <!-- Material Filter -->
                         <div class="col-md-3 mt-3">
                             <label for="materialFilter">{{ __('الخامة') }}</label>
@@ -113,6 +101,20 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!-- Expected Delivery Date Range -->
+                        <div class="col-md-6 mt-3">
+                            <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
+                            <div class="input-group">
+                                <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
+                                    class="form-control" value="{{ request('expected_delivery_start') }}">
+                                <span class="input-group-text">-</span>
+                                <input type="date" name="expected_delivery_end" id="expectedDeliveryEnd"
+                                    class="form-control" value="{{ request('expected_delivery_end') }}">
+                            </div>
+                        </div>
+
+
 
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
