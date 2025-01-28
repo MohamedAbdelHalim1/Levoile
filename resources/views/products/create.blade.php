@@ -12,34 +12,36 @@
                         <textarea class="form-control" id="description" name="description" required></textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
-                        <select class="form-control" id="category_id" name="category_id" required>
-                            <option value="">{{ __('اختر فئه') }}</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
-                        <select class="form-control" id="season_id" name="season_id" required>
-                            <option value="">{{ __('اختر الموسم') }}</option>
-                            @foreach ($seasons as $season)
-                                <option value="{{ $season->id }}">{{ $season->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                        <select class="form-control" id="factory_id" name="factory_id" required>
-                            <option value="">{{ __('اختر المصنع') }}</option>
-                            @foreach ($factories as $factory)
-                                <option value="{{ $factory->id }}">{{ $factory->name }}</option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
+                            <select class="form-control" id="category_id" name="category_id" required>
+                                <option value="">{{ __('اختر فئه') }}</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
+                            <select class="form-control" id="season_id" name="season_id" required>
+                                <option value="">{{ __('اختر الموسم') }}</option>
+                                @foreach ($seasons as $season)
+                                    <option value="{{ $season->id }}">{{ $season->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
+                            <select class="form-control" id="factory_id" name="factory_id" required>
+                                <option value="">{{ __('اختر المصنع') }}</option>
+                                @foreach ($factories as $factory)
+                                    <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -48,12 +50,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="marker_number" class="form-label">{{ __(' العلامه التجاريه') }}</label>
+                        <label for="marker_number" class="form-label">{{ __('رقم الماركر') }}</label>
                         <input type="text" class="form-control" id="marker_number" name="marker_number" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">{{ __('متوفر؟') }}</label>
+                        <label class="form-label">{{ __('حاله مخزون الخامات') }}</label>
                         <div class="d-flex align-items-center">
                             <div class="form-check me-3">
                                 <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" required>
