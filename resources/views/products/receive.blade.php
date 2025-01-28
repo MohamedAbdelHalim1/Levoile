@@ -108,7 +108,7 @@
                                 <div class="key-value">
                                     <span>المصنع:</span><span>{{ $product->factory->name ?? 'N/A' }}</span>
                                 </div>
-                                <div class="key-value"><span>متوفر:</span>
+                                <div class="key-value"><span>مخزون الخامات:</span>
                                     <span>{{ $product->have_stock ? 'نعم' : 'لا' }} -
                                         {{ $product->material_name ?? 'لا مواد متوفرة' }}</span>
                                 </div>

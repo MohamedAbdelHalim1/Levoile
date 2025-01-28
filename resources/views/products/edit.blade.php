@@ -77,14 +77,14 @@
 
                     <!-- Marker Number -->
                     <div class="mb-3">
-                        <label for="marker_number" class="form-label">{{ __('العلامه التجاريه') }}</label>
+                        <label for="marker_number" class="form-label">{{ __('رقم الماركر') }}</label>
                         <input type="text" class="form-control" id="marker_number" name="marker_number"
                             value="{{ $product->marker_number }}" required>
                     </div>
 
                     <!-- Have Stock -->
                     <div class="mb-3">
-                        <label class="form-label d-block">{{ __('متوفر؟') }}</label>
+                        <label class="form-label d-block">{{ __('حاله مخزون الخامات') }}</label>
                         <div class="d-flex align-items-center gap-3">
                             <div class="form-check">
                                 <input type="radio" id="stock_yes" name="have_stock" value="1"

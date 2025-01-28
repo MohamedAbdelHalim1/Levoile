@@ -129,8 +129,8 @@
                             <div class="key-value"><span>الفئه:</span> <span>{{ $product->category->name ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>الموسم:</span> <span>{{ $product->season->name ?? 'N/A' }}</span></div>
                             <div class="key-value"><span>المصنع:</span> <span>{{ $product->factory->name ?? 'N/A' }}</span></div>
-                            <div class="key-value"><span>متوفر:</span> <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span></div>
-                            <div class="key-value"><span>العلامة التجارية:</span> <span>{{ $product->marker_number }}</span></div>
+                            <div class="key-value"><span>مخزون الخامات:</span> <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span></div>
+                            <div class="key-value"><span>رقم الماركر :</span> <span>{{ $product->marker_number }}</span></div>
                             <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
                         </div>
                     </div>
