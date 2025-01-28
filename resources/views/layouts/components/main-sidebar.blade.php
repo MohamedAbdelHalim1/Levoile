@@ -252,7 +252,8 @@
                         auth()->user()->hasPermission('عرض دور') ||
                         auth()->user()->hasPermission('تعديل دور') ||
                         auth()->user()->hasPermission('حذف دور') ||
-                        auth()->user()->hasPermission('اضافة دور'))
+                        auth()->user()->hasPermission('اضافة دور') ||
+                        auth()->user()->hasPermission('تعديل صلاحيات مستخدم'))
                     <li class="sub-category">
                         <h3>المستخدمين</h3>
                     </li>
