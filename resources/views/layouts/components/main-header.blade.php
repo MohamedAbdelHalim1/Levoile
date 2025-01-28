@@ -368,7 +368,7 @@
 													<img src="{{asset('build/assets/images/brand/download.png')}}" alt="profile-user"
 														class="avatar  profile-user brround cover-image">
 												</a>
-												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+												<div class="dropdown-menu dropdown-menu-end show" style="left:auto !important;right: 0px !important;">
 													data-bs-popper="none">
 													<div class="drop-heading">
 														<div class="text-center">
