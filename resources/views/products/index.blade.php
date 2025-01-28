@@ -17,8 +17,8 @@
                         <!-- Category Filter -->
                         <div class="col-md-3">
                             <label for="categoryFilter">{{ __('الفئة') }}</label>
-                            <select name="category" id="categoryFilter" class="form-select  ts-filter">
-                                <option value="">{{ __('كل الفئات') }}</option>
+                            <select name="category" id="categoryFilter" class="ts-filter">
+                                <option value="">{{ __('بحث') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
                                         {{ request('category') == $category->name ? 'selected' : '' }}>
@@ -31,8 +31,8 @@
                         <!-- Season Filter -->
                         <div class="col-md-3">
                             <label for="seasonFilter">{{ __('الموسم') }}</label>
-                            <select name="season" id="seasonFilter" class="form-select ts-filter">
-                                <option value="">{{ __('كل المواسم') }}</option>
+                            <select name="season" id="seasonFilter" class="ts-filter">
+                                <option value="">{{ __('بحث') }}</option>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->name }}"
                                         {{ request('season') == $season->name ? 'selected' : '' }}>
@@ -45,8 +45,8 @@
                         <!-- Factory Filter -->
                         <div class="col-md-3">
                             <label for="factoryFilter">{{ __('المصنع') }}</label>
-                            <select name="factory" id="factoryFilter" class="form-select ts-filter">
-                                <option value="">{{ __('كل المصانع') }}</option>
+                            <select name="factory" id="factoryFilter" class="ts-filter">
+                                <option value="">{{ __('بحث') }}</option>
                                 @foreach ($factories as $factory)
                                     <option value="{{ $factory->name }}"
                                         {{ request('factory') == $factory->name ? 'selected' : '' }}>
@@ -59,8 +59,8 @@
                         <!-- Color Filter -->
                         <div class="col-md-3">
                             <label for="colorFilter">{{ __('اللون') }}</label>
-                            <select name="color" id="colorFilter" class="form-select ts-filter">
-                                <option value="">{{ __('كل الألوان') }}</option>
+                            <select name="color" id="colorFilter" class="ts-filter">
+                                <option value="">{{ __('بحث') }}</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->name }}"
                                         {{ request('color') == $color->name ? 'selected' : '' }}>
@@ -73,8 +73,8 @@
                         <!-- Status Filter -->
                         <div class="col-md-3 mt-3">
                             <label for="statusFilter">{{ __('الحالة') }}</label>
-                            <select name="status" id="statusFilter" class="form-select ts-filter">
-                                <option value="">{{ __('كل الحالات') }}</option>
+                            <select name="status" id="statusFilter" class="ts-filter">
+                                <option value="">{{ __('بحث') }}</option>
                                 <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
                                 <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>
@@ -239,7 +239,7 @@
                                                     data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>
                                             @endif
                                         @else
-                                            @if (auth()->user()->hasPermission('الغاء منتج'))
+                                            @if (auth()->user()->hasPermission('إلغاء منتج'))
                                                 <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
                                                     data-id="{{ $product->id }}">{{ __('الغاء') }}</a>
                                             @endif
@@ -275,7 +275,7 @@
             });
         });
     </script>
-    
+
 @endsection
 
 @section('scripts')
