@@ -135,10 +135,11 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td>
-                                    {{ $product->code ?? 'لا يوجد كود' }}
-                                    <img src="{{ asset($product->photo) }}" alt="Product Image"
-                                        style="width: 200px; height: auto;" class="mt-2">
-                                    </td>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <span class="fw-bold">{{ $product->code ?? 'لا يوجد كود' }}</span>
+                                        <img src="{{ asset($product->photo) }}" alt="Product Image" style="width: 200px; height: auto;" class="mt-2">
+                                    </div>
+                                </td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->season->name }}</td>
