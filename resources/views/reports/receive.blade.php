@@ -16,7 +16,7 @@
                     <!-- Category Filter -->
                     <div class="col-md-3">
                         <label for="categoryFilter">{{ __('الفئة') }}</label>
-                        <select id="categoryFilter" class="form-select">
+                        <select id="categoryFilter" class="ts-filter">
                             <option value="">{{ __('كل الفئات') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.category.name')->unique()->filter() as $category)
                                 <option value="{{ $category }}">{{ $category }}</option>
@@ -27,7 +27,7 @@
                     <!-- Season Filter -->
                     <div class="col-md-3">
                         <label for="seasonFilter">{{ __('الموسم') }}</label>
-                        <select id="seasonFilter" class="form-select">
+                        <select id="seasonFilter" class="ts-filter">
                             <option value="">{{ __('كل المواسم') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.season.name')->unique()->filter() as $season)
                                 <option value="{{ $season }}">{{ $season }}</option>
@@ -38,7 +38,7 @@
                     <!-- Factory Filter -->
                     <div class="col-md-3">
                         <label for="factoryFilter">{{ __('المصنع') }}</label>
-                        <select id="factoryFilter" class="form-select">
+                        <select id="factoryFilter" class="ts-filter">
                             <option value="">{{ __('كل المصانع') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.factory.name')->unique()->filter() as $factory)
                                 <option value="{{ $factory }}">{{ $factory }}</option>
@@ -49,7 +49,7 @@
                     <!-- Status Filter -->
                     <div class="col-md-3">
                         <label for="statusFilter">{{ __('الحالة') }}</label>
-                        <select id="statusFilter" class="form-select">
+                        <select id="statusFilter" class="ts-filter">
                             <option value="">{{ __('كل الحالات') }}</option>
                             <option value="New">{{ __('جديد') }}</option>
                             <option value="Partial">{{ __('جزئي') }}</option>
@@ -62,7 +62,7 @@
                     <!-- Variant Status Filter -->
                     <div class="col-md-3 mt-3">
                         <label for="variantStatusFilter">{{ __('حالة اللون') }}</label>
-                        <select id="variantStatusFilter" class="form-select">
+                        <select id="variantStatusFilter" class="ts-filter">
                             <option value="">{{ __('كل الحالات') }}</option>
                             <option value="Received">{{ __('تم الاستلام') }}</option>
                             <option value="Partially Received">{{ __('استلام جزئي') }}</option>
@@ -164,6 +164,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Apply Tom Select to all dropdowns with class 'ts-filter'
+            document.querySelectorAll(".ts-filter").forEach(select => {
+                new TomSelect(select, {
+                    plugins: ['remove_button'], // Optional: Allow removing selections
+                    placeholder: 'اختر خيارًا',
+                    allowEmptyOption: true
+                });
+            });
+        });
+    </script>
 @endsection
 
 @section('scripts')
