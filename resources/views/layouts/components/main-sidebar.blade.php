@@ -115,7 +115,7 @@
                                                         المواسم</a></li>
                                                 <li><a href="{{ route('factories.index') }}" class="slide-item">
                                                         المصانع</a></li>
-                                                <li><a href="#" class="slide-item">
+                                                <li><a href="{{ route('materials.index') }}" class="slide-item">
                                                         الخامات</a></li>
                                                 <li><a href="{{ route('colors.index') }}" class="slide-item">
                                                         الالوان</a></li>

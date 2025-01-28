@@ -104,14 +104,16 @@
                                     <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value">
+                                    <span>الخامه:</span><span>{{ $product->material->name ?? 'لا يوجد' }}</span>
+                                </div>
+                                <div class="key-value">
                                     <span>الموسم:</span><span>{{ $product->season->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value">
                                     <span>المصنع:</span><span>{{ $product->factory->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value"><span>مخزون الخامات:</span>
-                                    <span>{{ $product->have_stock ? 'نعم' : 'لا' }} -
-                                        {{ $product->material_name ?? 'لا مواد متوفرة' }}</span>
+                                    <span>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
                                 </div>
                                 <div class="key-value">
                                     <span>الحالة:</span>

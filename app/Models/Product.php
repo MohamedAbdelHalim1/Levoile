@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable = [
         'description',
         'category_id',
+        'material_id',
         'season_id',
         'factory_id',
         'photo',
@@ -28,6 +29,10 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 
     public function season()

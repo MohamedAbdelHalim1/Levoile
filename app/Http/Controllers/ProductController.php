@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Factory;
+use App\Models\Material;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductColorVariant;
@@ -22,10 +23,12 @@ class ProductController extends Controller
         $seasons = Season::all();
         $factories = Factory::all();
         $colors = Color::all();
+        $materials = Material::all();
     
         // Start the query for fetching products
         $query = Product::with([
             'category',
+            'material',
             'season',
             'factory',
             'productColors.color',
@@ -38,6 +41,11 @@ class ProductController extends Controller
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('name', $request->category);
+            });
+        }
+        if ($request->filled('material')) {
+            $query->whereHas('material', function ($q) use ($request) {
+                $q->where('name', $request->material);
             });
         }
     
@@ -77,7 +85,7 @@ class ProductController extends Controller
         // Fetch the filtered products
         $products = $query->get();
     
-        return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors'));
+        return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors' , 'materials'));
     }
     
     
@@ -365,7 +373,8 @@ class ProductController extends Controller
         $seasons = Season::all();
         $factories = Factory::all();
         $colors = Color::all();
-        return view('products.create', compact('categories', 'seasons', 'factories', 'colors'));
+        $materials = Material::all();
+        return view('products.create', compact('categories', 'seasons', 'factories', 'colors','materials'));
     }
 
     public function store(Request $request)
@@ -375,12 +384,12 @@ class ProductController extends Controller
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
+                'material_id' => 'required|exist:materials,id',
                 'season_id' => 'required|exists:seasons,id',
                 'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
                 'marker_number' => 'required|string',
                 'have_stock' => 'required|boolean',
-                'material_name' => 'required|string',
                 'colors' => 'nullable|array',
                 'colors.*.color_id' => 'required|exists:colors,id',
                 'colors.*.expected_delivery' => 'required|date',
@@ -411,11 +420,11 @@ class ProductController extends Controller
             $product = Product::create([
                 'description' => $request->description,
                 'category_id' => $request->category_id,
+                'material_id' => $request->material_id,
                 'season_id' => $request->season_id,
                 'factory_id' => $request->factory_id,
                 'photo' => $photoPath,
                 'have_stock' => $request->have_stock,
-                'material_name' => $request->material_name,
                 'marker_number' => $request->marker_number,
                 'code' => $newCode,
                 'status' => $status,
@@ -460,6 +469,7 @@ class ProductController extends Controller
         try {
             $product = Product::with([
                 'category',
+                'material',
                 'season',
                 'factory',
                 'productColors.color',
@@ -483,8 +493,9 @@ class ProductController extends Controller
         $seasons = Season::all();
         $factories = Factory::all();
         $colors = Color::all();
+        $materials = Material::all();
 
-        return view('products.edit', compact('product', 'categories', 'seasons', 'factories', 'colors'));
+        return view('products.edit', compact('product', 'categories', 'seasons', 'factories', 'colors','materials'));
     }
 
 
@@ -495,12 +506,12 @@ class ProductController extends Controller
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
+                'material_id' => 'required|exists:materials,id',
                 'season_id' => 'required|exists:seasons,id',
                 'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
                 'marker_number' => 'required|string',
                 'have_stock' => 'required|boolean',
-                'material_name' => 'required|string',
             ]);
 
             DB::beginTransaction();
@@ -528,6 +539,7 @@ class ProductController extends Controller
             $product->update([
                 'description' => $request->description,
                 'category_id' => $request->category_id,
+                'material_id' => $request->material_id,
                 'season_id' => $request->season_id,
                 'factory_id' => $request->factory_id,
                 'photo' => $product->photo,

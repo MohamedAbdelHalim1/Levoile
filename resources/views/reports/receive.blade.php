@@ -97,6 +97,7 @@
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('الكود') }}</th>
                             <th>{{ __('القسم') }}</th>
+                            <th>{{ __('الخامه') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('موعد الطرح') }}</th>
                             <th>{{ __('المصنع') }}</th>
@@ -122,6 +123,7 @@
                             <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
+                            <td>{{ $variant->productcolor->product->material->name ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>

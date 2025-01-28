@@ -7,9 +7,10 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FactoryController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
@@ -142,6 +143,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -182,6 +184,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/receiving-report', [ReportController::class, 'index'])->name('reports.receive');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('materials', MaterialController::class);
 
     Route::get('roles/{role}/permissions', [RoleController::class, 'editPermissions'])->name('roles.permissions');
     Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');

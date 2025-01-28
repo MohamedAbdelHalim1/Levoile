@@ -59,14 +59,19 @@
                         <div class="d-flex align-items-center">
                             <div class="form-check me-3">
                                 <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" required>
-                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('نعم') }}</label>
+                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('متوفر') }}</label>
                             </div>
                             <div class="form-check me-3">
                                 <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input">
-                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('لا') }}</label>
+                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('غير متوفر') }}</label>
                             </div>
                             <div class="flex-grow-1">
-                                <input type="text" class="form-control" id="material_name" name="material_name" placeholder="{{ __('اسم المواد ') }}" required>
+                                <select class="form-control" id="material_id" name="material_id" required>
+                                    <option value="">{{ __('اختر المادة') }}</option>
+                                    @foreach ($materials as $material)
+                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -112,6 +117,8 @@
             new TomSelect('#season_id', { placeholder: "اختر الموسم" });
             new TomSelect('#factory_id', { placeholder: "اختر المصنع" });
             new TomSelect('#color_id', { placeholder: "اختر اللون" });
+            new TomSelect('#material_id', { placeholder: "اختر المادة" }); // <-- Materials dropdown
+
 
             // Handle color dropdown selection
             document.querySelector('#color_id').addEventListener('change', function () {

@@ -89,21 +89,26 @@
                             <div class="form-check">
                                 <input type="radio" id="stock_yes" name="have_stock" value="1"
                                     class="form-check-input" {{ $product->have_stock ? 'checked' : '' }} required>
-                                <label for="stock_yes" class="form-check-label"
-                                    style="margin: 10px;">{{ __('نعم') }}</label>
+                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('متوفر') }}</label>
                             </div>
                             <div class="form-check">
                                 <input type="radio" id="stock_no" name="have_stock" value="0"
                                     class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
-                                <label for="stock_no" class="form-check-label"
-                                    style="margin: 10px;">{{ __('لا') }}</label>
+                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('غير متوفر') }}</label>
                             </div>
                             <div class="flex-grow-1">
-                                <input type="text" class="form-control" id="material_name" name="material_name"
-                                    value="{{ $product->material_name ?? '' }}" placeholder="{{ __('اسم المواد') }}">
+                                <select class="form-control" id="material_id" name="material_id">
+                                    <option value="">{{ __('اختر المادة') }}</option>
+                                    @foreach ($materials as $material)
+                                        <option value="{{ $material->id }}" {{ $product->material_id == $material->id ? 'selected' : '' }}>
+                                            {{ $material->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
+                    
 
 
                     <!-- Add New Color -->
@@ -176,6 +181,10 @@
                 searchField: "text"
             });
             new TomSelect("#new_color_id", {
+                searchField: "text"
+            });
+
+            new TomSelect("#material_id", {
                 searchField: "text"
             });
 

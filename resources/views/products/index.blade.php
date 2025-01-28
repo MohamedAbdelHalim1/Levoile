@@ -100,6 +100,20 @@
                             </div>
                         </div>
 
+                        <!-- Material Filter -->
+                        <div class="col-md-3 mt-3">
+                            <label for="materialFilter">{{ __('الخامة') }}</label>
+                            <select name="material" id="materialFilter" class="ts-filter">
+                                <option value="">{{ __('كل الخامات') }}</option>
+                                @foreach ($materials as $material)
+                                    <option value="{{ $material->name }}"
+                                        {{ request('material') == $material->name ? 'selected' : '' }}>
+                                        {{ $material->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">{{ __('عرض') }}</button>
@@ -124,6 +138,7 @@
                             <th>{{ __('الصورة') }}</th>
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('القسم') }}</th>
+                            <th>{{ __('الخامه') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('المصنع') }}</th>
                             <th>{{ __('الألوان') }}</th>
@@ -150,6 +165,7 @@
                                 </td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name }}</td>
+                                <td>{{ $product->material->name }}</td>
                                 <td>{{ $product->season->name }}</td>
                                 <td>{{ $product->factory->name }}</td>
                                 <td>

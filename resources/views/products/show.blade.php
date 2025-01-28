@@ -58,7 +58,7 @@
                         <p>{{ $product->marker_number }}</p>
 
                         <h3> حالة مخزون الخامات:</h3>
-                        <p>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} - {{ $product->material_name ?? 'لا مواد متوفرة' }}</p>
+                        <p>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} - {{ $product->material->name ?? 'لا مواد متوفرة' }}</p>
 
                         <h3>الحالة:</h3>
                         <p>{{ $product->status }}</p>

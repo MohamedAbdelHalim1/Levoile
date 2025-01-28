@@ -129,7 +129,7 @@
                             <div class="key-value"><span>القسم:</span> <span>{{ $product->category->name ?? 'لا يوجد' }}</span></div>
                             <div class="key-value"><span>الموسم:</span> <span>{{ $product->season->name ?? 'لا يوجد' }}</span></div>
                             <div class="key-value"><span>المصنع:</span> <span>{{ $product->factory->name ?? 'لا يوجد' }}</span></div>
-                            <div class="key-value"><span>مخزون الخامات:</span> <span>{{ $product->have_stock ? 'Yes' : 'No' }} - {{ $product->material_name ?? 'No material Identified' }}</span></div>
+                            <div class="key-value"><span>مخزون الخامات:</span> <span>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} - {{ $product->material->name ?? 'لا يوجد خامات' }}</span></div>
                             <div class="key-value"><span>رقم الماركر :</span> <span>{{ $product->marker_number }}</span></div>
                             <div class="key-value"><span>الحالة:</span> <span>{{ $product->status }}</span></div>
                         </div>
