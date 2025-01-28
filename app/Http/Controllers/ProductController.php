@@ -218,6 +218,7 @@ class ProductController extends Controller
             'variant_id' => 'required|exists:product_color_variants,id',
             'remaining_quantity' => 'required|integer|min:0',
             'new_expected_delivery' => 'nullable|date',
+            'reschedule_notes' =>'required'
         ]);
 
         try {
@@ -229,6 +230,7 @@ class ProductController extends Controller
                 // Update the current variant as "Partially Received"
                 $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
                 $variant->status = 'Partially Received';
+                $variant->note = $request->reschedule_notes;
                 $variant->save();
 
                 // Create a new variant for the remaining quantity
@@ -244,6 +246,7 @@ class ProductController extends Controller
                 // Fully receive the current variant
                 $variant->receiving_quantity = $variant->quantity - $validated['remaining_quantity'];
                 $variant->status = 'Received';
+                $variant->note = $request->reschedule_notes;
                 $variant->save();
             }
 
