@@ -384,7 +384,7 @@ class ProductController extends Controller
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
-                'material_id' => 'required|exist:materials,id',
+                'material_id' => 'required|exists:materials,id',
                 'season_id' => 'required|exists:seasons,id',
                 'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
