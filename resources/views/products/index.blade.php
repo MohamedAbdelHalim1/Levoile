@@ -137,16 +137,17 @@
                                 <td>
                                     <div class="d-flex flex-column align-items-center">
                                         <span class="fw-bold">{{ $product->code ?? 'لا يوجد كود' }}</span>
-                                        
+
                                         @if ($product->photo && file_exists(public_path($product->photo)))
                                             <a href="{{ asset($product->photo) }}" target="_blank">
-                                                <img src="{{ asset($product->photo) }}" alt="Product Image" style="width: 200px; height: auto;" class="mt-2">
+                                                <img src="{{ asset($product->photo) }}" alt="Product Image"
+                                                    style="width: 200px; height: auto;" class="mt-2">
                                             </a>
                                         @else
                                             <p class="text-muted mt-2">لا توجد صورة</p>
                                         @endif
                                     </div>
-                                </td>                                
+                                </td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->season->name }}</td>
@@ -177,18 +178,23 @@
                                                     @if ($variant)
                                                         <td>{{ $variant->expected_delivery }}</td>
                                                         <td>{{ $variant->quantity }}</td>
-                                                        <td>
-                                                            @if ($remainingDays > 0)
-                                                                <span class="badge bg-danger">{{ $remainingDays }}
-                                                                    {{ __('أيام تأخير') }}</span>
-                                                            @elseif ($remainingDays === 0)
-                                                                <span
-                                                                    class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
-                                                            @else
-                                                                <span class="badge bg-success">{{ abs($remainingDays) }}
-                                                                    {{ __('أيام متبقية') }}</span>
-                                                            @endif
-                                                        </td>
+                                                        @if ($product->status !== 'Complete')
+                                                            <td>
+                                                                @if ($remainingDays > 0)
+                                                                    <span class="badge bg-danger">{{ $remainingDays }}
+                                                                        {{ __('أيام تأخير') }}</span>
+                                                                @elseif ($remainingDays === 0)
+                                                                    <span
+                                                                        class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
+                                                                @else
+                                                                    <span
+                                                                        class="badge bg-success">{{ abs($remainingDays) }}
+                                                                        {{ __('أيام متبقية') }}</span>
+                                                                @endif
+                                                            </td>
+                                                        @else
+                                                            <td>-</td>
+                                                        @endif
                                                         <td>
                                                             @if ($variant->status === 'Received')
                                                                 <span
