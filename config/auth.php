@@ -62,8 +62,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'database',
-            'table' => 'users',
+            'driver' => 'eloquent', // Change from 'database' to 'eloquent'
+            'model' => App\Models\User::class, // Specify the User model
         ],
     ],
 
