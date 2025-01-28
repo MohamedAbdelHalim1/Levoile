@@ -218,7 +218,7 @@ class ProductController extends Controller
             'variant_id' => 'required|exists:product_color_variants,id',
             'remaining_quantity' => 'required|integer|min:0',
             'new_expected_delivery' => 'nullable|date',
-            'reschedule_notes' =>'required'
+            'reschedule_notes' =>'required|string|max:512',
         ]);
 
         try {
