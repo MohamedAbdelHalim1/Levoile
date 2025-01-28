@@ -54,25 +54,6 @@
             </div>
             @enderror
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div class="mt-3">
-                    <p class="small text-muted">
-                        {{ __('Your email address is unverified.') }}
-                        <button 
-                            form="send-verification" 
-                            class="btn btn-link p-0 align-baseline text-decoration-none"
-                        >
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="text-success small mt-2">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
         </div>
 
         <!-- Save Button -->
