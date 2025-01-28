@@ -96,7 +96,8 @@
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                             @endif
                             <div class="product-details">
-                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span></div>
+                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span>
+                                </div>
                                 <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
                                 </div>
                                 <div class="key-value">
@@ -249,22 +250,30 @@
                         <div class="form-check mt-4">
                             <input class="form-check-input" type="checkbox" id="rescheduleCheckbox">
                             <label class="form-check-label" for="rescheduleCheckbox">
-                                تريد الاعاده الجدوله الكميه المتبقية؟
+                                تريد اعاده جدوله الكميه المتبقية؟
                             </label>
                         </div>
 
-                        <!-- Expected Delivery Date and Redirect Button -->
+                        <!-- Expected Delivery Date -->
                         <div id="expectedDeliveryContainer" class="mt-3 d-none">
                             <label for="newExpectedDelivery" class="form-label">تاريخ التوصيل المتوقع</label>
                             <input type="date" id="newExpectedDelivery" name="new_expected_delivery"
                                 class="form-control">
+                        </div>
 
-                            <!-- Redirect Button for Reschedule -->
-                            <div class="mt-3">
-                                <button type="button" id="rescheduleBtn" class="btn btn-primary w-100 d-none">
-                                    اعاده جدوله الكميه المتبقية
-                                </button>
-                            </div>
+                        <!-- Notes Section -->
+                        <div class="mt-3">
+                            <label for="rescheduleNotes" class="form-label">ملاحظات <span
+                                    class="text-danger">*</span></label>
+                            <textarea id="rescheduleNotes" name="reschedule_notes" class="form-control" placeholder="أضف أي ملاحظات هنا..."
+                                rows="3" required></textarea>
+                        </div>
+
+                        <!-- Reschedule Button -->
+                        <div class="mt-3">
+                            <button type="button" id="rescheduleBtn" class="btn btn-primary w-100 d-none">
+                                اعاده جدوله الكميه المتبقية
+                            </button>
                         </div>
                     </div>
 
@@ -362,6 +371,13 @@
                 const remainingQuantity = parseInt($("#remainingQuantity").val());
                 const isRescheduleChecked = $("#rescheduleCheckbox").is(":checked");
                 const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
+                const notes = $("#rescheduleNotes").val(); // Get notes input
+
+                // Check if notes are filled
+                if (!notes || notes.trim() === "") {
+                    alert("يرجى إدخال الملاحظات");
+                    return;
+                }
 
                 // Disable the button to prevent multiple submissions
                 submitButton.prop("disabled", true);
@@ -393,6 +409,12 @@
                 const variantId = $("#rescheduleModal").data("variant-id");
                 const remainingQuantity = parseInt($("#remainingQuantity").val());
                 const newExpectedDelivery = $("#newExpectedDelivery").val();
+                const notes = $("#rescheduleNotes").val(); // Get notes input
+
+                if (!notes || notes.trim() === "") {
+                    alert("يرجى إدخال الملاحظات");
+                    return;
+                }
 
                 if (!newExpectedDelivery) {
                     alert("الرجاء ادخال تاريخ التسليم");
