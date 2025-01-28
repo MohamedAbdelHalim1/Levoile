@@ -70,6 +70,45 @@
 												</div>
 											</div> --}}
 											<!-- COUNTRY -->
+
+											<!-- SIDE-MENU -->
+											<div class="dropdown d-flex profile-1">
+												<a href="javascript:void(0)" data-bs-toggle="dropdown"
+													class="nav-link leading-none d-flex">
+													<img src="{{asset('build/assets/images/brand/download.png')}}" alt="profile-user"
+														class="avatar  profile-user brround cover-image">
+												</a>
+												<div class="dropdown-menu dropdown-menu-end show" style="left:auto !important;right: 0px !important;"
+													data-bs-popper="none">
+													<div class="drop-heading">
+														<div class="text-center">
+															<h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
+														</div>
+													</div>
+													<a class="dropdown-item text-dark fw-semibold border-top" href="{{url('profile')}}">
+														<i class="dropdown-icon fe fe-user"></i> الحساب
+													</a>
+													{{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
+														<i class="dropdown-icon fe fe-mail"></i> Inbox
+														<span class="badge bg-success float-end">3</span>
+													</a>
+													<a class="dropdown-item text-dark fw-semibold" href="{{url('settings')}}">
+														<i class="dropdown-icon fe fe-settings"></i> Settings
+													</a>
+													<a class="dropdown-item text-dark fw-semibold" href="{{url('faq')}}">
+														<i class="dropdown-icon fe fe-alert-triangle"></i>
+														Support ?
+													</a> --}}
+													<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+														@csrf
+													</form>
+													
+													<a class="dropdown-item text-dark fw-semibold" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+														<i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
+													</a>
+												</div>
+											</div>
+											<!-- SIDE-MENU -->
 											<div class="d-flex country">
 												<a class="nav-link icon theme-layout nav-link-bg layout-setting">
 													<span class="dark-layout mt-1"><i class="ri-moon-clear-line"></i></span>
@@ -361,43 +400,7 @@
 													<i class="ri-menu-fold-fill"></i>
 												</a>
 											</div> --}}
-											<!-- SIDE-MENU -->
-											<div class="dropdown d-flex profile-1">
-												<a href="javascript:void(0)" data-bs-toggle="dropdown"
-													class="nav-link leading-none d-flex">
-													<img src="{{asset('build/assets/images/brand/download.png')}}" alt="profile-user"
-														class="avatar  profile-user brround cover-image">
-												</a>
-												<div class="dropdown-menu dropdown-menu-end show" style="left:auto !important;right: 0px !important;"
-													data-bs-popper="none">
-													<div class="drop-heading">
-														<div class="text-center">
-															<h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
-														</div>
-													</div>
-													<a class="dropdown-item text-dark fw-semibold border-top" href="{{url('profile')}}">
-														<i class="dropdown-icon fe fe-user"></i> الحساب
-													</a>
-													{{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
-														<i class="dropdown-icon fe fe-mail"></i> Inbox
-														<span class="badge bg-success float-end">3</span>
-													</a>
-													<a class="dropdown-item text-dark fw-semibold" href="{{url('settings')}}">
-														<i class="dropdown-icon fe fe-settings"></i> Settings
-													</a>
-													<a class="dropdown-item text-dark fw-semibold" href="{{url('faq')}}">
-														<i class="dropdown-icon fe fe-alert-triangle"></i>
-														Support ?
-													</a> --}}
-													<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-														@csrf
-													</form>
-													
-													<a class="dropdown-item text-dark fw-semibold" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-														<i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
-													</a>
-												</div>
-											</div>
+											
 										</div>
 									</div>
 								</div>
