@@ -79,6 +79,7 @@
                                     <th>تاريخ التوصيل</th>
                                     <th>الكمية</th>
                                     <th>الحالة</th>
+                                    <th>ملاحظات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,6 +98,7 @@
                                                     <span class="badge bg-danger">لم يتم الاستلام</span>
                                                 @endif
                                             </td>
+                                            <td>{{ $variant->note ?? 'لا يوجد'}}</td>
                                         </tr>
                                         @if ($variant->children && $variant->children->isNotEmpty())
                                             @foreach ($variant->children as $child)
