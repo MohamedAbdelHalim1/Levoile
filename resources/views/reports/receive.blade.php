@@ -15,7 +15,7 @@
                 <div class="row">
                     <!-- Category Filter -->
                     <div class="col-md-3">
-                        <label for="categoryFilter">{{ __('الفئه') }}</label>
+                        <label for="categoryFilter">{{ __('القسم') }}</label>
                         <select id="categoryFilter" class="ts-filter">
                             <option value="">{{ __('كل الفئات') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.category.name')->unique()->filter() as $category)
@@ -96,7 +96,7 @@
                             <th>{{ __('الصورة') }}</th>
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('الكود') }}</th>
-                            <th>{{ __('الفئه') }}</th>
+                            <th>{{ __('القسم') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('موعد الطرح') }}</th>
                             <th>{{ __('المصنع') }}</th>

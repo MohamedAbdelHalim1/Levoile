@@ -14,10 +14,10 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             // Category
-            ['access' => 'إضافة فئه'],
-            ['access' => 'تعديل فئه'],
-            ['access' => 'عرض فئه'],
-            ['access' => 'حذف فئه'],
+            ['access' => 'إضافة قسم'],
+            ['access' => 'تعديل قسم'],
+            ['access' => 'عرض قسم'],
+            ['access' => 'حذف قسم'],
 
             // Season
             ['access' => 'إضافة موسم'],

@@ -26,7 +26,7 @@
                     <div class="row">
                         <!-- Product Category -->
                         <div class="col-md-4 mb-3">
-                            <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
+                            <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select id="category_id" name="category_id" required>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"

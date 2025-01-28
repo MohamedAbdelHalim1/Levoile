@@ -10,7 +10,7 @@
                 </div>
             @endif
 
-            @if (auth()->user()->hasPermission('إضافة فئه'))
+            @if (auth()->user()->hasPermission('إضافة قسم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('categories.create') }}" class="btn btn-success">
                         {{ __('أضافة قسم جديدة') }}
@@ -31,18 +31,18 @@
                             <tr>
                                 <td>{{ $category->name }}</td>
                                 <td>
-                                    @if (auth()->user()->hasPermission('عرض فئه'))
+                                    @if (auth()->user()->hasPermission('عرض قسم'))
                                         <a href="{{ route('categories.show', $category->id) }}"
                                             class="btn btn-primary">{{ __('عرض') }}</a>
                                     @endif
 
-                                    @if (auth()->user()->hasPermission('تعديل فئه'))
+                                    @if (auth()->user()->hasPermission('تعديل قسم'))
                                         <a href="{{ route('categories.edit', $category->id) }}"
                                             class="btn btn-secondary">{{ __('تعديل') }}</a>
                                     @endif
-                                    @if (auth()->user()->hasPermission('حذف فئه'))
+                                    @if (auth()->user()->hasPermission('حذف قسم'))
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الفئه؟')">
+                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه القسم؟')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>

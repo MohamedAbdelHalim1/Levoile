@@ -72,10 +72,10 @@
                     </li>
                 @endif
 
-                @if (auth()->user()->hasPermission('عرض فئه') ||
-                        auth()->user()->hasPermission('تعديل فئه') ||
-                        auth()->user()->hasPermission('حذف فئه') ||
-                        auth()->user()->hasPermission('إضافة فئه') ||
+                @if (auth()->user()->hasPermission('عرض قسم') ||
+                        auth()->user()->hasPermission('تعديل قسم') ||
+                        auth()->user()->hasPermission('حذف قسم') ||
+                        auth()->user()->hasPermission('إضافة قسم') ||
                         auth()->user()->hasPermission('عرض موسم') ||
                         auth()->user()->hasPermission('تعديل موسم') ||
                         auth()->user()->hasPermission('حذف موسم') ||

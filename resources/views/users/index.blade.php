@@ -33,7 +33,7 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->role->name ?? 'N/A' }}</td>
+                                <td>{{ $user->role->name ?? 'لا يوجد' }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('تعديل مستخدم'))
                                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">تعديل</a>

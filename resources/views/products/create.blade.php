@@ -14,9 +14,9 @@
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label for="category_id" class="form-label">{{ __('الفئه') }}</label>
+                            <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select class="form-control" id="category_id" name="category_id" required>
-                                <option value="">{{ __('اختر فئه') }}</option>
+                                <option value="">{{ __('اختر قسم') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach

@@ -13,7 +13,7 @@
             </div>
             <div class="d-flex mb-3">
                 <label class="form-label text-lg"><strong><b>الكود:</b></strong></label>
-                <p class="ms-3">{{ $color->code ?? 'N/A' }}</p>
+                <p class="ms-3">{{ $color->code ?? 'لا يوجد' }}</p>
             </div>
             <a href="{{ route('colors.index') }}" class="btn btn-secondary">العود للقائمة</a>
         </div>

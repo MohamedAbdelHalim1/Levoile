@@ -96,17 +96,17 @@
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                             @endif
                             <div class="product-details">
-                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'N/A' }}</span></div>
+                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span></div>
                                 <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>الفئه:</span><span>{{ $product->category->name ?? 'N/A' }}</span>
+                                    <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>الموسم:</span><span>{{ $product->season->name ?? 'N/A' }}</span>
+                                    <span>الموسم:</span><span>{{ $product->season->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>المصنع:</span><span>{{ $product->factory->name ?? 'N/A' }}</span>
+                                    <span>المصنع:</span><span>{{ $product->factory->name ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value"><span>مخزون الخامات:</span>
                                     <span>{{ $product->have_stock ? 'نعم' : 'لا' }} -
