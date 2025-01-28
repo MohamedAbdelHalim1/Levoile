@@ -17,7 +17,7 @@
                         <!-- Category Filter -->
                         <div class="col-md-3">
                             <label for="categoryFilter">{{ __('الفئة') }}</label>
-                            <select name="category" id="categoryFilter" class="form-select">
+                            <select name="category" id="categoryFilter" class="form-select  ts-filter">
                                 <option value="">{{ __('كل الفئات') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
@@ -31,7 +31,7 @@
                         <!-- Season Filter -->
                         <div class="col-md-3">
                             <label for="seasonFilter">{{ __('الموسم') }}</label>
-                            <select name="season" id="seasonFilter" class="form-select">
+                            <select name="season" id="seasonFilter" class="form-select ts-filter">
                                 <option value="">{{ __('كل المواسم') }}</option>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->name }}"
@@ -45,7 +45,7 @@
                         <!-- Factory Filter -->
                         <div class="col-md-3">
                             <label for="factoryFilter">{{ __('المصنع') }}</label>
-                            <select name="factory" id="factoryFilter" class="form-select">
+                            <select name="factory" id="factoryFilter" class="form-select ts-filter">
                                 <option value="">{{ __('كل المصانع') }}</option>
                                 @foreach ($factories as $factory)
                                     <option value="{{ $factory->name }}"
@@ -59,7 +59,7 @@
                         <!-- Color Filter -->
                         <div class="col-md-3">
                             <label for="colorFilter">{{ __('اللون') }}</label>
-                            <select name="color" id="colorFilter" class="form-select">
+                            <select name="color" id="colorFilter" class="form-select ts-filter">
                                 <option value="">{{ __('كل الألوان') }}</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->name }}"
@@ -73,7 +73,7 @@
                         <!-- Status Filter -->
                         <div class="col-md-3 mt-3">
                             <label for="statusFilter">{{ __('الحالة') }}</label>
-                            <select name="status" id="statusFilter" class="form-select">
+                            <select name="status" id="statusFilter" class="form-select ts-filter">
                                 <option value="">{{ __('كل الحالات') }}</option>
                                 <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
@@ -262,6 +262,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Apply Tom Select to all dropdowns with class 'ts-filter'
+            document.querySelectorAll(".ts-filter").forEach(select => {
+                new TomSelect(select, {
+                    plugins: ['remove_button'], // Optional: Allow removing selections
+                    placeholder: 'اختر خيارًا',
+                    allowEmptyOption: true
+                });
+            });
+        });
+    </script>
+    
 @endsection
 
 @section('scripts')
