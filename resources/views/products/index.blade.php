@@ -278,7 +278,7 @@
                                             @endif
                                         @endif
                                         @if (auth()->user()->hasPermission('حذف منتج'))
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟ ')"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
