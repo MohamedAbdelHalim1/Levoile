@@ -249,7 +249,7 @@
                         <!-- Reschedule Checkbox -->
                         <div class="form-check mt-4">
                             <input class="form-check-input" type="checkbox" id="rescheduleCheckbox">
-                            <label class="form-check-label" for="rescheduleCheckbox">
+                            <label class="form-check-label ml-3" for="rescheduleCheckbox">
                                 تريد اعاده جدوله الكميه المتبقية؟
                             </label>
                         </div>
