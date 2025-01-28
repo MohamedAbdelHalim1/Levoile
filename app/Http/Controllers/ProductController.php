@@ -544,7 +544,6 @@ class ProductController extends Controller
                 'factory_id' => $request->factory_id,
                 'photo' => $product->photo,
                 'have_stock' => $request->have_stock,
-                'material_name' => $request->material_name,
                 'marker_number' => $request->marker_number,
                 'status' => $status
             ]);
