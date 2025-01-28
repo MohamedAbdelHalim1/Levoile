@@ -228,7 +228,7 @@
                                                     class="btn btn-success w-100">{{ __('استلام') }}</a>
                                             @endif
                                         @endif
-                                        @if (auth()->user()->hasPermission('اكمال بيانات المنتج'))
+                                        @if (auth()->user()->hasPermission('إكمال بيانات المنتج'))
                                             <a href="{{ route('products.completeData', $product->id) }}"
                                                 class="btn btn-info w-100">{{ __('استكمال البيانات') }}</a>
                                         @endif

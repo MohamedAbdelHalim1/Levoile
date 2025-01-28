@@ -12,9 +12,9 @@
                         <tr>
                             <th>اسم الصلاحيات</th>
                             <th>عرض</th>
-                            <th>اضافة</th>
+                            {{-- <th>اضافة</th>
                             <th>تعديل</th>
-                            <th>حذف</th>
+                            <th>حذف</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +34,7 @@
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_view" 
                                             {{ in_array($permission->id . '_view', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_add" 
                                             {{ in_array($permission->id . '_add', $rolePermissions) ? 'checked' : '' }}>
                                     </td>
@@ -45,7 +45,7 @@
                                     <td>
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}_delete" 
                                             {{ in_array($permission->id . '_delete', $rolePermissions) ? 'checked' : '' }}>
-                                    </td>
+                                    </td> --}}
                                 @endif
                             </tr>
                         @endforeach

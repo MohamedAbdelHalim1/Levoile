@@ -270,8 +270,10 @@
                                             <ul class="sidemenu-list">
                                                 <li class="side-menu-label1"><a
                                                         href="javascript:void(0)">المستخدمين</a></li>
-                                                <li><a href="{{ route('roles.index') }}" class="slide-item">وظائف
-                                                        المستخدمين</a></li>
+                                                @if (auth()->user()->role_id == 1)
+                                                    <li><a href="{{ route('roles.index') }}" class="slide-item">وظائف
+                                                            المستخدمين</a></li>
+                                                @endif
                                                 <li><a href="{{ route('users.index') }}"
                                                         class="slide-item">المستخدمين</a></li>
                                             </ul>
