@@ -18,7 +18,7 @@
                         <div class="col-md-3">
                             <label for="categoryFilter">{{ __('الفئة') }}</label>
                             <select name="category" id="categoryFilter" class="ts-filter">
-                                <option value="">{{ __('بحث') }}</option>
+                                <option value="">{{ __('كل الفئات') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
                                         {{ request('category') == $category->name ? 'selected' : '' }}>
@@ -32,7 +32,7 @@
                         <div class="col-md-3">
                             <label for="seasonFilter">{{ __('الموسم') }}</label>
                             <select name="season" id="seasonFilter" class="ts-filter">
-                                <option value="">{{ __('بحث') }}</option>
+                                <option value="">{{ __('كل المواسم') }}</option>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->name }}"
                                         {{ request('season') == $season->name ? 'selected' : '' }}>
@@ -46,7 +46,7 @@
                         <div class="col-md-3">
                             <label for="factoryFilter">{{ __('المصنع') }}</label>
                             <select name="factory" id="factoryFilter" class="ts-filter">
-                                <option value="">{{ __('بحث') }}</option>
+                                <option value="">{{ __('كل المصانع') }}</option>
                                 @foreach ($factories as $factory)
                                     <option value="{{ $factory->name }}"
                                         {{ request('factory') == $factory->name ? 'selected' : '' }}>
@@ -60,7 +60,7 @@
                         <div class="col-md-3">
                             <label for="colorFilter">{{ __('اللون') }}</label>
                             <select name="color" id="colorFilter" class="ts-filter">
-                                <option value="">{{ __('بحث') }}</option>
+                                <option value="">{{ __('كل الألوان') }}</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->name }}"
                                         {{ request('color') == $color->name ? 'selected' : '' }}>
@@ -74,7 +74,7 @@
                         <div class="col-md-3 mt-3">
                             <label for="statusFilter">{{ __('الحالة') }}</label>
                             <select name="status" id="statusFilter" class="ts-filter">
-                                <option value="">{{ __('بحث') }}</option>
+                                <option value="">{{ __('كل الحالات') }}</option>
                                 <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
                                 <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>
