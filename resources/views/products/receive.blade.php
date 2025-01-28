@@ -391,6 +391,7 @@
                         variant_id: variantId,
                         remaining_quantity: remainingQuantity,
                         new_expected_delivery: newExpectedDelivery,
+                        note: note,
                     },
                     success: function(response) {
                         alert(response.message);
@@ -433,6 +434,7 @@
                         variant_id: variantId,
                         remaining_quantity: remainingQuantity,
                         new_expected_delivery: newExpectedDelivery,
+                        note: note,
                     },
                     success: function(response) {
                         alert(response.message);
