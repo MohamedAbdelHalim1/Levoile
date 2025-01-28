@@ -43,7 +43,7 @@
                                         <a href="{{ route('roles.permissions', $role->id) }}"
                                             class="btn btn-info">تعديل الصلاحيات</a>
                                     @endif
-                                    @if (auth()->user()->hasPermission('حذف دور'))
+                                    @if (auth()->user()->hasPermission('حذف دور') && $role->id != 1)
                                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
                                             style="display: inline-block;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الدور؟');">
                                             @csrf
