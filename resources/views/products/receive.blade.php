@@ -98,7 +98,8 @@
                             <div class="product-details">
                                 <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span>
                                 </div>
-                                <div class="key-value"><span>الوصف:</span> <span>{{ $product->description }}</span>
+                                <div class="key-value"><span>الوصف:</span>
+                                    <span>{{ $product->description ?? 'لا يوجد' }}</span>
                                 </div>
                                 <div class="key-value">
                                     <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
@@ -111,9 +112,6 @@
                                 </div>
                                 <div class="key-value">
                                     <span>المصنع:</span><span>{{ $product->factory->name ?? 'لا يوجد' }}</span>
-                                </div>
-                                <div class="key-value"><span>مخزون الخامات:</span>
-                                    <span>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
                                 </div>
                                 <div class="key-value">
                                     <span>الحالة:</span>
@@ -162,12 +160,16 @@
                                                         @if ($variant->receiving_quantity) disabled @endif>
                                                 </td>
                                                 <td>
-                                                    @if ($variant->status === 'Received')
-                                                        <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                                    @elseif ($variant->status === 'Partially Received')
-                                                        <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
-                                                    @elseif ($variant->status === 'Not Received')
-                                                        <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
+                                                    @if ($variant->status === 'New')
+                                                        <span class="badge bg-success">{{ __('جديد') }}</span>
+                                                    @elseif ($variant->status === 'processing')
+                                                        <span class="badge bg-warning">{{ __('جاري التصنيع') }}</span>
+                                                    @elseif ($variant->status === 'complete')
+                                                        <span class="badge bg-danger">{{ __('مكتمل') }}</span>
+                                                    @elseif ($variant->status === 'cancel')
+                                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                                    @elseif ($variant->status === 'stop')
+                                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -175,7 +177,15 @@
                                                         data-variant-id="{{ $variant->id }}" disabled>تأكيد</button>
                                                     <button type="button" class="btn btn-warning edit-btn"
                                                         data-variant-id="{{ $variant->id }}">تعديل</button>
+                                                    <button type="button" class="btn btn-danger cancel-btn"
+                                                        data-variant-id="{{ $variant->id }}"
+                                                        data-product-id="{{ $product->id }}"
+                                                        data-status="cancel">الغاء</button>
 
+                                                    <button type="button" class="btn btn-secondary stop-btn"
+                                                        data-variant-id="{{ $variant->id }}"
+                                                        data-product-id="{{ $product->id }}"
+                                                        data-status="stop">ايقاف</button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -193,34 +203,7 @@
         </div>
     </div>
 
-    <!-- Reschedule Modal -->
-    {{-- <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="rescheduleForm">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="rescheduleModalLabel">Reschedule Remaining Quantity</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="remainingQuantity" class="form-label">Remaining Quantity</label>
-                            <input type="number" id="remainingQuantity" class="form-control" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newExpectedDelivery" class="form-label">New Expected Delivery</label>
-                            <input type="date" id="newExpectedDelivery" name="new_expected_delivery" class="form-control"
-                                required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Reschedule</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
+
     <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -250,7 +233,8 @@
 
                         <!-- Reschedule Checkbox -->
                         <div class="form-check mt-4">
-                            <input class="form-check-input" type="checkbox" id="rescheduleCheckbox" style="margin-left: 10px;">
+                            <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
+                                style="margin-left: 10px;">
                             <label class="form-check-label" for="rescheduleCheckbox">
                                 تريد اعاده جدوله الكميه المتبقية؟
                             </label>
@@ -287,6 +271,31 @@
         </div>
     </div>
 
+    <!-- Stop/Cancel Modal -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">إضافة ملاحظة للحالة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="variantId">
+                    <input type="hidden" id="productId">  <!-- Added Product ID -->
+                    <input type="hidden" id="statusType">
+
+                    <label for="statusNote" class="form-label">الملاحظات</label>
+                    <textarea id="statusNote" class="form-control" rows="3" placeholder="أضف أي ملاحظات هنا..."></textarea>
+
+                    <div class="mt-3">
+                        <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">حفظ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 @endsection
 
@@ -301,15 +310,15 @@
                 const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
                 // Check if entered quantity is valid
-                if (enteredQuantity > originalQuantity) {
-                    alert("هذه الكمية غير صحيحه");
-                    quantityInput.val(""); // Reset the input value
-                    validateButton.prop("disabled", true); // Disable the Validate button
-                    return;
-                }
+                // if (enteredQuantity > originalQuantity) {
+                //     alert("هذه الكمية غير صحيحه");
+                //     quantityInput.val(""); // Reset the input value
+                //     validateButton.prop("disabled", true); // Disable the Validate button
+                //     return;
+                // }
 
                 // Enable/disable the Validate button based on valid input
-                validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
+                // validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
             });
             // Handle "تعديل" button click
             $(document).on("click", ".edit-btn", function() {
@@ -332,10 +341,10 @@
                 const originalQuantity = parseInt(row.find(".receiving-quantity").data(
                     "original-quantity"));
 
-                if (!remainingQuantity || remainingQuantity <= 0) {
-                    alert("الرجاء ادخال كمية صحيحة");
-                    return;
-                }
+                // if (!remainingQuantity || remainingQuantity <= 0) {
+                //     alert("الرجاء ادخال كمية صحيحة");
+                //     return;
+                // }
 
                 // Populate modal and adjust visibility of fields
                 $("#rescheduleModal").data("variant-id", variantId);
@@ -447,6 +456,57 @@
                         rescheduleButton.prop("disabled",
                             false); // Re-enable the button on error
                     },
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".stop-btn, .cancel-btn", function() {
+                const variantId = $(this).data("variant-id");
+                const productId = $(this).data("product-id"); // Get product ID
+                const statusType = $(this).data("status");
+
+                $("#variantId").val(variantId);
+                $("#productId").val(productId); // Store product ID
+                $("#statusType").val(statusType);
+                $("#statusNote").val("");
+
+                const modalTitle = statusType === "stop" ? "إيقاف المنتج" : "إلغاء المنتج";
+                $("#statusModalLabel").text(modalTitle);
+                $("#statusModal").modal("show");
+            });
+
+            $("#saveStatusBtn").on("click", function() {
+                const variantId = $("#variantId").val();
+                const productId = $("#productId").val();
+                const statusType = $("#statusType").val();
+                const note = $("#statusNote").val().trim();
+
+                if (!note) {
+                    alert("يرجى إدخال الملاحظات");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/products/variants/update-status",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        variant_id: variantId,
+                        product_id: productId, // Send product_id
+                        status: statusType,
+                        note: note
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $("#statusModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert("خطأ: " + xhr.responseJSON.message);
+                    }
                 });
             });
         });

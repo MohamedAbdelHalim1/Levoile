@@ -20,6 +20,7 @@ class Product extends Model
         'material_name',
         'marker_number',
         'status',
+        'receiving_status',
         'code',
         'name',
         'store_launch',

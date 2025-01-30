@@ -143,8 +143,9 @@
                             <th>{{ __('الخامه') }}</th>
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('المصنع') }}</th>
+                            <th>{{ __('حاله الطلب') }}</th>
                             <th>{{ __('الألوان') }}</th>
-                            <th>{{ __('الحالة') }}</th>
+                            <th>{{ __('حاله التسليم النهائيه') }}</th>
                             <th>{{ __('العمليات') }}</th>
                         </tr>
                     </thead>
@@ -170,15 +171,37 @@
                                 <td>{{ $product->material->name ?? 'لا يوجد' }}</td>
                                 <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
                                 <td>{{ $product->factory->name ?? 'لا يوجد' }}</td>
+
+                                <td>
+                                    @php
+                                        $totalVariants = $product->productColors->sum(function ($color) {
+                                            return $color->productcolorvariants->count();
+                                        });
+
+                                        $processingVariants = $product->productColors->sum(function ($color) {
+                                            return $color->productcolorvariants->where('status', 'processing')->count();
+                                        });
+                                    @endphp
+                                    @if ($product->status === 'New')
+                                        <span class="badge bg-primary">{{ __('طلب جديد') }}</span>
+                                    @elseif ($product->status === 'Cancel')
+                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                    @elseif ($product->status === 'Pending')
+                                        <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
+                                    @elseif($product->status === 'processing')
+                                        <span class="badge bg-success">{{ __('تصنيع') }}
+                                            ({{ $processingVariants }}/{{ $totalVariants }})
+                                        </span>
+                                    @endif
+                                </td>
                                 <td>
                                     <table class="table table-bordered mb-0">
                                         <thead>
                                             <tr>
                                                 <th>{{ __('اللون') }}</th>
-                                                <th>{{ __('تاريخ التوصيل') }}</th>
+                                                <th>{{ __('حاله التصنيع') }}</th>
+                                                <th>{{ __('حاله التسليم') }}</th>
                                                 <th>{{ __('الكمية') }}</th>
-                                                <th>{{ __('الايام المتبقية') }}</th>
-                                                <th>{{ __('الحالة') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -193,60 +216,49 @@
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $productColor->color->name }}</td>
-                                                    @if ($variant)
-                                                        <td>{{ $variant->expected_delivery }}</td>
-                                                        <td>{{ $variant->quantity }}</td>
-                                                        @if ($product->status !== 'Complete')
-                                                            <td>
-                                                                @if ($remainingDays > 0)
-                                                                    <span class="badge bg-danger">{{ $remainingDays }}
-                                                                        {{ __('أيام تأخير') }}</span>
-                                                                @elseif ($remainingDays === 0)
-                                                                    <span
-                                                                        class="badge bg-warning">{{ __('الاستلام اليوم') }}</span>
-                                                                @else
-                                                                    <span
-                                                                        class="badge bg-success">{{ abs($remainingDays) }}
-                                                                        {{ __('أيام متبقية') }}</span>
-                                                                @endif
-                                                            </td>
-                                                        @else
-                                                            <td>-</td>
-                                                        @endif
-                                                        <td>
-                                                            @if ($variant->status === 'Received')
-                                                                <span
-                                                                    class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                                            @elseif ($variant->status === 'Partially Received')
-                                                                <span class="badge bg-pink">{{ __('استلام جزئي') }}</span>
-                                                            @elseif ($variant->status === 'Not Received')
-                                                                <span
-                                                                    class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
-                                                            @endif
-                                                        </td>
-                                                    @else
-                                                        <td colspan="3">{{ __('لا يوجد بيانات') }}</td>
+                                                    @if ($variant->status === 'New')
+                                                        <td>{{ __('لم يتم البدء') }}</td>
+                                                    @elseif($variant->status === 'processing')
+                                                        <td>{{ __('جاري التصنيع') }}</td>
+                                                    @elseif($variant->status === 'complete')
+                                                        <td>{{ __('تم التصنيع') }}</td>
+                                                    @elseif($variant->status === 'cancel')
+                                                        <td>{{ __('تم الغاء التصنيع') }}</td>
+                                                    @elseif($variant->status === 'stop')
+                                                        <td>{{ __('تم ايقاف التصنيع') }}</td>
                                                     @endif
+                                                    <td>
+                                                        @if ($variant->receiving_status === 'New')
+                                                            <span>-</span>
+                                                        @elseif ($variant->receiving_status === 'Partial')
+                                                            <span class="badge bg-pink">{{ $remainingDays }}</span>
+                                                        @elseif ($variant->receiving_status === 'complete')
+                                                            <span
+                                                                class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $variant->quantity ?? 0 }}</td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </td>
                                 <td>
-                                    @if ($product->status === 'New')
-                                        <span class="badge bg-primary">{{ __('جديد') }}</span>
-                                    @elseif ($product->status === 'Partial')
-                                        <span class="badge bg-pink">{{ __('جزئي') }}</span>
-                                    @elseif ($product->status === 'Complete')
-                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
-                                    @elseif ($product->status === 'Cancel')
-                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                    @elseif ($product->status === 'Pending')
-                                        <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
+                                    @if ($product->receiving_status === 'New')
+                                        <span>-</span>
+                                    @elseif ($product->receiving_status === 'Partial')
+                                        <span class="badge bg-pink">({{ __('تسليم جزئي') }})</span>
+                                    @elseif ($product->receiving_status === 'Complete')
+                                        <span class="badge bg-success">({{ __('تم التسليم') }})</span>
+                                    @elseif ($product->receiving_status === 'Pending')
+                                        <span class="badge bg-danger">({{ __('في انتظار التسليم') }})</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-2">
+                                        <a href="{{ route('products.manufacture', $product->id) }}"
+                                            class="btn btn-primary w-100">{{ __('تصنيع') }}</a>
                                         @if (auth()->user()->hasPermission('عرض منتج'))
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-primary w-100">{{ __('عرض') }}</a>
@@ -278,7 +290,8 @@
                                             @endif
                                         @endif
                                         @if (auth()->user()->hasPermission('حذف منتج'))
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟ ')"
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟ ')"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('DELETE')

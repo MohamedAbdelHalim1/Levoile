@@ -24,7 +24,7 @@ class ProductController extends Controller
         $factories = Factory::all();
         $colors = Color::all();
         $materials = Material::all();
-    
+
         // Start the query for fetching products
         $query = Product::with([
             'category',
@@ -36,7 +36,7 @@ class ProductController extends Controller
                 $query->orderBy('expected_delivery', 'asc');
             }
         ]);
-    
+
         // Apply filters based on user input
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
@@ -48,29 +48,29 @@ class ProductController extends Controller
                 $q->where('name', $request->material);
             });
         }
-    
+
         if ($request->filled('season')) {
             $query->whereHas('season', function ($q) use ($request) {
                 $q->where('name', $request->season);
             });
         }
-    
+
         if ($request->filled('factory')) {
             $query->whereHas('factory', function ($q) use ($request) {
                 $q->where('name', $request->factory);
             });
         }
-    
+
         if ($request->filled('color')) {
             $query->whereHas('productColors.color', function ($q) use ($request) {
                 $q->where('name', $request->color);
             });
         }
-    
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-    
+
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
@@ -81,14 +81,14 @@ class ProductController extends Controller
                 }
             });
         }
-    
+
         // Fetch the filtered products
         $products = $query->get();
-    
-        return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors' , 'materials'));
+
+        return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors', 'materials'));
     }
-    
-    
+
+
     public function receive(Product $product)
     {
         // Eager load necessary relationships, including ProductColorVariants
@@ -104,24 +104,42 @@ class ProductController extends Controller
     }
 
 
-    // In ProductController.php
-    // public function updateReceivingQuantity(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'variant_id' => 'required|exists:product_color_variants,id',
-    //         'receiving_quantity' => 'required|integer|min:1',
-    //     ]);
+    public function manufacture(Product $product)
+    {
+        $product = Product::with(['productColors.color', 'productColors.productcolorvariants'])->findOrFail($id);
+        return view('products.manufacture', compact('product'));
+    }
 
-    //     // Find the variant
-    //     $variant = ProductColorVariant::findOrFail($validated['variant_id']);
+    public function update_manufacture(Request $request, Product $product)
+    {
+        try {
+            DB::beginTransaction();
 
-    //     // Update the receiving_quantity field
-    //     $variant->receiving_quantity = $validated['receiving_quantity'];
-    //     $variant->save();
+            $product->update([
+                'status' => 'processing',
+                'receiving_status' => 'Pending'
+            ]);
 
-    //     return response()->json(['status' => 'success', 'message' => 'Receiving quantity updated successfully.']);
-    // }
+            foreach ($request->colors as $colorId => $colorData) {
+                ProductColorVariant::update(
+                    [
+                        'expected_delivery' => $colorData['expected_delivery'],
+                        'quantity' => $colorData['quantity'],
+                        'status' => 'processing',
+                        'receiving_status' => 'pending',
+                    ]
+                );
+            }
 
+
+            DB::commit();
+
+            return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
 
     public function reschedule(Request $request)
     {
@@ -191,42 +209,42 @@ class ProductController extends Controller
         }
     }
 
-    protected function updateProductStatus(Product $product)
-    {
-        // Initialize flags to track statuses
-        $hasNotReceived = false;
-        $allNotReceived = true;
-    
-        foreach ($product->productColors as $productColor) {
-            foreach ($productColor->productcolorvariants as $variant) {
-                if ($variant->status === 'Not Received') {
-                    $hasNotReceived = true;
-                } else {
-                    $allNotReceived = false; // If one variant is not "Not Received", it's not all
-                }
-            }
-        }
-    
-        // Determine the product status based on the variants' statuses
-        if ($allNotReceived) {
-            $product->status = 'New';
-        } elseif ($hasNotReceived) {
-            $product->status = 'Partial';
-        } else {
-            $product->status = 'Complete';
-        }
-    
-        $product->save();
-    }
-    
+    // protected function updateProductStatus(Product $product)
+    // {
+    //     // Initialize flags to track statuses
+    //     $hasNotReceived = false;
+    //     $allNotReceived = true;
+
+    //     foreach ($product->productColors as $productColor) {
+    //         foreach ($productColor->productcolorvariants as $variant) {
+    //             if ($variant->status === 'Not Received') {
+    //                 $hasNotReceived = true;
+    //             } else {
+    //                 $allNotReceived = false; // If one variant is not "Not Received", it's not all
+    //             }
+    //         }
+    //     }
+
+    //     // Determine the product status based on the variants' statuses
+    //     if ($allNotReceived) {
+    //         $product->status = 'New';
+    //     } elseif ($hasNotReceived) {
+    //         $product->status = 'Partial';
+    //     } else {
+    //         $product->status = 'Complete';
+    //     }
+
+    //     $product->save();
+    // }
+
 
     public function markReceived(Request $request)
     {
         $validated = $request->validate([
             'variant_id' => 'required|exists:product_color_variants,id',
-            'remaining_quantity' => 'required|integer|min:0',
+            'remaining_quantity' => 'required|integer',
             'new_expected_delivery' => 'nullable|date',
-            'note' =>'required|string|max:512',
+            'note' => 'required|string|max:512',
         ]);
 
         try {
@@ -237,8 +255,9 @@ class ProductController extends Controller
             if (!empty($validated['new_expected_delivery'])) {
                 // Update the current variant as "Partially Received"
                 $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
-                $variant->status = 'Partially Received';
                 $variant->note = $request->note;
+                $variant->status = 'Partial';
+                $variant->receiving_status = 'Partial';
                 $variant->save();
 
                 // Create a new variant for the remaining quantity
@@ -248,18 +267,39 @@ class ProductController extends Controller
                     'quantity' => $validated['remaining_quantity'],
                     'receiving_quantity' => null,
                     'parent_id' => $variant->id,
-                    'status' => 'Not Received',
+                    'status' => 'Postponed',
+                    'receiving_status' => 'Postponed',
+
                 ]);
             } else {
                 // Fully receive the current variant
                 $variant->receiving_quantity = $variant->quantity - $validated['remaining_quantity'];
-                $variant->status = 'Received';
+                $variant->status = 'complete';
+                $variant->receiving_status = 'complete';
                 $variant->note = $request->note;
                 $variant->save();
             }
 
-            // Update the product status
-            $this->updateProductStatus($product);
+            $counter = 0;
+            $variantCount = $product->productColors->sum(function ($color) {
+                return $color->productcolorvariants->count();
+            });
+            foreach ($product->productColors as $productColor) {
+                foreach ($productColor->productcolorvariants as $variant) {
+                    if ($variant->status === 'complete') {
+                        $counter++;
+                    }
+                }
+            }
+
+            if ($counter === $variantCount) {
+                $product->receving_status = 'Complete';
+                $product->status = 'Complete';
+                $product->save();
+            } else {
+                $product->receving_status = 'Partial';
+                $product->save();
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -272,6 +312,54 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'variant_id' => 'required|exists:productcolorvariants,id',
+            'product_id' => 'required|exists:products,id', // Validate product ID
+            'status' => 'required|in:stop,cancel',
+            'note' => 'required|string|max:512'
+        ]);
+    
+        try {
+            $variant = ProductColorVariant::findOrFail($request->variant_id);
+            $product = Product::findOrFail($request->product_id);
+    
+            // Update the variant status and note
+            $variant->status = $request->status;
+            $variant->note = $request->note;
+            $variant->save();
+    
+            // Check if all variants of the product are canceled or stopped
+            $allVariants = $product->productColors->sum(function ($color) {
+                return $color->productcolorvariants->count();
+            });
+    
+            $canceledOrStopped = 0;
+            foreach ($product->productColors as $productColor) {
+                foreach ($productColor->productcolorvariants as $variant) {
+                    if ($variant->status === 'stop' || $variant->status === 'cancel') {
+                        $canceledOrStopped++;
+                    }
+                }
+            }
+    
+            // If all variants are either canceled or stopped, update the product status
+            if ($canceledOrStopped === $allVariants) {
+                $product->status = $request->status; // Make product also "stop" or "cancel"
+                $product->receving_status = $request->status;
+                $product->save();
+            }
+    
+            return response()->json(['message' => 'تم تحديث الحالة بنجاح']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+    
+
+
 
 
 
@@ -374,7 +462,7 @@ class ProductController extends Controller
         $factories = Factory::all();
         $colors = Color::all();
         $materials = Material::all();
-        return view('products.create', compact('categories', 'seasons', 'factories', 'colors','materials'));
+        return view('products.create', compact('categories', 'seasons', 'factories', 'colors', 'materials'));
     }
 
     public function store(Request $request)
@@ -389,11 +477,8 @@ class ProductController extends Controller
                 'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
                 'marker_number' => 'required|string',
-                'have_stock' => 'required|boolean',
                 'colors' => 'nullable|array',
                 'colors.*.color_id' => 'required|exists:colors,id',
-                'colors.*.expected_delivery' => 'required|date',
-                'colors.*.quantity' => 'required|integer|min:1',
             ]);
 
             // Start DB Transaction
@@ -414,7 +499,7 @@ class ProductController extends Controller
             $newCode = $seasonCode . '-' . str_pad($existingCodesCount + 1, 3, '0', STR_PAD_LEFT);
 
             // Determine the product status
-            $status = $request->have_stock ? 'New' : 'Pending';
+            // $status = $request->have_stock ? 'New' : 'Pending';
 
             // Create the product
             $product = Product::create([
@@ -424,10 +509,10 @@ class ProductController extends Controller
                 'season_id' => $request->season_id,
                 'factory_id' => $request->factory_id,
                 'photo' => $photoPath,
-                'have_stock' => $request->have_stock,
                 'marker_number' => $request->marker_number,
                 'code' => $newCode,
-                'status' => $status,
+                'status' => 'New',
+                'receiving_status' => 'New',
             ]);
 
             // Handle colors and their variants
@@ -442,9 +527,8 @@ class ProductController extends Controller
                     // Create the initial ProductColorVariant entry
                     ProductColorVariant::create([
                         'product_color_id' => $productColor->id,
-                        'expected_delivery' => $color['expected_delivery'],
-                        'quantity' => $color['quantity'],
-                        'receiving_quantity' => null, // Initially null
+                        'status' => 'New',
+                        'receiving_status' => 'New',
                     ]);
                 }
             }
@@ -477,13 +561,13 @@ class ProductController extends Controller
                     $query->with(['children'])->orderBy('expected_delivery', 'asc');
                 }
             ])->findOrFail($id);
-    
+
             return view('products.show', compact('product'));
         } catch (\Exception $e) {
             return redirect()->route('products.index')->with('error', 'Product not found or an error occurred: ' . $e->getMessage());
         }
     }
-    
+
 
 
     public function edit($id)
@@ -495,7 +579,7 @@ class ProductController extends Controller
         $colors = Color::all();
         $materials = Material::all();
 
-        return view('products.edit', compact('product', 'categories', 'seasons', 'factories', 'colors','materials'));
+        return view('products.edit', compact('product', 'categories', 'seasons', 'factories', 'colors', 'materials'));
     }
 
 

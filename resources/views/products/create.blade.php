@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select class="form-control" id="category_id" name="category_id" required>
                                 <option value="">{{ __('اختر قسم') }}</option>
@@ -23,7 +23,7 @@
                             </select>
                         </div>
     
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
                             <select class="form-control" id="season_id" name="season_id" required>
                                 <option value="">{{ __('اختر الموسم') }}</option>
@@ -33,7 +33,7 @@
                             </select>
                         </div>
     
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
                             <select class="form-control" id="factory_id" name="factory_id" required>
                                 <option value="">{{ __('اختر المصنع') }}</option>
@@ -42,11 +42,15 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="photo" class="form-label">{{ __('الصورة') }}</label>
-                        <input type="file" class="form-control" id="photo" name="photo" required>
+                        <div class="col-md-3 mb-3">
+                            <label for="factory_id" class="form-label">{{ __('الخامه') }}</label>
+                            <select class="form-control" id="material_id" name="material_id" required>
+                                <option value="">{{ __('اختر الخامه') }}</option>
+                                @foreach ($materials as $material)
+                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -55,27 +59,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">{{ __('حاله مخزون الخامات') }}</label>
-                        <div class="d-flex align-items-center">
-                            <div class="form-check me-3">
-                                <input type="radio" id="stock_yes" name="have_stock" value="1" class="form-check-input" required>
-                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('متوفر') }}</label>
-                            </div>
-                            <div class="form-check me-3">
-                                <input type="radio" id="stock_no" name="have_stock" value="0" class="form-check-input">
-                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('غير متوفر') }}</label>
-                            </div>
-                            <div class="flex-grow-1">
-                                <select class="form-control" id="material_id" name="material_id" required>
-                                    <option value="">{{ __('اختر المادة') }}</option>
-                                    @foreach ($materials as $material)
-                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        <label for="photo" class="form-label">{{ __('الصورة') }}</label>
+                        <input type="file" class="form-control" id="photo" name="photo" required>
                     </div>
-
                     <!-- Color Selection -->
                     <div class="mb-3">
                         <label for="color_id" class="form-label">{{ __(' اللون') }}</label>
@@ -93,8 +79,6 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th>{{ __('اللون') }}</th>
-                                    <th>{{ __('تاريخ الاستلام') }}</th>
-                                    <th>{{ __('الكمية') }}</th>
                                     <th>{{ __('العمليات') }}</th>
                                 </tr>
                             </thead>
@@ -138,12 +122,6 @@
                             <td>
                                 <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
                                 ${colorName}
-                            </td>
-                            <td>
-                                <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>

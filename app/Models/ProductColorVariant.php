@@ -18,6 +18,7 @@ class ProductColorVariant extends Model
         'parent_id', // Added parent_id
         'status', // Add status here
         'note',
+        'receiving_status'
     ];
 
 
