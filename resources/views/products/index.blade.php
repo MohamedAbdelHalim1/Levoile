@@ -179,7 +179,7 @@
                                         });
 
                                         $processingVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->where('status', 'processing')->count();
+                                            return $color->productcolorvariants->where('status', 'complete')->count();
                                         });
                                     @endphp
                                     @if ($product->status === 'New')
