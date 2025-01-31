@@ -182,11 +182,11 @@
                                             return $color->productcolorvariants->where('status', 'complete')->count();
                                         });
                                     @endphp
-                                    @if ($product->status === 'New')
+                                    @if ($product->status === 'new')
                                         <span class="badge bg-primary">{{ __('طلب جديد') }}</span>
-                                    @elseif ($product->status === 'Cancel')
+                                    @elseif ($product->status === 'cancel')
                                         <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                    @elseif ($product->status === 'Pending')
+                                    @elseif ($product->status === 'pending')
                                         <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
                                     @elseif($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
@@ -221,7 +221,7 @@
                                                     <!-- Manufacturing Status -->
                                                     <td>
                                                         @switch($variant->status)
-                                                            @case('New')
+                                                            @case('new')
                                                                 {{ __('لم يتم البدء') }}
                                                             @break
 
@@ -256,7 +256,7 @@
                                                                 : null;
                                                         @endphp
 
-                                                        @if ($variant->receiving_status === 'New')
+                                                        @if ($variant->receiving_status === 'new')
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
                                                             @if ($remainingDays > 0)
@@ -282,13 +282,13 @@
                                     </table>
                                 </td>
                                 <td>
-                                    @if ($product->receiving_status === 'New')
+                                    @if ($product->receiving_status === 'new')
                                         <span>-</span>
-                                    @elseif ($product->receiving_status === 'Partial')
+                                    @elseif ($product->receiving_status === 'partial')
                                         <span class="badge bg-pink">{{ __('تسليم جزئي') }}</span>
-                                    @elseif ($product->receiving_status === 'Complete')
+                                    @elseif ($product->receiving_status === 'complete')
                                         <span class="badge bg-success">{{ __('تم التسليم') }}</span>
-                                    @elseif ($product->receiving_status === 'Pending')
+                                    @elseif ($product->receiving_status === 'pending')
                                         <span class="badge bg-warning">{{ __('في انتظار التسليم') }}</span>
                                     @endif
                                 </td>

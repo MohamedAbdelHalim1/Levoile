@@ -545,8 +545,8 @@ class ProductController extends Controller
                 'photo' => $photoPath,
                 'marker_number' => $request->marker_number,
                 'code' => $newCode,
-                'status' => 'New',
-                'receiving_status' => 'New',
+                'status' => 'new',
+                'receiving_status' => 'new',
             ]);
 
             // Handle colors and their variants
@@ -561,8 +561,8 @@ class ProductController extends Controller
                     // Create the initial ProductColorVariant entry
                     ProductColorVariant::create([
                         'product_color_id' => $productColor->id,
-                        'status' => 'New',
-                        'receiving_status' => 'New',
+                        'status' => 'new',
+                        'receiving_status' => 'new',
                     ]);
                 }
             }
