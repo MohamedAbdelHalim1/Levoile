@@ -259,7 +259,7 @@
                                                         @if ($variant->receiving_status === 'New')
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
-                                                            @if ($remainingDays > 0)
+                                                            @if ($remainingDays < 0)
                                                                 <span class="badge bg-success">{{ $remainingDays }} يوم
                                                                     متبقي</span>
                                                             @elseif ($remainingDays === 0)
