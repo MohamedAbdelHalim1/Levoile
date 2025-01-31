@@ -301,8 +301,8 @@ class ProductController extends Controller
                     'quantity' => $validated['remaining_quantity'],
                     'receiving_quantity' => null,
                     'parent_id' => $variant->id,
-                    'status' => 'Postponed',
-                    'receiving_status' => 'Postponed',
+                    'status' => 'postponed',
+                    'receiving_status' => 'postponed',
 
                 ]);
              

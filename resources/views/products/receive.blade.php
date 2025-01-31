@@ -160,10 +160,14 @@
                                                         @if ($variant->receiving_quantity) disabled @endif>
                                                 </td>
                                                 <td>
-                                                    @if ($variant->status === 'New')
+                                                    @if ($variant->status === 'new')
                                                         <span class="badge bg-success">{{ __('جديد') }}</span>
                                                     @elseif ($variant->status === 'processing')
                                                         <span class="badge bg-warning">{{ __('جاري التصنيع') }}</span>
+                                                        @elseif ($variant->status === 'partial')
+                                                        <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
+                                                        @elseif ($variant->status === 'postponed')
+                                                        <span class="badge bg-warning">{{ __('مؤجل') }}</span>
                                                     @elseif ($variant->status === 'complete')
                                                         <span class="badge bg-danger">{{ __('مكتمل') }}</span>
                                                     @elseif ($variant->status === 'cancel')
