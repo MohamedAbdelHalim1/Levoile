@@ -117,6 +117,7 @@ class ProductController extends Controller
 
     public function update_manufacture(Request $request, Product $product)
     {
+        dd($request->all());    
         try {
             DB::beginTransaction();
     
