@@ -13,6 +13,7 @@ use App\Models\ProductSeason;
 use App\Models\Season;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -117,26 +118,31 @@ class ProductController extends Controller
 
     public function update_manufacture(Request $request, Product $product)
     {
-        dd($request->all());    
         try {
             DB::beginTransaction();
     
-            // Validate the request
+            // ✅ Validate Request
             $validated = $request->validate([
                 'colors' => 'required|array',
-                'colors.*.color_id' => 'required|exists:product_colors,id',
+                'colors.*.color_id' => [
+                    'required',
+                    Rule::exists('product_colors', 'id')->where(function ($query) use ($product) {
+                        $query->where('product_id', $product->id);
+                    }),
+                ],
                 'colors.*.expected_delivery' => 'required|date',
                 'colors.*.quantity' => 'required|integer|min:1',
             ]);
     
-            // Update the product status
+            // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'Pending'
             ]);
     
+            // ✅ Process Each Color Variant
             foreach ($validated['colors'] as $colorId => $colorData) {
-                // Find the correct variant for this product & color
+                // 🔎 Find the latest variant for this color
                 $variant = ProductColorVariant::where('product_color_id', $colorId)
                     ->whereHas('productcolor', function ($query) use ($product) {
                         $query->where('product_id', $product->id);
@@ -145,7 +151,7 @@ class ProductController extends Controller
                     ->first();
     
                 if ($variant) {
-                    // Update the existing variant
+                    // ✅ Update Existing Variant
                     $variant->update([
                         'expected_delivery' => $colorData['expected_delivery'],
                         'quantity' => $colorData['quantity'],
@@ -153,7 +159,7 @@ class ProductController extends Controller
                         'receiving_status' => 'pending',
                     ]);
                 } else {
-                    // Create a new variant if none exists
+                    // ✅ Create a New Variant if None Exists
                     ProductColorVariant::create([
                         'product_color_id' => $colorId,
                         'expected_delivery' => $colorData['expected_delivery'],
