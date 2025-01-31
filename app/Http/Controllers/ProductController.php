@@ -108,41 +108,27 @@ class ProductController extends Controller
     public function manufacture($id)
     {
         $product = Product::with([
-            'productColors.color', 
+            'productColors.color',
             'productColors.productcolorvariants'
         ])->findOrFail($id);
-    
+
         return view('products.manufacture', compact('product'));
     }
-    
+
 
     public function update_manufacture(Request $request, Product $product)
     {
         try {
-            dd($request->all(), $product);
-            $validated = $request->validate([
-                'colors' => 'required|array',
-                'colors.*.color_id' => [
-                        'required',
-                        Rule::in(ProductColor::where('product_id', $product->id)->pluck('id')->map(fn($id) => (int) $id)->toArray()),
-                    ],
-                'colors.*.expected_delivery' => 'required|date',
-                'colors.*.quantity' => 'required|integer|min:1',
-            ]);
-
             DB::beginTransaction();
-    
-            // ✅ Validate Request
-           
-    
+
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'Pending'
             ]);
-    
+
             // ✅ Process Each Color Variant
-            foreach ($validated['colors'] as $colorId => $colorData) {
+            foreach ($request->colors as $colorId => $colorData) {
                 // 🔎 Find the latest variant for this color
                 $variant = ProductColorVariant::where('product_color_id', $colorId)
                     ->whereHas('productcolor', function ($query) use ($product) {
@@ -150,7 +136,7 @@ class ProductController extends Controller
                     })
                     ->latest()
                     ->first();
-    
+
                 if ($variant) {
                     // ✅ Update Existing Variant
                     $variant->update([
@@ -170,16 +156,16 @@ class ProductController extends Controller
                     ]);
                 }
             }
-    
+
             DB::commit();
-    
+
             return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);
         }
     }
-    
+
 
 
     public function reschedule(Request $request)
