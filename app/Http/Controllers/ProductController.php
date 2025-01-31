@@ -119,7 +119,7 @@ class ProductController extends Controller
     public function update_manufacture(Request $request, Product $product)
     {
         try {
-            dd($request->all());
+            dd($request->all(), $product);
             $validated = $request->validate([
                 'colors' => 'required|array',
                 'colors.*.color_id' => [
