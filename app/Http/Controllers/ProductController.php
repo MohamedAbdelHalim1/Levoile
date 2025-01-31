@@ -126,9 +126,7 @@ class ProductController extends Controller
                 'colors' => 'required|array',
                 'colors.*.color_id' => [
                     'required',
-                    Rule::exists('product_colors', 'id')->where(function ($query) use ($product) {
-                        $query->where('product_id', $product->id);
-                    }),
+                    Rule::in(ProductColor::where('product_id', $product->id)->pluck('id')->toArray()),
                 ],
                 'colors.*.expected_delivery' => 'required|date',
                 'colors.*.quantity' => 'required|integer|min:1',
