@@ -289,7 +289,7 @@
                                     @elseif ($product->receiving_status === 'Complete')
                                         <span class="badge bg-success">{{ __('تم التسليم') }}</span>
                                     @elseif ($product->receiving_status === 'Pending')
-                                        <span class="badge bg-danger">{{ __('في انتظار التسليم') }}</span>
+                                        <span class="badge bg-warning">{{ __('في انتظار التسليم') }}</span>
                                     @endif
                                 </td>
                                 <td>

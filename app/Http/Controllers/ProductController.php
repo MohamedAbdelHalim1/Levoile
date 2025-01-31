@@ -124,7 +124,7 @@ class ProductController extends Controller
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
-                'receiving_status' => 'Pending'
+                'receiving_status' => 'pending'
             ]);
     
             foreach ($request->colors as $colorId => $colorData) {
