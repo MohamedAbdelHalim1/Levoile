@@ -167,7 +167,7 @@
                                                         @elseif ($variant->status === 'partial')
                                                         <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
                                                         @elseif ($variant->status === 'postponed')
-                                                        <span class="badge bg-warning">{{ __('مؤجل') }}</span>
+                                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
                                                     @elseif ($variant->status === 'complete')
                                                         <span class="badge bg-danger">{{ __('مكتمل') }}</span>
                                                     @elseif ($variant->status === 'cancel')

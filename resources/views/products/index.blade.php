@@ -230,6 +230,12 @@
                                                             @case('processing')
                                                                 {{ __('جاري التصنيع') }}
                                                             @break
+                                                            @case('postponed')
+                                                                {{ __('مؤجل ') }}
+                                                            @break
+                                                            @case('partial')
+                                                                {{ __('جزئي الاستلام') }}
+                                                            @break
 
                                                             @case('complete')
                                                                 {{ __('تم التصنيع') }}
@@ -273,6 +279,7 @@
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
                                                                 class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
+                                                                
                                                         @endif
                                                     </td>
 
