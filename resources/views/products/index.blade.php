@@ -215,30 +215,67 @@
                                                         : null;
                                                 @endphp
                                                 <tr>
+                                                    <!-- Color Name -->
                                                     <td>{{ $productColor->color->name }}</td>
-                                                    @if ($variant->status === 'New')
-                                                        <td>{{ __('لم يتم البدء') }}</td>
-                                                    @elseif($variant->status === 'processing')
-                                                        <td>{{ __('جاري التصنيع') }}</td>
-                                                    @elseif($variant->status === 'complete')
-                                                        <td>{{ __('تم التصنيع') }}</td>
-                                                    @elseif($variant->status === 'cancel')
-                                                        <td>{{ __('تم الغاء التصنيع') }}</td>
-                                                    @elseif($variant->status === 'stop')
-                                                        <td>{{ __('تم ايقاف التصنيع') }}</td>
-                                                    @endif
+
+                                                    <!-- Manufacturing Status -->
                                                     <td>
+                                                        @switch($variant->status)
+                                                            @case('New')
+                                                                {{ __('لم يتم البدء') }}
+                                                            @break
+
+                                                            @case('processing')
+                                                                {{ __('جاري التصنيع') }}
+                                                            @break
+
+                                                            @case('complete')
+                                                                {{ __('تم التصنيع') }}
+                                                            @break
+
+                                                            @case('cancel')
+                                                                {{ __('تم الغاء التصنيع') }}
+                                                            @break
+
+                                                            @case('stop')
+                                                                {{ __('تم ايقاف التصنيع') }}
+                                                            @break
+
+                                                            @default
+                                                                {{ __('غير معروف') }}
+                                                        @endswitch
+                                                    </td>
+
+                                                    <!-- Receiving Status with Remaining/Overdue Days -->
+                                                    <td>
+                                                        @php
+                                                            $remainingDays = $variant
+                                                                ? \Carbon\Carbon::parse(
+                                                                    $variant->expected_delivery,
+                                                                )->diffInDays(now(), false)
+                                                                : null;
+                                                        @endphp
+
                                                         @if ($variant->receiving_status === 'New')
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
-                                                            <span class="badge bg-pink">{{ $remainingDays }}</span>
+                                                            @if ($remainingDays > 0)
+                                                                <span class="badge bg-success">{{ $remainingDays }} يوم
+                                                                    متبقي</span>
+                                                            @elseif ($remainingDays === 0)
+                                                                <span class="badge bg-warning">الاستلام اليوم</span>
+                                                            @else
+                                                                <span class="badge bg-danger">{{ abs($remainingDays) }} يوم
+                                                                    تأخير</span>
+                                                            @endif
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
                                                                 class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $variant->quantity ?? 0 }}</td>
 
+                                                    <!-- Quantity -->
+                                                    <td>{{ $variant->quantity ?? 0 }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
