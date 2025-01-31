@@ -188,6 +188,8 @@
                                         <span class="badge bg-danger">{{ __('ملغي') }}</span>
                                     @elseif ($product->status === 'pending')
                                         <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
+                                    @elseif($totalVariants === $processingVariants)
+                                    <span class="badge bg-info">{{ __('مكتمل') }}</span>
                                     @elseif($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
                                             ({{ $processingVariants }}/{{ $totalVariants }})

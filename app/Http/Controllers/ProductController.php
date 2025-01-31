@@ -305,6 +305,7 @@ class ProductController extends Controller
                     'receiving_status' => 'Postponed',
 
                 ]);
+             
             } else {
                 // Fully receive the current variant
                 $variant->receiving_quantity = $variant->quantity - $validated['remaining_quantity'];
