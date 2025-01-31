@@ -168,7 +168,7 @@ class ProductController extends Controller
             return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
+            dd($e);
         }
     }
     
