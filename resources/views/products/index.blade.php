@@ -189,7 +189,7 @@
                                     @elseif ($product->status === 'pending')
                                         <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
                                     @elseif($totalVariants === $processingVariants)
-                                    <span class="badge bg-info">{{ __('مكتمل') }}</span>
+                                        <span class="badge bg-info">{{ __('مكتمل') }}</span>
                                     @elseif($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
                                             ({{ $processingVariants }}/{{ $totalVariants }})
@@ -230,9 +230,11 @@
                                                             @case('processing')
                                                                 {{ __('جاري التصنيع') }}
                                                             @break
+
                                                             @case('postponed')
                                                                 {{ __('مؤجل ') }}
                                                             @break
+
                                                             @case('partial')
                                                                 {{ __('جزئي الاستلام') }}
                                                             @break
@@ -273,13 +275,16 @@
                                                             @elseif ($remainingDays === 0)
                                                                 <span class="badge bg-warning">الاستلام اليوم</span>
                                                             @else
-                                                                <span class="badge bg-success">{{ abs($remainingDays) }} يوم
+                                                                <span class="badge bg-success">{{ abs($remainingDays) }}
+                                                                    يوم
                                                                     متبقي</span>
                                                             @endif
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
                                                                 class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
-                                                                
+                                                        @elseif ($variant->receiving_status === 'postponed')
+                                                            <span
+                                                                class="badge bg-pink">{{ $variant->expected_delivery }}</span>
                                                         @endif
                                                     </td>
 
