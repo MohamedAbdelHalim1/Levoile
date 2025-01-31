@@ -315,26 +315,31 @@ class ProductController extends Controller
                 $variant->save();
             }
 
-            $counter = 0;
-            $variantCount = $product->productColors->sum(function ($color) {
-                return $color->productcolorvariants->count();
-            });
+            $fullyReceivedCount = 0;
+            $totalVariants = 0;
+            
+            // Loop through product colors and check receiving quantity
             foreach ($product->productColors as $productColor) {
                 foreach ($productColor->productcolorvariants as $variant) {
-                    if ($variant->status === 'complete') {
-                        $counter++;
+                    $totalVariants++;
+            
+                    // If receiving_quantity is equal to quantity, consider it fully received
+                    if ($variant->receiving_quantity >= $variant->quantity) {
+                        $fullyReceivedCount++;
                     }
                 }
             }
-
-            if ($counter === $variantCount) {
+            
+            // If all variants are fully received, mark product as complete
+            if ($fullyReceivedCount === $totalVariants && $totalVariants > 0) {
                 $product->receiving_status = 'complete';
                 $product->status = 'complete';
-                $product->save();
             } else {
                 $product->receiving_status = 'partial';
-                $product->save();
             }
+            
+            $product->save();
+            
 
             return response()->json([
                 'status' => 'success',
