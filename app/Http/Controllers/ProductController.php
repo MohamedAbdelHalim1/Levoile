@@ -120,23 +120,29 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'Pending'
             ]);
-
-            // ✅ Process Each Color Variant
+    
             foreach ($request->colors as $colorId => $colorData) {
+                // ✅ Ensure the `product_color_id` exists
+                $productColor = ProductColor::where('product_id', $product->id)
+                    ->where('color_id', $colorId)
+                    ->first();
+    
+                if (!$productColor) {
+                    DB::rollBack();
+                    return dd('error', "لون المنتج غير موجود: $colorId");
+                }
+    
                 // 🔎 Find the latest variant for this color
-                $variant = ProductColorVariant::where('product_color_id', $colorId)
-                    ->whereHas('productcolor', function ($query) use ($product) {
-                        $query->where('product_id', $product->id);
-                    })
+                $variant = ProductColorVariant::where('product_color_id', $productColor->id)
                     ->latest()
                     ->first();
-
+    
                 if ($variant) {
                     // ✅ Update Existing Variant
                     $variant->update([
@@ -148,7 +154,7 @@ class ProductController extends Controller
                 } else {
                     // ✅ Create a New Variant if None Exists
                     ProductColorVariant::create([
-                        'product_color_id' => $colorId,
+                        'product_color_id' => $productColor->id, // ✅ Use the correct `id`
                         'expected_delivery' => $colorData['expected_delivery'],
                         'quantity' => $colorData['quantity'],
                         'status' => 'processing',
@@ -156,15 +162,16 @@ class ProductController extends Controller
                     ]);
                 }
             }
-
+    
             DB::commit();
-
+    
             return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            dd('error', $e->getMessage());
         }
     }
+    
 
 
 
