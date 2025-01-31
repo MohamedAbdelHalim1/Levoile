@@ -119,9 +119,7 @@ class ProductController extends Controller
     public function update_manufacture(Request $request, Product $product)
     {
         try {
-            DB::beginTransaction();
-    
-            // ✅ Validate Request
+            dd($request->all());
             $validated = $request->validate([
                 'colors' => 'required|array',
                 'colors.*.color_id' => [
@@ -131,6 +129,11 @@ class ProductController extends Controller
                 'colors.*.expected_delivery' => 'required|date',
                 'colors.*.quantity' => 'required|integer|min:1',
             ]);
+
+            DB::beginTransaction();
+    
+            // ✅ Validate Request
+           
     
             // ✅ Update Product Status to "Processing"
             $product->update([
