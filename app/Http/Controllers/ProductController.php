@@ -290,8 +290,8 @@ class ProductController extends Controller
                 // Update the current variant as "Partially Received"
                 $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
                 $variant->note = $request->note;
-                $variant->status = 'Partial';
-                $variant->receiving_status = 'Partial';
+                $variant->status = 'partial';
+                $variant->receiving_status = 'partial';
                 $variant->save();
 
                 // Create a new variant for the remaining quantity
@@ -327,11 +327,11 @@ class ProductController extends Controller
             }
 
             if ($counter === $variantCount) {
-                $product->receving_status = 'Complete';
-                $product->status = 'Complete';
+                $product->receiving_status = 'complete';
+                $product->status = 'complete';
                 $product->save();
             } else {
-                $product->receving_status = 'Partial';
+                $product->receiving_status = 'partial';
                 $product->save();
             }
 
