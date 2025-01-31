@@ -104,7 +104,7 @@ class ProductController extends Controller
     }
 
 
-    public function manufacture(Product $product)
+    public function manufacture($id)
     {
         $product = Product::with(['productColors.color', 'productColors.productcolorvariants'])->findOrFail($id);
         return view('products.manufacture', compact('product'));
