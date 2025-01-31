@@ -125,9 +125,9 @@ class ProductController extends Controller
             $validated = $request->validate([
                 'colors' => 'required|array',
                 'colors.*.color_id' => [
-                    'required',
-                    Rule::in(ProductColor::where('product_id', $product->id)->pluck('id')->toArray()),
-                ],
+                        'required',
+                        Rule::in(ProductColor::where('product_id', $product->id)->pluck('id')->map(fn($id) => (int) $id)->toArray()),
+                    ],
                 'colors.*.expected_delivery' => 'required|date',
                 'colors.*.quantity' => 'required|integer|min:1',
             ]);
