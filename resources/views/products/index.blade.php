@@ -230,7 +230,7 @@
                                                     <td>
                                                         @if ($variant->receiving_status === 'New')
                                                             <span>-</span>
-                                                        @elseif ($variant->receiving_status === 'Partial')
+                                                        @elseif ($variant->receiving_status === 'pending')
                                                             <span class="badge bg-pink">{{ $remainingDays }}</span>
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
