@@ -259,14 +259,14 @@
                                                         @if ($variant->receiving_status === 'New')
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
-                                                            @if ($remainingDays < 0)
-                                                                <span class="badge bg-success">{{ $remainingDays }} يوم
-                                                                    متبقي</span>
+                                                            @if ($remainingDays > 0)
+                                                                <span class="badge bg-danger">{{ $remainingDays }} يوم
+                                                                    متأخر</span>
                                                             @elseif ($remainingDays === 0)
                                                                 <span class="badge bg-warning">الاستلام اليوم</span>
                                                             @else
-                                                                <span class="badge bg-danger">{{ abs($remainingDays) }} يوم
-                                                                    تأخير</span>
+                                                                <span class="badge bg-success">{{ abs($remainingDays) }} يوم
+                                                                    متبقي</span>
                                                             @endif
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
@@ -285,11 +285,11 @@
                                     @if ($product->receiving_status === 'New')
                                         <span>-</span>
                                     @elseif ($product->receiving_status === 'Partial')
-                                        <span class="badge bg-pink">({{ __('تسليم جزئي') }})</span>
+                                        <span class="badge bg-pink">{{ __('تسليم جزئي') }}</span>
                                     @elseif ($product->receiving_status === 'Complete')
-                                        <span class="badge bg-success">({{ __('تم التسليم') }})</span>
+                                        <span class="badge bg-success">{{ __('تم التسليم') }}</span>
                                     @elseif ($product->receiving_status === 'Pending')
-                                        <span class="badge bg-danger">({{ __('في انتظار التسليم') }})</span>
+                                        <span class="badge bg-danger">{{ __('في انتظار التسليم') }}</span>
                                     @endif
                                 </td>
                                 <td>
