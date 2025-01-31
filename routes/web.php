@@ -173,8 +173,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('factories', FactoryController::class);
     Route::delete('/product-color/{id}', [ProductController::class, 'deleteProductColor'])->name('product-color.delete');
     Route::get('/products/{product}/receive', [ProductController::class, 'receive'])->name('products.receive');
-    Route::get('/products/{product}/manufacture', [ProductController::class, 'manufacture'])->name('products.manufacture');
-    Route::post('/products/{id}/manufacture', [ProductController::class, 'update_manufacture'])->name('products.update.manufacture');
+    Route::get('/products/{id}/manufacture', [ProductController::class, 'manufacture'])->name('products.manufacture');
+    Route::post('/products/{product}/manufacture', [ProductController::class, 'update_manufacture'])->name('products.update.manufacture');
     Route::post('/products/variants/update-status', [ProductController::class, 'updateStatus']);
 
     Route::post('/products/{product}/receive', [ProductController::class, 'submitReceive'])->name('products.submitReceive');

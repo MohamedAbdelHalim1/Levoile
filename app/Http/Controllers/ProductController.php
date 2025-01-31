@@ -106,40 +106,73 @@ class ProductController extends Controller
 
     public function manufacture($id)
     {
-        $product = Product::with(['productColors.color', 'productColors.productcolorvariants'])->findOrFail($id);
+        $product = Product::with([
+            'productColors.color', 
+            'productColors.productcolorvariants'
+        ])->findOrFail($id);
+    
         return view('products.manufacture', compact('product'));
     }
+    
 
     public function update_manufacture(Request $request, Product $product)
     {
         try {
             DB::beginTransaction();
-
+    
+            // Validate the request
+            $validated = $request->validate([
+                'colors' => 'required|array',
+                'colors.*.color_id' => 'required|exists:product_colors,id',
+                'colors.*.expected_delivery' => 'required|date',
+                'colors.*.quantity' => 'required|integer|min:1',
+            ]);
+    
+            // Update the product status
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'Pending'
             ]);
-
-            foreach ($request->colors as $colorId => $colorData) {
-                ProductColorVariant::update(
-                    [
+    
+            foreach ($validated['colors'] as $colorId => $colorData) {
+                // Find the correct variant for this product & color
+                $variant = ProductColorVariant::where('product_color_id', $colorId)
+                    ->whereHas('productcolor', function ($query) use ($product) {
+                        $query->where('product_id', $product->id);
+                    })
+                    ->latest()
+                    ->first();
+    
+                if ($variant) {
+                    // Update the existing variant
+                    $variant->update([
                         'expected_delivery' => $colorData['expected_delivery'],
                         'quantity' => $colorData['quantity'],
                         'status' => 'processing',
                         'receiving_status' => 'pending',
-                    ]
-                );
+                    ]);
+                } else {
+                    // Create a new variant if none exists
+                    ProductColorVariant::create([
+                        'product_color_id' => $colorId,
+                        'expected_delivery' => $colorData['expected_delivery'],
+                        'quantity' => $colorData['quantity'],
+                        'status' => 'processing',
+                        'receiving_status' => 'pending',
+                    ]);
+                }
             }
-
-
+    
             DB::commit();
-
+    
             return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
         }
     }
+    
+
 
     public function reschedule(Request $request)
     {
@@ -321,21 +354,21 @@ class ProductController extends Controller
             'status' => 'required|in:stop,cancel',
             'note' => 'required|string|max:512'
         ]);
-    
+
         try {
             $variant = ProductColorVariant::findOrFail($request->variant_id);
             $product = Product::findOrFail($request->product_id);
-    
+
             // Update the variant status and note
             $variant->status = $request->status;
             $variant->note = $request->note;
             $variant->save();
-    
+
             // Check if all variants of the product are canceled or stopped
             $allVariants = $product->productColors->sum(function ($color) {
                 return $color->productcolorvariants->count();
             });
-    
+
             $canceledOrStopped = 0;
             foreach ($product->productColors as $productColor) {
                 foreach ($productColor->productcolorvariants as $variant) {
@@ -344,20 +377,20 @@ class ProductController extends Controller
                     }
                 }
             }
-    
+
             // If all variants are either canceled or stopped, update the product status
             if ($canceledOrStopped === $allVariants) {
                 $product->status = $request->status; // Make product also "stop" or "cancel"
                 $product->receving_status = $request->status;
                 $product->save();
             }
-    
+
             return response()->json(['message' => 'تم تحديث الحالة بنجاح']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
 

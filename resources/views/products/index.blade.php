@@ -258,7 +258,7 @@
                                 <td>
                                     <div class="d-flex flex-column gap-2">
                                         <a href="{{ route('products.manufacture', $product->id) }}"
-                                            class="btn btn-primary w-100">{{ __('تصنيع') }}</a>
+                                            class="btn btn-info w-100">{{ __('تصنيع') }}</a>
                                         @if (auth()->user()->hasPermission('عرض منتج'))
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-primary w-100">{{ __('عرض') }}</a>
