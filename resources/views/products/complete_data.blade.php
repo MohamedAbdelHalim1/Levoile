@@ -66,17 +66,17 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="name">ألاسم</label>
-                                <input type="text" id="name" name="name" class="form-control"
+                                <input type="text" id="name" name="name" class="form-control" required
                                     value="{{ $product->name }}">
                             </div>
                             <div class="mb-3">
                                 <label for="store_launch">طرح المنتج</label>
-                                <input type="text" id="store_launch" name="store_launch" class="form-control"
+                                <input type="text" id="store_launch" name="store_launch" class="form-control" required
                                     value="{{ $product->store_launch }}">
                             </div>
                             <div class="mb-3">
                                 <label for="price">السعر</label>
-                                <input type="number" id="price" name="price" class="form-control" step="0.01"
+                                <input type="number" id="price" name="price" class="form-control" step="0.01" required
                                     value="{{ $product->price }}">
                             </div>
 
@@ -99,7 +99,7 @@
                                                     <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
                                                     <td>
                                                         <input type="text"
-                                                            name="colors[{{ $productColor->color_id }}][sku]"
+                                                            name="colors[{{ $productColor->color_id }}][sku]" required 
                                                             class="form-control" value="{{ $productColor->sku }}">
                                                     </td>
                                                 </tr>
