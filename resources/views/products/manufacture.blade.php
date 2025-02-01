@@ -27,18 +27,22 @@
                                 <tr>
                                     <td>{{ $productColor->color->name }}</td>
                                     <td>
-                                        <!-- Start Manufacturing Button -->
-                                        <button type="button" class="btn btn-primary start-manufacturing-btn"
-                                            data-color-id="{{ $productColor->id }}"
-                                            data-color-name="{{ $productColor->color->name }}" data-bs-toggle="modal"
-                                            data-bs-target="#manufacturingModal">
-                                            {{ __('ابدأ التصنيع') }}
-                                        </button>
 
                                         <!-- If this color has a variant, show cancel/stop buttons -->
                                         @php
                                             $variant = $productColor->productcolorvariants->last();
                                         @endphp
+                                        @if ($variant->status === 'new')
+                                            <!-- Start Manufacturing Button -->
+                                            <button type="button" class="btn btn-primary start-manufacturing-btn"
+                                                data-color-id="{{ $productColor->id }}"
+                                                data-color-name="{{ $productColor->color->name }}" data-bs-toggle="modal"
+                                                data-bs-target="#manufacturingModal">
+                                                {{ __('ابدأ التصنيع') }}
+                                            </button>
+                                        @endif
+
+
 
                                         @if ($variant)
                                             <!-- Cancel Button -->
