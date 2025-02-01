@@ -181,7 +181,7 @@
                                                         data-variant-id="{{ $variant->id }}" disabled>تأكيد</button>
                                                     <button type="button" class="btn btn-warning edit-btn"
                                                         data-variant-id="{{ $variant->id }}">تعديل</button>
-                                                    @if ($variant->status !== 'partial' || $variant->status !== 'complete')
+                                                    @if ($variant->status != 'partial' || $variant->status != 'complete')
                                                         <button type="button" class="btn btn-danger cancel-btn"
                                                             data-variant-id="{{ $variant->id }}"
                                                             data-product-id="{{ $product->id }}"
