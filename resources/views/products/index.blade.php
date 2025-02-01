@@ -289,8 +289,7 @@
                                                             <span
                                                                 class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
                                                         @elseif ($variant->receiving_status === 'postponed')
-                                                            <span
-                                                                class="badge bg-pink">{{ $variant->expected_delivery }}</span>
+                                                            <span>-</span>
                                                         @endif
                                                     </td>
 
