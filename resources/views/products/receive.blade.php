@@ -164,9 +164,9 @@
                                                         <span class="badge bg-success">{{ __('جديد') }}</span>
                                                     @elseif ($variant->status === 'processing')
                                                         <span class="badge bg-warning">{{ __('جاري التصنيع') }}</span>
-                                                        @elseif ($variant->status === 'partial')
+                                                    @elseif ($variant->status === 'partial')
                                                         <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
-                                                        @elseif ($variant->status === 'postponed')
+                                                    @elseif ($variant->status === 'postponed')
                                                         <span class="badge bg-info">{{ __('مؤجل') }}</span>
                                                     @elseif ($variant->status === 'complete')
                                                         <span class="badge bg-danger">{{ __('مكتمل') }}</span>
@@ -181,15 +181,17 @@
                                                         data-variant-id="{{ $variant->id }}" disabled>تأكيد</button>
                                                     <button type="button" class="btn btn-warning edit-btn"
                                                         data-variant-id="{{ $variant->id }}">تعديل</button>
-                                                    <button type="button" class="btn btn-danger cancel-btn"
-                                                        data-variant-id="{{ $variant->id }}"
-                                                        data-product-id="{{ $product->id }}"
-                                                        data-status="cancel">الغاء</button>
+                                                    @if ($variant->status !== 'partial' || $variant->status !== 'complete')
+                                                        <button type="button" class="btn btn-danger cancel-btn"
+                                                            data-variant-id="{{ $variant->id }}"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-status="cancel">الغاء</button>
 
-                                                    <button type="button" class="btn btn-secondary stop-btn"
-                                                        data-variant-id="{{ $variant->id }}"
-                                                        data-product-id="{{ $product->id }}"
-                                                        data-status="stop">ايقاف</button>
+                                                        <button type="button" class="btn btn-secondary stop-btn"
+                                                            data-variant-id="{{ $variant->id }}"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-status="stop">ايقاف</button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -285,7 +287,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="variantId">
-                    <input type="hidden" id="productId">  <!-- Added Product ID -->
+                    <input type="hidden" id="productId"> <!-- Added Product ID -->
                     <input type="hidden" id="statusType">
 
                     <label for="statusNote" class="form-label">الملاحظات</label>

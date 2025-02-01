@@ -356,7 +356,7 @@ class ProductController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'variant_id' => 'required|exists:productcolorvariants,id',
+            'variant_id' => 'required|exists:product_color_variants,id',
             'product_id' => 'required|exists:products,id', // Validate product ID
             'status' => 'required|in:stop,cancel',
             'note' => 'required|string|max:512'
