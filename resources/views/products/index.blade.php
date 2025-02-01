@@ -189,7 +189,6 @@
                                     @elseif ($product->status === 'pending')
                                         <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
                                     @elseif($product->status === 'complete')
-                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
                                         <span class="badge bg-info">{{ __('مكتمل') }}</span>
                                     @elseif($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
