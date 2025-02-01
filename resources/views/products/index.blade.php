@@ -174,28 +174,45 @@
 
                                 <td>
                                     @php
-                                        $totalVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->count();
-                                        });
-
-                                        $processingVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->where('status', 'complete')->count();
-                                        });
+                                        $fullyReceivedCount = 0;
+                                        $totalVariants = 0;
+                                
+                                        // Loop through product colors and check receiving quantity
+                                        foreach ($product->productColors as $productColor) {
+                                            foreach ($productColor->productcolorvariants as $variant) {
+                                                $totalVariants++;
+                                
+                                                // If receiving_quantity is equal to quantity, consider it fully received
+                                                if ($variant->receiving_quantity >= $variant->quantity) {
+                                                    $fullyReceivedCount++;
+                                                }
+                                            }
+                                        }
+                                
+                                        // Determine product status based on quantity and receiving quantity
+                                        if ($fullyReceivedCount === $totalVariants && $totalVariants > 0) {
+                                            $product->receiving_status = 'complete';
+                                            $product->status = 'complete';
+                                        } else {
+                                            $product->receiving_status = 'partial';
+                                        }
                                     @endphp
+                                
                                     @if ($product->status === 'new')
                                         <span class="badge bg-primary">{{ __('طلب جديد') }}</span>
                                     @elseif ($product->status === 'cancel')
                                         <span class="badge bg-danger">{{ __('ملغي') }}</span>
                                     @elseif ($product->status === 'pending')
                                         <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
-                                    @elseif($totalVariants === $processingVariants)
+                                    @elseif ($fullyReceivedCount === $totalVariants && $totalVariants > 0)
                                         <span class="badge bg-info">{{ __('مكتمل') }}</span>
-                                    @elseif($product->status === 'processing')
+                                    @elseif ($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
-                                            ({{ $processingVariants }}/{{ $totalVariants }})
+                                            ({{ $fullyReceivedCount }}/{{ $totalVariants }})
                                         </span>
                                     @endif
                                 </td>
+                                
                                 <td>
                                     <table class="table table-bordered mb-0">
                                         <thead>
