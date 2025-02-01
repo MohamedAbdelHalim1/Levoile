@@ -177,21 +177,11 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-info validate-btn"
-                                                        data-variant-id="{{ $variant->id }}">تأكيد</button>
-                                                    {{-- <button type="button" class="btn btn-warning edit-btn"
-                                                        data-variant-id="{{ $variant->id }}">تعديل</button> --}}
                                                     @if ($variant->status != 'partial' && $variant->status != 'complete')
-                                                        <button type="button" class="btn btn-danger cancel-btn"
-                                                            data-variant-id="{{ $variant->id }}"
-                                                            data-product-id="{{ $product->id }}"
-                                                            data-status="cancel">الغاء</button>
-
-                                                        <button type="button" class="btn btn-secondary stop-btn"
-                                                            data-variant-id="{{ $variant->id }}"
-                                                            data-product-id="{{ $product->id }}"
-                                                            data-status="stop">ايقاف</button>
+                                                        <button type="button" class="btn btn-info validate-btn"
+                                                            data-variant-id="{{ $variant->id }}">تأكيد</button>
                                                     @endif
+
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -175,11 +175,11 @@
                                 <td>
                                     @php
                                         $totalVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->count();
+                                            return $color->productcolorvariants->where('parent_id', null)->count();
                                         });
 
                                         $processingVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->where('status', 'complete')->count();
+                                            return $color->productcolorvariants->where('status', 'processing')->count();
                                         });
                                     @endphp
                                     @if ($product->status === 'new')
