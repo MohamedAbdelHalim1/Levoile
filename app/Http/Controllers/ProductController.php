@@ -368,6 +368,7 @@ class ProductController extends Controller
     
             // Update the variant status and note
             $variant->status = $request->status;
+            $variant->receiving_status = $request->status;
             $variant->note = $request->note;
             $variant->save();
     
