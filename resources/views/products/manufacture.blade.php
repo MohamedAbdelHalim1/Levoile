@@ -150,41 +150,46 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $(".start-manufacturing-btn").on("click", function() {
-                $("#modal-color-id").val($(this).data("color-id"));
-                $("#modal-color-name").val($(this).data("color-name"));
-            });
 
-            $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function() {
-                $("#variantId").val($(this).data("variant-id"));
-                $("#productId").val($(this).data("product-id"));
-                $("#statusType").val($(this).data("status"));
-                $("#statusNote").val("");
+@endsection
 
-                let modalTitle = "";
-                if ($(this).data("status") === "stop") modalTitle = "إيقاف التصنيع";
-                else if ($(this).data("status") === "cancel") modalTitle = "إلغاء التصنيع";
-                else if ($(this).data("status") === "postponed") modalTitle = "تأجيل التصنيع";
 
-                $("#statusModalLabel").text(modalTitle);
-                $("#statusModal").modal("show");
-            });
-
-            $("#saveStatusBtn").off("click").on("click", function() {
-                $.post("/products/variants/update-status", {
-                    _token: "{{ csrf_token() }}",
-                    variant_id: $("#variantId").val(),
-                    product_id: $("#productId").val(),
-                    status: $("#statusType").val(),
-                    note: $("#statusNote").val().trim()
-                }).done(response => {
-                    alert(response.message);
-                    $("#statusModal").modal("hide");
-                    location.reload();
-                }).fail(xhr => alert("خطأ: " + xhr.responseJSON.message));
-            });
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $(".start-manufacturing-btn").on("click", function() {
+            $("#modal-color-id").val($(this).data("color-id"));
+            $("#modal-color-name").val($(this).data("color-name"));
         });
-    </script>
+
+        $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function() {
+            $("#variantId").val($(this).data("variant-id"));
+            $("#productId").val($(this).data("product-id"));
+            $("#statusType").val($(this).data("status"));
+            $("#statusNote").val("");
+
+            let modalTitle = "";
+            if ($(this).data("status") === "stop") modalTitle = "إيقاف التصنيع";
+            else if ($(this).data("status") === "cancel") modalTitle = "إلغاء التصنيع";
+            else if ($(this).data("status") === "postponed") modalTitle = "تأجيل التصنيع";
+
+            $("#statusModalLabel").text(modalTitle);
+            $("#statusModal").modal("show");
+        });
+
+        $("#saveStatusBtn").off("click").on("click", function() {
+            $.post("/products/variants/update-status", {
+                _token: "{{ csrf_token() }}",
+                variant_id: $("#variantId").val(),
+                product_id: $("#productId").val(),
+                status: $("#statusType").val(),
+                note: $("#statusNote").val().trim()
+            }).done(response => {
+                alert(response.message);
+                $("#statusModal").modal("hide");
+                location.reload();
+            }).fail(xhr => alert("خطأ: " + xhr.responseJSON.message));
+        });
+    });
+</script>
 @endsection
