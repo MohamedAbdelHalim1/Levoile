@@ -75,7 +75,7 @@
                                     <td>
 
 
-                                        @if ($variant && $variant->status === 'new')
+                                        @if ($variant && $variant->status === 'new' || $variant->status === 'postponed')
                                             <!-- ✅ Start Manufacturing Button -->
                                             <button type="button" class="btn btn-primary start-manufacturing-btn"
                                                 data-color-id="{{ $productColor->id }}"

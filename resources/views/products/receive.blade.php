@@ -305,16 +305,16 @@
                 const enteredQuantity = parseInt(quantityInput.val());
                 const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
-                // Check if entered quantity is valid
-                // if (enteredQuantity > originalQuantity) {
-                //     alert("هذه الكمية غير صحيحه");
-                //     quantityInput.val(""); // Reset the input value
-                //     validateButton.prop("disabled", true); // Disable the Validate button
-                //     return;
-                // }
+                Check if entered quantity is valid
+                if (enteredQuantity > originalQuantity) {
+                    alert("هذه الكمية غير صحيحه");
+                    quantityInput.val(""); // Reset the input value
+                    validateButton.prop("disabled", true); // Disable the Validate button
+                    return;
+                }
 
-                // Enable/disable the Validate button based on valid input
-                // validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
+                Enable/disable the Validate button based on valid input
+                validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
             });
             // Handle "تعديل" button click
             $(document).on("click", ".edit-btn", function() {
@@ -507,4 +507,32 @@
             });
         });
     </script>
+
+{{-- <script>
+    $(document).ready(function() {
+        // Handle input change on receiving quantity fields
+        $(document).on("input", ".receiving-quantity", function() {
+            const quantityInput = $(this);
+            const validateButton = quantityInput.closest("tr").find(".validate-btn");
+
+            // Enable the button if input has a value, disable if blank
+            if (quantityInput.val().trim() === "" || parseInt(quantityInput.val()) <= 0) {
+                validateButton.prop("disabled", true);
+            } else {
+                validateButton.prop("disabled", false);
+            }
+        });
+
+        // Initialize button state on page load (disable buttons if input is blank)
+        $(".receiving-quantity").each(function() {
+            const quantityInput = $(this);
+            const validateButton = quantityInput.closest("tr").find(".validate-btn");
+
+            if (quantityInput.val().trim() === "" || parseInt(quantityInput.val()) <= 0) {
+                validateButton.prop("disabled", true);
+            }
+        });
+    });
+</script> --}}
+
 @endsection
