@@ -211,7 +211,7 @@
                     <div class="modal-body">
                         <!-- Remaining Quantity Field -->
                         <div class="mb-3">
-                            <label for="remainingQuantity" class="form-label">الكمية المتبقية</label>
+                            <label for="remainingQuantity" id="remainingQuantityLabel" class="form-label">الكمية المتبقية</label>
                             <input type="number" id="remainingQuantity" class="form-control" readonly>
                         </div>
 
