@@ -230,15 +230,11 @@
 
                         <!-- Reschedule Checkbox -->
                         <div class="form-check d-flex mt-4">
-                            <div>
-                                <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
-                                    style="margin-left: 10px;">
-                            </div>
-                            <div>
-                                <label class="form-check-label" for="rescheduleCheckbox">
-                                    تريد اعاده جدوله الكميه المتبقية؟
-                                </label>
-                            </div>
+                            <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
+                                style="margin-left: 10px;">
+                            <label class="form-check-label" for="rescheduleCheckbox">
+                                تريد اعاده جدوله الكميه المتبقية؟
+                            </label>
                         </div>
 
                         <!-- Expected Delivery Date -->
