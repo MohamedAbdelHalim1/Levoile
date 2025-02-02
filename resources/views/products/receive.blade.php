@@ -300,56 +300,58 @@
         $(document).ready(function() {
             // Enable/disable Validate button based on receiving quantity
             $(document).on("input", ".receiving-quantity", function() {
-                const validateButton = $(this).closest("tr").find(".validate-btn");
-                const quantityInput = $(this);
-                const enteredQuantity = quantityInput.val().trim(); // Get input value as string
-                const quantityValue = parseInt(enteredQuantity, 10); // Convert to integer
-                const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
+            const validateButton = $(this).closest("tr").find(".validate-btn");
+            const quantityInput = $(this);
+            const enteredQuantity = quantityInput.val().trim(); // Get input value as string
+            const quantityValue = parseInt(enteredQuantity, 10); // Convert to integer
+            const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
-                // Check if entered quantity is valid and not greater than original quantity
-                if (enteredQuantity === "" || isNaN(quantityValue) || quantityValue <= 0 || quantityValue >
-                    originalQuantity) {
-                    validateButton.prop("disabled", true); // Disable the Validate button
-                } else {
-                    validateButton.prop("disabled", false); // Enable the button when valid
-                }
-            });
+            // Enable the button if a valid number is entered
+            validateButton.prop("disabled", enteredQuantity === "" || isNaN(quantityValue) || quantityValue <= 0);
+        });
 
-            // Ensure buttons are correctly disabled on page load
-            $(".receiving-quantity").each(function() {
-                const quantityInput = $(this);
-                const validateButton = quantityInput.closest("tr").find(".validate-btn");
-                const enteredQuantity = quantityInput.val().trim();
+        // Ensure buttons are correctly disabled on page load
+        $(".receiving-quantity").each(function() {
+            const quantityInput = $(this);
+            const validateButton = quantityInput.closest("tr").find(".validate-btn");
+            const enteredQuantity = quantityInput.val().trim();
 
-                if (enteredQuantity === "" || isNaN(parseInt(enteredQuantity, 10)) || parseInt(
-                        enteredQuantity, 10) <= 0) {
-                    validateButton.prop("disabled", true);
-                }
-            });
+            if (enteredQuantity === "" || isNaN(parseInt(enteredQuantity, 10)) || parseInt(enteredQuantity, 10) <= 0) {
+                validateButton.prop("disabled", true);
+            }
+        });
 
-            // Handle Validate button click
-            $(document).on("click", ".validate-btn", function() {
-                const variantId = $(this).data("variant-id");
-                const row = $(this).closest("tr");
-                const remainingQuantity = parseInt(row.find(".receiving-quantity").val());
-                const originalQuantity = parseInt(row.find(".receiving-quantity").data(
-                "original-quantity"));
+        // Handle Validate button click
+        $(document).on("click", ".validate-btn", function() {
+            const variantId = $(this).data("variant-id");
+            const row = $(this).closest("tr");
+            const receivingQuantity = parseInt(row.find(".receiving-quantity").val(), 10);
+            const originalQuantity = parseInt(row.find(".receiving-quantity").data("original-quantity"), 10);
 
-                $("#rescheduleModal").data("variant-id", variantId);
-                const remaining = originalQuantity - remainingQuantity;
-                $("#remainingQuantity").val(remaining);
+            $("#rescheduleModal").data("variant-id", variantId);
 
-                // Hide reschedule fields if no remaining quantity
-                if (remaining === 0) {
-                    $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
-                    $("#expectedDeliveryContainer").addClass("d-none");
-                } else {
-                    $("#rescheduleCheckbox").closest(".form-check").removeClass("d-none");
-                    $("#expectedDeliveryContainer").addClass("d-none"); // Ensure it starts hidden
-                }
+            // Check if receiving quantity is greater than original quantity
+            if (receivingQuantity > originalQuantity) {
+                $("#remainingQuantityLabel").text("الكميه الزائده"); // Change label text
+                $("#remainingQuantity").val(receivingQuantity - originalQuantity); // Set excess quantity
+            } else {
+                $("#remainingQuantityLabel").text("الكمية المتبقية"); // Default label
+                $("#remainingQuantity").val(originalQuantity - receivingQuantity); // Set remaining quantity
+            }
 
-                $("#rescheduleModal").modal("show");
-            });
+            // Hide reschedule fields if no remaining quantity
+            if (originalQuantity - receivingQuantity === 0) {
+                $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
+                $("#expectedDeliveryContainer").addClass("d-none");
+            } else {
+                $("#rescheduleCheckbox").closest(".form-check").removeClass("d-none");
+                $("#expectedDeliveryContainer").addClass("d-none"); // Ensure it starts hidden
+            }
+
+            $("#rescheduleModal").modal("show");
+        });
+
+
             // Handle Reschedule Checkbox toggle
             $("#rescheduleCheckbox").on("change", function() {
                 const isChecked = $(this).is(":checked");
