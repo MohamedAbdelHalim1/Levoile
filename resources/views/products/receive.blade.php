@@ -374,6 +374,7 @@
                 const enteredQuantity = parseInt($(".receiving-quantity").val(), 10);
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
+            console.log(enteredQuantity);
                 // Check if notes are filled
                 if (!notes || notes.trim() === "") {
                     alert("يرجى إدخال الملاحظات");
@@ -412,6 +413,8 @@
                 const variantId = $("#rescheduleModal").data("variant-id");
                 const remainingQuantity = parseInt($("#remainingQuantity").val());
                 const newExpectedDelivery = $("#newExpectedDelivery").val();
+                const enteredQuantity = parseInt($(".receiving-quantity").val(), 10);
+
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 if (!notes || notes.trim() === "") {
@@ -437,6 +440,8 @@
                         remaining_quantity: remainingQuantity,
                         new_expected_delivery: newExpectedDelivery,
                         note: notes,
+                        entered_quantity: enteredQuantity
+
                     },
                     success: function(response) {
                         alert(response.message);
