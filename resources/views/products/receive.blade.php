@@ -371,6 +371,7 @@
                 const remainingQuantity = parseInt($("#remainingQuantity").val());
                 const isRescheduleChecked = $("#rescheduleCheckbox").is(":checked");
                 const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
+                const enteredQuantity = parseInt($(".receiving-quantity").val(), 10);
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 // Check if notes are filled
@@ -392,6 +393,7 @@
                         remaining_quantity: remainingQuantity,
                         new_expected_delivery: newExpectedDelivery,
                         note: notes,
+                        entered_quantity: enteredQuantity
                     },
                     success: function(response) {
                         alert(response.message);

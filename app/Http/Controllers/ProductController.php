@@ -276,6 +276,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'variant_id' => 'required|exists:product_color_variants,id',
             'remaining_quantity' => 'required|integer',
+            'entered_quantity' => 'required|integer',
             'new_expected_delivery' => 'nullable|date',
             'note' => 'required|string|max:512',
         ]);
@@ -307,7 +308,7 @@ class ProductController extends Controller
              
             } else {
                 // Fully receive the current variant
-                $variant->receiving_quantity = $variant->quantity - $validated['remaining_quantity'];
+                $variant->receiving_quantity = ($entered_quantity > $variant->quantity) ? $entered_quantity : $variant->quantity - $validated['remaining_quantity'];
                 $variant->status = 'complete';
                 $variant->receiving_status = 'complete';
                 $variant->note = $request->note;
