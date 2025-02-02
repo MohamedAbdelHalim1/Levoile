@@ -163,7 +163,7 @@ class ProductController extends Controller
     
             DB::commit();
     
-            return redirect()->route('products.index')->with('success', 'تم بدأ تصنيع المنتج بنجاح');
+            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('products.index')->with('error', 'حدث خطأ أثناء بدء التصنيع.');
