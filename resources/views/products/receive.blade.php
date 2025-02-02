@@ -348,7 +348,7 @@
                 }
 
                 // Hide reschedule fields if no remaining quantity
-                if (originalQuantity - receivingQuantity === 0) {
+                if (originalQuantity - receivingQuantity === 0 || receivingQuantity > originalQuantity) {
                     $("#rescheduleCheckbox").closest(".form-check").addClass("d-none");
                     $("#expectedDeliveryContainer").addClass("d-none");
                 } else {
