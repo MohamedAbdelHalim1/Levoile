@@ -302,31 +302,29 @@
             $(document).on("input", ".receiving-quantity", function() {
                 const validateButton = $(this).closest("tr").find(".validate-btn");
                 const quantityInput = $(this);
-                const enteredQuantity = parseInt(quantityInput.val());
+                const enteredQuantity = quantityInput.val().trim(); // Get input value as string
+                const quantityValue = parseInt(enteredQuantity, 10); // Convert to integer
                 const originalQuantity = parseInt(quantityInput.attr("data-original-quantity")) || 0;
 
-                //Check if entered quantity is valid
-                if (enteredQuantity > originalQuantity) {
-                    alert("هذه الكمية غير صحيحه");
-                    quantityInput.val(""); // Reset the input value
+                // Check if entered quantity is valid and not greater than original quantity
+                if (enteredQuantity === "" || isNaN(quantityValue) || quantityValue <= 0 || quantityValue >
+                    originalQuantity) {
                     validateButton.prop("disabled", true); // Disable the Validate button
-                    return;
+                } else {
+                    validateButton.prop("disabled", false); // Enable the button when valid
                 }
-
-                //Enable/disable the Validate button based on valid input
-                validateButton.prop("disabled", !enteredQuantity || enteredQuantity <= 0);
             });
-            // Handle "تعديل" button click
-            $(document).on("click", ".edit-btn", function() {
-                const row = $(this).closest("tr");
-                const quantityInput = row.find(".receiving-quantity");
 
-                // Enable the input field
-                quantityInput.prop("disabled", false);
+            // Ensure buttons are correctly disabled on page load
+            $(".receiving-quantity").each(function() {
+                const quantityInput = $(this);
+                const validateButton = quantityInput.closest("tr").find(".validate-btn");
+                const enteredQuantity = quantityInput.val().trim();
 
-                // Enable the "تأكيد" button
-                const validateButton = row.find(".validate-btn");
-                validateButton.prop("disabled", false);
+                if (enteredQuantity === "" || isNaN(parseInt(enteredQuantity, 10)) || parseInt(
+                        enteredQuantity, 10) <= 0) {
+                    validateButton.prop("disabled", true);
+                }
             });
 
             // Handle Validate button click
@@ -335,14 +333,8 @@
                 const row = $(this).closest("tr");
                 const remainingQuantity = parseInt(row.find(".receiving-quantity").val());
                 const originalQuantity = parseInt(row.find(".receiving-quantity").data(
-                    "original-quantity"));
+                "original-quantity"));
 
-                // if (!remainingQuantity || remainingQuantity <= 0) {
-                //     alert("الرجاء ادخال كمية صحيحة");
-                //     return;
-                // }
-
-                // Populate modal and adjust visibility of fields
                 $("#rescheduleModal").data("variant-id", variantId);
                 const remaining = originalQuantity - remainingQuantity;
                 $("#remainingQuantity").val(remaining);
@@ -358,7 +350,6 @@
 
                 $("#rescheduleModal").modal("show");
             });
-
             // Handle Reschedule Checkbox toggle
             $("#rescheduleCheckbox").on("change", function() {
                 const isChecked = $(this).is(":checked");
@@ -507,7 +498,4 @@
             });
         });
     </script>
-
-
-
 @endsection
