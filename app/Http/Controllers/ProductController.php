@@ -308,7 +308,7 @@ class ProductController extends Controller
              
             } else {
                 // Fully receive the current variant
-                $variant->receiving_quantity = ($entered_quantity > $variant->quantity) ? $entered_quantity : $variant->quantity - $validated['remaining_quantity'];
+                $variant->receiving_quantity = ($validated['entered_quantity'] > $variant->quantity) ? $validated['entered_quantity'] : $variant->quantity - $validated['remaining_quantity'];
                 $variant->status = 'complete';
                 $variant->receiving_status = 'complete';
                 $variant->note = $request->note;
