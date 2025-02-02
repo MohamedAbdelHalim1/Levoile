@@ -68,11 +68,8 @@
                                     </td>
 
                                     <td>
-                                        @if ($variant)
-                                            {{ $variant->quantity }}
-                                        @else
-                                            -
-                                        @endif
+                                            {{ $variant->quantity ?? 0}}
+                                      
                                     </td>
 
                                     <td>
