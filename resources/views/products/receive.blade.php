@@ -229,12 +229,16 @@
                         </div>
 
                         <!-- Reschedule Checkbox -->
-                        <div class="form-check mt-4">
-                            <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
-                                style="margin-left: 10px;">
-                            <label class="form-check-label" for="rescheduleCheckbox">
-                                تريد اعاده جدوله الكميه المتبقية؟
-                            </label>
+                        <div class="form-check d-flex mt-4">
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
+                                    style="margin-left: 10px;">
+                            </div>
+                            <div>
+                                <label class="form-check-label" for="rescheduleCheckbox">
+                                    تريد اعاده جدوله الكميه المتبقية؟
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Expected Delivery Date -->
@@ -340,11 +344,11 @@
                 if (receivingQuantity > originalQuantity) {
                     $("#remainingQuantityLabel").text("الكميه الزائده"); // Change label text
                     $("#remainingQuantity").val(receivingQuantity -
-                    originalQuantity); // Set excess quantity
+                        originalQuantity); // Set excess quantity
                 } else {
                     $("#remainingQuantityLabel").text("الكمية المتبقية"); // Default label
                     $("#remainingQuantity").val(originalQuantity -
-                    receivingQuantity); // Set remaining quantity
+                        receivingQuantity); // Set remaining quantity
                 }
 
                 // Hide reschedule fields if no remaining quantity
@@ -380,7 +384,7 @@
                 const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
                 const receivingQuantityInput = currentRow.find(".receiving-quantity"); // Use the stored row
                 const enteredQuantity = parseInt(receivingQuantityInput.val(),
-                10); // Get the entered quantity
+                    10); // Get the entered quantity
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 console.log(enteredQuantity);
@@ -425,7 +429,7 @@
                 const newExpectedDelivery = $("#newExpectedDelivery").val();
                 const receivingQuantityInput = currentRow.find(".receiving-quantity"); // Use the stored row
                 const enteredQuantity = parseInt(receivingQuantityInput.val(),
-                10); // Get the entered quantity
+                    10); // Get the entered quantity
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 if (!notes || notes.trim() === "") {
@@ -460,7 +464,7 @@
                     error: function(xhr) {
                         alert("Error: " + xhr.responseJSON.message);
                         rescheduleButton.prop("disabled",
-                        false); // Re-enable the button on error
+                            false); // Re-enable the button on error
                     },
                 });
             });
