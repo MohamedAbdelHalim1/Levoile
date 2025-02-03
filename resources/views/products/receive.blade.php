@@ -181,7 +181,7 @@
                                                         $variant->status != 'partial' &&
                                                             $variant->status != 'complete' &&
                                                             $variant->quantity != null &&
-                                                            !($variant->parent_id == null && $variant->status == 'processing'))
+                                                            $variant->parent_id != null)
                                                         <button type="button" class="btn btn-info validate-btn"
                                                             data-variant-id="{{ $variant->id }}">تأكيد</button>
                                                     @endif
