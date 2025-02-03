@@ -350,7 +350,7 @@
                                         @if (auth()->user()->hasPermission('إكمال بيانات المنتج'))
                                             <a href="{{ route('products.completeData', $product->id) }}"
                                                 class="btn btn-info w-100">
-                                                @if (isEmpty($product->name))
+                                                @if (empty($product->name))
                                                     أكمال البيانات
                                                 @else
                                                     تعديل البيانات
