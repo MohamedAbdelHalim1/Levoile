@@ -120,6 +120,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="mt-4">
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                </div>
             </div>
         </div>
     </div>
@@ -184,8 +187,6 @@
 
                     <div class="mt-3">
                         <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">حفظ</button>
-                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
-
                     </div>
                 </div>
             </div>
