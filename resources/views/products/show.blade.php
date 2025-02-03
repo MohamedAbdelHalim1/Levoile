@@ -30,60 +30,85 @@
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
                 <h1 class="text-center mb-4">تفاصيل المنتج</h1>
                 <div>
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <!-- Product Image -->
+                        <div class="col-md-6 text-center">
                             @if ($product->photo)
-                                <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image"
-                                    style="width:400px; height: auto;">
+                                <img src="{{ asset($product->photo) }}" alt="Product Image" class="img-fluid rounded shadow"
+                                    style="max-width: 350px; height: auto;">
                             @else
-                                <p><i>لا يوجد صورة</i></p>
+                                <p class="text-muted"><i>لا يوجد صورة</i></p>
                             @endif
                         </div>
+                    
+                        <!-- Product Details -->
                         <div class="col-md-6">
-                            <div class="d-flex">
-                                <h3>الوصف:</h3>
-                                <p>{{ $product->description }}</p>
+                            <h3 class="mb-4 text-center">تفاصيل المنتج</h3>
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-end">الوصف:</th>
+                                            <td>{{ $product->description }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">الكود:</th>
+                                            <td>{{ $product->code ?? 'لا يوجد' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">القسم:</th>
+                                            <td>{{ $product->category->name ?? 'لا يوجد' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">الموسم:</th>
+                                            <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">المصنع:</th>
+                                            <td>{{ $product->factory->name ?? 'لا يوجد' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">رقم الماركر:</th>
+                                            <td>{{ $product->marker_number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">حالة مخزون الخامات:</th>
+                                            <td>
+                                                {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
+                                                {{ $product->material->name ?? 'لا مواد متوفرة' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">الحالة:</th>
+                                            <td>
+                                                <span class="badge 
+                                                    @if ($product->status === 'new') bg-primary 
+                                                    @elseif ($product->status === 'complete') bg-success 
+                                                    @elseif ($product->status === 'partial') bg-warning 
+                                                    @elseif ($product->status === 'pending') bg-info
+                                                    @elseif ($product->status === 'processing') bg-info
+                                                    @elseif ($product->status === 'cancel') bg-danger
+                                                    @elseif ($product->status === 'stop') bg-danger
+                                                    @elseif ($product->status === 'postponed') bg-info
+                                                    @else bg-secondary @endif">
+                                                @if ($product->status === 'new') جديد 
+                                                @elseif ($product->status === 'complete') مكتمل 
+                                                @elseif ($product->status === 'partial') جزئي 
+                                                @elseif ($product->status === 'pending') قيد الانتظار
+                                                @elseif ($product->status === 'processing') قيد التنصيع
+                                                @elseif ($product->status === 'cancel') ملغي
+                                                @elseif ($product->status === 'stop') توقف
+                                                @elseif ($product->status === 'postponed') مؤجل
+                                                @else لا يوجد @endif
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-
-                            <div class="d-flex">
-                                <h3>الكود:</h3>
-                                <p>{{ $product->code ?? 'لا يوجد' }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <h3>القسم:</h3>
-                                <p>{{ $product->category->name ?? 'لا يوجد' }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <h3>الموسم:</h3>
-                                <p>{{ $product->season->name ?? 'لا يوجد' }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <h3>المصنع:</h3>
-                                <p>{{ $product->factory->name ?? 'لا يوجد' }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <h3> رقم الماركر:</h3>
-                                <p>{{ $product->marker_number }}</p>
-                            </div>
-                            <div class="d-flex">
-                                <h3> حالة مخزون الخامات:</h3>
-                                <p>{{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
-                                    {{ $product->material->name ?? 'لا مواد متوفرة' }}</p>
-                            </div>
-                            <div class="d-flex">
-                                <h3>الحالة:</h3>
-                                <p>{{ $product->status }}</p>
-                            </div>
-
-
-
                         </div>
                     </div>
-
+                    
                     <hr>
 
                     <h2>الالوان</h2>
