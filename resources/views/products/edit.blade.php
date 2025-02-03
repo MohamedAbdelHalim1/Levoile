@@ -64,8 +64,9 @@
                         </div>
 
                         <div class="col-md-3 mb-3">
+                            <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
                             <select class="form-control" id="material_id" name="material_id">
-                                <option value="">{{ __('اختر المادة') }}</option>
+                                <option value="">{{ __('اختر الخامه') }}</option>
                                 @foreach ($materials as $material)
                                     <option value="{{ $material->id }}" {{ $product->material_id == $material->id ? 'selected' : '' }}>
                                         {{ $material->name }}
@@ -113,8 +114,6 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th>{{ __('اللون') }}</th>
-                                    <th>{{ __('تاريخ الاستلام') }}</th>
-                                    <th>{{ __('الكمية') }}</th>
                                     <th>{{ __('العمليات') }}</th>
                                 </tr>
                             </thead>
