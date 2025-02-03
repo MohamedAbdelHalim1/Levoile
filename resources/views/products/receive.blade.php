@@ -177,10 +177,15 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if ($variant->status != 'partial' && $variant->status != 'complete' && $variant->quantity != null)
+                                                    @if (
+                                                        $variant->status != 'partial' &&
+                                                            $variant->status != 'complete' &&
+                                                            $variant->quantity != null &&
+                                                            !($variant->parent_id == null && $variant->status == 'processing'))
                                                         <button type="button" class="btn btn-info validate-btn"
                                                             data-variant-id="{{ $variant->id }}">تأكيد</button>
                                                     @endif
+
 
                                                 </td>
                                             </tr>
@@ -340,11 +345,11 @@
                 if (receivingQuantity > originalQuantity) {
                     $("#remainingQuantityLabel").text("الكميه الزائده"); // Change label text
                     $("#remainingQuantity").val(receivingQuantity -
-                    originalQuantity); // Set excess quantity
+                        originalQuantity); // Set excess quantity
                 } else {
                     $("#remainingQuantityLabel").text("الكمية المتبقية"); // Default label
                     $("#remainingQuantity").val(originalQuantity -
-                    receivingQuantity); // Set remaining quantity
+                        receivingQuantity); // Set remaining quantity
                 }
 
                 // Hide reschedule fields if no remaining quantity
@@ -380,7 +385,7 @@
                 const newExpectedDelivery = isRescheduleChecked ? $("#newExpectedDelivery").val() : null;
                 const receivingQuantityInput = currentRow.find(".receiving-quantity"); // Use the stored row
                 const enteredQuantity = parseInt(receivingQuantityInput.val(),
-                10); // Get the entered quantity
+                    10); // Get the entered quantity
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 console.log(enteredQuantity);
@@ -425,7 +430,7 @@
                 const newExpectedDelivery = $("#newExpectedDelivery").val();
                 const receivingQuantityInput = currentRow.find(".receiving-quantity"); // Use the stored row
                 const enteredQuantity = parseInt(receivingQuantityInput.val(),
-                10); // Get the entered quantity
+                    10); // Get the entered quantity
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 if (!notes || notes.trim() === "") {
@@ -460,7 +465,7 @@
                     error: function(xhr) {
                         alert("Error: " + xhr.responseJSON.message);
                         rescheduleButton.prop("disabled",
-                        false); // Re-enable the button on error
+                            false); // Re-enable the button on error
                     },
                 });
             });
