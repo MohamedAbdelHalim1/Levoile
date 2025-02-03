@@ -323,6 +323,7 @@ class ProductController extends Controller
                 'stop' => 'متوقف',
                 'cancel' => 'ملغي',
                 'postponed' => 'مؤجل',
+                'pending' => 'قيد الانتظار',
             ];
 
             // ✅ Store original values before update
