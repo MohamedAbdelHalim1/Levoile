@@ -135,9 +135,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
-                </div>
+                
             </div>
         </div>
     </div>

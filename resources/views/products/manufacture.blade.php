@@ -68,14 +68,14 @@
                                     </td>
 
                                     <td>
-                                            {{ $variant->quantity ?? 0}}
-                                      
+                                        {{ $variant->quantity ?? 0 }}
+
                                     </td>
 
                                     <td>
 
 
-                                        @if ($variant && $variant->status === 'new' || $variant->status === 'postponed')
+                                        @if (($variant && $variant->status === 'new') || $variant->status === 'postponed')
                                             <!-- ✅ Start Manufacturing Button -->
                                             <button type="button" class="btn btn-primary start-manufacturing-btn"
                                                 data-color-id="{{ $productColor->id }}"
@@ -184,6 +184,8 @@
 
                     <div class="mt-3">
                         <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">حفظ</button>
+                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+
                     </div>
                 </div>
             </div>
