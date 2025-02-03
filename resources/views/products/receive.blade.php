@@ -180,7 +180,8 @@
                                                     @if (
                                                             $variant->status != 'partial' &&
                                                             $variant->status != 'complete' &&
-                                                            empty($variant->receiving_quantity)
+                                                            empty($variant->receiving_quantity) &&
+                                                            !empty($variant->expected_delivery)
                                                         )
                                                         <button type="button" class="btn btn-info validate-btn"
                                                             data-variant-id="{{ $variant->id }}">تأكيد</button>
