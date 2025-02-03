@@ -290,7 +290,7 @@ class ProductController extends Controller
                 // Update the current variant as "Partially Received"
                 $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
                 $variant->note = $request->note;
-                $variant->status = 'partial';
+                $variant->status = 'processing';
                 $variant->receiving_status = 'partial';
                 $variant->save();
 
