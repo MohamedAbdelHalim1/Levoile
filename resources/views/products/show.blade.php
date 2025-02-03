@@ -28,7 +28,6 @@
     <div class="p-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
-                <h1 class="text-center mb-4">تفاصيل المنتج</h1>
                 <div>
                     <div class="row align-items-center">
                         <!-- Product Image -->
@@ -49,38 +48,38 @@
                                     <tbody>
                                         <tr>
                                             <th class="text-end">الوصف:</th>
-                                            <td>{{ $product->description }}</td>
+                                            <td style="font-weight: bold;">{{ $product->description }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">الكود:</th>
-                                            <td>{{ $product->code ?? 'لا يوجد' }}</td>
+                                            <td style="font-weight: bold;">{{ $product->code ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">القسم:</th>
-                                            <td>{{ $product->category->name ?? 'لا يوجد' }}</td>
+                                            <td style="font-weight: bold;">{{ $product->category->name ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">الموسم:</th>
-                                            <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
+                                            <td style="font-weight: bold;">{{ $product->season->name ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">المصنع:</th>
-                                            <td>{{ $product->factory->name ?? 'لا يوجد' }}</td>
+                                            <td style="font-weight: bold;">{{ $product->factory->name ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">رقم الماركر:</th>
-                                            <td>{{ $product->marker_number }}</td>
+                                            <td style="font-weight: bold;">{{ $product->marker_number }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">حالة مخزون الخامات:</th>
-                                            <td>
+                                            <td style="font-weight: bold;">
                                                 {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
                                                 {{ $product->material->name ?? 'لا مواد متوفرة' }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">الحالة:</th>
-                                            <td>
+                                            <td style="font-weight: bold;">
                                                 <span class="badge 
                                                     @if ($product->status === 'new') bg-primary 
                                                     @elseif ($product->status === 'complete') bg-success 
