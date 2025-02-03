@@ -265,10 +265,7 @@ class ProductController extends Controller
 
             throw new \Exception('Invalid reschedule request. Ensure all inputs are correct.');
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+           dd($e);
         }
     }
 
@@ -317,7 +314,18 @@ class ProductController extends Controller
             $variant = ProductColorVariant::findOrFail($validated['variant_id']);
             $product = $variant->productcolor->product;
 
-            // ✅ Store original status before update
+            // ✅ Arabic labels for statuses
+            $statusLabels = [
+                'new' => 'جديد',
+                'processing' => 'جاري التصنيع',
+                'partial' => 'استلام جزئي',
+                'complete' => 'مكتمل',
+                'stop' => 'متوقف',
+                'cancel' => 'ملغي',
+                'postponed' => 'مؤجل',
+            ];
+
+            // ✅ Store original values before update
             $originalStatus = $variant->status;
             $originalReceivingStatus = $variant->receiving_status;
             $originalReceivingQuantity = $variant->receiving_quantity;
@@ -409,11 +417,14 @@ class ProductController extends Controller
             $product->save();
 
             // ✅ Log history for product status update
+            $previousStatus = $statusLabels[$originalReceivingStatus] ?? $originalReceivingStatus;
+            $newStatus = $statusLabels[$product->receiving_status] ?? $product->receiving_status;
+
             History::create([
                 'product_id' => $product->id,
                 'type' => 'تحديث حالة الاستلام',
                 'action_by' => auth()->user()->name,
-                'note' => "تم تحديث حالة المنتج '{$product->description}' إلى '{$product->receiving_status}'.",
+                'note' => "تم تغيير حالة استلام المنتج '{$product->description}' من '{$previousStatus}' إلى '{$newStatus}'.",
             ]);
 
             DB::commit();
@@ -424,9 +435,10 @@ class ProductController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+           dd($e);
         }
     }
+
 
     public function updateStatus(Request $request)
     {
@@ -440,6 +452,9 @@ class ProductController extends Controller
         try {
             $variant = ProductColorVariant::findOrFail($request->variant_id);
             $product = Product::findOrFail($request->product_id);
+
+            // Store previous status before updating
+            $previousStatus = $variant->status;
 
             // Update the variant status and note
             $variant->status = $request->status;
@@ -480,9 +495,31 @@ class ProductController extends Controller
 
             $product->save();
 
+            // ✅ **History Logging**
+            $statusLabels = [
+                'stop' => 'متوقف',
+                'cancel' => 'ملغي',
+                'postponed' => 'مؤجل',
+                'complete' => 'مكتمل',
+                'new' => 'جديد',
+                'partial' => 'جزئي',
+                'pending' => 'قيد الانتظار',
+                'processing' => 'قيد التصنيع'
+            ];
+
+            $statusTextBefore = $statusLabels[$previousStatus] ?? $previousStatus;
+            $statusTextAfter = $statusLabels[$request->status] ?? $request->status;
+
+            History::create([
+                'product_id' => $product->id,
+                'type' => 'تحديث الحالة',
+                'action_by' => auth()->user()->name,
+                'note' => "تم تغيير حالة لون المنتج من {$statusTextBefore} إلى {$statusTextAfter}. ملاحظات: {$request->note}"
+            ]);
+
             return response()->json(['message' => 'تم تحديث الحالة بنجاح']);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            dd($e);
         }
     }
 
@@ -492,6 +529,17 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            // ✅ Arabic labels for statuses
+            $statusLabels = [
+                'new' => 'جديد',
+                'processing' => 'جاري التصنيع',
+                'partial' => 'استلام جزئي',
+                'complete' => 'مكتمل',
+                'stop' => 'متوقف',
+                'cancel' => 'ملغي',
+                'postponed' => 'مؤجل',
+            ];
 
             // ✅ Store original values before update
             $originalStatus = $product->status;
@@ -505,11 +553,14 @@ class ProductController extends Controller
 
             // ✅ Log history only if the status actually changed
             if ($originalStatus !== 'cancel' || $originalReceivingStatus !== 'cancel') {
+                $previousStatus = $statusLabels[$originalStatus] ?? $originalStatus;
+                $newStatus = $statusLabels['cancel'];
+
                 History::create([
                     'product_id' => $product->id,
                     'type' => 'إلغاء',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم إلغاء المنتج '{$product->description}' من حالة '$originalStatus' إلى 'ملغي'.",
+                    'note' => "تم إلغاء المنتج '{$product->description}' من حالة '{$previousStatus}' إلى '{$newStatus}'.",
                 ]);
             }
 
@@ -521,18 +572,27 @@ class ProductController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+            dd($e);
         }
     }
+
 
 
     public function renew(Product $product)
     {
         try {
             DB::beginTransaction();
+
+            // ✅ Arabic labels for statuses
+            $statusLabels = [
+                'new' => 'جديد',
+                'processing' => 'جاري التصنيع',
+                'partial' => 'استلام جزئي',
+                'complete' => 'مكتمل',
+                'stop' => 'متوقف',
+                'cancel' => 'ملغي',
+                'postponed' => 'مؤجل',
+            ];
 
             // ✅ Store original values before update
             $originalStatus = $product->status;
@@ -546,11 +606,14 @@ class ProductController extends Controller
 
             // ✅ Log history only if the status actually changed
             if ($originalStatus !== 'new' || $originalReceivingStatus !== 'new') {
+                $previousStatus = $statusLabels[$originalStatus] ?? $originalStatus;
+                $newStatus = $statusLabels['new'];
+
                 History::create([
                     'product_id' => $product->id,
                     'type' => 'تفعيل',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم تفعيل المنتج '{$product->description}' من حالة '$originalStatus' إلى 'جديد'.",
+                    'note' => "تم تفعيل المنتج '{$product->description}' من حالة '{$previousStatus}' إلى '{$newStatus}'.",
                 ]);
             }
 
@@ -562,12 +625,10 @@ class ProductController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+            dd($e);
         }
     }
+
 
 
     public function completeData(Product $product)
@@ -775,7 +836,7 @@ class ProductController extends Controller
 
             return view('products.show', compact('product'));
         } catch (\Exception $e) {
-            return redirect()->route('products.index')->with('error', 'Product not found or an error occurred: ' . $e->getMessage());
+            dd($e);
         }
     }
 
@@ -885,7 +946,7 @@ class ProductController extends Controller
             return redirect()->route('products.index')->with('success', 'تم التعديل بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('products.index')->with('error', 'حدث خطأ أثناء التعديل.');
+            dd($e);
         }
     }
 
@@ -909,7 +970,7 @@ class ProductController extends Controller
 
             return redirect()->route('products.index')->with('success', 'تم الحذف بنجاح');
         } catch (\Exception $e) {
-            return redirect()->route('products.index')->with('error', 'An error occurred: ' . $e->getMessage());
+            dd($e);
         }
     }
 
@@ -939,14 +1000,14 @@ class ProductController extends Controller
             return response()->json(['status' => 'success', 'message' => 'تم الحذف بنجاح.']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            dd($e);
         }
     }
 
     public function history($id)
     {
         $product = Product::findOrFail($id);
-        $history = History::where('product_id', $id)->orderBy('created_at', 'desc')->get();
+        $history = History::where('product_id', $id)->orderBy('created_at', 'asc')->get();
 
         return view('products.history', compact('product', 'history'));
     }

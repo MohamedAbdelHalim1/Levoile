@@ -9,19 +9,19 @@
                 <table class="table table-bordered">
                     <thead class="table-dark">
                         <tr>
+                            <th>{{ __('التاريخ') }}</th>
                             <th>{{ __('النوع') }}</th>
                             <th>{{ __('تم بواسطة') }}</th>
                             <th>{{ __('الملاحظة') }}</th>
-                            <th>{{ __('التاريخ') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($history as $record)
                             <tr>
+                                <td>{{ $record->created_at->format('Y-m-d H:i:s') }}</td>
                                 <td>{{ $record->type }}</td>
                                 <td>{{ $record->action_by }}</td>
                                 <td>{{ $record->note }}</td>
-                                <td>{{ $record->created_at->format('Y-m-d H:i:s') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
