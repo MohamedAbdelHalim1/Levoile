@@ -183,12 +183,22 @@
                                                         <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
                                                         <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
                                                         <td>
-                                                            @if ($child->status === 'Received')
-                                                                <span class="badge bg-success">تم الاستلام</span>
-                                                            @elseif ($child->status === 'Partially Received')
-                                                                <span class="badge bg-pink">استلام جزئي</span>
-                                                            @elseif ($child->status === 'Not Received')
-                                                                <span class="badge bg-danger">لم يتم الاستلام</span>
+                                                            @if ($child->status === 'new')
+                                                                {{ __('لم يتم البدء') }}
+                                                            @elseif ($child->status === 'processing')
+                                                                {{ __('جاري التصنيع') }}
+                                                            @elseif ($child->status === 'postponed')
+                                                                {{ __('مؤجل ') }}
+                                                            @elseif ($child->status === 'partial')
+                                                                {{ __('جزئي الاستلام') }}
+                                                            @elseif ($child->status === 'complete')
+                                                                {{ __('تم التصنيع') }}
+                                                            @elseif ($child->status === 'cancel')
+                                                                {{ __('تم الغاء التصنيع') }}
+                                                            @elseif ($child->status === 'stop')
+                                                                {{ __('تم ايقاف التصنيع') }}
+                                                            @elseif ($child->status === 'pending')
+                                                                {{ __('قيد الانتظار') }}
                                                             @endif
                                                         </td>
                                                     </tr>
