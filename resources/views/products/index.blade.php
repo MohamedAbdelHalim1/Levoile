@@ -184,7 +184,8 @@
                                         });
                                         $processingVariants = $product->productColors->sum(function ($color) {
                                             return $color->productcolorvariants
-                                                ->whereIn('status', ['processing', 'complete']) // ✅ Corrected
+                                                ->whereIn('status', ['processing', 'complete'])
+                                                ->where('parent_id', null) // ✅ Corrected
                                                 ->count();
                                         });
                                     @endphp
