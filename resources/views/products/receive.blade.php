@@ -178,10 +178,10 @@
                                                 </td>
                                                 <td>
                                                     @if (
-                                                        $variant->status != 'partial' &&
+                                                            $variant->status != 'partial' &&
                                                             $variant->status != 'complete' &&
-                                                            $variant->quantity != null &&
-                                                            $variant->parent_id != null)
+                                                            $variant->quantity != null
+                                                        )
                                                         <button type="button" class="btn btn-info validate-btn"
                                                             data-variant-id="{{ $variant->id }}">تأكيد</button>
                                                     @endif
