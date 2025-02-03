@@ -378,6 +378,11 @@
                                                     class="btn btn-danger w-100">{{ __('مسح') }}</button>
                                             </form>
                                         @endif
+                                        <!-- ✅ New History Button -->
+                                        <a href="{{ route('products.history', $product->id) }}"
+                                            class="btn btn-dark w-100">
+                                            {{ __('تاريخ المنتج') }}
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

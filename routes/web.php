@@ -193,6 +193,7 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/{role}/permissions', [RoleController::class, 'editPermissions'])->name('roles.permissions');
     Route::post('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 
+    Route::get('/products/{id}/history', [ProductController::class, 'history'])->name('products.history');
 
 
 

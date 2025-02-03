@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Factory;
+use App\Models\History;
 use App\Models\Material;
 use App\Models\Product;
 use App\Models\ProductColor;
@@ -75,10 +76,10 @@ class ProductController extends Controller
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
-                    $q->where('status','processing')->where('expected_delivery', '>=', $request->expected_delivery_start);
+                    $q->where('status', 'processing')->where('expected_delivery', '>=', $request->expected_delivery_start);
                 }
                 if ($request->filled('expected_delivery_end')) {
-                    $q->where('status','processing')->where('expected_delivery', '<=', $request->expected_delivery_end);
+                    $q->where('status', 'processing')->where('expected_delivery', '<=', $request->expected_delivery_end);
                 }
             });
         }
@@ -120,28 +121,32 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
+            // ✅ Store original values before update
+            $originalStatus = $product->status;
+            $originalReceivingStatus = $product->receiving_status;
+
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-    
+
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-    
+
             if (!$productColor) {
                 DB::rollBack();
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
-    
+
             // 🔎 Find the latest variant for this color
             $variant = ProductColorVariant::where('product_color_id', $productColor->id)
                 ->latest()
                 ->first();
-    
+
             if ($variant) {
                 // ✅ Update Existing Variant
                 $variant->update([
@@ -150,27 +155,52 @@ class ProductController extends Controller
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                 ]);
+
+                // ✅ Log history for updating manufacturing variant
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'تحديث التصنيع',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم تحديث تصنيع اللون '{$productColor->color->name}' بتحديد تاريخ استلام {$request->expected_delivery} والكمية {$request->quantity}.",
+                ]);
             } else {
                 // ✅ Create a New Variant if None Exists
-                ProductColorVariant::create([
+                $newVariant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
                     'expected_delivery' => $request->expected_delivery,
                     'quantity' => $request->quantity,
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                 ]);
+
+                // ✅ Log history for new manufacturing variant
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'بدء التصنيع',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$request->quantity} مع تاريخ استلام متوقع {$request->expected_delivery}.",
+                ]);
             }
-    
+
+            // ✅ Log history for product status change (if changed)
+            if ($originalStatus !== 'processing') {
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'تحديث حالة المنتج',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم تغيير حالة المنتج '{$product->description}' إلى 'جاري التصنيع'.",
+                ]);
+            }
+
             DB::commit();
-    
+
             return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدأ تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('products.index')->with('error', 'حدث خطأ أثناء بدء التصنيع.');
+            dd($e);
         }
     }
-    
-    
+
 
 
 
@@ -282,8 +312,15 @@ class ProductController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
+
             $variant = ProductColorVariant::findOrFail($validated['variant_id']);
             $product = $variant->productcolor->product;
+
+            // ✅ Store original status before update
+            $originalStatus = $variant->status;
+            $originalReceivingStatus = $variant->receiving_status;
+            $originalReceivingQuantity = $variant->receiving_quantity;
 
             // Handle Rescheduling
             if (!empty($validated['new_expected_delivery'])) {
@@ -295,7 +332,7 @@ class ProductController extends Controller
                 $variant->save();
 
                 // Create a new variant for the remaining quantity
-                ProductColorVariant::create([
+                $newVariant = ProductColorVariant::create([
                     'product_color_id' => $variant->product_color_id,
                     'expected_delivery' => $validated['new_expected_delivery'],
                     'quantity' => $validated['remaining_quantity'],
@@ -303,26 +340,32 @@ class ProductController extends Controller
                     'parent_id' => $variant->id,
                     'status' => 'processing',
                     'receiving_status' => 'pending',
-
                 ]);
-             
+
+                // ✅ Log history for rescheduling
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'إعادة جدولة',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم إعادة جدولة اللون '{$variant->productcolor->color->name}' بكمية متبقية {$validated['remaining_quantity']} وحدة، ليتم استلامها في {$validated['new_expected_delivery']}.",
+                ]);
             } else {
                 // Fully receive the current variant
-                $variant->receiving_quantity = ($validated['entered_quantity'] > $variant->quantity) 
-                    ? $validated['entered_quantity'] 
+                $variant->receiving_quantity = ($validated['entered_quantity'] > $variant->quantity)
+                    ? $validated['entered_quantity']
                     : $variant->quantity - $validated['remaining_quantity'];
                 $variant->status = 'complete';
                 $variant->receiving_status = 'complete';
                 $variant->note = $request->note;
                 $variant->save();
-    
+
                 // ✅ Update parent variant status to complete if all its children are complete
                 if ($variant->parent_id) {
                     $parentVariant = ProductColorVariant::find($variant->parent_id);
                     if ($parentVariant) {
                         // Check if all child variants are complete
                         $allChildrenComplete = $parentVariant->children()->where('status', '!=', 'complete')->count() === 0;
-    
+
                         if ($allChildrenComplete) {
                             $parentVariant->status = 'complete';
                             $parentVariant->receiving_status = 'complete';
@@ -330,23 +373,31 @@ class ProductController extends Controller
                         }
                     }
                 }
+
+                // ✅ Log history for full receiving
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'استلام كامل',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم استلام اللون '{$variant->productcolor->color->name}' بالكامل بكمية {$variant->receiving_quantity} وحدة.",
+                ]);
             }
 
             $fullyReceivedCount = 0;
             $totalVariants = 0;
-            
+
             // Loop through product colors and check receiving quantity
             foreach ($product->productColors as $productColor) {
                 foreach ($productColor->productcolorvariants as $variant) {
                     $totalVariants++;
-            
+
                     // If receiving_quantity is equal to or greater than quantity, consider it fully received
                     if ($variant->receiving_quantity >= $variant->quantity) {
                         $fullyReceivedCount++;
                     }
                 }
             }
-            
+
             // If all variants are fully received, mark product as complete
             if ($fullyReceivedCount === $totalVariants && $totalVariants > 0) {
                 $product->receiving_status = 'complete';
@@ -354,20 +405,26 @@ class ProductController extends Controller
             } else {
                 $product->receiving_status = 'partial';
             }
-            
+
             $product->save();
-            
-            
+
+            // ✅ Log history for product status update
+            History::create([
+                'product_id' => $product->id,
+                'type' => 'تحديث حالة الاستلام',
+                'action_by' => auth()->user()->name,
+                'note' => "تم تحديث حالة المنتج '{$product->description}' إلى '{$product->receiving_status}'.",
+            ]);
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'تم وضع علامة على لون المنتج بأنه تم استلامه بنجاح.',
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+            DB::rollBack();
+            dd($e->getMessage());
         }
     }
 
@@ -379,25 +436,25 @@ class ProductController extends Controller
             'status' => 'required|in:stop,cancel,postponed', // Added 'postponed'
             'note' => 'required|string|max:512'
         ]);
-    
+
         try {
             $variant = ProductColorVariant::findOrFail($request->variant_id);
             $product = Product::findOrFail($request->product_id);
-    
+
             // Update the variant status and note
             $variant->status = $request->status;
             $variant->receiving_status = $request->status;
             $variant->note = $request->note;
             $variant->save();
-    
+
             // Get total count of variants
             $allVariants = $product->productColors->sum(function ($color) {
                 return $color->productcolorvariants->count();
             });
-    
+
             $affectedVariants = 0;
             $hasCompleteVariant = false;
-    
+
             foreach ($product->productColors as $productColor) {
                 foreach ($productColor->productcolorvariants as $variant) {
                     if (in_array($variant->status, ['stop', 'cancel', 'postponed'])) {
@@ -408,39 +465,62 @@ class ProductController extends Controller
                     }
                 }
             }
-    
+
             // If all variants are canceled, stopped, or postponed, update the product status
             if ($affectedVariants === $allVariants) {
                 $product->status = $request->status;
                 $product->receiving_status = $request->status;
             }
-    
+
             // If at least one variant is complete and the rest are canceled, stopped, or postponed, set product as complete
             if ($hasCompleteVariant && $affectedVariants + 1 === $allVariants) {
                 $product->status = 'complete';
                 $product->receiving_status = 'complete';
             }
-    
+
             $product->save();
-    
+
             return response()->json(['message' => 'تم تحديث الحالة بنجاح']);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
     public function cancel(Product $product)
     {
         try {
-            $product->update(['status' => 'cancel' , 'receiving_status' => 'cancel']);
+            DB::beginTransaction();
+
+            // ✅ Store original values before update
+            $originalStatus = $product->status;
+            $originalReceivingStatus = $product->receiving_status;
+
+            // ✅ Update product status
+            $product->update([
+                'status' => 'cancel',
+                'receiving_status' => 'cancel',
+            ]);
+
+            // ✅ Log history only if the status actually changed
+            if ($originalStatus !== 'cancel' || $originalReceivingStatus !== 'cancel') {
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'إلغاء',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم إلغاء المنتج '{$product->description}' من حالة '$originalStatus' إلى 'ملغي'.",
+                ]);
+            }
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'تم الغاء المنتج بنجاح.',
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -448,22 +528,47 @@ class ProductController extends Controller
         }
     }
 
+
     public function renew(Product $product)
     {
         try {
-            $product->update(['status' => 'new' , 'receiving_status' => 'new']);
+            DB::beginTransaction();
+
+            // ✅ Store original values before update
+            $originalStatus = $product->status;
+            $originalReceivingStatus = $product->receiving_status;
+
+            // ✅ Update product status
+            $product->update([
+                'status' => 'new',
+                'receiving_status' => 'new',
+            ]);
+
+            // ✅ Log history only if the status actually changed
+            if ($originalStatus !== 'new' || $originalReceivingStatus !== 'new') {
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'تفعيل',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم تفعيل المنتج '{$product->description}' من حالة '$originalStatus' إلى 'جديد'.",
+                ]);
+            }
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'تم تفعيل المنتج بنجاح.',
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     public function completeData(Product $product)
     {
@@ -482,42 +587,72 @@ class ProductController extends Controller
                 'colors.*.sku' => 'nullable|string|max:255',
             ]);
 
-            // Start transaction
+            // ✅ Start transaction
             DB::beginTransaction();
 
-            // Update product details
+            // ✅ Store original values before update
+            $originalValues = $product->getOriginal();
+
+            // ✅ Update product details
             $product->update([
                 'name' => $validated['name'],
                 'store_launch' => $validated['store_launch'],
                 'price' => $validated['price'],
             ]);
 
-            // Update SKU for each color
+            // ✅ Track changes in product details
+            $changes = [];
+            foreach (['name', 'store_launch', 'price'] as $field) {
+                $oldValue = $originalValues[$field] ?? null;
+                $newValue = $product->$field;
+
+                if ($oldValue != $newValue) {
+                    $oldValueText = $oldValue === null ? "تم الإضافة" : "'$oldValue'";
+                    $changes[] = "$field: $oldValueText → '$newValue'";
+                }
+            }
+
+            // ✅ Update SKU for each color and track changes
             foreach ($validated['colors'] as $colorId => $colorData) {
                 $productColor = ProductColor::where('product_id', $product->id)
                     ->where('color_id', $colorId)
                     ->firstOrFail();
 
+                $originalSKU = $productColor->sku ?? null;
+                $newSKU = $colorData['sku'] ?? null;
+
                 $productColor->update([
-                    'sku' => $colorData['sku'] ?? null,
+                    'sku' => $newSKU,
+                ]);
+
+                // Track SKU changes
+                if ($originalSKU != $newSKU) {
+                    $colorName = $productColor->color->name ?? 'غير معروف';
+                    $oldSkuText = $originalSKU === null ? "تم الإضافة" : "'$originalSKU'";
+                    $changes[] = "SKU للون '$colorName': $oldSkuText → '$newSKU'";
+                }
+            }
+
+            // ✅ Log history entry only if changes exist
+            if (!empty($changes)) {
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'تعديل',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم اكتمال بيانات المنتج '{$product->description}'. " . implode(", ", $changes),
                 ]);
             }
 
-            // Commit transaction
+            // ✅ Commit transaction
             DB::commit();
 
             return redirect()->route('products.index')->with('success', 'تم اكتمال البيانات بنجاح.');
         } catch (\Exception $e) {
-            // Rollback transaction on error
+            // ❌ Rollback transaction on error
             DB::rollBack();
-
-            // Debugging the error
             dd($e);
         }
     }
-
-
-
 
 
 
@@ -582,6 +717,8 @@ class ProductController extends Controller
             ]);
 
             // Handle colors and their variants
+            $colorNames = [];
+
             if ($request->has('colors')) {
                 foreach ($request->colors as $color) {
                     // Create the ProductColor entry
@@ -596,8 +733,16 @@ class ProductController extends Controller
                         'status' => 'new',
                         'receiving_status' => 'new',
                     ]);
+                    $colorNames[] = Color::find($color['color_id'])->name;
                 }
             }
+
+            History::create([
+                'product_id' => $product->id,
+                'type' => 'انشاء',
+                'action_by' => auth()->user()->name,
+                'note' => "تم انشاء منتج جديد: {$product->description} وبه عدد " . count($colorNames) . " الوان: " . implode(', ', $colorNames)
+            ]);
 
             // Commit the transaction
             DB::commit();
@@ -653,6 +798,8 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         try {
+            DB::beginTransaction();
+
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
@@ -663,14 +810,17 @@ class ProductController extends Controller
                 'marker_number' => 'required|string',
             ]);
 
-            DB::beginTransaction();
+            // ✅ Store original values before update
+            $originalValues = $product->getOriginal();
 
+            // ✅ Handle Image Upload
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 $photoName = time() . '_' . $photo->getClientOriginalName();
                 $photoPath = 'images/products/' . $photoName;
                 $photo->move(public_path('images/products'), $photoName);
 
+                // Delete old photo if exists
                 if ($product->photo && file_exists(public_path($product->photo))) {
                     unlink(public_path($product->photo));
                 }
@@ -678,42 +828,64 @@ class ProductController extends Controller
                 $product->photo = $photoPath;
             }
 
-     
-
+            // ✅ Update Product Details
             $product->update([
                 'description' => $request->description,
                 'category_id' => $request->category_id,
                 'material_id' => $request->material_id,
                 'season_id' => $request->season_id,
                 'factory_id' => $request->factory_id,
-                'photo' => $product->photo,
                 'marker_number' => $request->marker_number,
             ]);
 
+            // ✅ Get only changed columns
+            $changedFields = $product->getChanges();
+            $changeLogs = [];
+
+            foreach ($changedFields as $column => $newValue) {
+                if ($column === 'photo') {
+                    $changeLogs[] = "تم تحديث الصورة";
+                } else {
+                    $oldValue = $originalValues[$column] ?? 'لا يوجد قيمة سابقة';
+                    $changeLogs[] = "تم تعديل $column من '$oldValue' إلى '$newValue'";
+                }
+            }
+
+            // ✅ Track Changes in Colors & Variants
             if ($request->has('colors')) {
                 foreach ($request->colors as $colorId => $colorData) {
                     $productColor = ProductColor::updateOrCreate(
-                        [
-                            'product_id' => $product->id,
-                            'color_id' => $colorId,
-                        ]
+                        ['product_id' => $product->id, 'color_id' => $colorId]
                     );
 
-                    ProductColorVariant::updateOrCreate(
-                        [
+                    $variant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
+                    if (!$variant) {
+                        ProductColorVariant::create([
                             'product_color_id' => $productColor->id,
-                        ],
-                       
-                    );
+                            'status' => 'new',
+                            'receiving_status' => 'new',
+                        ]);
+                        $changeLogs[] = "تم إضافة لون جديد";
+                    }
                 }
+            }
+
+            // ✅ Store History Record if Changes Exist
+            if (!empty($changeLogs)) {
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'تعديل',
+                    'action_by' => auth()->user()->name,
+                    'note' => implode(', ', $changeLogs)
+                ]);
             }
 
             DB::commit();
 
-            return redirect()->route('products.edit', $product->id)->with('success', 'تم التعديل بنجاح.');
+            return redirect()->route('products.index')->with('success', 'تم التعديل بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            return redirect()->route('products.index')->with('error', 'حدث خطأ أثناء التعديل.');
         }
     }
 
@@ -744,12 +916,38 @@ class ProductController extends Controller
     public function deleteProductColor($id)
     {
         try {
-            $productColor = ProductColor::findOrFail($id);
+            DB::beginTransaction();
+
+            // ✅ Find the product color and its details before deletion
+            $productColor = ProductColor::with('color', 'product')->findOrFail($id);
+            $colorName = $productColor->color->name ?? 'غير معروف';
+            $productName = $productColor->product->description ?? 'غير معروف';
+
+            // ✅ Delete the product color
             $productColor->delete();
+
+            // ✅ Log history
+            History::create([
+                'product_id' => $productColor->product_id,
+                'type' => 'حذف',
+                'action_by' => auth()->user()->name,
+                'note' => "تم حذف اللون '$colorName' من المنتج '$productName'"
+            ]);
+
+            DB::commit();
 
             return response()->json(['status' => 'success', 'message' => 'تم الحذف بنجاح.']);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function history($id)
+    {
+        $product = Product::findOrFail($id);
+        $history = History::where('product_id', $id)->orderBy('created_at', 'desc')->get();
+
+        return view('products.history', compact('product', 'history'));
     }
 }
