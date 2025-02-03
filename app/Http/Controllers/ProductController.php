@@ -75,10 +75,10 @@ class ProductController extends Controller
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
-                    $q->where('expected_delivery', '>=', $request->expected_delivery_start);
+                    $q->where('status','processing')->where('expected_delivery', '>=', $request->expected_delivery_start);
                 }
                 if ($request->filled('expected_delivery_end')) {
-                    $q->where('expected_delivery', '<=', $request->expected_delivery_end);
+                    $q->where('status','processing')->where('expected_delivery', '<=', $request->expected_delivery_end);
                 }
             });
         }
@@ -373,26 +373,38 @@ class ProductController extends Controller
             $variant->note = $request->note;
             $variant->save();
     
-            // Check if all variants are either stopped, canceled, or postponed
+            // Get total count of variants
             $allVariants = $product->productColors->sum(function ($color) {
                 return $color->productcolorvariants->count();
             });
     
             $affectedVariants = 0;
+            $hasCompleteVariant = false;
+    
             foreach ($product->productColors as $productColor) {
                 foreach ($productColor->productcolorvariants as $variant) {
                     if (in_array($variant->status, ['stop', 'cancel', 'postponed'])) {
                         $affectedVariants++;
                     }
+                    if ($variant->status === 'complete') {
+                        $hasCompleteVariant = true; // Check if at least one variant is complete
+                    }
                 }
             }
     
-            // If all variants are either canceled, stopped, or postponed, update the product status
+            // If all variants are canceled, stopped, or postponed, update the product status
             if ($affectedVariants === $allVariants) {
                 $product->status = $request->status;
                 $product->receiving_status = $request->status;
-                $product->save();
             }
+    
+            // If at least one variant is complete and the rest are canceled, stopped, or postponed, set product as complete
+            if ($hasCompleteVariant && $affectedVariants + 1 === $allVariants) {
+                $product->status = 'complete';
+                $product->receiving_status = 'complete';
+            }
+    
+            $product->save();
     
             return response()->json(['message' => 'تم تحديث الحالة بنجاح']);
         } catch (\Exception $e) {
@@ -402,16 +414,10 @@ class ProductController extends Controller
     
 
 
-
-
-
-
-
-
     public function cancel(Product $product)
     {
         try {
-            $product->update(['status' => 'Cancel']);
+            $product->update(['status' => 'cancel' , 'receiving_status' => 'cancel']);
 
             return response()->json([
                 'status' => 'success',
@@ -428,7 +434,7 @@ class ProductController extends Controller
     public function renew(Product $product)
     {
         try {
-            $product->update(['status' => 'New']);
+            $product->update(['status' => 'new' , 'receiving_status' => 'new']);
 
             return response()->json([
                 'status' => 'success',
@@ -638,7 +644,6 @@ class ProductController extends Controller
                 'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
                 'marker_number' => 'required|string',
-                'have_stock' => 'required|boolean',
             ]);
 
             DB::beginTransaction();
@@ -656,12 +661,7 @@ class ProductController extends Controller
                 $product->photo = $photoPath;
             }
 
-            $status = $product->status;
-            if ($request->have_stock) {
-                $status = 'New';
-            } else {
-                $status = 'Pending';
-            }
+     
 
             $product->update([
                 'description' => $request->description,
@@ -670,9 +670,7 @@ class ProductController extends Controller
                 'season_id' => $request->season_id,
                 'factory_id' => $request->factory_id,
                 'photo' => $product->photo,
-                'have_stock' => $request->have_stock,
                 'marker_number' => $request->marker_number,
-                'status' => $status
             ]);
 
             if ($request->has('colors')) {
@@ -688,10 +686,7 @@ class ProductController extends Controller
                         [
                             'product_color_id' => $productColor->id,
                         ],
-                        [
-                            'expected_delivery' => $colorData['expected_delivery'],
-                            'quantity' => $colorData['quantity'],
-                        ]
+                       
                     );
                 }
             }

@@ -70,7 +70,7 @@
                                     value="{{ $product->name }}">
                             </div>
                             <div class="mb-3">
-                                <label for="store_launch">طرح المنتج</label>
+                                <label for="store_launch">وقت طرح المنتج في الاسواق</label>
                                 <input type="text" id="store_launch" name="store_launch" class="form-control" required
                                     value="{{ $product->store_launch }}">
                             </div>

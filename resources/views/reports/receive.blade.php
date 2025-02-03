@@ -51,11 +51,14 @@
                         <label for="statusFilter">{{ __('الحالة') }}</label>
                         <select id="statusFilter" class="ts-filter">
                             <option value="">{{ __('كل الحالات') }}</option>
-                            <option value="New">{{ __('جديد') }}</option>
-                            <option value="Partial">{{ __('جزئي') }}</option>
-                            <option value="Complete">{{ __('مكتمل') }}</option>
-                            <option value="Cancel">{{ __('ملغي') }}</option>
-                            <option value="Pending">{{ __('قيد الانتظار') }}</option>
+                            <option value="new">{{ __('جديد') }}</option>
+                            <option value="partial">{{ __('جزئي') }}</option>
+                            <option value="complete">{{ __('مكتمل') }}</option>
+                            <option value="processing">{{ __('قيد التصنيع') }}</option>
+                            <option value="pending">{{ __('قيد الانتظار') }}</option>
+                            <option value="stop">{{ __('متوقف') }}</option>
+                            <option value="cancel">{{ __('ملغي') }}</option>
+                            <option value="postponed">{{ __('مؤجل') }}</option>
                         </select>
                     </div>
 
@@ -64,9 +67,14 @@
                         <label for="variantStatusFilter">{{ __('حالة اللون') }}</label>
                         <select id="variantStatusFilter" class="ts-filter">
                             <option value="">{{ __('كل الحالات') }}</option>
-                            <option value="Received">{{ __('تم الاستلام') }}</option>
-                            <option value="Partially Received">{{ __('استلام جزئي') }}</option>
-                            <option value="Not Received">{{ __('لم يتم الاستلام') }}</option>
+                            <option value="new">{{ __('جديد') }}</option>
+                            <option value="partial">{{ __('جزئي') }}</option>
+                            <option value="complete">{{ __('مكتمل') }}</option>
+                            <option value="processing">{{ __('قيد التصنيع') }}</option>
+                            <option value="pending">{{ __('قيد الانتظار') }}</option>
+                            <option value="stop">{{ __('متوقف') }}</option>
+                            <option value="cancel">{{ __('ملغي') }}</option>
+                            <option value="postponed">{{ __('مؤجل') }}</option>
                         </select>
                     </div>
 
@@ -128,16 +136,22 @@
                             <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
                             <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>
                             <td>
-                                @if ($variant->productcolor->product->status === 'New')
+                                @if ($variant->productcolor->product->status === 'new')
                                     <span class="badge bg-primary">{{ __('جديد') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'Partial')
+                                @elseif ($variant->productcolor->product->status === 'partial')
                                     <span class="badge bg-warning">{{ __('جزئي') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'Complete')
+                                @elseif ($variant->productcolor->product->status === 'complete')
                                     <span class="badge bg-success">{{ __('مكتمل') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'Cancel')
+                                @elseif ($variant->productcolor->product->status === 'cancel')
                                     <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'Pending')
+                                @elseif ($variant->productcolor->product->status === 'pending')
                                     <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                @elseif ($variant->productcolor->product->status === 'postponed')
+                                    <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                @elseif ($variant->productcolor->product->status === 'stop')
+                                    <span class="badge bg-danger">{{ __('توقف') }}</span>
+                                @elseif ($variant->productcolor->product->status === 'processing')
+                                    <span class="badge bg-success">{{ __('قيد التنصيع') }}</span>
                                 @else
                                     {{ $variant->productcolor->product->status ?? __('لا يوجد') }}
                                 @endif
@@ -148,12 +162,22 @@
                             <td>{{ $variant->quantity ?? 0 }}</td>
                             <td>{{ $variant->receiving_quantity ?? 0 }}</td>
                             <td>
-                                @if ($variant->status === 'Received')
-                                    <span class="badge bg-success">{{ __('تم الاستلام') }}</span>
-                                @elseif ($variant->status === 'Partially Received')
-                                    <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
-                                @elseif ($variant->status === 'Not Received')
-                                    <span class="badge bg-danger">{{ __('لم يتم الاستلام') }}</span>
+                                @if ($variant->status === 'new')
+                                    <span class="badge bg-success">{{ __('جديد ') }}</span>
+                                @elseif ($variant->status === 'partial')
+                                    <span class="badge bg-warning">{{ __('جزئي') }}</span>
+                                @elseif ($variant->status === 'processing')
+                                    <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
+                                @elseif ($variant->status === 'complete')
+                                    <span class="badge bg-success">{{ __('مكتمل') }}</span>
+                                @elseif ($variant->status === 'cancel')
+                                    <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                @elseif ($variant->status === 'pending')
+                                    <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                @elseif ($variant->status === 'postponed')
+                                    <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                @elseif ($variant->status === 'stop')
+                                    <span class="badge bg-danger">{{ __('متوقف') }}</span>
                                 @else
                                     {{ $variant->status ?? __('لا يوجد') }}
                                 @endif

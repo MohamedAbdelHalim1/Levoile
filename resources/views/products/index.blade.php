@@ -75,16 +75,20 @@
                             <label for="statusFilter">{{ __('الحالة') }}</label>
                             <select name="status" id="statusFilter" class="ts-filter">
                                 <option value="">{{ __('كل الحالات') }}</option>
-                                <option value="New" {{ request('status') == 'New' ? 'selected' : '' }}>
+                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
-                                <option value="Partial" {{ request('status') == 'Partial' ? 'selected' : '' }}>
-                                    {{ __(' جزئي') }}</option>
-                                <option value="Complete" {{ request('status') == 'Complete' ? 'selected' : '' }}>
-                                    {{ __(' مكتمل') }}</option>
-                                <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>
-                                    {{ __('ملغي') }}</option>
-                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
+                                <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
+                                    {{ __('قيد التجهيز') }}</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
                                     {{ __('قيد الانتظار') }}</option>
+                                <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>
+                                    {{ __(' جزئي') }}</option>
+                                <option value="complete" {{ request('status') == 'complete' ? 'selected' : '' }}>
+                                    {{ __(' مكتمل') }}</option>
+                                <option value="cancel" {{ request('status') == 'cancel' ? 'selected' : '' }}>
+                                    {{ __('ملغي') }}</option>
+                                <option value="stop" {{ request('status') == 'stop' ? 'selected' : '' }}>
+                                    {{ __('متوقف') }}</option>
                             </select>
                         </div>
 
@@ -144,6 +148,7 @@
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('المصنع') }}</th>
                             <th>{{ __('حاله الطلب') }}</th>
+                            <th>{{ __('جار التصنيع') }}</th>
                             <th>{{ __('الألوان') }}</th>
                             <th>{{ __('حاله التسليم النهائيه') }}</th>
                             <th>{{ __('العمليات') }}</th>
@@ -179,7 +184,10 @@
                                         });
 
                                         $processingVariants = $product->productColors->sum(function ($color) {
-                                            return $color->productcolorvariants->where('status', 'processing')->count();
+                                            return $color->productcolorvariants
+                                                ->where('status', 'processing')
+                                                ->where('status', 'complete')
+                                                ->count();
                                         });
                                     @endphp
                                     @if ($product->status === 'new')
@@ -198,10 +206,14 @@
                                         <span class="badge bg-info">{{ __('مكتمل') }}</span>
                                     @elseif($product->status === 'processing')
                                         <span class="badge bg-success">{{ __('تصنيع') }}
-                                            ({{ $processingVariants }}/{{ $totalVariants }})
                                         </span>
                                     @endif
                                 </td>
+
+                                <td>
+                                    ({{ $processingVariants }}/{{ $totalVariants }})
+                                </td>
+
                                 <td>
                                     <table class="table table-bordered mb-0">
                                         <thead>
@@ -310,7 +322,7 @@
                                     @elseif ($product->receiving_status === 'pending')
                                         <span class="badge bg-warning">{{ __('في انتظار التسليم') }}</span>
                                     @elseif ($product->receiving_status === 'postponed')
-                                        <span class="badge bg-pink">{{ __('مؤجل') }}</span> 
+                                        <span class="badge bg-pink">{{ __('مؤجل') }}</span>
                                     @elseif ($product->receiving_status === 'stop')
                                         <span class="badge bg-danger">{{ __('توقف') }}</span>
                                     @elseif ($product->receiving_status === 'cancel')
@@ -337,10 +349,16 @@
                                         @endif
                                         @if (auth()->user()->hasPermission('إكمال بيانات المنتج'))
                                             <a href="{{ route('products.completeData', $product->id) }}"
-                                                class="btn btn-info w-100">{{ __('استكمال البيانات') }}</a>
+                                                class="btn btn-info w-100">
+                                                @if (isEmpty($product->name))
+                                                    أكمال البيانات
+                                                @else
+                                                    تعديل البيانات
+                                                @endif
+                                            </a>
                                         @endif
 
-                                        @if ($product->status === 'Cancel')
+                                        @if ($product->status === 'cancel')
                                             @if (auth()->user()->hasPermission('تفعيل منتج'))
                                                 <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
                                                     data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>

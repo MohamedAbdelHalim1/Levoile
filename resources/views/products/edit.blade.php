@@ -25,7 +25,7 @@
 
                     <div class="row">
                         <!-- Product Category -->
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select id="category_id" name="category_id" required>
                                 @foreach ($categories as $category)
@@ -38,7 +38,7 @@
                         </div>
 
                         <!-- Product Season -->
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
                             <select id="season_id" name="season_id" required>
                                 @foreach ($seasons as $season)
@@ -51,13 +51,24 @@
                         </div>
 
                         <!-- Product Factory -->
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
                             <select id="factory_id" name="factory_id" required>
                                 @foreach ($factories as $factory)
                                     <option value="{{ $factory->id }}"
                                         {{ $product->factory_id == $factory->id ? 'selected' : '' }}>
                                         {{ $factory->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <select class="form-control" id="material_id" name="material_id">
+                                <option value="">{{ __('اختر المادة') }}</option>
+                                @foreach ($materials as $material)
+                                    <option value="{{ $material->id }}" {{ $product->material_id == $material->id ? 'selected' : '' }}>
+                                        {{ $material->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -82,33 +93,7 @@
                             value="{{ $product->marker_number }}" required>
                     </div>
 
-                    <!-- Have Stock -->
-                    <div class="mb-3">
-                        <label class="form-label d-block">{{ __('حاله مخزون الخامات') }}</label>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="form-check">
-                                <input type="radio" id="stock_yes" name="have_stock" value="1"
-                                    class="form-check-input" {{ $product->have_stock ? 'checked' : '' }} required>
-                                <label for="stock_yes" class="form-check-label" style="margin: 10px;">{{ __('متوفر') }}</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" id="stock_no" name="have_stock" value="0"
-                                    class="form-check-input" {{ !$product->have_stock ? 'checked' : '' }}>
-                                <label for="stock_no" class="form-check-label" style="margin: 10px;">{{ __('غير متوفر') }}</label>
-                            </div>
-                            <div class="flex-grow-1">
-                                <select class="form-control" id="material_id" name="material_id">
-                                    <option value="">{{ __('اختر المادة') }}</option>
-                                    @foreach ($materials as $material)
-                                        <option value="{{ $material->id }}" {{ $product->material_id == $material->id ? 'selected' : '' }}>
-                                            {{ $material->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
+                  
 
 
                     <!-- Add New Color -->
@@ -143,16 +128,6 @@
                                             <input type="hidden" name="colors[{{ $productColor->color_id }}][color_id]"
                                                 value="{{ $productColor->color_id }}">
                                             {{ $productColor->color->name }}
-                                        </td>
-                                        <td>
-                                            <input type="date" class="form-control"
-                                                name="colors[{{ $productColor->color_id }}][expected_delivery]"
-                                                value="{{ $variant ? $variant->expected_delivery : '' }}" required>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control"
-                                                name="colors[{{ $productColor->color_id }}][quantity]"
-                                                value="{{ $variant ? $variant->quantity : '' }}" min="1" required>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger delete-color"
@@ -209,12 +184,6 @@
                         <td>
                             <input type="hidden" name="colors[${colorId}][color_id]" value="${colorId}">
                             ${colorName}
-                        </td>
-                        <td>
-                            <input type="date" class="form-control" name="colors[${colorId}][expected_delivery]" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" name="colors[${colorId}][quantity]" min="1" required>
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
