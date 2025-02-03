@@ -178,11 +178,10 @@
                                                 </td>
                                                 <td>
                                                     @if (
-                                                            $variant->status != 'partial' &&
+                                                        $variant->status != 'partial' &&
                                                             $variant->status != 'complete' &&
                                                             empty($variant->receiving_quantity) &&
-                                                            !empty($variant->expected_delivery)
-                                                        )
+                                                            !empty($variant->expected_delivery))
                                                         <button type="button" class="btn btn-info validate-btn"
                                                             data-variant-id="{{ $variant->id }}">تأكيد</button>
                                                     @endif
@@ -230,7 +229,7 @@
                         <!-- Submit Button -->
                         <div class="mt-3">
                             <button type="button" id="submitReceiving" class="btn btn-success w-100">
-                                نعم واعتبار ان اللون تم استلامه بالكامل
+                                نعم، وتأكيد استلام اللون بالكامل 
                             </button>
                         </div>
 

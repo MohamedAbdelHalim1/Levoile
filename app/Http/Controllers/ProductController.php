@@ -159,9 +159,9 @@ class ProductController extends Controller
                 // ✅ Log history for updating manufacturing variant
                 History::create([
                     'product_id' => $product->id,
-                    'type' => 'تحديث التصنيع',
+                    'type' => 'بدء التصنيع',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم تحديث تصنيع اللون '{$productColor->color->name}' بتحديد تاريخ استلام {$request->expected_delivery} والكمية {$request->quantity}.",
+                    'note' => "أبدا تصنيع اللون '{$productColor->color->name}' بتحديد تاريخ استلام {$request->expected_delivery} والكمية {$request->quantity}.",
                 ]);
             } else {
                 // ✅ Create a New Variant if None Exists
@@ -186,7 +186,7 @@ class ProductController extends Controller
             if ($originalStatus !== 'processing') {
                 History::create([
                     'product_id' => $product->id,
-                    'type' => 'تحديث حالة المنتج',
+                    'type' => ' حالة تصنيع المنتج',
                     'action_by' => auth()->user()->name,
                     'note' => "تم تغيير حالة المنتج '{$product->description}' إلى 'جاري التصنيع'.",
                 ]);
@@ -423,7 +423,7 @@ class ProductController extends Controller
 
             History::create([
                 'product_id' => $product->id,
-                'type' => 'تحديث حالة الاستلام',
+                'type' => ' حالة الاستلام',
                 'action_by' => auth()->user()->name,
                 'note' => "تم تغيير حالة استلام المنتج '{$product->description}' من '{$previousStatus}' إلى '{$newStatus}'.",
             ]);
@@ -699,7 +699,7 @@ class ProductController extends Controller
             if (!empty($changes)) {
                 History::create([
                     'product_id' => $product->id,
-                    'type' => 'تعديل',
+                    'type' => 'استكمال البيانات',
                     'action_by' => auth()->user()->name,
                     'note' => "تم اكتمال بيانات المنتج '{$product->description}'. " . implode(", ", $changes),
                 ]);

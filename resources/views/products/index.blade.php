@@ -330,8 +330,10 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-2">
-                                        <a href="{{ route('products.manufacture', $product->id) }}"
-                                            class="btn btn-info w-100">{{ __('تصنيع') }}</a>
+                                        @if (auth()->user()->hasPermission('تصنيع المنتج'))
+                                            <a href="{{ route('products.manufacture', $product->id) }}"
+                                                class="btn btn-info w-100">{{ __('تصنيع') }}</a>
+                                        @endif
                                         @if (auth()->user()->hasPermission('عرض منتج'))
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-primary w-100">{{ __('عرض') }}</a>
@@ -378,11 +380,12 @@
                                                     class="btn btn-danger w-100">{{ __('مسح') }}</button>
                                             </form>
                                         @endif
-                                        <!-- ✅ New History Button -->
-                                        <a href="{{ route('products.history', $product->id) }}"
-                                            class="btn btn-dark w-100">
-                                            {{ __('تاريخ المنتج') }}
-                                        </a>
+                                        @if (auth()->user()->role->name === 'admin')
+                                            <a href="{{ route('products.history', $product->id) }}"
+                                                class="btn btn-dark w-100">
+                                                {{ __('المراجعه ') }}
+                                            </a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

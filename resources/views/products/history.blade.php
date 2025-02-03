@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
-                <h2 class="mb-4">{{ __('تاريخ المنتج') }}: {{ $product->description }}</h2>
+                <h2 class="mb-4">{{ __('مراجعه المنتج') }}: {{ $product->description }}</h2>
 
                 <table class="table table-bordered">
                     <thead class="table-dark">
