@@ -308,11 +308,28 @@ class ProductController extends Controller
              
             } else {
                 // Fully receive the current variant
-                $variant->receiving_quantity = ($validated['entered_quantity'] > $variant->quantity) ? $validated['entered_quantity'] : $variant->quantity - $validated['remaining_quantity'];
+                $variant->receiving_quantity = ($validated['entered_quantity'] > $variant->quantity) 
+                    ? $validated['entered_quantity'] 
+                    : $variant->quantity - $validated['remaining_quantity'];
                 $variant->status = 'complete';
                 $variant->receiving_status = 'complete';
                 $variant->note = $request->note;
                 $variant->save();
+    
+                // ✅ Update parent variant status to complete if all its children are complete
+                if ($variant->parent_id) {
+                    $parentVariant = ProductColorVariant::find($variant->parent_id);
+                    if ($parentVariant) {
+                        // Check if all child variants are complete
+                        $allChildrenComplete = $parentVariant->children()->where('status', '!=', 'complete')->count() === 0;
+    
+                        if ($allChildrenComplete) {
+                            $parentVariant->status = 'complete';
+                            $parentVariant->receiving_status = 'complete';
+                            $parentVariant->save();
+                        }
+                    }
+                }
             }
 
             $fullyReceivedCount = 0;
