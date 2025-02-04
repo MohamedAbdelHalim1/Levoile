@@ -117,10 +117,24 @@
                                     <span>الحالة:</span>
                                     <span
                                         class="badge
-                                        @if ($product->status === 'Complete') bg-success
-                                        @elseif ($product->status === 'Partial') bg-warning
+                                        @if ($product->status === 'complete') bg-success
+                                        @elseif ($product->status === 'partial') bg-warning
+                                        @elseif ($product->status === 'new') bg-primary
+                                        @elseif ($product->status === 'postponed') bg-info
+                                        @elseif ($product->status === 'processing') bg-info
+                                        @elseif ($product->status === 'stop') bg-danger
+                                        @elseif ($product->status === 'cancel') bg-danger
+                                        @elseif ($product->status === 'pending') bg-info
                                         @else bg-primary @endif">
-                                        {{ $product->status }}
+                                        @if ($product->status === 'new') جديد
+                                        @elseif ($product->status === 'cancel') ملغي
+                                        @elseif ($product->status === 'pending') قيد الانتظار
+                                        @elseif ($product->status === 'postponed') مؤجل
+                                        @elseif ($product->status === 'stop') متوقف
+                                        @elseif ($product->status === 'complete') مكتمل
+                                        @elseif ($product->status === 'processing') قيد التنصيع
+                                        @elseif ($product->status === 'partial') جزئي
+                                        @else لا يوجد @endif
                                     </span>
                                 </div>
                             </div>

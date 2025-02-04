@@ -73,6 +73,10 @@ class ProductController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('receiving_status')) {
+            $query->where('receiving_status', $request->receiving_status);
+        }
+
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
@@ -85,7 +89,7 @@ class ProductController extends Controller
         }
 
         // Fetch the filtered products
-        $products = $query->orderBy('id', 'desc')->get();
+        $products = $query->orderBy('created_at', 'desc')->get();
 
         return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors', 'materials'));
     }
@@ -336,7 +340,7 @@ class ProductController extends Controller
                 // Update the current variant as "Partially Received"
                 $variant->receiving_quantity += ($variant->quantity - $validated['remaining_quantity']);
                 $variant->note = $request->note;
-                $variant->status = 'processing';
+                $variant->status = 'partial';
                 $variant->receiving_status = 'partial';
                 $variant->save();
 
@@ -1008,7 +1012,7 @@ class ProductController extends Controller
     public function history($id)
     {
         $product = Product::findOrFail($id);
-        $history = History::where('product_id', $id)->orderBy('created_at', 'asc')->get();
+        $history = History::where('product_id', $id)->orderBy('created_at', 'desc')->get();
 
         return view('products.history', compact('product', 'history'));
     }

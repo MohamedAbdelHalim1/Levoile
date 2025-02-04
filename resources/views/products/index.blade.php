@@ -71,14 +71,14 @@
                         </div>
 
                         <!-- Status Filter -->
-                        <div class="col-md-3 mt-3">
+                        <div class="col-md-4 mt-3">
                             <label for="statusFilter">{{ __('الحالة') }}</label>
                             <select name="status" id="statusFilter" class="ts-filter">
                                 <option value="">{{ __('كل الحالات') }}</option>
                                 <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
                                 <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                    {{ __('قيد التجهيز') }}</option>
+                                    {{ __('تصنيع') }}</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
                                     {{ __('قيد الانتظار') }}</option>
                                 <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>
@@ -92,8 +92,30 @@
                             </select>
                         </div>
 
+                        <!-- receiving status Filter -->
+                        <div class="col-md-4 mt-3">
+                            <label for="receivingStatusFilter">{{ __('حالة الاستلام') }}</label>
+                            <select name="receiving_status" id="receivingStatusFilter" class="ts-filter"></select>
+                                <option value="">{{ __('كل الحالات') }}</option>
+                                <option value="new" {{ request('receiving_status') == 'new' ? 'selected' : '' }}>
+                                    {{ __('جديد') }}</option>
+                                <option value="processing" {{ request('receiving_status') == 'processing' ? 'selected' : '' }}>
+                                    {{ __('تصنيع') }}</option>
+                                <option value="pending" {{ request('receiving_status') == 'pending' ? 'selected' : '' }}>
+                                    {{ __('قيد الانتظار') }}</option>
+                                <option value="partial" {{ request('receiving_status') == 'partial' ? 'selected' : '' }}>
+                                    {{ __(' جزئي') }}</option>
+                                <option value="complete" {{ request('receiving_status') == 'complete' ? 'selected' : '' }}>
+                                    {{ __(' مكتمل') }}</option>
+                                <option value="cancel" {{ request('receiving_status') == 'cancel' ? 'selected' : '' }}>
+                                    {{ __('ملغي') }}</option>
+                                <option value="stop" {{ request('receiving_status') == 'stop' ? 'selected' : '' }}>
+                                    {{ __('متوقف') }}</option>
+                            </select>
+                        </div>
+
                         <!-- Material Filter -->
-                        <div class="col-md-3 mt-3">
+                        <div class="col-md-4 mt-3">
                             <label for="materialFilter">{{ __('الخامة') }}</label>
                             <select name="material" id="materialFilter" class="ts-filter">
                                 <option value="">{{ __('كل الخامات') }}</option>
@@ -141,6 +163,7 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
+                            <th>{{ __('#') }}</th>
                             <th>{{ __('الصورة') }}</th>
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('القسم') }}</th>
@@ -157,6 +180,7 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
+                                <td>{{ $product->id }}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center">
                                         <span class="fw-bold">{{ $product->code ?? 'لا يوجد كود' }}</span>
@@ -220,7 +244,8 @@
                                                 <th>{{ __('اللون') }}</th>
                                                 <th>{{ __('حاله التصنيع') }}</th>
                                                 <th>{{ __('حاله التسليم') }}</th>
-                                                <th>{{ __('الكمية') }}</th>
+                                                <th>{{ __('الكميه المطلوبه') }}</th>
+                                                <th>{{ __('الكميه المستلمه') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -232,6 +257,14 @@
                                                             $variant->expected_delivery,
                                                         )->diffInDays(now(), false)
                                                         : null;
+                                                    // i want to get  the quantity of parent productcolorvariant by productcolor id and summation of all recevied quantity
+                                                    $totalReceivedQuantity = $productColor->productcolorvariants->sum(
+                                                        'receiving_quantity',
+                                                    );
+                                                    $totalExpectedQuantity = $productColor->productcolorvariants
+                                                        ->where('parent_id', null)
+                                                        ->sum('quantity');
+
                                                 @endphp
                                                 <tr>
                                                     <!-- Color Name -->
@@ -305,7 +338,8 @@
                                                     </td>
 
                                                     <!-- Quantity -->
-                                                    <td>{{ $variant->quantity ?? 0 }}</td>
+                                                    <td>{{ $totalExpectedQuantity ?? 0 }}</td>
+                                                    <td>{{ $totalReceivedQuantity ?? 0 }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -338,7 +372,12 @@
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-primary w-100">{{ __('عرض') }}</a>
                                         @endif
-                                        @if (auth()->user()->hasPermission('تعديل منتج'))
+                                        @if (auth()->user()->hasPermission('تعديل منتج') &&
+                                                $product->productColors->every(function ($color) {
+                                                    return $color->productcolorvariants->every(function ($variant) {
+                                                        return $variant->status === 'new';
+                                                    });
+                                                }))
                                             <a href="{{ route('products.edit', $product->id) }}"
                                                 class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
                                         @endif
