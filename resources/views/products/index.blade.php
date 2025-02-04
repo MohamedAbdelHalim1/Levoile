@@ -95,7 +95,7 @@
                         <!-- receiving status Filter -->
                         <div class="col-md-4 mt-3">
                             <label for="receivingStatusFilter">{{ __('حالة الاستلام') }}</label>
-                            <select name="receiving_status" id="receivingStatusFilter" class="ts-filter"></select>
+                            <select name="receiving_status" id="receivingStatusFilter" class="ts-filter">
                                 <option value="">{{ __('كل الحالات') }}</option>
                                 <option value="new" {{ request('receiving_status') == 'new' ? 'selected' : '' }}>
                                     {{ __('جديد') }}</option>
