@@ -161,26 +161,26 @@
                                         {{ $variant->status ?? __('لا يوجد') }}
                                     @endif
                                 </td>
-                                <td></td>
-                                @if ($variant->receiving_status === 'new')
-                                    <span class="badge bg-success">{{ __('جديد ') }}</span>
-                                @elseif ($variant->receiving_status === 'partial')
-                                    <span class="badge bg-warning">{{ __('جزئي') }}</span>
-                                @elseif ($variant->receiving_status === 'processing')
-                                    <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
-                                @elseif ($variant->receiving_status === 'complete')
-                                    <span class="badge bg-success">{{ __('مكتمل') }}</span>
-                                @elseif ($variant->receiving_status === 'cancel')
-                                    <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                @elseif ($variant->receiving_status === 'pending')
-                                    <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
-                                @elseif ($variant->receiving_status === 'postponed')
-                                    <span class="badge bg-info">{{ __('مؤجل') }}</span>
-                                @elseif ($variant->receiving_status === 'stop')
-                                    <span class="badge bg-danger">{{ __('متوقف') }}</span>
-                                @else
-                                    {{ $variant->receiving_status ?? __('لا يوجد') }}
-                                @endif
+                                <td>
+                                    @if ($variant->receiving_status === 'new')
+                                        <span class="badge bg-success">{{ __('جديد ') }}</span>
+                                    @elseif ($variant->receiving_status === 'partial')
+                                        <span class="badge bg-warning">{{ __('جزئي') }}</span>
+                                    @elseif ($variant->receiving_status === 'processing')
+                                        <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
+                                    @elseif ($variant->receiving_status === 'complete')
+                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
+                                    @elseif ($variant->receiving_status === 'cancel')
+                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                    @elseif ($variant->receiving_status === 'pending')
+                                        <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                    @elseif ($variant->receiving_status === 'postponed')
+                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                    @elseif ($variant->receiving_status === 'stop')
+                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
+                                    @else
+                                        {{ $variant->receiving_status ?? __('لا يوجد') }}
+                                    @endif
                                 </td>
                                 <td>{{ $variant->quantity ?? 0 }}</td>
                                 <td>{{ $variant->receiving_quantity ?? 0 }}</td>
@@ -255,7 +255,7 @@
                 const matchesVariantStatus = !variantStatus || rowVariantStatus.includes(variantStatus);
 
                 const matchesDate = (!startDate || rowDate >= startDate) && (!endDate || rowDate <=
-                endDate);
+                    endDate);
 
                 if (matchesCategory && matchesSeason && matchesFactory && matchesStatus &&
                     matchesVariantStatus && matchesDate) {
