@@ -52,7 +52,7 @@
                 <div class="col-md-2">
                     <a href="{{ route($model['route']) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <i class="fe {{ $model['icon'] }} fs-3"></i>
+                            <i class="fe fe-box {{ $model['icon'] }} fs-3"></i>
                             <div class="ms-3 text-left">
                                 <h5 class="mt-2 mb-1">{{ $model['name'] }}</h5>
                                 <h3 class="text-dark fw-bold">{{ $model['count'] }}</h3>
