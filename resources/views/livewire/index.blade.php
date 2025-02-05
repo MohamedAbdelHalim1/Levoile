@@ -18,6 +18,8 @@
     <!-- END PAGE HEADER -->
 
     <!-- ROW -->
+
+    
     <div class="p-4">
         <!-- Date Range Filter -->
         <div class="row mb-4">
@@ -28,6 +30,10 @@
             <div class="col-md-4">
                 <label>إلى تاريخ</label>
                 <input type="date" class="form-control" wire:model="endDate">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-primary me-2" wire:click="filterData">تطبيق الفلتر</button>
+                <button class="btn btn-secondary" wire:click="resetFilter">إلغاء الفلتر</button>
             </div>
         </div>
     
@@ -92,6 +98,7 @@
             @endforeach
         </div>
     </div>
+    
     
     <!-- END ROW -->
 
