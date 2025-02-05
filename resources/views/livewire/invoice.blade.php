@@ -48,7 +48,7 @@
                                         <div class="card-header border-bottom d-block">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <a class="header-brand" href="{{url('index')}}">
+                                                    <a class="header-brand" href="{{route('dashboard')}}">
                                                         <img alt="logo" class="header-brand-img logo-3 float-start" src="{{asset('build/assets/images/brand/logo.png')}}">
                                                         <img alt="logo" class="header-brand-img logo-4 m-0" src="{{asset('build/assets/images/brand/logo-light.png')}}">
                                                     </a>

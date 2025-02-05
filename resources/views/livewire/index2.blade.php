@@ -10,7 +10,7 @@
                             <div class="page-header d-sm-flex d-block">
                                 <ol class="breadcrumb mb-sm-0 mb-3">
                                     <!-- breadcrumb -->
-                                    <li class="breadcrumb-item"><a href="{{url('index')}}">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Dashboard02</li>
                                 </ol><!-- End breadcrumb -->
                                 <div class="ms-auto">

@@ -13,7 +13,7 @@
                     <div class="container text-center text-dark">
                         <div class="display-1  text-dark mb-2">400</div>
                         <p class="h5 fw-normal mb-6 leading-normal">Oops! The Page you were looking for doesn't exits...</p>
-                        <a class="btn btn-primary" href="{{url('index')}}">
+                        <a class="btn btn-primary" href="{{route('dashboard')}}">
                             Back To Home
                         </a>
                     </div>

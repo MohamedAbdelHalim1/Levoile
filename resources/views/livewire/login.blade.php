@@ -13,7 +13,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="text-center mb-2">
-                                        <a class="header-brand1" href="{{ url('index') }}">
+                                        <a class="header-brand1" href="{{ route('dashboard') }}">
                                             <img src="{{ asset('build/assets/images/brand/logo.png') }}"
                                                 class="header-brand-img main-logo" alt="Sparic logo" style="width: 100px;height: 100px;">
                                             <img src="{{ asset('build/assets/images/brand/logo-light.png') }}"

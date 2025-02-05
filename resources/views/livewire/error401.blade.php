@@ -13,7 +13,7 @@
                     <div class="container text-center text-dark">
                         <div class="display-1  text-dark mb-2">401</div>
                         <p class="h5 fw-normal mb-6 leading-normal">Sorry, an error has occured, Requested page not found!</p>
-                        <a class="btn btn-primary" href="{{url('index')}}">
+                        <a class="btn btn-primary" href="{{route('dashboard')}}">
                             Back To Home
                         </a>
                     </div>

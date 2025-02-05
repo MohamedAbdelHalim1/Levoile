@@ -5,7 +5,7 @@
 							<a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar"
 								href="javascript:void(0)"></a>
 							<!-- sidebar-toggle-->
-							<a class="logo-horizontal" href="{{url('index')}}">
+							<a class="logo-horizontal" href="{{route('dashboard')}}">
 								<img src="{{asset('build/assets/images/brand/logo.png')}}" class="header-brand-img main-logo"
 									alt="Sparic logo">
 								<img src="{{asset('build/assets/images/brand/logo-light.png')}}" class="header-brand-img darklogo"

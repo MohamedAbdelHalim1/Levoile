@@ -8,7 +8,7 @@
     <!-- PAGE HEADER -->
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
-            <li class="breadcrumb-item"><a href="{{url('index')}}">الرئيسية</a></li>
+            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">الرئيسية</a></li>
             <li class="breadcrumb-item active" aria-current="page">لوحة التحكم</li>
         </ol>
     </div>
@@ -17,7 +17,7 @@
     <!-- ROW -->
     <div class="p-4">
         <!-- Date Range Filter -->
-        <form method="GET" action="{{ route('dashboard.index') }}" class="row mb-4">
+        <form method="GET" action="{{ route('dashboard') }}" class="row mb-4">
             <div class="col-md-4">
                 <label>من تاريخ</label>
                 <input type="date" class="form-control" name="startDate" value="{{ request('startDate') }}">
@@ -28,7 +28,7 @@
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary me-2">بحث</button>
-                <a href="{{ route('dashboard.index') }}" class="btn btn-success">إلغاء</a>
+                <a href="{{ route('dashboard') }}" class="btn btn-success">إلغاء</a>
             </div>
         </form>
 

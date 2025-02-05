@@ -15,7 +15,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="text-center mb-3">
-                                                    <a class="header-brand1" href="{{url('index')}}">
+                                                    <a class="header-brand1" href="{{route('dashboard')}}">
                                                         <img src="{{asset('build/assets/images/brand/logo.png')}}"
                                                             class="header-brand-img main-logo" alt="Sparic logo">
                                                         <img src="{{asset('build/assets/images/brand/logo-light.png')}}"
@@ -33,7 +33,7 @@
                                                     <input type="password" class="form-control" id="exampleInputPassword1"
                                                         placeholder="Password">
                                                 </div>
-                                                <a href="{{url('index')}}" class="btn btn-primary btn-block">Unlock</a>
+                                                <a href="{{route('dashboard')}}" class="btn btn-primary btn-block">Unlock</a>
                                             </div>
                                         </div>
                                     </div>

@@ -15,7 +15,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="text-center mb-6">
-                                                    <a class="header-brand1" href="{{url('index')}}">
+                                                    <a class="header-brand1" href="{{route('dashboard')}}">
                                                         <img src="{{asset('build/assets/images/brand/logo.png')}}"
                                                             class="header-brand-img main-logo" alt="Sparic logo">
                                                         <img src="{{asset('build/assets/images/brand/logo-light.png')}}"
@@ -48,7 +48,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div>
-                                                        <a href="{{url('index')}}" class="btn btn-primary btn-block px-4">Create a
+                                                        <a href="{{route('dashboard')}}" class="btn btn-primary btn-block px-4">Create a
                                                             new account</a>
                                                     </div>
                                                 </div>

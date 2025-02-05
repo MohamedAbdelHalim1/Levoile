@@ -16,7 +16,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="text-center mb-6">
-                                                    <a class="header-brand1" href="{{url('index')}}">
+                                                    <a class="header-brand1" href="{{route('dashboard')}}">
                                                         <img src="{{asset('build/assets/images/brand/logo.png')}}"
                                                             class="header-brand-img main-logo" alt="Sparic logo">
                                                         <img src="{{asset('build/assets/images/brand/logo-light.png')}}"
@@ -30,7 +30,7 @@
                                                     <input type="password" class="form-control" placeholder="Email address">
                                                 </div>
                                                 <div class="text-center">
-                                                    <a href="{{url('index')}}" class="btn btn-primary btn-block">Send</a>
+                                                    <a href="{{route('dashboard')}}" class="btn btn-primary btn-block">Send</a>
                                                 </div>
                                                 <div class="mt-6 btn-list">
                                                     <button type="button" class="btn btn-icon btn-facebook"><i
