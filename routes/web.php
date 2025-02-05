@@ -160,9 +160,9 @@ Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('livewire.index');
-    })->name('dashboard');
+    // Route::get('/', function () {
+    //     return view('livewire.index');
+    // })->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -207,7 +207,7 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
         Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::get('index', Index::class)->name('dashboard.index');
+    Route::get('/', Index::class)->name('dashboard.index');
     Route::get('index2', Index2::class);
     Route::get('index3', Index3::class);
     Route::get('index4', Index4::class);
