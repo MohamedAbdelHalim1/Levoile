@@ -150,7 +150,7 @@
                                                 </li>
                                                 <li><a href="{{ route('reports.receive') }}" class="slide-item">تقرير
                                                         الاستلامات</a></li>
-                                                <li><a href="{{ url('calenasdar') }}" class="slide-item">تقرير
+                                                <li><a href="{{ route('reports.productStatusForSeason') }}" class="slide-item">تقرير
                                                         المواسم </a></li>
                                                 <li><a href="{{ url('calenasdar') }}" class="slide-item">تقرير
                                                         الاقسام </a></li>
