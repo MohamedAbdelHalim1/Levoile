@@ -52,10 +52,10 @@
                 <div class="col-md-2">
                     <a href="{{ route($model['route']) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <i class="fe fe-box {{ $model['icon'] }} fs-3"></i>
-                            <div class="ms-3 text-left">
-                                <h5 class="mt-2 mb-1">{{ $model['name'] }}</h5>
-                                <h3 class="text-dark fw-bold">{{ $model['count'] }}</h3>
+                            <i class="fe {{ $model['icon'] }} fs-3"></i>
+                            <div class="ms-3">
+                                <h5 class="mt-2 mb-1 text-start">{{ $model['name'] }}</h5>
+                                <h3 class="text-dark fw-bold text-start">{{ $model['count'] }}</h3>
                             </div>
                         </div>
                     </a>
@@ -71,7 +71,7 @@
             @php
                 $productStatusesLabels = [
                     'complete' => ['label' => 'مكتمل', 'icon' => 'fe-check-circle text-success'],
-                    'processing' => ['label' => 'قيد التصنيع', 'icon' => 'fe-tool text-info'],
+                    'processing' => ['label' => 'قيد التصنيع', 'icon' => 'fe-zap text-info'], // Fixed icon
                     'partial' => ['label' => 'استلام جزئي', 'icon' => 'fe-percent text-warning'],
                     'new' => ['label' => 'جديد', 'icon' => 'fe-plus-circle text-primary'],
                     'cancel' => ['label' => 'ملغي', 'icon' => 'fe-x-circle text-danger'],
@@ -84,9 +84,9 @@
                     <a href="{{ route('products.index', ['status' => $key]) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
                             <i class="fe {{ $status['icon'] }} fs-3"></i>
-                            <div class="ms-3 text-left">
-                                <h5 class="mt-2 mb-1">{{ $status['label'] }}</h5>
-                                <h3 class="text-dark fw-bold">{{ $productStatuses[$key] ?? 0 }}</h3>
+                            <div class="ms-3">
+                                <h5 class="mt-2 mb-1 text-start">{{ $status['label'] }}</h5>
+                                <h3 class="text-dark fw-bold text-start">{{ $productStatuses[$key] ?? 0 }}</h3>
                             </div>
                         </div>
                     </a>
@@ -101,9 +101,9 @@
         <div class="row">
             @php
                 $variantStatusesIcons = [
-                    'complete' => 'fe-check text-success',
-                    'processing' => 'fe-zap text-info',
-                    'partial' => 'fe-percent text-warning',
+                    'complete' => 'fe-check-circle text-success', 
+                    'processing' => 'fe-sliders text-info',  // Changed icon
+                    'partial' => 'fe-pie-chart text-warning', // Changed icon
                     'new' => 'fe-plus text-primary',
                     'cancel' => 'fe-x text-danger',
                     'stop' => 'fe-pause text-secondary',
@@ -115,9 +115,9 @@
                     <a href="{{ route('products.index', ['variant_status' => $key]) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
                             <i class="fe {{ $variantStatusesIcons[$key] }} fs-3"></i>
-                            <div class="ms-3 text-left">
-                                <h5 class="mt-2 mb-1">{{ $status['label'] }}</h5>
-                                <h3 class="text-dark fw-bold">{{ $variantStatuses[$key] ?? 0 }}</h3>
+                            <div class="ms-3">
+                                <h5 class="mt-2 mb-1 text-start">{{ $status['label'] }}</h5>
+                                <h3 class="text-dark fw-bold text-start">{{ $variantStatuses[$key] ?? 0 }}</h3>
                             </div>
                         </div>
                     </a>
