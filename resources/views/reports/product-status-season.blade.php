@@ -5,7 +5,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Date Range Filter -->
-            <form method="GET" action="{{ route('reports.productStatus') }}" class="row mb-4">
+            <form method="GET" action="{{ route('reports.productStatusForSeason') }}" class="row mb-4">
                 <div class="col-md-4">
                     <label>من تاريخ</label>
                     <input type="date" class="form-control" name="startDate" value="{{ request('startDate') }}">
@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary me-2">بحث</button>
-                    <a href="{{ route('reports.productStatus') }}" class="btn btn-secondary">إلغاء</a>
+                    <a href="{{ route('reports.productStatusForSeason') }}" class="btn btn-secondary">إلغاء</a>
                 </div>
             </form>
 
