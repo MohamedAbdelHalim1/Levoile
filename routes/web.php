@@ -204,7 +204,7 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
         Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::get('index', Index::class);
+    Route::get('index', Index::class)->name('dashboard.index');
     Route::get('index2', Index2::class);
     Route::get('index3', Index3::class);
     Route::get('index4', Index4::class);

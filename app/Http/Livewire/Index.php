@@ -14,33 +14,17 @@ use Carbon\Carbon;
 
 class Index extends Component
 {
-    public $startDate;
-    public $endDate;
-    public $applyFilter = false; // 🔹 Apply filter only when button is clicked
-
-    public function mount()
-    {
-        // Initially, show all data without filtering
-        $this->startDate = null;
-        $this->endDate = null;
-    }
-
-    public function filterData()
-    {
-        $this->applyFilter = true;
-    }
-
-    public function resetFilter()
-    {
-        $this->startDate = null;
-        $this->endDate = null;
-        $this->applyFilter = false;
-    }
-
     public function render()
     {
-        // If filter is applied, use date range; otherwise, show all data
-        $queryRange = $this->applyFilter ? [['created_at', '>=', $this->startDate], ['created_at', '<=', $this->endDate]] : [];
+        // Get request parameters for date filtering
+        $startDate = request('startDate');
+        $endDate = request('endDate');
+
+        // If no date range is selected, show all records
+        $queryRange = [];
+        if ($startDate && $endDate) {
+            $queryRange = [['created_at', '>=', $startDate], ['created_at', '<=', $endDate]];
+        }
 
         // Count Models
         $seasons = Season::where($queryRange)->count();
