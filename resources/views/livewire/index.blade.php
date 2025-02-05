@@ -77,7 +77,7 @@
                 <div class="col-md-2">
                     <a href="{{ route('products.index', ['status' => $key]) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <i class="fe {{ $status['icon'] }} fs-3"></i>
+                            <i class="fe fe-box {{ $status['icon'] }} fs-3"></i>
                             <div class="ms-2">
                                 <h5 class="mt-2 mb-1">{{ $status['label'] }}</h5>
                                 <h3 class="text-dark fw-bold">{{ $productStatuses[$key] ?? 0 }}</h3>
