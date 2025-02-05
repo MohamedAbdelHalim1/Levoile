@@ -77,6 +77,13 @@ class ProductController extends Controller
             $query->where('receiving_status', $request->receiving_status);
         }
 
+        if ($request->filled('variant_status')) {
+            $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
+                $q->where('status', $request->variant_status);
+            });
+        }
+    
+
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
