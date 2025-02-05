@@ -28,9 +28,12 @@
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary me-2">بحث</button>
-                <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">إلغاء</a>
+                <a href="{{ route('dashboard.index') }}" class="btn btn-success">إلغاء</a>
             </div>
         </form>
+
+        <!-- Section Title -->
+        <h4 class="mt-4 mb-3 text-primary fw-bold">البيانات الأساسية</h4>
 
         <!-- First Row: Model Counts -->
         <div class="row">
@@ -50,7 +53,7 @@
                     <a href="{{ route($model['route']) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
                             <i class="fe {{ $model['icon'] }} fs-3"></i>
-                            <div class="ms-2">
+                            <div class="ms-3 text-left">
                                 <h5 class="mt-2 mb-1">{{ $model['name'] }}</h5>
                                 <h3 class="text-dark fw-bold">{{ $model['count'] }}</h3>
                             </div>
@@ -60,8 +63,11 @@
             @endforeach
         </div>
 
+        <!-- Section Title -->
+        <h4 class="mt-5 mb-3 text-primary fw-bold">حالات التصنيع للمنتجات</h4>
+
         <!-- Second Row: Product Status Counts -->
-        <div class="row mt-4">
+        <div class="row">
             @php
                 $productStatusesLabels = [
                     'complete' => ['label' => 'مكتمل', 'icon' => 'fe-check-circle text-success'],
@@ -77,8 +83,8 @@
                 <div class="col-md-2">
                     <a href="{{ route('products.index', ['status' => $key]) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <i class="fe fe-box {{ $status['icon'] }} fs-3"></i>
-                            <div class="ms-2">
+                            <i class="fe {{ $status['icon'] }} fs-3"></i>
+                            <div class="ms-3 text-left">
                                 <h5 class="mt-2 mb-1">{{ $status['label'] }}</h5>
                                 <h3 class="text-dark fw-bold">{{ $productStatuses[$key] ?? 0 }}</h3>
                             </div>
@@ -88,15 +94,29 @@
             @endforeach
         </div>
 
+        <!-- Section Title -->
+        <h4 class="mt-5 mb-3 text-primary fw-bold">حالات الألوان الحالية</h4>
+
         <!-- Third Row: ProductColorVariant Status Counts -->
-        <div class="row mt-4">
+        <div class="row">
+            @php
+                $variantStatusesIcons = [
+                    'complete' => 'fe-check text-success',
+                    'processing' => 'fe-zap text-info',
+                    'partial' => 'fe-percent text-warning',
+                    'new' => 'fe-plus text-primary',
+                    'cancel' => 'fe-x text-danger',
+                    'stop' => 'fe-pause text-secondary',
+                ];
+            @endphp
+
             @foreach ($productStatusesLabels as $key => $status)
                 <div class="col-md-2">
                     <a href="{{ route('products.index', ['variant_status' => $key]) }}" class="card shadow p-3 text-decoration-none">
                         <div class="d-flex align-items-center">
-                            <i class="fe fe-box {{ $status['icon'] }} fs-3"></i>
-                            <div class="ms-2">
-                                <h5 class="mt-2 mb-1">{{ $status['label'] }} (ألوان المنتجات)</h5>
+                            <i class="fe {{ $variantStatusesIcons[$key] }} fs-3"></i>
+                            <div class="ms-3 text-left">
+                                <h5 class="mt-2 mb-1">{{ $status['label'] }}</h5>
                                 <h3 class="text-dark fw-bold">{{ $variantStatuses[$key] ?? 0 }}</h3>
                             </div>
                         </div>
@@ -120,7 +140,7 @@
     <!-- DATA TABLES JS -->
     <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
 
     <!-- INDEX JS -->
