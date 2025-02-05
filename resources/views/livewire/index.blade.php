@@ -27,8 +27,8 @@
                 <input type="date" class="form-control" name="endDate" value="{{ request('endDate') }}">
             </div>
             <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary me-2">تطبيق الفلتر</button>
-                <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">إلغاء الفلتر</a>
+                <button type="submit" class="btn btn-primary me-2">بحث</button>
+                <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">إلغاء</a>
             </div>
         </form>
 
