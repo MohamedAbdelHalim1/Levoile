@@ -152,7 +152,7 @@
                                                         الاستلامات</a></li>
                                                 <li><a href="{{ route('reports.productStatusForSeason') }}" class="slide-item">تقرير
                                                         المواسم </a></li>
-                                                <li><a href="{{ url('calenasdar') }}" class="slide-item">تقرير
+                                                <li><a href="{{ route('reports.categoryStatus') }}" class="slide-item">تقرير
                                                         الاقسام </a></li>
                                             </ul>
                                         </div>

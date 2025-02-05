@@ -187,6 +187,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/variants/mark-received', [ProductController::class, 'markReceived'])->name('variants.markReceived');
     Route::get('/receiving-report', [ReportController::class, 'index'])->name('reports.receive');
     Route::get('/reports/products-status', [ReportController::class, 'productStatusReportForSeason'])->name('reports.productStatusForSeason');
+    Route::get('/reports/categories-status', [ReportController::class, 'categoryStatusReport'])->name('reports.categoryStatus');
 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
