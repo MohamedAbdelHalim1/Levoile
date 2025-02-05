@@ -82,9 +82,11 @@
                     <div class="col-md-6 mt-3">
                         <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
                         <div class="input-group">
-                            <input type="date" id="expectedDeliveryStart" class="form-control" placeholder="{{ __('بداية التاريخ') }}">
+                            <input type="date" id="expectedDeliveryStart" class="form-control"
+                                placeholder="{{ __('بداية التاريخ') }}">
                             <span class="input-group-text">-</span>
-                            <input type="date" id="expectedDeliveryEnd" class="form-control" placeholder="{{ __('نهاية التاريخ') }}">
+                            <input type="date" id="expectedDeliveryEnd" class="form-control"
+                                placeholder="{{ __('نهاية التاريخ') }}">
                         </div>
                     </div>
 
@@ -102,6 +104,7 @@
                     <thead>
                         <tr>
                             <th>{{ __('الصورة') }}</th>
+                            <th>{{ __('اللون') }}</th>
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('الكود') }}</th>
                             <th>{{ __('القسم') }}</th>
@@ -109,81 +112,83 @@
                             <th>{{ __('الموسم') }}</th>
                             <th>{{ __('موعد الطرح') }}</th>
                             <th>{{ __('المصنع') }}</th>
-                            <th>{{ __('الحاله') }}</th>
-                            <th>{{ __('الرقم التسلسلي') }}</th>
-                            <th>{{ __('اللون') }}</th>
-                            <th>{{ __('تاريخ التوصيل') }}</th>
+                            <th>{{ __('حالة التصنيع') }}</th>
+                            <th>{{ __('حالة التسليم ') }}</th>
                             <th>{{ __('الكمية') }}</th>
                             <th>{{ __('الكمية المستلمة') }}</th>
-                            <th>{{ __('حالة اللون') }}</th>
+                            <th>{{ __('الرقم التسلسلي') }}</th>
+                            <th>{{ __('تاريخ التوصيل') }}</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($product_color_variants as $variant)
-                        <tr>
-                            <td>
-                                @if ($variant->productcolor->product->photo)
-                                    <img src="{{ asset($variant->productcolor->product->photo) }}" alt="Product Image" style="width: 100px; height: auto;">
-                                @else
-                                    {{ __('لا يتوفر صورة') }}
-                                @endif
-                            </td>
-                            <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->material->name ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>
-                            <td>
-                                @if ($variant->productcolor->product->status === 'new')
-                                    <span class="badge bg-primary">{{ __('جديد') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'partial')
-                                    <span class="badge bg-warning">{{ __('جزئي') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'complete')
-                                    <span class="badge bg-success">{{ __('مكتمل') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'cancel')
-                                    <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'pending')
-                                    <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'postponed')
-                                    <span class="badge bg-info">{{ __('مؤجل') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'stop')
-                                    <span class="badge bg-danger">{{ __('توقف') }}</span>
-                                @elseif ($variant->productcolor->product->status === 'processing')
-                                    <span class="badge bg-success">{{ __('قيد التنصيع') }}</span>
-                                @else
-                                    {{ $variant->productcolor->product->status ?? __('لا يوجد') }}
-                                @endif
-                            </td>
-                            <td>{{ $variant->productcolor->sku ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->productcolor->color->name ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->expected_delivery ?? __('لا يوجد') }}</td>
-                            <td>{{ $variant->quantity ?? 0 }}</td>
-                            <td>{{ $variant->receiving_quantity ?? 0 }}</td>
-                            <td>
-                                @if ($variant->status === 'new')
+                            <tr>
+                                <td>
+                                    @if ($variant->productcolor->product->photo)
+                                        <img src="{{ asset($variant->productcolor->product->photo) }}" alt="Product Image"
+                                            style="width: 100px; height: auto;">
+                                    @else
+                                        {{ __('لا يتوفر صورة') }}
+                                    @endif
+                                </td>
+                                <td>{{ $variant->productcolor->color->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->material->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>
+                                <td>
+                                    @if ($variant->status === 'new')
+                                        <span class="badge bg-success">{{ __('جديد ') }}</span>
+                                    @elseif ($variant->status === 'partial')
+                                        <span class="badge bg-warning">{{ __('جزئي') }}</span>
+                                    @elseif ($variant->status === 'processing')
+                                        <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
+                                    @elseif ($variant->status === 'complete')
+                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
+                                    @elseif ($variant->status === 'cancel')
+                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                    @elseif ($variant->status === 'pending')
+                                        <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                    @elseif ($variant->status === 'postponed')
+                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                    @elseif ($variant->status === 'stop')
+                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
+                                    @else
+                                        {{ $variant->status ?? __('لا يوجد') }}
+                                    @endif
+                                </td>
+                                <td></td>
+                                @if ($variant->receiving_status === 'new')
                                     <span class="badge bg-success">{{ __('جديد ') }}</span>
-                                @elseif ($variant->status === 'partial')
+                                @elseif ($variant->receiving_status === 'partial')
                                     <span class="badge bg-warning">{{ __('جزئي') }}</span>
-                                @elseif ($variant->status === 'processing')
+                                @elseif ($variant->receiving_status === 'processing')
                                     <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
-                                @elseif ($variant->status === 'complete')
+                                @elseif ($variant->receiving_status === 'complete')
                                     <span class="badge bg-success">{{ __('مكتمل') }}</span>
-                                @elseif ($variant->status === 'cancel')
+                                @elseif ($variant->receiving_status === 'cancel')
                                     <span class="badge bg-danger">{{ __('ملغي') }}</span>
-                                @elseif ($variant->status === 'pending')
+                                @elseif ($variant->receiving_status === 'pending')
                                     <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
-                                @elseif ($variant->status === 'postponed')
+                                @elseif ($variant->receiving_status === 'postponed')
                                     <span class="badge bg-info">{{ __('مؤجل') }}</span>
-                                @elseif ($variant->status === 'stop')
+                                @elseif ($variant->receiving_status === 'stop')
                                     <span class="badge bg-danger">{{ __('متوقف') }}</span>
                                 @else
-                                    {{ $variant->status ?? __('لا يوجد') }}
+                                    {{ $variant->receiving_status ?? __('لا يوجد') }}
                                 @endif
-                            </td>
-                        </tr>
-                        
+                                </td>
+                                <td>{{ $variant->quantity ?? 0 }}</td>
+                                <td>{{ $variant->receiving_quantity ?? 0 }}</td>
+                                <td>{{ $variant->productcolor->sku ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->expected_delivery ?? __('لا يوجد') }}</td>
+
+
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -192,7 +197,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             // Apply Tom Select to all dropdowns with class 'ts-filter'
             document.querySelectorAll(".ts-filter").forEach(select => {
                 new TomSelect(select, {
@@ -206,7 +211,6 @@
 @endsection
 
 @section('scripts')
-
     <!-- SELECT2 JS -->
     <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
     @vite('resources/assets/js/select2.js')
@@ -227,7 +231,7 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.getElementById('applyFilterBtn').addEventListener('click', function () {
+        document.getElementById('applyFilterBtn').addEventListener('click', function() {
             const category = document.getElementById('categoryFilter').value.toLowerCase();
             const season = document.getElementById('seasonFilter').value.toLowerCase();
             const factory = document.getElementById('factoryFilter').value.toLowerCase();
@@ -236,7 +240,7 @@
             const startDate = document.getElementById('expectedDeliveryStart').value;
             const endDate = document.getElementById('expectedDeliveryEnd').value;
 
-            document.querySelectorAll('#file-datatable tbody tr').forEach(function (row) {
+            document.querySelectorAll('#file-datatable tbody tr').forEach(function(row) {
                 const rowCategory = row.children[3].textContent.toLowerCase();
                 const rowSeason = row.children[4].textContent.toLowerCase();
                 const rowFactory = row.children[6].textContent.toLowerCase();
@@ -250,9 +254,11 @@
                 const matchesStatus = !status || rowStatus.includes(status);
                 const matchesVariantStatus = !variantStatus || rowVariantStatus.includes(variantStatus);
 
-                const matchesDate = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
+                const matchesDate = (!startDate || rowDate >= startDate) && (!endDate || rowDate <=
+                endDate);
 
-                if (matchesCategory && matchesSeason && matchesFactory && matchesStatus && matchesVariantStatus && matchesDate) {
+                if (matchesCategory && matchesSeason && matchesFactory && matchesStatus &&
+                    matchesVariantStatus && matchesDate) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -260,11 +266,11 @@
             });
         });
 
-        document.getElementById('resetFilterBtn').addEventListener('click', function () {
-            document.querySelectorAll('select, input[type="date"]').forEach(function (input) {
+        document.getElementById('resetFilterBtn').addEventListener('click', function() {
+            document.querySelectorAll('select, input[type="date"]').forEach(function(input) {
                 input.value = '';
             });
-            document.querySelectorAll('#file-datatable tbody tr').forEach(function (row) {
+            document.querySelectorAll('#file-datatable tbody tr').forEach(function(row) {
                 row.style.display = '';
             });
         });
