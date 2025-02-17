@@ -25,77 +25,81 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($productColor->productcolorvariants as $variant)
-                                <tr>
-                                    <td>{{ $productColor->color->name }}</td>
+                            @foreach ($product->productColors as $productColor)
+                                @foreach ($productColor->productcolorvariants as $variant)
+                                    <tr>
+                                        <td>{{ $productColor->color->name }}</td>
 
-                                    <td>
-                                        @switch($variant->status)
-                                            @case('new')
-                                                {{ __('لم يتم البدء') }}
-                                            @break
+                                        <td>
+                                            @switch($variant->status)
+                                                @case('new')
+                                                    {{ __('لم يتم البدء') }}
+                                                @break
 
-                                            @case('processing')
-                                                {{ __('جاري التصنيع') }}
-                                            @break
+                                                @case('processing')
+                                                    {{ __('جاري التصنيع') }}
+                                                @break
 
-                                            @case('postponed')
-                                                {{ __('مؤجل') }}
-                                            @break
+                                                @case('postponed')
+                                                    {{ __('مؤجل') }}
+                                                @break
 
-                                            @case('partial')
-                                                {{ __('جزئي الاستلام') }}
-                                            @break
+                                                @case('partial')
+                                                    {{ __('جزئي الاستلام') }}
+                                                @break
 
-                                            @case('complete')
-                                                {{ __('تم التصنيع') }}
-                                            @break
+                                                @case('complete')
+                                                    {{ __('تم التصنيع') }}
+                                                @break
 
-                                            @case('cancel')
-                                                {{ __('تم الغاء التصنيع') }}
-                                            @break
+                                                @case('cancel')
+                                                    {{ __('تم الغاء التصنيع') }}
+                                                @break
 
-                                            @case('stop')
-                                                {{ __('تم ايقاف التصنيع') }}
-                                            @break
+                                                @case('stop')
+                                                    {{ __('تم ايقاف التصنيع') }}
+                                                @break
 
-                                            @default
-                                                {{ __('غير معروف') }}
-                                        @endswitch
-                                    </td>
+                                                @default
+                                                    {{ __('غير معروف') }}
+                                            @endswitch
+                                        </td>
 
-                                    <td>{{ $variant->quantity ?? 0 }}</td>
+                                        <td>{{ $variant->quantity ?? 0 }}</td>
 
-                                    <td>
-                                        @if ($variant->status === 'new' || $variant->status === 'postponed')
-                                            <button type="button" class="btn btn-primary start-manufacturing-btn"
-                                                data-color-id="{{ $productColor->id }}"
-                                                data-color-name="{{ $productColor->color->name }}" data-bs-toggle="modal"
-                                                data-bs-target="#manufacturingModal">
-                                                {{ __('ابدأ التصنيع') }}
-                                            </button>
-                                        @else
-                                            <button type="button" class="btn btn-secondary stop-btn"
+                                        <td>
+                                            @if ($variant->status === 'new' || $variant->status === 'postponed')
+                                                <button type="button" class="btn btn-primary start-manufacturing-btn"
+                                                    data-color-id="{{ $productColor->id }}"
+                                                    data-color-name="{{ $productColor->color->name }}"
+                                                    data-bs-toggle="modal" data-bs-target="#manufacturingModal">
+                                                    {{ __('ابدأ التصنيع') }}
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn btn-secondary stop-btn"
+                                                    data-variant-id="{{ $variant->id }}"
+                                                    data-product-id="{{ $product->id }}" data-status="stop"
+                                                    data-bs-toggle="modal" data-bs-target="#statusModal">
+                                                    {{ __('إيقاف') }}
+                                                </button>
+                                            @endif
+
+                                            <button type="button" class="btn btn-danger cancel-btn"
                                                 data-variant-id="{{ $variant->id }}"
-                                                data-product-id="{{ $product->id }}" data-status="stop"
+                                                data-product-id="{{ $product->id }}" data-status="cancel"
                                                 data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('إيقاف') }}
+                                                {{ __('إلغاء') }}
                                             </button>
-                                        @endif
 
-                                        <button type="button" class="btn btn-danger cancel-btn"
-                                            data-variant-id="{{ $variant->id }}" data-product-id="{{ $product->id }}"
-                                            data-status="cancel" data-bs-toggle="modal" data-bs-target="#statusModal">
-                                            {{ __('إلغاء') }}
-                                        </button>
-
-                                        <button type="button" class="btn btn-warning postpone-btn"
-                                            data-variant-id="{{ $variant->id }}" data-product-id="{{ $product->id }}"
-                                            data-status="postponed" data-bs-toggle="modal" data-bs-target="#statusModal">
-                                            {{ __('تأجيل') }}
-                                        </button>
-                                    </td>
-                                </tr>
+                                            <button type="button" class="btn btn-warning postpone-btn"
+                                                data-variant-id="{{ $variant->id }}"
+                                                data-product-id="{{ $product->id }}" data-status="postponed"
+                                                data-bs-toggle="modal" data-bs-target="#statusModal">
+                                                {{ __('تأجيل') }}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             @endforeach
 
                         </tbody>
