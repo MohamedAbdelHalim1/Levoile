@@ -166,7 +166,7 @@
                                 </div>
 
                                 <!-- ✅ Factory Selection -->
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3 factory-container">
                                     <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
                                     <select name="factory_id[]" class="tom-select-factory" required>
                                         <option value="">{{ __('اختر المصنع') }}</option>
@@ -177,7 +177,7 @@
                                 </div>
 
                                 <!-- ✅ Material Selection -->
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3 material-container">
                                     <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
                                     <select name="material_id[]" class="tom-select-material" required>
                                         <option value="">{{ __('اختر الخامه') }}</option>
@@ -186,6 +186,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+
 
                                 <!-- ✅ Marker Number Input -->
                                 <div class="col-md-4 mb-3">
