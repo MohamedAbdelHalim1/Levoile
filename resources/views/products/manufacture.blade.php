@@ -25,12 +25,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($product->productColors as $productColor)
+                            @foreach ($productColor->productcolorvariants as $variant)
                                 <tr>
                                     <td>{{ $productColor->color->name }}</td>
-                                    @php
-                                        $variant = $productColor->productcolorvariants->last();
-                                    @endphp
 
                                     <td>
                                         @switch($variant->status)
@@ -43,7 +40,7 @@
                                             @break
 
                                             @case('postponed')
-                                                {{ __('مؤجل ') }}
+                                                {{ __('مؤجل') }}
                                             @break
 
                                             @case('partial')
@@ -67,16 +64,10 @@
                                         @endswitch
                                     </td>
 
-                                    <td>
-                                        {{ $variant->quantity ?? 0 }}
-
-                                    </td>
+                                    <td>{{ $variant->quantity ?? 0 }}</td>
 
                                     <td>
-
-
-                                        @if (($variant && $variant->status === 'new') || $variant->status === 'postponed')
-                                            <!-- ✅ Start Manufacturing Button -->
+                                        @if ($variant->status === 'new' || $variant->status === 'postponed')
                                             <button type="button" class="btn btn-primary start-manufacturing-btn"
                                                 data-color-id="{{ $productColor->id }}"
                                                 data-color-name="{{ $productColor->color->name }}" data-bs-toggle="modal"
@@ -84,7 +75,6 @@
                                                 {{ __('ابدأ التصنيع') }}
                                             </button>
                                         @else
-                                            <!-- ✅ Stop Button -->
                                             <button type="button" class="btn btn-secondary stop-btn"
                                                 data-variant-id="{{ $variant->id }}"
                                                 data-product-id="{{ $product->id }}" data-status="stop"
@@ -93,30 +83,21 @@
                                             </button>
                                         @endif
 
-                                        @if ($variant)
-                                            <!-- ✅ Cancel Button -->
-                                            <button type="button" class="btn btn-danger cancel-btn"
-                                                data-variant-id="{{ $variant->id }}"
-                                                data-product-id="{{ $product->id }}" data-status="cancel"
-                                                data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('إلغاء') }}
-                                            </button>
+                                        <button type="button" class="btn btn-danger cancel-btn"
+                                            data-variant-id="{{ $variant->id }}" data-product-id="{{ $product->id }}"
+                                            data-status="cancel" data-bs-toggle="modal" data-bs-target="#statusModal">
+                                            {{ __('إلغاء') }}
+                                        </button>
 
-
-
-                                            <!-- ✅ Postpone Button -->
-                                            <button type="button" class="btn btn-warning postpone-btn"
-                                                data-variant-id="{{ $variant->id }}"
-                                                data-product-id="{{ $product->id }}" data-status="postponed"
-                                                data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('تأجيل') }}
-                                            </button>
-                                        @endif
+                                        <button type="button" class="btn btn-warning postpone-btn"
+                                            data-variant-id="{{ $variant->id }}" data-product-id="{{ $product->id }}"
+                                            data-status="postponed" data-bs-toggle="modal" data-bs-target="#statusModal">
+                                            {{ __('تأجيل') }}
+                                        </button>
                                     </td>
-
-
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>

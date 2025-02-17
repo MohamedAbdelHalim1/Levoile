@@ -80,7 +80,7 @@ class ProductController extends Controller
                 $q->where('status', $request->variant_status);
             });
         }
-    
+
 
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
@@ -118,12 +118,15 @@ class ProductController extends Controller
     {
         $product = Product::with([
             'productColors.color',
-            'productColors.productcolorvariants'
+            'productColors.productcolorvariants' => function ($query) {
+                $query->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
+            }
         ])->findOrFail($id);
+
         $materials = Material::all();
         $factories = Factory::all();
 
-        return view('products.manufacture', compact('product' , 'materials', 'factories'));
+        return view('products.manufacture', compact('product', 'materials', 'factories'));
     }
 
 
@@ -131,27 +134,27 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Store original values before update
             $originalStatus = $product->status;
             $originalReceivingStatus = $product->receiving_status;
-    
+
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-    
+
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-    
+
             if (!$productColor) {
                 DB::rollBack();
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
-    
+
             // ✅ Insert multiple records for manufacturing
             $variants = [];
             foreach ($request->expected_delivery as $index => $expected_delivery) {
@@ -159,7 +162,7 @@ class ProductController extends Controller
                 $factory_id = $request->factory_id[$index] ?? null;
                 $material_id = $request->material_id[$index] ?? null;
                 $marker_number = $request->marker_number[$index] ?? null;
-    
+
                 $variant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
                     'expected_delivery' => $expected_delivery,
@@ -170,9 +173,9 @@ class ProductController extends Controller
                     'material_id' => $material_id,
                     'marker_number' => $marker_number,
                 ]);
-    
+
                 $variants[] = $variant;
-    
+
                 // ✅ Log history for each created variant
                 History::create([
                     'product_id' => $product->id,
@@ -181,7 +184,7 @@ class ProductController extends Controller
                     'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$quantity} مع تاريخ استلام متوقع {$expected_delivery}، مصنع: " . ($factory_id ? Factory::find($factory_id)->name : "غير محدد") . "، خامة: " . ($material_id ? Material::find($material_id)->name : "غير محددة") . ".",
                 ]);
             }
-    
+
             // ✅ Log history for product status change (if changed)
             if ($originalStatus !== 'processing') {
                 History::create([
@@ -191,16 +194,16 @@ class ProductController extends Controller
                     'note' => "تم تغيير حالة المنتج '{$product->description}' إلى 'جاري التصنيع'.",
                 ]);
             }
-    
+
             DB::commit();
-    
+
             return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدء تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
         }
     }
-    
+
     public function reschedule(Request $request)
     {
         $validated = $request->validate([
@@ -262,7 +265,7 @@ class ProductController extends Controller
 
             throw new \Exception('Invalid reschedule request. Ensure all inputs are correct.');
         } catch (\Exception $e) {
-           dd($e);
+            dd($e);
         }
     }
 
@@ -433,7 +436,7 @@ class ProductController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-           dd($e);
+            dd($e);
         }
     }
 
@@ -877,7 +880,7 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'category_id' => $request->category_id,
                 'season_id' => $request->season_id,
-                
+
             ]);
 
             // ✅ Get only changed columns
