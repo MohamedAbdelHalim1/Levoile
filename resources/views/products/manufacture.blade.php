@@ -293,7 +293,7 @@
                 // Clone the original input group
                 let newElement = original.cloneNode(true);
 
-                // Clear input values except for color name
+                // ✅ Clear input values except for color name
                 newElement.querySelectorAll('input, select').forEach(element => {
                     if (element.name !== "modal-color-name") {
                         if (element.tagName === 'INPUT') {
@@ -308,18 +308,28 @@
                 let colorName = document.getElementById('modal-color-name').value;
                 newElement.querySelector('input[id="modal-color-name"]').value = colorName;
 
-                // ✅ Remove old Tom Select instances (otherwise, it acts like an input field)
+                // ✅ Remove existing Tom Select instances in cloned div
                 let oldSelects = newElement.querySelectorAll('.tom-select-factory, .tom-select-material');
                 oldSelects.forEach(select => {
-                    let tomInstance = select.tomselect;
-                    if (tomInstance) {
-                        tomInstance.destroy(); // Destroy old instance
+                    if (select.tomselect) {
+                        select.tomselect.destroy(); // Destroy existing instance
                     }
                 });
 
-                // ✅ Ensure new select elements get proper class
-                newElement.querySelector('.tom-select-factory').classList.remove("ts-hidden");
-                newElement.querySelector('.tom-select-material').classList.remove("ts-hidden");
+                // ✅ Reset select elements to their original state
+                newElement.querySelector('.tom-select-factory').outerHTML = `<select name="factory_id[]" class="tom-select-factory" required>
+            <option value="">اختر المصنع</option>
+            @foreach ($factories as $factory)
+                <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+            @endforeach
+        </select>`;
+
+                newElement.querySelector('.tom-select-material').outerHTML = `<select name="material_id[]" class="tom-select-material" required>
+            <option value="">اختر الخامه</option>
+            @foreach ($materials as $material)
+                <option value="{{ $material->id }}">{{ $material->name }}</option>
+            @endforeach
+        </select>`;
 
                 // ✅ Append new element to container
                 container.appendChild(newElement);
