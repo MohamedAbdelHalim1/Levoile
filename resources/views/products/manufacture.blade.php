@@ -235,17 +235,7 @@
 
 
 @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Tom Select
-            new TomSelect('.tom-select-material', {
-                placeholder: "اختر الخامه"
-            });
-            new TomSelect('.tom-select-factory', {
-                placeholder: "اختر المصنع"
-            });
-        });
-    </script>
+
     <script>
         $(document).ready(function() {
 
