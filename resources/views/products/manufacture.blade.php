@@ -295,7 +295,10 @@
 
                 // ✅ Fix Color Name (Keep it, but reset everything else)
                 let colorName = document.getElementById('modal-color-name').value;
-                newElement.querySelector('input.color-name-field').value = colorName;
+                let colorInput = newElement.querySelector('input.color-name-field');
+                if (colorInput) {
+                    colorInput.value = colorName;
+                }
 
                 // ✅ Destroy Tom Select instances in cloned div before appending new ones
                 newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
