@@ -119,7 +119,7 @@ class ProductController extends Controller
         $product = Product::with([
             'productColors.color',
             'productColors.productcolorvariants' => function ($query) {
-                $query->where('status', '!=' ,'new')->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
+                $query->where('status', '!=', 'new')->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
             }
         ])->findOrFail($id);
 
@@ -147,13 +147,22 @@ class ProductController extends Controller
 
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
-                ->where('id', $request->color_id)
+                ->where('id', $request->color_id) // Make sure we get the correct color the user selected
                 ->first();
 
             if (!$productColor) {
                 DB::rollBack();
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
+
+            // ✅ Find the latest variant for the exact color the user selected
+            $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
+                ->where('status', 'processing') // Ensure we get an ongoing manufacturing process
+                ->latest('created_at')
+                ->first();
+
+            // ✅ Assign parent_id to the correct variant or null if none exist
+            $parent_id = $latestVariant ? $latestVariant->id : null;
 
             // ✅ Insert multiple records for manufacturing
             $variants = [];
@@ -165,6 +174,7 @@ class ProductController extends Controller
 
                 $variant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
+                    'parent_id' => $parent_id, // ✅ Assign only the correct parent variant
                     'expected_delivery' => $expected_delivery,
                     'quantity' => $quantity,
                     'status' => 'processing',
