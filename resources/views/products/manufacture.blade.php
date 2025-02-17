@@ -142,12 +142,12 @@
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
                         <!-- Add a small circular plus button -->
-                        <button type="button" class="btn btn-success btn-sm rounded-circle" id="add-manufacturing-inputs">
+                        <button type="button" class="btn btn-success btn-sm rounded-circle mb-2" id="add-manufacturing-inputs">
                             +
                         </button>
 
                         <!-- Container to hold duplicated input sets -->
-                        <div id="additional-inputs-container"></div>
+                        <div id="additional-inputs-container" class="mb-3"></div>
 
                         <div class="row" style="border: 1px solid #acacac; padding: 10px" id="modal-color-details">
                             <div class="col-md-4 mb-3">
