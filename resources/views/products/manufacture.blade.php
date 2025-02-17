@@ -280,41 +280,48 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("add-manufacturing-inputs").addEventListener("click", function() {
-                let container = document.getElementById("additional-inputs-container");
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
+                let container = document.getElementById('additional-inputs-container');
+                let original = document.getElementById('modal-color-details');
 
-                // Create new input container div
-                let inputDiv = document.createElement("div");
-                inputDiv.className = "position-relative p-3 border rounded mb-2"; // Bootstrap styling
+                // Clone the original div
+                let newElement = original.cloneNode(true);
 
-                // Create close button
-                let closeButton = document.createElement("button");
-                closeButton.innerHTML = "&times;";
-                closeButton.className = "btn btn-danger btn-sm position-absolute";
-                closeButton.style.top = "-10px";
-                closeButton.style.left = "-10px";
-                closeButton.style.borderRadius = "50%";
-                closeButton.style.padding = "5px 10px";
-                closeButton.addEventListener("click", function() {
-                    inputDiv.remove();
+                // Remove the original ID to prevent duplicates
+                newElement.removeAttribute('id');
+
+                // Remove existing values from inputs and selects
+                newElement.querySelectorAll('input, select').forEach(element => {
+                    if (element.tagName === 'INPUT') {
+                        element.value = '';
+                    } else if (element.tagName === 'SELECT') {
+                        element.selectedIndex = 0;
+                    }
+                    element.removeAttribute('id'); // Remove ID to prevent duplicates
                 });
 
-                // Create input elements
-                let input1 = document.createElement("input");
-                input1.type = "text";
-                input1.className = "form-control mb-2";
-                input1.placeholder = "Custom Input 1";
+                // Create remove button
+                let removeButton = document.createElement('button');
+                removeButton.innerHTML = '×';
+                removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                removeButton.style.position = 'absolute';
+                removeButton.style.top = '-10px';
+                removeButton.style.left = '-10px';
+                removeButton.style.borderRadius = '50%';
 
-                let input2 = document.createElement("input");
-                input2.type = "text";
-                input2.className = "form-control";
-                input2.placeholder = "Custom Input 2";
+                // Set position relative for parent div
+                newElement.style.position = 'relative';
 
-                // Append elements
-                inputDiv.appendChild(closeButton);
-                inputDiv.appendChild(input1);
-                inputDiv.appendChild(input2);
-                container.appendChild(inputDiv);
+                // Append remove button
+                newElement.appendChild(removeButton);
+
+                // Add event listener to remove button
+                removeButton.addEventListener('click', function() {
+                    newElement.remove();
+                });
+
+                // Append new element to container
+                container.appendChild(newElement);
             });
 
         });
