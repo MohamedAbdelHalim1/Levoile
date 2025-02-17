@@ -235,7 +235,6 @@
 
 
 @section('scripts')
-
     <script>
         $(document).ready(function() {
 
@@ -300,12 +299,27 @@
 
                 // ✅ Remove existing Tom Select instances in cloned div
                 newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
-                    let tomInstance = select.tomselect;
-                    if (tomInstance) {
-                        tomInstance.destroy(); // Destroy existing instance
+                    if (select.tomselect) {
+                        select.tomselect.destroy(); // Properly destroy the existing instance
                     }
-                    select.parentNode.replaceChild(select.cloneNode(true),
-                    select); // Remove old select
+
+                    // ✅ Replace the old select element with a fresh new one
+                    let newSelect = select.cloneNode(true);
+                    newSelect.innerHTML = ""; // Clear existing options
+                    newSelect.innerHTML += `<option value="">اختر المصنع</option>`;
+                    if (select.classList.contains('tom-select-factory')) {
+                        @foreach ($factories as $factory)
+                            newSelect.innerHTML +=
+                                `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
+                        @endforeach
+                    } else {
+                        @foreach ($materials as $material)
+                            newSelect.innerHTML +=
+                                `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
+                        @endforeach
+                    }
+
+                    select.parentNode.replaceChild(newSelect, select);
                 });
 
                 // ✅ Append new element to container
