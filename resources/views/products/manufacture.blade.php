@@ -21,6 +21,10 @@
                                 <th>{{ __('اللون') }}</th>
                                 <th>{{ __('الحالة') }}</th>
                                 <th>{{ __('الكمية') }}</th>
+                                <th>{{ __('المصنع') }}</th>
+                                <th>{{ __('الخامة') }}</th>
+                                <th>{{ __('رقم الماركر') }}</th>
+                                <th>{{ __('الكود') }}</th>
                                 <th>{{ __('العمليات') }}</th>
                             </tr>
                         </thead>
@@ -66,6 +70,22 @@
                                         </td>
 
                                         <td>{{ $variant->quantity ?? 0 }}</td>
+
+                                        <td>
+                                            {{ $variant->factory->name ?? 'لا يوجد' }}
+                                        </td>
+
+                                        <td>
+                                            {{ $variant->material->name ?? 'لا يوجد' }}
+                                        </td>
+
+                                        <td>
+                                            {{ $variant->marker_number ?? 'لا يوجد' }}
+                                        </td>
+
+                                        <td>
+                                            {{ $productColor->sku ?? 'لا يوجد' }}
+                                        </td>
 
                                         <td>
                                             @if ($variant->status === 'new' || $variant->status === 'postponed')
