@@ -66,7 +66,7 @@
                                         <tr>
                                             <th class="text-end">حالة مخزون الخامات:</th>
                                             <td style="font-weight: bold;">
-                                                {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
+                                                {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }}
                                             </td>
                                         </tr>
                                         <tr>

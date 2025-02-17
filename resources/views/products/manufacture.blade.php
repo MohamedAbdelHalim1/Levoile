@@ -142,22 +142,48 @@
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('اللون') }}</label>
-                            <input type="text" class="form-control" id="modal-color-name" disabled>
+                        <div class="row" style="border: 1px solid #acacac; padding: 10px">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ __('اللون') }}</label>
+                                <input type="text" class="form-control" id="modal-color-name" disabled>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
+                                <input type="date" class="form-control" name="expected_delivery" id="expected_delivery"
+                                    required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
+                                <input type="number" class="form-control" name="quantity" id="quantity" min="1"
+                                    required>
+                            </div>
+                            <!-- i want here tommy select for materials and factories -->
+                            <div class="col-md-4 mb-3">
+                                <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
+                                <select id="factory_id" name="factory_id" required>
+                                    <option value="">{{ __('اختر المصنع') }}</option>
+                                    @foreach ($factories as $factory)
+                                        <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
+                                <select id="material_id" name="material_id" required>
+                                    <option value="">{{ __('اختر الخامه') }}</option>
+                                    @foreach ($materials as $material)
+                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ __('رقم الماركر') }}</label>
+                                <input type="text" class="form-control" name="marker_number" id="marker_number">
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
-                            <input type="date" class="form-control" name="expected_delivery" id="expected_delivery"
-                                required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
-                            <input type="number" class="form-control" name="quantity" id="quantity" min="1"
-                                required>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">{{ __('ابدأ التصنيع') }}</button>
@@ -197,7 +223,19 @@
 
 @section('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Tom Select
+            new TomSelect('#material_id', {
+                placeholder: "اختر الخامه"
+            });
+            new TomSelect('#factory_id', {
+                placeholder: "اختر المصنع"
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function() {
+
             $(".start-manufacturing-btn").on("click", function() {
                 $("#modal-color-id").val($(this).data("color-id"));
                 $("#modal-color-name").val($(this).data("color-name"));

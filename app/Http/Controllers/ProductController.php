@@ -120,8 +120,10 @@ class ProductController extends Controller
             'productColors.color',
             'productColors.productcolorvariants'
         ])->findOrFail($id);
+        $materials = Material::all();
+        $factories = Factory::all();
 
-        return view('products.manufacture', compact('product'));
+        return view('products.manufacture', compact('product' , 'materials', 'factories'));
     }
 
 

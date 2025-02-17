@@ -12,13 +12,10 @@ class Product extends Model
     protected $fillable = [
         'description',
         'category_id',
-        'material_id',
         'season_id',
-        'factory_id',
         'photo',
         'have_stock',
         'material_name',
-        'marker_number',
         'status',
         'receiving_status',
         'code',
@@ -31,20 +28,13 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    public function material()
-    {
-        return $this->belongsTo(Material::class);
-    }
+
 
     public function season()
     {
         return $this->belongsTo(Season::class);
     }
 
-    public function factory()
-    {
-        return $this->belongsTo(Factory::class);
-    }
 
     public function productColors()
     {
