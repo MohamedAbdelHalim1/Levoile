@@ -18,6 +18,8 @@
                     <table class="table table-bordered" id="color-details-table">
                         <thead class="table-dark">
                             <tr>
+                                <th><input type="checkbox" id="select-all"></th> <!-- ✅ Select All Checkbox -->
+
                                 <th>{{ __('اللون') }}</th>
                                 <th>{{ __('الحالة') }}</th>
                                 <th>{{ __('الكمية') }}</th>
@@ -32,6 +34,10 @@
                             @foreach ($product->productColors as $productColor)
                                 @foreach ($productColor->productcolorvariants as $variant)
                                     <tr>
+                                        <td>
+                                            <input type="checkbox" class="record-checkbox" value="{{ $variant->id }}">
+                                        </td> <!-- ✅ Individual Record Checkbox -->
+
                                         <td>{{ $productColor->color->name }}</td>
 
                                         <td>
@@ -127,6 +133,9 @@
                 </div>
                 <div class="mt-4">
                     <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                    <button type="button" class="btn btn-success ms-2" id="bulk-manufacturing-btn" style="display: none;">
+                        ابدأ التصنيع
+                    </button> <!-- ✅ Bulk Manufacturing Button (Hidden Initially) -->
                 </div>
             </div>
         </div>
@@ -243,6 +252,32 @@
 
 
 @section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectAllCheckbox = document.getElementById("select-all");
+        const checkboxes = document.querySelectorAll(".record-checkbox");
+        const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
+
+        // ✅ Handle "Select All" checkbox functionality
+        selectAllCheckbox.addEventListener("change", function() {
+            checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+            toggleBulkButton();
+        });
+
+        // ✅ Handle individual checkbox clicks
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function() {
+                toggleBulkButton();
+            });
+        });
+
+        // ✅ Show or hide the bulk action button based on selection
+        function toggleBulkButton() {
+            let anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            bulkManufacturingBtn.style.display = anyChecked ? "block" : "none";
+        }
+    });
+</script>
     <script>
         $(document).ready(function() {
             $(".start-manufacturing-btn").on("click", function() {
