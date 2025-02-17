@@ -308,6 +308,30 @@
                 let colorName = document.getElementById('modal-color-name').value;
                 newElement.querySelector('input[id="modal-color-name"]').value = colorName;
 
+                // ✅ Remove old Tom Select instances (otherwise, it acts like an input field)
+                let oldSelects = newElement.querySelectorAll('.tom-select-factory, .tom-select-material');
+                oldSelects.forEach(select => {
+                    let tomInstance = select.tomselect;
+                    if (tomInstance) {
+                        tomInstance.destroy(); // Destroy old instance
+                    }
+                });
+
+                // ✅ Ensure new select elements get proper class
+                newElement.querySelector('.tom-select-factory').classList.remove("ts-hidden");
+                newElement.querySelector('.tom-select-material').classList.remove("ts-hidden");
+
+                // ✅ Append new element to container
+                container.appendChild(newElement);
+
+                // ✅ Reinitialize Tom Select for new selects
+                new TomSelect(newElement.querySelector('.tom-select-factory'), {
+                    placeholder: "اختر المصنع"
+                });
+                new TomSelect(newElement.querySelector('.tom-select-material'), {
+                    placeholder: "اختر الخامه"
+                });
+
                 // ✅ Add remove button
                 let removeButton = document.createElement('button');
                 removeButton.innerHTML = '×';
@@ -327,23 +351,20 @@
                 removeButton.addEventListener('click', function() {
                     newElement.remove();
                 });
-
-                // ✅ Append new element to container
-                container.appendChild(newElement);
-
-                // ✅ Reinitialize Tom Select for new selects
-                new TomSelect(newElement.querySelector('.tom-select-factory'), {
-                    placeholder: "اختر المصنع"
-                });
-                new TomSelect(newElement.querySelector('.tom-select-material'), {
-                    placeholder: "اختر الخامه"
-                });
             });
 
             // ✅ Ensure the modal gets the correct color name on open
             $(".start-manufacturing-btn").on("click", function() {
                 $("#modal-color-id").val($(this).data("color-id"));
                 $("#modal-color-name").val($(this).data("color-name"));
+            });
+
+            // ✅ Initialize Tom Select on page load for first dropdowns
+            new TomSelect('.tom-select-factory', {
+                placeholder: "اختر المصنع"
+            });
+            new TomSelect('.tom-select-material', {
+                placeholder: "اختر الخامه"
             });
         });
     </script>
