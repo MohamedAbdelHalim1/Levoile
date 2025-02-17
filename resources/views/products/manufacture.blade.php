@@ -279,21 +279,44 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("add-manufacturing-inputs").addEventListener("click", function () {
-                // Get the div containing the input fields
-                let originalInputs = document.getElementById("modal-color-details");
-                let clonedInputs = originalInputs.cloneNode(true); // Clone all elements inside
-    
-                // Reset input values in the cloned fields
-                clonedInputs.querySelectorAll("input, select").forEach(el => {
-                    if (el.type !== "hidden") el.value = "";
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("add-manufacturing-inputs").addEventListener("click", function() {
+                let container = document.getElementById("additional-inputs-container");
+
+                // Create new input container div
+                let inputDiv = document.createElement("div");
+                inputDiv.className = "position-relative p-3 border rounded mb-2"; // Bootstrap styling
+
+                // Create close button
+                let closeButton = document.createElement("button");
+                closeButton.innerHTML = "&times;";
+                closeButton.className = "btn btn-danger btn-sm position-absolute";
+                closeButton.style.top = "-10px";
+                closeButton.style.left = "-10px";
+                closeButton.style.borderRadius = "50%";
+                closeButton.style.padding = "5px 10px";
+                closeButton.addEventListener("click", function() {
+                    inputDiv.remove();
                 });
-    
-                // Append the cloned inputs to the additional inputs container
-                document.getElementById("additional-inputs-container").appendChild(clonedInputs);
+
+                // Create input elements
+                let input1 = document.createElement("input");
+                input1.type = "text";
+                input1.className = "form-control mb-2";
+                input1.placeholder = "Custom Input 1";
+
+                let input2 = document.createElement("input");
+                input2.type = "text";
+                input2.className = "form-control";
+                input2.placeholder = "Custom Input 2";
+
+                // Append elements
+                inputDiv.appendChild(closeButton);
+                inputDiv.appendChild(input1);
+                inputDiv.appendChild(input2);
+                container.appendChild(inputDiv);
             });
+
         });
     </script>
-    
 @endsection
