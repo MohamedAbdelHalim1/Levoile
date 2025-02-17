@@ -168,7 +168,7 @@
                                 <!-- ✅ Factory Selection -->
                                 <div class="col-md-4 mb-3">
                                     <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                                    <select name="factory_id[]" class="form-select tom-select-factory" required>
+                                    <select name="factory_id[]" class="tom-select-factory" required>
                                         <option value="">{{ __('اختر المصنع') }}</option>
                                         @foreach ($factories as $factory)
                                             <option value="{{ $factory->id }}">{{ $factory->name }}</option>
@@ -179,7 +179,7 @@
                                 <!-- ✅ Material Selection -->
                                 <div class="col-md-4 mb-3">
                                     <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
-                                    <select name="material_id[]" class="form-select tom-select-material" required>
+                                    <select name="material_id[]" class="tom-select-material" required>
                                         <option value="">{{ __('اختر الخامه') }}</option>
                                         @foreach ($materials as $material)
                                             <option value="{{ $material->id }}">{{ $material->name }}</option>
