@@ -142,7 +142,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
                         <!-- Add a small circular plus button -->
-                        <button type="button" class="btn btn-success btn-sm rounded-circle mb-2" id="add-manufacturing-inputs">
+                        <button type="button" class="btn btn-success btn-sm mb-2" id="add-manufacturing-inputs">
                             +
                         </button>
 
