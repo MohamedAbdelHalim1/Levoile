@@ -8,12 +8,12 @@
                 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <label for="description" class="form-label">{{ __('الوصف') }}</label>
+                        <label for="description" class="form-label">{{ __('الاسم') }}</label>
                         <textarea class="form-control" id="description" name="description" required></textarea>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select class="form-control" id="category_id" name="category_id" required>
                                 <option value="">{{ __('اختر قسم') }}</option>
@@ -23,7 +23,7 @@
                             </select>
                         </div>
     
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
                             <select class="form-control" id="season_id" name="season_id" required>
                                 <option value="">{{ __('اختر الموسم') }}</option>
@@ -32,31 +32,8 @@
                                 @endforeach
                             </select>
                         </div>
-    
-                        <div class="col-md-3 mb-3">
-                            <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                            <select class="form-control" id="factory_id" name="factory_id" required>
-                                <option value="">{{ __('اختر المصنع') }}</option>
-                                @foreach ($factories as $factory)
-                                    <option value="{{ $factory->id }}">{{ $factory->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label for="factory_id" class="form-label">{{ __('الخامه') }}</label>
-                            <select class="form-control" id="material_id" name="material_id" required>
-                                <option value="">{{ __('اختر الخامه') }}</option>
-                                @foreach ($materials as $material)
-                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="marker_number" class="form-label">{{ __('رقم الماركر') }}</label>
-                        <input type="text" class="form-control" id="marker_number" name="marker_number" required>
-                    </div>
 
                     <div class="mb-3">
                         <label for="photo" class="form-label">{{ __('الصورة') }}</label>
@@ -99,9 +76,7 @@
             // Initialize Tom Select
             new TomSelect('#category_id', { placeholder: "اختر الفئة" });
             new TomSelect('#season_id', { placeholder: "اختر الموسم" });
-            new TomSelect('#factory_id', { placeholder: "اختر المصنع" });
             new TomSelect('#color_id', { placeholder: "اختر اللون" });
-            new TomSelect('#material_id', { placeholder: "اختر المادة" }); // <-- Materials dropdown
 
 
             // Handle color dropdown selection

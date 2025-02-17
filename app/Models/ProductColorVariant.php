@@ -18,7 +18,12 @@ class ProductColorVariant extends Model
         'parent_id', // Added parent_id
         'status', // Add status here
         'note',
-        'receiving_status'
+        'receiving_status',
+        'marker_number',
+        'material_id',
+        'factory_id',
+
+
     ];
 
 
@@ -35,6 +40,16 @@ class ProductColorVariant extends Model
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+    
+    public function factory()
+    {
+        return $this->belongsTo(Factory::class);
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 
 }

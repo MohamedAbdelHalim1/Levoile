@@ -30,9 +30,7 @@ class ProductController extends Controller
         // Start the query for fetching products
         $query = Product::with([
             'category',
-            'material',
             'season',
-            'factory',
             'productColors.color',
             'productColors.productcolorvariants' => function ($query) {
                 $query->orderBy('expected_delivery', 'asc');
@@ -45,11 +43,11 @@ class ProductController extends Controller
                 $q->where('name', $request->category);
             });
         }
-        if ($request->filled('material')) {
-            $query->whereHas('material', function ($q) use ($request) {
-                $q->where('name', $request->material);
-            });
-        }
+        // if ($request->filled('material')) {
+        //     $query->whereHas('material', function ($q) use ($request) {
+        //         $q->where('name', $request->material);
+        //     });
+        // }
 
         if ($request->filled('season')) {
             $query->whereHas('season', function ($q) use ($request) {
@@ -57,11 +55,11 @@ class ProductController extends Controller
             });
         }
 
-        if ($request->filled('factory')) {
-            $query->whereHas('factory', function ($q) use ($request) {
-                $q->where('name', $request->factory);
-            });
-        }
+        // if ($request->filled('factory')) {
+        //     $query->whereHas('factory', function ($q) use ($request) {
+        //         $q->where('name', $request->factory);
+        //     });
+        // }
 
         if ($request->filled('color')) {
             $query->whereHas('productColors.color', function ($q) use ($request) {
@@ -110,7 +108,6 @@ class ProductController extends Controller
             'productColors.productcolorvariants', // Load related variants for each product color
             'category',
             'season',
-            'factory'
         ]);
 
         return view('products.receive', compact('product'));
@@ -645,7 +642,7 @@ class ProductController extends Controller
 
     public function completeData(Product $product)
     {
-        $product->load(['productColors.color', 'category', 'season', 'factory']);
+        $product->load(['productColors.color', 'category', 'season']);
         return view('products.complete_data', compact('product'));
     }
 
@@ -733,10 +730,8 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $seasons = Season::all();
-        $factories = Factory::all();
         $colors = Color::all();
-        $materials = Material::all();
-        return view('products.create', compact('categories', 'seasons', 'factories', 'colors', 'materials'));
+        return view('products.create', compact('categories', 'seasons', 'colors'));
     }
 
     public function store(Request $request)
@@ -746,11 +741,8 @@ class ProductController extends Controller
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
-                'material_id' => 'required|exists:materials,id',
                 'season_id' => 'required|exists:seasons,id',
-                'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
-                'marker_number' => 'required|string',
                 'colors' => 'nullable|array',
                 'colors.*.color_id' => 'required|exists:colors,id',
             ]);
@@ -779,11 +771,8 @@ class ProductController extends Controller
             $product = Product::create([
                 'description' => $request->description,
                 'category_id' => $request->category_id,
-                'material_id' => $request->material_id,
                 'season_id' => $request->season_id,
-                'factory_id' => $request->factory_id,
                 'photo' => $photoPath,
-                'marker_number' => $request->marker_number,
                 'code' => $newCode,
                 'status' => 'new',
                 'receiving_status' => 'new',
@@ -837,9 +826,7 @@ class ProductController extends Controller
         try {
             $product = Product::with([
                 'category',
-                'material',
                 'season',
-                'factory',
                 'productColors.color',
                 'productColors.productcolorvariants' => function ($query) {
                     $query->with(['children'])->orderBy('expected_delivery', 'asc');
@@ -859,11 +846,9 @@ class ProductController extends Controller
         $product = Product::with(['productColors.color', 'productColors.productcolorvariants'])->findOrFail($id);
         $categories = Category::all();
         $seasons = Season::all();
-        $factories = Factory::all();
         $colors = Color::all();
-        $materials = Material::all();
 
-        return view('products.edit', compact('product', 'categories', 'seasons', 'factories', 'colors', 'materials'));
+        return view('products.edit', compact('product', 'categories', 'seasons', 'colors'));
     }
 
 
@@ -876,11 +861,8 @@ class ProductController extends Controller
             $request->validate([
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
-                'material_id' => 'required|exists:materials,id',
                 'season_id' => 'required|exists:seasons,id',
-                'factory_id' => 'required|exists:factories,id',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,bmp,webp,heic|max:2048',
-                'marker_number' => 'required|string',
             ]);
 
             // ✅ Store original values before update
@@ -905,10 +887,8 @@ class ProductController extends Controller
             $product->update([
                 'description' => $request->description,
                 'category_id' => $request->category_id,
-                'material_id' => $request->material_id,
                 'season_id' => $request->season_id,
-                'factory_id' => $request->factory_id,
-                'marker_number' => $request->marker_number,
+                
             ]);
 
             // ✅ Get only changed columns

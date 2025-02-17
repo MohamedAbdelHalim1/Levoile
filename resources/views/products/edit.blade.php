@@ -19,13 +19,13 @@
 
                     <!-- Product Description -->
                     <div class="mb-3">
-                        <label for="description" class="form-label">{{ __('الوصف') }}</label>
+                        <label for="description" class="form-label">{{ __('الاسم') }}</label>
                         <textarea class="form-control" id="description" name="description" required>{{ $product->description }}</textarea>
                     </div>
 
                     <div class="row">
                         <!-- Product Category -->
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="category_id" class="form-label">{{ __('القسم') }}</label>
                             <select id="category_id" name="category_id" required>
                                 @foreach ($categories as $category)
@@ -38,7 +38,7 @@
                         </div>
 
                         <!-- Product Season -->
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
                             <select id="season_id" name="season_id" required>
                                 @foreach ($seasons as $season)
@@ -50,30 +50,6 @@
                             </select>
                         </div>
 
-                        <!-- Product Factory -->
-                        <div class="col-md-3 mb-3">
-                            <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                            <select id="factory_id" name="factory_id" required>
-                                @foreach ($factories as $factory)
-                                    <option value="{{ $factory->id }}"
-                                        {{ $product->factory_id == $factory->id ? 'selected' : '' }}>
-                                        {{ $factory->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
-                            <select class="form-control" id="material_id" name="material_id">
-                                <option value="">{{ __('اختر الخامه') }}</option>
-                                @foreach ($materials as $material)
-                                    <option value="{{ $material->id }}" {{ $product->material_id == $material->id ? 'selected' : '' }}>
-                                        {{ $material->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
 
 
@@ -87,14 +63,7 @@
                         @endif
                     </div>
 
-                    <!-- Marker Number -->
-                    <div class="mb-3">
-                        <label for="marker_number" class="form-label">{{ __('رقم الماركر') }}</label>
-                        <input type="text" class="form-control" id="marker_number" name="marker_number"
-                            value="{{ $product->marker_number }}" required>
-                    </div>
 
-                  
 
 
                     <!-- Add New Color -->
@@ -155,16 +124,11 @@
             new TomSelect("#season_id", {
                 searchField: "text"
             });
-            new TomSelect("#factory_id", {
-                searchField: "text"
-            });
+
             new TomSelect("#new_color_id", {
                 searchField: "text"
             });
 
-            new TomSelect("#material_id", {
-                searchField: "text"
-            });
 
             // Add new color
             document.getElementById("new_color_id").addEventListener("change", function() {

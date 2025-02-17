@@ -11,8 +11,8 @@ class Material extends Model
     use HasFactory;
     protected $fillable = ['name'];
 
-    public function products()
+    public function productvariants()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(ProductColorVariant::class);
     }
 }

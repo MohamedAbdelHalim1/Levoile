@@ -165,11 +165,9 @@
                         <tr>
                             <th>{{ __('#') }}</th>
                             <th>{{ __('الصورة') }}</th>
-                            <th>{{ __('الوصف') }}</th>
+                            <th>{{ __('الاسم') }}</th>
                             <th>{{ __('القسم') }}</th>
-                            <th>{{ __('الخامه') }}</th>
                             <th>{{ __('الموسم') }}</th>
-                            <th>{{ __('المصنع') }}</th>
                             <th>{{ __('حاله الطلب') }}</th>
                             <th>{{ __('جار التصنيع') }}</th>
                             <th>{{ __('الألوان') }}</th>
@@ -197,10 +195,7 @@
                                 </td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name ?? 'لا يوجد' }}</td>
-                                <td>{{ $product->material->name ?? 'لا يوجد' }}</td>
                                 <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
-                                <td>{{ $product->factory->name ?? 'لا يوجد' }}</td>
-
                                 <td>
                                     @php
                                         $totalVariants = $product->productColors->sum(function ($color) {

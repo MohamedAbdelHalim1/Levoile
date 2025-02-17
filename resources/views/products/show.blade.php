@@ -62,19 +62,11 @@
                                             <th class="text-end">الموسم:</th>
                                             <td style="font-weight: bold;">{{ $product->season->name ?? 'لا يوجد' }}</td>
                                         </tr>
-                                        <tr>
-                                            <th class="text-end">المصنع:</th>
-                                            <td style="font-weight: bold;">{{ $product->factory->name ?? 'لا يوجد' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-end">رقم الماركر:</th>
-                                            <td style="font-weight: bold;">{{ $product->marker_number }}</td>
-                                        </tr>
+                         
                                         <tr>
                                             <th class="text-end">حالة مخزون الخامات:</th>
                                             <td style="font-weight: bold;">
                                                 {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }} -
-                                                {{ $product->material->name ?? 'لا مواد متوفرة' }}
                                             </td>
                                         </tr>
                                         <tr>

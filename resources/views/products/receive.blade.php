@@ -104,15 +104,11 @@
                                 <div class="key-value">
                                     <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
                                 </div>
-                                <div class="key-value">
-                                    <span>الخامه:</span><span>{{ $product->material->name ?? 'لا يوجد' }}</span>
-                                </div>
+                               
                                 <div class="key-value">
                                     <span>الموسم:</span><span>{{ $product->season->name ?? 'لا يوجد' }}</span>
                                 </div>
-                                <div class="key-value">
-                                    <span>المصنع:</span><span>{{ $product->factory->name ?? 'لا يوجد' }}</span>
-                                </div>
+                                
                                 <div class="key-value">
                                     <span>الحالة:</span>
                                     <span
