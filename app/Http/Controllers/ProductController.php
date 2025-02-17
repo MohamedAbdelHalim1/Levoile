@@ -119,7 +119,7 @@ class ProductController extends Controller
         $product = Product::with([
             'productColors.color',
             'productColors.productcolorvariants' => function ($query) {
-                $query->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
+                $query->where('status', '!=' ,'new')->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
             }
         ])->findOrFail($id);
 
