@@ -150,10 +150,12 @@
                         <!-- ✅ Container to hold multiple sets of inputs -->
                         <div id="additional-inputs-container" class="mb-3">
                             <div class="manufacturing-input-group row" style="border: 1px solid #acacac; padding: 10px">
+                                <!-- ✅ Color Name -->
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ __('اللون') }}</label>
-                                    <input type="text" class="form-control" id="modal-color-name" disabled>
+                                    <input type="text" class="form-control color-name-field" disabled>
                                 </div>
+
 
                                 <div class="col-md-4 mb-3">
                                     <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
@@ -294,11 +296,11 @@
                     }
                 });
 
-                // ✅ Fix Color Name (Keep it, but reset everything else)
-                let colorName = document.getElementById('modal-color-name').value;
-                let colorInput = newElement.querySelector('input.color-name-field');
-                if (colorInput) {
-                    colorInput.value = colorName;
+                // ✅ Fix Color Name: Set it from the first input group
+                let originalColorName = document.querySelector('.color-name-field').value;
+                let newColorInput = newElement.querySelector('.color-name-field');
+                if (newColorInput) {
+                    newColorInput.value = originalColorName;
                 }
 
                 // ✅ Destroy Tom Select instances in cloned div before appending new ones
