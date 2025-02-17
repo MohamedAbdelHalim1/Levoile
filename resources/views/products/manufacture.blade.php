@@ -141,8 +141,15 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
+                        <!-- Add a small circular plus button -->
+                        <button type="button" class="btn btn-success btn-sm rounded-circle" id="add-manufacturing-inputs">
+                            +
+                        </button>
 
-                        <div class="row" style="border: 1px solid #acacac; padding: 10px">
+                        <!-- Container to hold duplicated input sets -->
+                        <div id="additional-inputs-container"></div>
+
+                        <div class="row" style="border: 1px solid #acacac; padding: 10px" id="modal-color-details">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">{{ __('اللون') }}</label>
                                 <input type="text" class="form-control" id="modal-color-name" disabled>
@@ -271,4 +278,22 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("add-manufacturing-inputs").addEventListener("click", function () {
+                // Get the div containing the input fields
+                let originalInputs = document.getElementById("modal-color-details");
+                let clonedInputs = originalInputs.cloneNode(true); // Clone all elements inside
+    
+                // Reset input values in the cloned fields
+                clonedInputs.querySelectorAll("input, select").forEach(el => {
+                    if (el.type !== "hidden") el.value = "";
+                });
+    
+                // Append the cloned inputs to the additional inputs container
+                document.getElementById("additional-inputs-container").appendChild(clonedInputs);
+            });
+        });
+    </script>
+    
 @endsection
