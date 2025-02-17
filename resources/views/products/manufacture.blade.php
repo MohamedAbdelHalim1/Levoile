@@ -238,10 +238,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Tom Select
-            new TomSelect('#material_id', {
+            new TomSelect('.tom-select-material', {
                 placeholder: "اختر الخامه"
             });
-            new TomSelect('#factory_id', {
+            new TomSelect('.tom-select-factory', {
                 placeholder: "اختر المصنع"
             });
         });
