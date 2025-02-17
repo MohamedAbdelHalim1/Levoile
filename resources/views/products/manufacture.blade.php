@@ -293,16 +293,22 @@
                 // Clone the original input group
                 let newElement = original.cloneNode(true);
 
-                // Clear input values
+                // Clear input values except for color name
                 newElement.querySelectorAll('input, select').forEach(element => {
-                    if (element.tagName === 'INPUT') {
-                        element.value = '';
-                    } else if (element.tagName === 'SELECT') {
-                        element.selectedIndex = 0;
+                    if (element.name !== "modal-color-name") {
+                        if (element.tagName === 'INPUT') {
+                            element.value = '';
+                        } else if (element.tagName === 'SELECT') {
+                            element.selectedIndex = 0;
+                        }
                     }
                 });
 
-                // Add remove button
+                // ✅ Set color name dynamically in the cloned input
+                let colorName = document.getElementById('modal-color-name').value;
+                newElement.querySelector('input[id="modal-color-name"]').value = colorName;
+
+                // ✅ Add remove button
                 let removeButton = document.createElement('button');
                 removeButton.innerHTML = '×';
                 removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
@@ -311,27 +317,33 @@
                 removeButton.style.left = '-10px';
                 removeButton.style.borderRadius = '50%';
 
-                // Set position relative for parent div
+                // ✅ Set position relative for parent div
                 newElement.style.position = 'relative';
 
-                // Append remove button
+                // ✅ Append remove button
                 newElement.appendChild(removeButton);
 
-                // Remove button event
+                // ✅ Remove button event
                 removeButton.addEventListener('click', function() {
                     newElement.remove();
                 });
 
-                // Append new element to container
+                // ✅ Append new element to container
                 container.appendChild(newElement);
 
-                // Reinitialize Tom Select for new selects
+                // ✅ Reinitialize Tom Select for new selects
                 new TomSelect(newElement.querySelector('.tom-select-factory'), {
                     placeholder: "اختر المصنع"
                 });
                 new TomSelect(newElement.querySelector('.tom-select-material'), {
                     placeholder: "اختر الخامه"
                 });
+            });
+
+            // ✅ Ensure the modal gets the correct color name on open
+            $(".start-manufacturing-btn").on("click", function() {
+                $("#modal-color-id").val($(this).data("color-id"));
+                $("#modal-color-name").val($(this).data("color-name"));
             });
         });
     </script>
