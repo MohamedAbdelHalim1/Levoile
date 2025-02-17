@@ -284,7 +284,7 @@
 
                 // ✅ Clear input values except for color name
                 newElement.querySelectorAll('input, select').forEach(element => {
-                    if (element.name !== "modal-color-name") {
+                    if (!element.classList.contains("color-name-field")) {
                         if (element.tagName === 'INPUT') {
                             element.value = '';
                         } else if (element.tagName === 'SELECT') {
@@ -293,50 +293,54 @@
                     }
                 });
 
-                // ✅ Set color name dynamically in the cloned input
+                // ✅ Fix Color Name (Keep it, but reset everything else)
                 let colorName = document.getElementById('modal-color-name').value;
-                newElement.querySelector('input[id="modal-color-name"]').value = colorName;
+                newElement.querySelector('input.color-name-field').value = colorName;
 
-                // ✅ Remove existing Tom Select instances in cloned div
+                // ✅ Destroy Tom Select instances in cloned div before appending new ones
                 newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
                     if (select.tomselect) {
-                        select.tomselect.destroy(); // Properly destroy the existing instance
+                        select.tomselect.destroy();
                     }
-
-                    // ✅ Replace the old select element with a fresh new one
-                    let newSelect = select.cloneNode(true);
-                    newSelect.innerHTML = ""; // Clear existing options
-                    newSelect.innerHTML += `<option value="">اختر المصنع</option>`;
-                    if (select.classList.contains('tom-select-factory')) {
-                        @foreach ($factories as $factory)
-                            newSelect.innerHTML +=
-                                `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
-                        @endforeach
-                    } else {
-                        @foreach ($materials as $material)
-                            newSelect.innerHTML +=
-                                `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
-                        @endforeach
-                    }
-
-                    select.parentNode.replaceChild(newSelect, select);
+                    select.parentNode.removeChild(select);
                 });
+
+                // ✅ Create new select elements (Fresh dropdowns)
+                let factoryDropdown = document.createElement('select');
+                factoryDropdown.name = "factory_id[]";
+                factoryDropdown.classList.add("tom-select-factory");
+                factoryDropdown.innerHTML = `<option value="">اختر المصنع</option>`;
+                @foreach ($factories as $factory)
+                    factoryDropdown.innerHTML +=
+                        `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
+                @endforeach
+                newElement.querySelector('.factory-container').appendChild(factoryDropdown);
+
+                let materialDropdown = document.createElement('select');
+                materialDropdown.name = "material_id[]";
+                materialDropdown.classList.add("tom-select-material");
+                materialDropdown.innerHTML = `<option value="">اختر الخامه</option>`;
+                @foreach ($materials as $material)
+                    materialDropdown.innerHTML +=
+                        `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
+                @endforeach
+                newElement.querySelector('.material-container').appendChild(materialDropdown);
 
                 // ✅ Append new element to container
                 container.appendChild(newElement);
 
                 // ✅ Reinitialize Tom Select for new selects
-                new TomSelect(newElement.querySelector('.tom-select-factory'), {
+                new TomSelect(factoryDropdown, {
                     placeholder: "اختر المصنع"
                 });
-                new TomSelect(newElement.querySelector('.tom-select-material'), {
+                new TomSelect(materialDropdown, {
                     placeholder: "اختر الخامه"
                 });
 
                 // ✅ Add remove button
                 let removeButton = document.createElement('button');
                 removeButton.innerHTML = '×';
-                removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                removeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'remove-entry');
                 removeButton.style.position = 'absolute';
                 removeButton.style.top = '-10px';
                 removeButton.style.left = '-10px';
