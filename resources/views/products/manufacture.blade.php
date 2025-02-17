@@ -153,7 +153,7 @@
                                 <!-- ✅ Color Name -->
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ __('اللون') }}</label>
-                                    <input type="text" class="form-control color-name-field" disabled>
+                                    <input type="text" class="form-control color-name-field" value="" disabled>
                                 </div>
 
 
@@ -240,11 +240,20 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-
             $(".start-manufacturing-btn").on("click", function() {
-                $("#modal-color-id").val($(this).data("color-id"));
-                $("#modal-color-name").val($(this).data("color-name"));
+                let colorId = $(this).data("color-id");
+                let colorName = $(this).data("color-name");
+
+                $("#modal-color-id").val(colorId);
+                $("#modal-color-name").val(colorName);
+
+                // ✅ Also Set the First Color Name Input Field in the Modal
+                let firstColorInput = document.querySelector('.color-name-field');
+                if (firstColorInput) {
+                    firstColorInput.value = colorName;
+                }
             });
+
 
             $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function() {
                 $("#variantId").val($(this).data("variant-id"));
@@ -296,12 +305,18 @@
                     }
                 });
 
-                // ✅ Fix Color Name: Set it from the first input group
-                let originalColorName = document.querySelector('.color-name-field').value;
-                let newColorInput = newElement.querySelector('.color-name-field');
-                if (newColorInput) {
-                    newColorInput.value = originalColorName;
+                // ✅ Get Color Name from the First Input in the Modal
+                let originalColorInput = document.querySelector('#modal-color-name');
+                if (originalColorInput) {
+                    let originalColorName = originalColorInput.value;
+
+                    // ✅ Set the color name in the new cloned element
+                    let newColorInput = newElement.querySelector('.color-name-field');
+                    if (newColorInput) {
+                        newColorInput.value = originalColorName;
+                    }
                 }
+
 
                 // ✅ Destroy Tom Select instances in cloned div before appending new ones
                 newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
