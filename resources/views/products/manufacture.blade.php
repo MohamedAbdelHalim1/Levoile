@@ -317,7 +317,13 @@
                     factoryDropdown.innerHTML +=
                         `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
                 @endforeach
-                newElement.querySelector('.factory-container').appendChild(factoryDropdown);
+
+                let factoryContainer = newElement.querySelector('.factory-container');
+                if (factoryContainer) {
+                    factoryContainer.appendChild(factoryDropdown);
+                } else {
+                    console.error("Error: '.factory-container' not found in cloned element.");
+                }
 
                 let materialDropdown = document.createElement('select');
                 materialDropdown.name = "material_id[]";
@@ -327,7 +333,13 @@
                     materialDropdown.innerHTML +=
                         `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
                 @endforeach
-                newElement.querySelector('.material-container').appendChild(materialDropdown);
+
+                let materialContainer = newElement.querySelector('.material-container');
+                if (materialContainer) {
+                    materialContainer.appendChild(materialDropdown);
+                } else {
+                    console.error("Error: '.material-container' not found in cloned element.");
+                }
 
                 // ✅ Append new element to container
                 container.appendChild(newElement);
