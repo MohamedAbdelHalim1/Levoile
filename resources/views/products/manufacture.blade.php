@@ -141,53 +141,58 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
-                        <!-- Add a small circular plus button -->
+
+                        <!-- ✅ Button to Add More Manufacturing Inputs -->
                         <button type="button" class="btn btn-success btn-sm mb-2" id="add-manufacturing-inputs">
                             +
                         </button>
 
-                        <!-- Container to hold duplicated input sets -->
-                        <div id="additional-inputs-container" class="mb-3"></div>
+                        <!-- ✅ Container to hold multiple sets of inputs -->
+                        <div id="additional-inputs-container" class="mb-3">
+                            <div class="manufacturing-input-group row" style="border: 1px solid #acacac; padding: 10px">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ __('اللون') }}</label>
+                                    <input type="text" class="form-control" id="modal-color-name" disabled>
+                                </div>
 
-                        <div class="row" style="border: 1px solid #acacac; padding: 10px" id="modal-color-details">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">{{ __('اللون') }}</label>
-                                <input type="text" class="form-control" id="modal-color-name" disabled>
-                            </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
+                                    <input type="date" class="form-control" name="expected_delivery[]" required>
+                                </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
-                                <input type="date" class="form-control" name="expected_delivery" id="expected_delivery"
-                                    required>
-                            </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
+                                    <input type="number" class="form-control" name="quantity[]" min="1" required>
+                                </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
-                                <input type="number" class="form-control" name="quantity" id="quantity" min="1"
-                                    required>
-                            </div>
-                            <!-- i want here tommy select for materials and factories -->
-                            <div class="col-md-4 mb-3">
-                                <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
-                                <select id="factory_id" name="factory_id" required>
-                                    <option value="">{{ __('اختر المصنع') }}</option>
-                                    @foreach ($factories as $factory)
-                                        <option value="{{ $factory->id }}">{{ $factory->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
-                                <select id="material_id" name="material_id" required>
-                                    <option value="">{{ __('اختر الخامه') }}</option>
-                                    @foreach ($materials as $material)
-                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">{{ __('رقم الماركر') }}</label>
-                                <input type="text" class="form-control" name="marker_number" id="marker_number">
+                                <!-- ✅ Factory Selection -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
+                                    <select name="factory_id[]" class="form-select tom-select-factory" required>
+                                        <option value="">{{ __('اختر المصنع') }}</option>
+                                        @foreach ($factories as $factory)
+                                            <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- ✅ Material Selection -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
+                                    <select name="material_id[]" class="form-select tom-select-material" required>
+                                        <option value="">{{ __('اختر الخامه') }}</option>
+                                        @foreach ($materials as $material)
+                                            <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- ✅ Marker Number Input -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ __('رقم الماركر') }}</label>
+                                    <input type="text" class="form-control" name="marker_number[]">
+                                </div>
+
                             </div>
                         </div>
 
@@ -201,6 +206,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- ✅ Status Update Modal -->
     <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
@@ -282,25 +288,21 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
                 let container = document.getElementById('additional-inputs-container');
-                let original = document.getElementById('modal-color-details');
+                let original = document.querySelector('.manufacturing-input-group');
 
-                // Clone the original div
+                // Clone the original input group
                 let newElement = original.cloneNode(true);
 
-                // Remove the original ID to prevent duplicates
-                newElement.removeAttribute('id');
-
-                // Remove existing values from inputs and selects
+                // Clear input values
                 newElement.querySelectorAll('input, select').forEach(element => {
                     if (element.tagName === 'INPUT') {
                         element.value = '';
                     } else if (element.tagName === 'SELECT') {
                         element.selectedIndex = 0;
                     }
-                    element.removeAttribute('id'); // Remove ID to prevent duplicates
                 });
 
-                // Create remove button
+                // Add remove button
                 let removeButton = document.createElement('button');
                 removeButton.innerHTML = '×';
                 removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
@@ -315,15 +317,22 @@
                 // Append remove button
                 newElement.appendChild(removeButton);
 
-                // Add event listener to remove button
+                // Remove button event
                 removeButton.addEventListener('click', function() {
                     newElement.remove();
                 });
 
                 // Append new element to container
                 container.appendChild(newElement);
-            });
 
+                // Reinitialize Tom Select for new selects
+                new TomSelect(newElement.querySelector('.tom-select-factory'), {
+                    placeholder: "اختر المصنع"
+                });
+                new TomSelect(newElement.querySelector('.tom-select-material'), {
+                    placeholder: "اختر الخامه"
+                });
+            });
         });
     </script>
 @endsection

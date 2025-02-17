@@ -131,67 +131,57 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Store original values before update
             $originalStatus = $product->status;
             $originalReceivingStatus = $product->receiving_status;
-
+    
             // ✅ Update Product Status to "Processing"
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-
+    
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-
+    
             if (!$productColor) {
                 DB::rollBack();
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
-
-            // 🔎 Find the latest variant for this color
-            $variant = ProductColorVariant::where('product_color_id', $productColor->id)
-                ->latest()
-                ->first();
-
-            if ($variant) {
-                // ✅ Update Existing Variant
-                $variant->update([
-                    'expected_delivery' => $request->expected_delivery,
-                    'quantity' => $request->quantity,
-                    'status' => 'processing',
-                    'receiving_status' => 'pending',
-                ]);
-
-                // ✅ Log history for updating manufacturing variant
-                History::create([
-                    'product_id' => $product->id,
-                    'type' => 'بدء التصنيع',
-                    'action_by' => auth()->user()->name,
-                    'note' => "أبدا تصنيع اللون '{$productColor->color->name}' بتحديد تاريخ استلام {$request->expected_delivery} والكمية {$request->quantity}.",
-                ]);
-            } else {
-                // ✅ Create a New Variant if None Exists
-                $newVariant = ProductColorVariant::create([
+    
+            // ✅ Insert multiple records for manufacturing
+            $variants = [];
+            foreach ($request->expected_delivery as $index => $expected_delivery) {
+                $quantity = $request->quantity[$index] ?? 0;
+                $factory_id = $request->factory_id[$index] ?? null;
+                $material_id = $request->material_id[$index] ?? null;
+                $marker_number = $request->marker_number[$index] ?? null;
+    
+                $variant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
-                    'expected_delivery' => $request->expected_delivery,
-                    'quantity' => $request->quantity,
+                    'expected_delivery' => $expected_delivery,
+                    'quantity' => $quantity,
                     'status' => 'processing',
                     'receiving_status' => 'pending',
+                    'factory_id' => $factory_id,
+                    'material_id' => $material_id,
+                    'marker_number' => $marker_number,
                 ]);
-
-                // ✅ Log history for new manufacturing variant
+    
+                $variants[] = $variant;
+    
+                // ✅ Log history for each created variant
                 History::create([
                     'product_id' => $product->id,
                     'type' => 'بدء التصنيع',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$request->quantity} مع تاريخ استلام متوقع {$request->expected_delivery}.",
+                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$quantity} مع تاريخ استلام متوقع {$expected_delivery}، مصنع: " . ($factory_id ? Factory::find($factory_id)->name : "غير محدد") . "، خامة: " . ($material_id ? Material::find($material_id)->name : "غير محددة") . ".",
                 ]);
             }
-
+    
             // ✅ Log history for product status change (if changed)
             if ($originalStatus !== 'processing') {
                 History::create([
@@ -201,19 +191,16 @@ class ProductController extends Controller
                     'note' => "تم تغيير حالة المنتج '{$product->description}' إلى 'جاري التصنيع'.",
                 ]);
             }
-
+    
             DB::commit();
-
-            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدأ تصنيع المنتج بنجاح');
+    
+            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدء تصنيع المنتج بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
+            return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
         }
     }
-
-
-
-
+    
     public function reschedule(Request $request)
     {
         $validated = $request->validate([
