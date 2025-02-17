@@ -309,27 +309,14 @@
                 newElement.querySelector('input[id="modal-color-name"]').value = colorName;
 
                 // ✅ Remove existing Tom Select instances in cloned div
-                let oldSelects = newElement.querySelectorAll('.tom-select-factory, .tom-select-material');
-                oldSelects.forEach(select => {
-                    if (select.tomselect) {
-                        select.tomselect.destroy(); // Destroy existing instance
+                newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
+                    let tomInstance = select.tomselect;
+                    if (tomInstance) {
+                        tomInstance.destroy(); // Destroy existing instance
                     }
+                    select.parentNode.replaceChild(select.cloneNode(true),
+                    select); // Remove old select
                 });
-
-                // ✅ Reset select elements to their original state
-                newElement.querySelector('.tom-select-factory').outerHTML = `<select name="factory_id[]" class="tom-select-factory" required>
-            <option value="">اختر المصنع</option>
-            @foreach ($factories as $factory)
-                <option value="{{ $factory->id }}">{{ $factory->name }}</option>
-            @endforeach
-        </select>`;
-
-                newElement.querySelector('.tom-select-material').outerHTML = `<select name="material_id[]" class="tom-select-material" required>
-            <option value="">اختر الخامه</option>
-            @foreach ($materials as $material)
-                <option value="{{ $material->id }}">{{ $material->name }}</option>
-            @endforeach
-        </select>`;
 
                 // ✅ Append new element to container
                 container.appendChild(newElement);
