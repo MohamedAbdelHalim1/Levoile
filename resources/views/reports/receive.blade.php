@@ -14,7 +14,7 @@
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
                 <div class="row">
                     <!-- Category Filter -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="categoryFilter">{{ __('القسم') }}</label>
                         <select id="categoryFilter" class="ts-filter">
                             <option value="">{{ __('كل الفئات') }}</option>
@@ -25,7 +25,7 @@
                     </div>
 
                     <!-- Season Filter -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="seasonFilter">{{ __('الموسم') }}</label>
                         <select id="seasonFilter" class="ts-filter">
                             <option value="">{{ __('كل المواسم') }}</option>
@@ -36,7 +36,7 @@
                     </div>
 
                     <!-- Factory Filter -->
-                    <div class="col-md-3">
+                    {{-- <div class="col-md-4">
                         <label for="factoryFilter">{{ __('المصنع') }}</label>
                         <select id="factoryFilter" class="ts-filter">
                             <option value="">{{ __('كل المصانع') }}</option>
@@ -44,10 +44,10 @@
                                 <option value="{{ $factory }}">{{ $factory }}</option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
 
                     <!-- Status Filter -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="statusFilter">{{ __('الحالة') }}</label>
                         <select id="statusFilter" class="ts-filter">
                             <option value="">{{ __('كل الحالات') }}</option>
@@ -136,10 +136,10 @@
                                 <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
                                 <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
                                 <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->material->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->material->name ?? __('لا يوجد') }}</td>
                                 <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
                                 <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->factory->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->factory->name ?? __('لا يوجد') }}</td>
                                 <td>
                                     @if ($variant->status === 'new')
                                         <span class="badge bg-success">{{ __('جديد ') }}</span>

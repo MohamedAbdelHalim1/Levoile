@@ -19,8 +19,7 @@ class ReportController extends Controller
         $product_color_variants = ProductColorVariant::with([
             'productcolor.color',
             'productcolor.product.category',
-            'productcolor.product.season',
-            'productcolor.product.factory'
+            'productcolor.product.season'
         ])->get();
     
         return view('reports.receive', compact('product_color_variants'));
