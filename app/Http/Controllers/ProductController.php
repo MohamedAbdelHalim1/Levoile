@@ -243,7 +243,7 @@ class ProductController extends Controller
     
                 if (!$productColor) {
                     DB::rollBack();
-                    return back()->with('error', "لون المنتج غير موجود")->withInput();
+                    dd("لون المنتج غير موجود");
                 }
     
                 // ✅ Find Latest Variant
