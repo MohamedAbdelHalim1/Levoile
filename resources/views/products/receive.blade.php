@@ -160,8 +160,8 @@
                                     @foreach ($product->productColors as $productColor)
                                         @foreach ($productColor->productcolorvariants as $variant)
                                             <tr>
-                                                <td>{{ $productColor->sku ?? 'لا يوجد' }}</td>
                                                 <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
+                                                <td>{{ $productColor->sku ?? 'لا يوجد' }}</td>
                                                 <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
                                                 <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
                                                 <td>
