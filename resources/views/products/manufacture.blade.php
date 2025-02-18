@@ -238,6 +238,35 @@
                     method="POST">
                     @csrf
                     <div class="modal-body">
+                        <!-- ✅ Common Fields (Same for all colors) -->
+                        <div class="row border p-3 mb-3 bg-light">
+                            <div class="col-md-4 mb-3">
+                                <label for="expected_delivery" class="form-label">تاريخ الاستلام</label>
+                                <input type="date" class="form-control" name="expected_delivery" required>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="factory_id" class="form-label">المصنع</label>
+                                <select name="factory_id" class="form-control" required>
+                                    <option value="">اختر المصنع</option>
+                                    @foreach ($factories as $factory)
+                                        <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="material_id" class="form-label">الخامة</label>
+                                <select name="material_id" class="form-control" required>
+                                    <option value="">اختر الخامة</option>
+                                    @foreach ($materials as $material)
+                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ✅ Color-Specific Fields -->
                         <div id="bulk-inputs-container"></div> <!-- ✅ Dynamic Inputs Go Here -->
                     </div>
                     <div class="modal-footer">
@@ -248,6 +277,7 @@
             </div>
         </div>
     </div>
+
 
 
     <!-- ✅ Status Update Modal -->
@@ -479,7 +509,6 @@
             const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
 
             bulkManufacturingBtn.addEventListener("click", function() {
-                let selectedVariants = [];
                 let checkboxes = document.querySelectorAll(".record-checkbox:checked");
                 let container = document.getElementById("bulk-inputs-container");
 
@@ -494,44 +523,19 @@
                     <div class="manufacturing-input-group row border p-3 mb-2">
                         <input type="hidden" name="color_ids[]" value="${colorId}">
     
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">اللون</label>
                             <input type="text" class="form-control" value="${colorName}" disabled>
                         </div>
     
-                        <div class="col-md-4 mb-3">
-                            <label for="expected_delivery" class="form-label">تاريخ الاستلام</label>
-                            <input type="date" class="form-control" name="expected_delivery[]" required>
-                        </div>
-    
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="quantity" class="form-label">الكمية</label>
-                            <input type="number" class="form-control" name="quantity[]" min="1" required>
+                            <input type="number" class="form-control" name="quantities[]" min="1" required>
                         </div>
     
-                        <div class="col-md-4 mb-3">
-                            <label for="factory_id" class="form-label">المصنع</label>
-                            <select name="factory_id[]" class="form-control" required>
-                                <option value="">اختر المصنع</option>
-                                @foreach ($factories as $factory)
-                                    <option value="{{ $factory->id }}">{{ $factory->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-    
-                        <div class="col-md-4 mb-3">
-                            <label for="material_id" class="form-label">الخامة</label>
-                            <select name="material_id[]" class="form-control" required>
-                                <option value="">اختر الخامة</option>
-                                @foreach ($materials as $material)
-                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-    
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">رقم الماركر</label>
-                            <input type="text" class="form-control" name="marker_number[]">
+                            <input type="text" class="form-control" name="marker_numbers[]">
                         </div>
                     </div>
                 `;

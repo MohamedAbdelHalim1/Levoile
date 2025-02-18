@@ -215,65 +215,76 @@ class ProductController extends Controller
     }
 
     public function bulkManufacture(Request $request, Product $product)
-{
-    try {
-        DB::beginTransaction();
+    {
+        try {
+            DB::beginTransaction();
 
-        // ✅ Update product status
-        $product->update([
-            'status' => 'processing',
-            'receiving_status' => 'pending'
-        ]);
+            // ✅ Validate request
+            $request->validate([
+                'expected_delivery' => 'required|date',
+                'factory_id' => 'required|exists:factories,id',
+                'material_id' => 'required|exists:materials,id',
+                'color_ids' => 'required|array',
+                'quantities' => 'required|array',
+                'marker_numbers' => 'nullable|array',
+            ]);
 
-        // ✅ Loop Through Selected Colors
-        foreach ($request->color_ids as $index => $color_id) {
-            $productColor = ProductColor::where('product_id', $product->id)
-                ->where('id', $color_id)
-                ->first();
+            // ✅ Update product status
+            $product->update([
+                'status' => 'processing',
+                'receiving_status' => 'pending'
+            ]);
 
-            if (!$productColor) {
-                DB::rollBack();
-                return back()->with('error', "لون المنتج غير موجود")->withInput();
+            // ✅ Loop Through Selected Colors
+            foreach ($request->color_ids as $index => $color_id) {
+                $productColor = ProductColor::where('product_id', $product->id)
+                    ->where('id', $color_id)
+                    ->first();
+
+                if (!$productColor) {
+                    DB::rollBack();
+                    return back()->with('error', "لون المنتج غير موجود")->withInput();
+                }
+
+                // ✅ Find Latest Variant
+                $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
+                    ->where('status', 'processing')
+                    ->latest('created_at')
+                    ->first();
+
+                // ✅ Assign Parent ID
+                $parent_id = $latestVariant ? $latestVariant->id : null;
+
+                // ✅ Create New Variant
+                $variant = ProductColorVariant::create([
+                    'product_color_id' => $productColor->id,
+                    'parent_id' => $parent_id,
+                    'expected_delivery' => $request->expected_delivery, // ✅ Common field
+                    'quantity' => $request->quantities[$index], // ✅ Color-Specific
+                    'status' => 'processing',
+                    'receiving_status' => 'pending',
+                    'factory_id' => $request->factory_id, // ✅ Common field
+                    'material_id' => $request->material_id, // ✅ Common field
+                    'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
+                ]);
+
+                // ✅ Log History
+                History::create([
+                    'product_id' => $product->id,
+                    'type' => 'بدء التصنيع',
+                    'action_by' => auth()->user()->name,
+                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
+                ]);
             }
 
-            // ✅ Find Latest Variant
-            $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
-                ->where('status', 'processing')
-                ->latest('created_at')
-                ->first();
-
-            // ✅ Assign Parent ID
-            $parent_id = $latestVariant ? $latestVariant->id : null;
-
-            // ✅ Create New Variant
-            $variant = ProductColorVariant::create([
-                'product_color_id' => $productColor->id,
-                'parent_id' => $parent_id,
-                'expected_delivery' => $request->expected_delivery[$index],
-                'quantity' => $request->quantity[$index],
-                'status' => 'processing',
-                'receiving_status' => 'pending',
-                'factory_id' => $request->factory_id[$index] ?? null,
-                'material_id' => $request->material_id[$index] ?? null,
-                'marker_number' => $request->marker_number[$index] ?? null,
-            ]);
-
-            // ✅ Log History
-            History::create([
-                'product_id' => $product->id,
-                'type' => 'بدء التصنيع',
-                'action_by' => auth()->user()->name,
-                'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$variant->quantity}",
-            ]);
+            DB::commit();
+            return redirect()->route('products.manufacture', $product->id)->with('success', 'تم بدء تصنيع المنتجات بنجاح');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
         }
-
-        DB::commit();
-        return redirect()->route('products.manufacture', $product->id)->with('success', 'تم بدء تصنيع المنتجات بنجاح');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
     }
-}
+
 
 
     public function reschedule(Request $request)
