@@ -198,6 +198,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/products/{id}/history', [ProductController::class, 'history'])->name('products.history');
 
+    Route::post('/products/{product}/bulk-manufacture', [ProductController::class, 'bulkManufacture'])
+    ->name('products.update.bulk-manufacture');
 
 
 

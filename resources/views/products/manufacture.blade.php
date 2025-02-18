@@ -225,6 +225,31 @@
     </div>
 
 
+    <!-- ✅ Bulk Manufacturing Modal -->
+    <div class="modal fade" id="bulkManufacturingModal" tabindex="-1" aria-labelledby="bulkManufacturingModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkManufacturingModalLabel">بدء التصنيع لأكثر من لون</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="bulk-manufacturing-form" action="{{ route('products.update.bulk-manufacture', $product->id) }}"
+                    method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div id="bulk-inputs-container"></div> <!-- ✅ Dynamic Inputs Go Here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">ابدأ التصنيع</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ✅ Status Update Modal -->
     <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -445,6 +470,76 @@
             });
             new TomSelect('.tom-select-material', {
                 placeholder: "اختر الخامه"
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
+
+            bulkManufacturingBtn.addEventListener("click", function() {
+                let selectedVariants = [];
+                let checkboxes = document.querySelectorAll(".record-checkbox:checked");
+                let container = document.getElementById("bulk-inputs-container");
+
+                container.innerHTML = ""; // ✅ Clear previous inputs
+
+                checkboxes.forEach(checkbox => {
+                    let row = checkbox.closest("tr");
+                    let colorName = row.cells[1].innerText; // ✅ Color Name
+                    let colorId = checkbox.value;
+
+                    let inputGroup = `
+                    <div class="manufacturing-input-group row border p-3 mb-2">
+                        <input type="hidden" name="color_ids[]" value="${colorId}">
+    
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="text" class="form-control" value="${colorName}" disabled>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="expected_delivery" class="form-label">تاريخ الاستلام</label>
+                            <input type="date" class="form-control" name="expected_delivery[]" required>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="quantity" class="form-label">الكمية</label>
+                            <input type="number" class="form-control" name="quantity[]" min="1" required>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="factory_id" class="form-label">المصنع</label>
+                            <select name="factory_id[]" class="form-control" required>
+                                <option value="">اختر المصنع</option>
+                                @foreach ($factories as $factory)
+                                    <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label for="material_id" class="form-label">الخامة</label>
+                            <select name="material_id[]" class="form-control" required>
+                                <option value="">اختر الخامة</option>
+                                @foreach ($materials as $material)
+                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+    
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">رقم الماركر</label>
+                            <input type="text" class="form-control" name="marker_number[]">
+                        </div>
+                    </div>
+                `;
+
+                    container.innerHTML += inputGroup; // ✅ Append Inputs
+                });
+
+                $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
             });
         });
     </script>
