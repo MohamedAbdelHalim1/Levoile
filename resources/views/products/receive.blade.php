@@ -148,6 +148,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>اللون</th>
+                                        <th>ألكود</th>
                                         <th>تاريخ التوصيل</th>
                                         <th>الكمية</th>
                                         <th>الكمية المستلمة</th>
@@ -159,6 +160,7 @@
                                     @foreach ($product->productColors as $productColor)
                                         @foreach ($productColor->productcolorvariants as $variant)
                                             <tr>
+                                                <td>{{ $productColor->sku ?? 'لا يوجد' }}</td>
                                                 <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
                                                 <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
                                                 <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
