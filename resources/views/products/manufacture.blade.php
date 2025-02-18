@@ -247,7 +247,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="factory_id" class="form-label">المصنع</label>
-                                <select name="factory_id" class="form-control tom-select-factory" required>
+                                <select name="factory_id" class="form-control bulk-tom-select-factory" required>
                                     <option value="">اختر المصنع</option>
                                     @foreach ($factories as $factory)
                                         <option value="{{ $factory->id }}">{{ $factory->name }}</option>
@@ -257,7 +257,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label for="material_id" class="form-label">الخامة</label>
-                                <select name="material_id" class="form-control tom-select-material" required>
+                                <select name="material_id" class="form-control bulk-tom-select-material" required>
                                     <option value="">اختر الخامة</option>
                                     @foreach ($materials as $material)
                                         <option value="{{ $material->id }}">{{ $material->name }}</option>
@@ -507,10 +507,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
-            new TomSelect('.tom-select-factory', {
+            new TomSelect('.bulk-tom-select-factory', {
                 placeholder: "اختر المصنع"
             });
-            new TomSelect('.tom-select-material', {
+            new TomSelect('.bulk-tom-select-material', {
                 placeholder: "اختر الخامه"
             });
 
