@@ -223,7 +223,7 @@ class ProductController extends Controller
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
                 // ✅ Find existing variant for the selected color
-                $variant = ProductColorVariant::where('product_color_id', $color_id)
+                $variant = ProductColorVariant::where('id', $color_id)
                     ->whereNull('quantity') // ✅ Update only if quantity is null
                     ->first();
     
