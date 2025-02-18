@@ -134,92 +134,77 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
-            // ✅ Store original values before update
-            $originalStatus = $product->status;
-            $originalReceivingStatus = $product->receiving_status;
-
-            // ✅ Update Product Status to "Processing"
-            $product->update([
-                'status' => 'processing',
-                'receiving_status' => 'pending'
-            ]);
-
+    
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
-                ->where('id', $request->color_id) // Make sure we get the correct color the user selected
+                ->where('id', $request->color_id)
                 ->first();
-
+    
             if (!$productColor) {
                 DB::rollBack();
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
-
-            // ✅ Find the latest variant for the exact color the user selected
-            $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
-                ->where('status', 'processing') // Ensure we get an ongoing manufacturing process
-                ->latest('created_at')
+    
+            // ✅ Find the first existing variant where quantity is null (the original record)
+            $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)
+                ->whereNull('quantity')
                 ->first();
-
-            // ✅ Assign parent_id to the correct variant or null if none exist
-            $parent_id = $latestVariant ? $latestVariant->id : null;
-
-            // ✅ Insert multiple records for manufacturing
-            $variants = [];
-            foreach ($request->expected_delivery as $index => $expected_delivery) {
-                $quantity = $request->quantity[$index] ?? 0;
-                $factory_id = $request->factory_id[$index] ?? null;
-                $material_id = $request->material_id[$index] ?? null;
-                $marker_number = $request->marker_number[$index] ?? null;
-
-                $variant = ProductColorVariant::create([
+    
+            if (!$existingVariant) {
+                DB::rollBack();
+                return response()->json(['error' => "لم يتم العثور على السجل الأصلي لهذا اللون"], 400);
+            }
+    
+            // ✅ Update the first record with the first input values
+            $existingVariant->update([
+                'expected_delivery' => $request->expected_delivery[0],
+                'quantity' => $request->quantity[0],
+                'status' => 'processing',
+                'receiving_status' => 'pending',
+                'factory_id' => $request->factory_id[0],
+                'material_id' => $request->material_id[0],
+                'marker_number' => $request->marker_number[0] ?? null,
+            ]);
+    
+            // ✅ If there are more inputs, create new records
+            for ($i = 1; $i < count($request->expected_delivery); $i++) {
+                ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
-                    'parent_id' => $parent_id, // ✅ Assign only the correct parent variant
-                    'expected_delivery' => $expected_delivery,
-                    'quantity' => $quantity,
+                    'parent_id' => null, // ✅ Keep parent_id null for now
+                    'expected_delivery' => $request->expected_delivery[$i],
+                    'quantity' => $request->quantity[$i],
                     'status' => 'processing',
                     'receiving_status' => 'pending',
-                    'factory_id' => $factory_id,
-                    'material_id' => $material_id,
-                    'marker_number' => $marker_number,
-                ]);
-
-                $variants[] = $variant;
-
-                // ✅ Log history for each created variant
-                History::create([
-                    'product_id' => $product->id,
-                    'type' => 'بدء التصنيع',
-                    'action_by' => auth()->user()->name,
-                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$quantity} مع تاريخ استلام متوقع {$expected_delivery}، مصنع: " . ($factory_id ? Factory::find($factory_id)->name : "غير محدد") . "، خامة: " . ($material_id ? Material::find($material_id)->name : "غير محددة") . ".",
+                    'factory_id' => $request->factory_id[$i],
+                    'material_id' => $request->material_id[$i],
+                    'marker_number' => $request->marker_number[$i] ?? null,
                 ]);
             }
-
-            // ✅ Log history for product status change (if changed)
-            if ($originalStatus !== 'processing') {
-                History::create([
-                    'product_id' => $product->id,
-                    'type' => ' حالة تصنيع المنتج',
-                    'action_by' => auth()->user()->name,
-                    'note' => "تم تغيير حالة المنتج '{$product->description}' إلى 'جاري التصنيع'.",
-                ]);
-            }
-
+    
+            // ✅ Log History
+            History::create([
+                'product_id' => $product->id,
+                'type' => 'تحديث التصنيع',
+                'action_by' => auth()->user()->name,
+                'note' => "تم تحديث اللون '{$productColor->color->name}' بالكمية الأولى {$request->quantity[0]} والباقي تمت إضافته كإدخالات جديدة.",
+            ]);
+    
             DB::commit();
-
-            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم بدء تصنيع المنتج بنجاح');
+            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
+            dd($e); // ✅ Debugging: Dump error for debugging
+            return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
+    
 
     public function bulkManufacture(Request $request, Product $product)
     {
         try {
             DB::beginTransaction();
     
-            // ✅ Validate request
+            // ✅ Validate request input
             $request->validate([
                 'expected_delivery' => 'required|date',
                 'factory_id' => 'required|exists:factories,id',
@@ -235,54 +220,45 @@ class ProductController extends Controller
                 'receiving_status' => 'pending'
             ]);
     
-            // ✅ Loop Through Selected Colors
+            // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
-                $productColor = ProductColor::where('product_id', $product->id)
-                    ->where('id', $color_id)
+                // ✅ Find existing variant for the selected color
+                $variant = ProductColorVariant::where('product_color_id', $color_id)
+                    ->whereNull('quantity') // ✅ Update only if quantity is null
                     ->first();
     
-                if (!$productColor) {
+                if ($variant) {
+                    // ✅ Update the existing record with new data
+                    $variant->update([
+                        'expected_delivery' => $request->expected_delivery, // ✅ Common field
+                        'quantity' => $request->quantities[$index], // ✅ Color-Specific
+                        'status' => 'processing',
+                        'receiving_status' => 'pending',
+                        'factory_id' => $request->factory_id, // ✅ Common field
+                        'material_id' => $request->material_id, // ✅ Common field
+                        'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
+                    ]);
+                } else {
+                    // ✅ If no existing record found, handle the error or create a new one (optional)
                     DB::rollBack();
-                    dd("لون المنتج غير موجود");
+                    dd('No existing record found for color ID: ' . $color_id);
                 }
-    
-                // ✅ Find Latest Variant
-                $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
-                    ->where('status', 'processing')
-                    ->latest('created_at')
-                    ->first();
-    
-                // ✅ Assign Parent ID
-                $parent_id = $latestVariant ? $latestVariant->id : null;
-    
-                // ✅ Create New Variant
-                $variant = ProductColorVariant::create([
-                    'product_color_id' => $productColor->id,
-                    'parent_id' => $parent_id,
-                    'expected_delivery' => $request->expected_delivery, // ✅ Common field
-                    'quantity' => $request->quantities[$index], // ✅ Color-Specific
-                    'status' => 'processing',
-                    'receiving_status' => 'pending',
-                    'factory_id' => $request->factory_id, // ✅ Common field
-                    'material_id' => $request->material_id, // ✅ Common field
-                    'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
-                ]);
     
                 // ✅ Log History
                 History::create([
                     'product_id' => $product->id,
-                    'type' => 'بدء التصنيع',
+                    'type' => 'تحديث التصنيع',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
+                    'note' => "تم تحديث تصنيع اللون '{$variant->productcolor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
                 ]);
             }
     
             DB::commit();
-            return redirect()->route('products.manufacture', $product->id)->with('success', 'تم بدء تصنيع المنتجات بنجاح');
+            return redirect()->route('products.manufacture', $product->id)->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e); // ✅ Debugging: Dump error for debugging
-            return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
+            return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
     
