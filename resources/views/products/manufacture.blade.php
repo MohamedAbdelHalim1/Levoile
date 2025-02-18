@@ -131,7 +131,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-4">
+                <div class="mt-4 d-flex">
                     <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
                     <button type="button" class="btn btn-success ms-2" id="bulk-manufacturing-btn" style="display: none;">
                         ابدأ التصنيع
@@ -252,32 +252,34 @@
 
 
 @section('scripts')
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const selectAllCheckbox = document.getElementById("select-all");
-        const checkboxes = document.querySelectorAll(".record-checkbox");
-        const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const selectAllCheckbox = document.getElementById("select-all");
+            const checkboxes = document.querySelectorAll(".record-checkbox");
+            const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
 
-        // ✅ Handle "Select All" checkbox functionality
-        selectAllCheckbox.addEventListener("change", function() {
-            checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
-            toggleBulkButton();
-        });
-
-        // ✅ Handle individual checkbox clicks
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", function() {
+            // ✅ Handle "Select All" checkbox functionality
+            selectAllCheckbox.addEventListener("change", function() {
+                checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
                 toggleBulkButton();
             });
-        });
 
-        // ✅ Show or hide the bulk action button based on selection
-        function toggleBulkButton() {
-            let anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-            bulkManufacturingBtn.style.display = anyChecked ? "block" : "none";
-        }
-    });
-</script>
+            // ✅ Handle individual checkbox clicks
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function() {
+                    toggleBulkButton();
+                });
+            });
+
+            // ✅ Show or hide the bulk action button based on selection
+            function toggleBulkButton() {
+                let checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+
+                // ✅ Show the button only if two or more checkboxes are selected
+                bulkManufacturingBtn.style.display = checkedCount >= 2 ? "block" : "none";
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $(".start-manufacturing-btn").on("click", function() {
