@@ -15,7 +15,7 @@
                 <form method="GET" action="{{ route('products.index') }}">
                     <div class="row">
                         <!-- Category Filter -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="categoryFilter">{{ __('القسم') }}</label>
                             <select name="category" id="categoryFilter" class="ts-filter">
                                 <option value="">{{ __('كل الاقسام') }}</option>
@@ -29,7 +29,7 @@
                         </div>
 
                         <!-- Season Filter -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="seasonFilter">{{ __('الموسم') }}</label>
                             <select name="season" id="seasonFilter" class="ts-filter">
                                 <option value="">{{ __('كل المواسم') }}</option>
@@ -43,7 +43,7 @@
                         </div>
 
                         <!-- Factory Filter -->
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <label for="factoryFilter">{{ __('المصنع') }}</label>
                             <select name="factory" id="factoryFilter" class="ts-filter">
                                 <option value="">{{ __('كل المصانع') }}</option>
@@ -54,10 +54,10 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <!-- Color Filter -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="colorFilter">{{ __('اللون') }}</label>
                             <select name="color" id="colorFilter" class="ts-filter">
                                 <option value="">{{ __('كل الألوان') }}</option>
@@ -115,7 +115,7 @@
                         </div>
 
                         <!-- Material Filter -->
-                        <div class="col-md-4 mt-3">
+                        {{-- <div class="col-md-4 mt-3">
                             <label for="materialFilter">{{ __('الخامة') }}</label>
                             <select name="material" id="materialFilter" class="ts-filter">
                                 <option value="">{{ __('كل الخامات') }}</option>
@@ -126,10 +126,10 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
                         <!-- Expected Delivery Date Range -->
-                        <div class="col-md-6 mt-3">
+                        <div class="col-md-4 mt-3">
                             <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
                             <div class="input-group">
                                 <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
