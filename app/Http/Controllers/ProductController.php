@@ -218,7 +218,7 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Validate request
             $request->validate([
                 'expected_delivery' => 'required|date',
@@ -228,33 +228,33 @@ class ProductController extends Controller
                 'quantities' => 'required|array',
                 'marker_numbers' => 'nullable|array',
             ]);
-
+    
             // ✅ Update product status
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-
+    
             // ✅ Loop Through Selected Colors
             foreach ($request->color_ids as $index => $color_id) {
                 $productColor = ProductColor::where('product_id', $product->id)
                     ->where('id', $color_id)
                     ->first();
-
+    
                 if (!$productColor) {
                     DB::rollBack();
                     return back()->with('error', "لون المنتج غير موجود")->withInput();
                 }
-
+    
                 // ✅ Find Latest Variant
                 $latestVariant = ProductColorVariant::where('product_color_id', $productColor->id)
                     ->where('status', 'processing')
                     ->latest('created_at')
                     ->first();
-
+    
                 // ✅ Assign Parent ID
                 $parent_id = $latestVariant ? $latestVariant->id : null;
-
+    
                 // ✅ Create New Variant
                 $variant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
@@ -267,7 +267,7 @@ class ProductController extends Controller
                     'material_id' => $request->material_id, // ✅ Common field
                     'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
                 ]);
-
+    
                 // ✅ Log History
                 History::create([
                     'product_id' => $product->id,
@@ -276,15 +276,16 @@ class ProductController extends Controller
                     'note' => "تم بدء تصنيع اللون '{$productColor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
                 ]);
             }
-
+    
             DB::commit();
             return redirect()->route('products.manufacture', $product->id)->with('success', 'تم بدء تصنيع المنتجات بنجاح');
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e); // ✅ Debugging: Dump error for debugging
             return back()->with('error', 'حدث خطأ أثناء بدء التصنيع: ' . $e->getMessage());
         }
     }
-
+    
 
 
     public function reschedule(Request $request)
