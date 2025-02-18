@@ -145,32 +145,26 @@ class ProductController extends Controller
                 return response()->json(['error' => "لون المنتج غير موجود"], 400);
             }
     
-            // ✅ Find the first existing variant where quantity is null (the original record)
-            $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)
-                ->whereNull('quantity')
-                ->first();
+            // ✅ Find an existing variant (Update First Record Instead of Creating)
+            $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
     
-            if (!$existingVariant) {
-                DB::rollBack();
-                return response()->json(['error' => "لم يتم العثور على السجل الأصلي لهذا اللون"], 400);
+            if ($existingVariant) {
+                // ✅ Update the first record with the first input values
+                $existingVariant->update([
+                    'expected_delivery' => $request->expected_delivery[0],
+                    'quantity' => $request->quantity[0],
+                    'status' => 'processing',
+                    'receiving_status' => 'pending',
+                    'factory_id' => $request->factory_id[0],
+                    'material_id' => $request->material_id[0],
+                    'marker_number' => $request->marker_number[0] ?? null,
+                ]);
             }
     
-            // ✅ Update the first record with the first input values
-            $existingVariant->update([
-                'expected_delivery' => $request->expected_delivery[0],
-                'quantity' => $request->quantity[0],
-                'status' => 'processing',
-                'receiving_status' => 'pending',
-                'factory_id' => $request->factory_id[0],
-                'material_id' => $request->material_id[0],
-                'marker_number' => $request->marker_number[0] ?? null,
-            ]);
-    
-            // ✅ If there are more inputs, create new records
+            // ✅ If more inputs exist, create new records
             for ($i = 1; $i < count($request->expected_delivery); $i++) {
                 ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
-                    'parent_id' => null, // ✅ Keep parent_id null for now
                     'expected_delivery' => $request->expected_delivery[$i],
                     'quantity' => $request->quantity[$i],
                     'status' => 'processing',
@@ -198,6 +192,7 @@ class ProductController extends Controller
         }
     }
     
+    
 
     public function bulkManufacture(Request $request, Product $product)
     {
@@ -223,12 +218,10 @@ class ProductController extends Controller
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
                 // ✅ Find existing variant for the selected color
-                $variant = ProductColorVariant::where('id', $color_id)
-                    ->whereNull('quantity') // ✅ Update only if quantity is null
-                    ->first();
+                $variant = ProductColorVariant::where('id', $color_id)->first();
     
                 if ($variant) {
-                    // ✅ Update the existing record with new data
+                    // ✅ If the record exists, update it
                     $variant->update([
                         'expected_delivery' => $request->expected_delivery, // ✅ Common field
                         'quantity' => $request->quantities[$index], // ✅ Color-Specific
@@ -239,9 +232,17 @@ class ProductController extends Controller
                         'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
                     ]);
                 } else {
-                    // ✅ If no existing record found, handle the error or create a new one (optional)
-                    DB::rollBack();
-                    dd('No existing record found for color ID: ' . $color_id);
+                    // ✅ If no record exists, create a new one
+                    $variant = ProductColorVariant::create([
+                        'product_color_id' => $color_id,
+                        'expected_delivery' => $request->expected_delivery,
+                        'quantity' => $request->quantities[$index],
+                        'status' => 'processing',
+                        'receiving_status' => 'pending',
+                        'factory_id' => $request->factory_id,
+                        'material_id' => $request->material_id,
+                        'marker_number' => $request->marker_numbers[$index] ?? null,
+                    ]);
                 }
     
                 // ✅ Log History
@@ -249,7 +250,7 @@ class ProductController extends Controller
                     'product_id' => $product->id,
                     'type' => 'تحديث التصنيع',
                     'action_by' => auth()->user()->name,
-                    'note' => "تم تحديث تصنيع اللون '{$variant->productcolor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
+                    'note' => "تم تعديل تصنيع اللون '{$variant->productcolor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
                 ]);
             }
     

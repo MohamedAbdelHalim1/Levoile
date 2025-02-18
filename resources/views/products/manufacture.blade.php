@@ -94,21 +94,27 @@
                                         </td>
 
                                         <td>
-                                            @if ($variant->status === 'new' || $variant->status === 'postponed')
+                                            @if ($variant->quantity > 0)
+                                                <button type="button" class="btn btn-warning start-manufacturing-btn"
+                                                    data-color-id="{{ $productColor->id }}"
+                                                    data-color-name="{{ $productColor->color->name }}"
+                                                    data-bs-toggle="modal" data-bs-target="#manufacturingModal">
+                                                    {{ __('تعديل التصنيع') }}
+                                                </button>
+                                            @else
                                                 <button type="button" class="btn btn-primary start-manufacturing-btn"
                                                     data-color-id="{{ $productColor->id }}"
                                                     data-color-name="{{ $productColor->color->name }}"
                                                     data-bs-toggle="modal" data-bs-target="#manufacturingModal">
                                                     {{ __('ابدأ التصنيع') }}
                                                 </button>
-                                            @else
-                                                <button type="button" class="btn btn-secondary stop-btn"
-                                                    data-variant-id="{{ $variant->id }}"
-                                                    data-product-id="{{ $product->id }}" data-status="stop"
-                                                    data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                    {{ __('إيقاف') }}
-                                                </button>
                                             @endif
+                                            <button type="button" class="btn btn-secondary stop-btn"
+                                                data-variant-id="{{ $variant->id }}"
+                                                data-product-id="{{ $product->id }}" data-status="stop"
+                                                data-bs-toggle="modal" data-bs-target="#statusModal">
+                                                {{ __('إيقاف') }}
+                                            </button>
 
                                             <button type="button" class="btn btn-danger cancel-btn"
                                                 data-variant-id="{{ $variant->id }}"
@@ -134,7 +140,7 @@
                 <div class="mt-4 d-flex">
                     <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
                     <button type="button" class="btn btn-success ms-2" id="bulk-manufacturing-btn" style="display: none;">
-                        ابدأ التصنيع
+                         تصنيع
                     </button> <!-- ✅ Bulk Manufacturing Button (Hidden Initially) -->
                 </div>
             </div>
@@ -178,7 +184,8 @@
 
                                 <div class="col-md-4 mb-3">
                                     <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
-                                    <input type="number" class="form-control" name="quantity[]" min="1" required>
+                                    <input type="number" class="form-control" name="quantity[]" min="1"
+                                        required>
                                 </div>
 
                                 <!-- ✅ Factory Selection -->
