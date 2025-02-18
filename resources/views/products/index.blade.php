@@ -237,6 +237,7 @@
                                         <thead>
                                             <tr>
                                                 <th>{{ __('اللون') }}</th>
+                                                <th>{{ __('ألكود') }}</th>
                                                 <th>{{ __('حاله التصنيع') }}</th>
                                                 <th>{{ __('حاله التسليم') }}</th>
                                                 <th>{{ __('الكميه المطلوبه') }}</th>
@@ -264,6 +265,7 @@
                                                 <tr>
                                                     <!-- Color Name -->
                                                     <td>{{ $productColor->color->name }}</td>
+                                                    <td>{{ $productColor->sku }}</td>
 
                                                     <!-- Manufacturing Status -->
                                                     <td>
