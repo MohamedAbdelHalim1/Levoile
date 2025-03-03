@@ -183,6 +183,11 @@
                                 </div>
 
                                 <div class="col-md-4 mb-3">
+                                    <label for="order_delivery" class="form-label">{{ __('تاريخ الطلب') }}</label>
+                                    <input type="date" class="form-control" name="order_delivery[]" required>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
                                     <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
                                     <input type="number" class="form-control" name="quantity[]" min="1"
                                         required>
@@ -247,12 +252,17 @@
                     <div class="modal-body">
                         <!-- ✅ Common Fields (Shared for all colors) -->
                         <div class="row border p-3 mb-3 bg-light">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="expected_delivery" class="form-label">تاريخ الاستلام</label>
                                 <input type="date" class="form-control" name="expected_delivery" required>
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
+                                <label for="order_delivery" class="form-label">تاريخ الطلب</label>
+                                <input type="date" class="form-control" name="order_delivery" required>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
                                 <label for="factory_id" class="form-label">المصنع</label>
                                 <select name="factory_id" class="form-control bulk-tom-select-factory" required>
                                     <option value="">اختر المصنع</option>
@@ -262,7 +272,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="material_id" class="form-label">الخامة</label>
                                 <select name="material_id" class="form-control bulk-tom-select-material" required>
                                     <option value="">اختر الخامة</option>

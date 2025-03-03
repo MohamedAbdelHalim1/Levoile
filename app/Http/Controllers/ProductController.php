@@ -152,6 +152,7 @@ class ProductController extends Controller
                 // ✅ Update the first record with the first input values
                 $existingVariant->update([
                     'expected_delivery' => $request->expected_delivery[0],
+                    'order_delivery' => $request->order_delivery[0],
                     'quantity' => $request->quantity[0],
                     'status' => 'processing',
                     'receiving_status' => 'pending',
@@ -166,6 +167,7 @@ class ProductController extends Controller
                 ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
                     'expected_delivery' => $request->expected_delivery[$i],
+                    'order_delivery' => $request->order_delivery[$i],
                     'quantity' => $request->quantity[$i],
                     'status' => 'processing',
                     'receiving_status' => 'pending',
@@ -202,6 +204,7 @@ class ProductController extends Controller
             // ✅ Validate request input
             $request->validate([
                 'expected_delivery' => 'required|date',
+                'order_delivery' => 'required|date',
                 'factory_id' => 'required|exists:factories,id',
                 'material_id' => 'required|exists:materials,id',
                 'color_ids' => 'required|array',
@@ -224,6 +227,7 @@ class ProductController extends Controller
                     // ✅ If the record exists, update it
                     $variant->update([
                         'expected_delivery' => $request->expected_delivery, // ✅ Common field
+                        'order_delivery' => $request->order_delivery, // ✅ Common field
                         'quantity' => $request->quantities[$index], // ✅ Color-Specific
                         'status' => 'processing',
                         'receiving_status' => 'pending',
@@ -236,6 +240,7 @@ class ProductController extends Controller
                     $variant = ProductColorVariant::create([
                         'product_color_id' => $color_id,
                         'expected_delivery' => $request->expected_delivery,
+                        'order_delivery' => $request->order_delivery,
                         'quantity' => $request->quantities[$index],
                         'status' => 'processing',
                         'receiving_status' => 'pending',

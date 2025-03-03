@@ -13,6 +13,7 @@ class ProductColorVariant extends Model
     protected $fillable = [
         'product_color_id',
         'expected_delivery',
+        'order_delivery',
         'quantity',
         'receiving_quantity',
         'parent_id', // Added parent_id
