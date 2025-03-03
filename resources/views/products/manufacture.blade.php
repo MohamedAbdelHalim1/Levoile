@@ -140,7 +140,7 @@
                 <div class="mt-4 d-flex">
                     <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
                     <button type="button" class="btn btn-success ms-2" id="bulk-manufacturing-btn" style="display: none;">
-                         تصنيع
+                        تصنيع
                     </button> <!-- ✅ Bulk Manufacturing Button (Hidden Initially) -->
                 </div>
             </div>
@@ -220,6 +220,12 @@
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ __('رقم الماركر') }}</label>
                                     <input type="text" class="form-control" name="marker_number[]">
+                                </div>
+
+                                <!-- ✅ sku Input -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ __('الكود') }}</label>
+                                    <input type="text" class="form-control" name="sku[]" required>
                                 </div>
 
                             </div>
@@ -553,14 +559,18 @@
                             <input type="text" class="form-control" value="${colorName}" disabled>
                         </div>
     
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-2 mb-3">
                             <label for="quantity" class="form-label">الكمية</label>
                             <input type="number" class="form-control" name="quantities[]" min="1" required>
                         </div>
     
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-32 mb-3">
                             <label class="form-label">رقم الماركر</label>
                             <input type="text" class="form-control" name="marker_numbers[]">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">الكود</label>
+                            <input type="text" class="form-control" name="sku[]" required>
                         </div>
                     </div>
                 `;
