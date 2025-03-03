@@ -564,7 +564,7 @@
                             <input type="number" class="form-control" name="quantities[]" min="1" required>
                         </div>
     
-                        <div class="col-md-32 mb-3">
+                        <div class="col-md-2 mb-3">
                             <label class="form-label">رقم الماركر</label>
                             <input type="text" class="form-control" name="marker_numbers[]">
                         </div>
