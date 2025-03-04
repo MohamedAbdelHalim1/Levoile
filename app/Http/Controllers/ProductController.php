@@ -152,6 +152,12 @@ class ProductController extends Controller
             // ✅ Find an existing variant (Update First Record Instead of Creating)
             $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
 
+            // ✅ Handle marker file upload
+            $markerFilePath = null;
+            if ($request->hasFile('marker_file.0')) {
+                $markerFilePath = $this->uploadFile($request->file('marker_file.0'), 'images');
+            }
+
             if ($existingVariant) {
                 // ✅ Update the first record with the first input values
                 $existingVariant->update([
@@ -163,11 +169,20 @@ class ProductController extends Controller
                     'factory_id' => $request->factory_id[0],
                     'material_id' => $request->material_id[0],
                     'marker_number' => $request->marker_number[0] ?? null,
+                    'marker_file' => $markerFilePath ?? $existingVariant->marker_file, // Keep old file if not updated
+
                 ]);
             }
 
+
             // ✅ If more inputs exist, create new records
             for ($i = 1; $i < count($request->expected_delivery); $i++) {
+
+                $markerFilePath = null;
+                if ($request->hasFile("marker_file.$i")) {
+                    $markerFilePath = $this->uploadFile($request->file("marker_file.$i"), 'marker_files');
+                }
+
                 ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
                     'expected_delivery' => $request->expected_delivery[$i],
@@ -178,6 +193,7 @@ class ProductController extends Controller
                     'factory_id' => $request->factory_id[$i],
                     'material_id' => $request->material_id[$i],
                     'marker_number' => $request->marker_number[$i] ?? null,
+                    'marker_file' => $markerFilePath,
                 ]);
             }
 
@@ -198,6 +214,12 @@ class ProductController extends Controller
         }
     }
 
+    private function uploadFile($file, $directory)
+    {
+        $fileName = Str::uuid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path($directory), $fileName);
+        return "$directory/$fileName";
+    }
 
 
     public function bulkManufacture(Request $request, Product $product)

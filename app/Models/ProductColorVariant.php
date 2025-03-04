@@ -21,6 +21,7 @@ class ProductColorVariant extends Model
         'note',
         'receiving_status',
         'marker_number',
+        'marker_file',
         'material_id',
         'factory_id',
         'pending_date',

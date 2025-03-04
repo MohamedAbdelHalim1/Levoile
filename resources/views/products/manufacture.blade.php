@@ -51,7 +51,7 @@
                                                 @break
 
                                                 @case('postponed')
-                                                    {{ __(' مؤجل الي ' . $variant->pending_date ) }}
+                                                    {{ __(' مؤجل الي ' . $variant->pending_date) }}
                                                 @break
 
                                                 @case('partial')
@@ -157,7 +157,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="manufacturing-form" action="{{ route('products.update.manufacture', $product->id) }}"
-                    method="POST">
+                    method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" name="color_id" id="modal-color-id">
@@ -220,6 +220,13 @@
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">{{ __('رقم الماركر') }}</label>
                                     <input type="text" class="form-control" name="marker_number[]">
+                                </div>
+
+                                <!-- ✅ Marker File Upload -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="marker_file" class="form-label">{{ __('ملف الماركر') }}</label>
+                                    <input type="file" class="form-control" name="marker_file[]"
+                                        accept="image/*,.pdf,.xlsx,.xls,.csv,.zip,.rar">
                                 </div>
 
                                 <!-- ✅ sku Input -->
