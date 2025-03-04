@@ -225,12 +225,15 @@ class ProductController extends Controller
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
 
+
+
+                // ✅ Find existing variant for the selected color
+                $variant = ProductColorVariant::where('id', $color_id)->first();
+
                 // get productColor from color_id to update sku
-                $productColor = ProductColor::where('product_id', $product->id)
-                    ->where('id', $color_id)
+                $productColor = ProductColor::where('id', $variant->product_color_id)
                     ->first();
 
-                    dd($productColor , $color_id , $product->id);
                 if ($productColor) {
                     // ✅ Convert array to string before saving SKU
                     $productColor->sku = isset($request->sku[$index])
@@ -238,9 +241,6 @@ class ProductController extends Controller
                         : null;
                     $productColor->save();
                 }
-
-                // ✅ Find existing variant for the selected color
-                $variant = ProductColorVariant::where('id', $color_id)->first();
 
                 if ($variant) {
                     // ✅ If the record exists, update it
