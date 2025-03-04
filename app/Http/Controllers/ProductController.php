@@ -142,9 +142,13 @@ class ProductController extends Controller
     
             if (!$productColor) {
                 DB::rollBack();
-                return response()->json(['error' => "لون المنتج غير موجود"], 400);
+                dd('Color not found');
             }
     
+            // add request sku to product color sku column
+            $productColor->sku = $request->sku;
+            $productColor->save();
+
             // ✅ Find an existing variant (Update First Record Instead of Creating)
             $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
     
@@ -220,6 +224,17 @@ class ProductController extends Controller
     
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
+
+                // get productColor from color_id to update sku
+                $productColor = ProductColor::where('product_id', $product->id)
+                    ->where('id', $color_id)
+                    ->first();
+    
+                // ✅ Update the product color's SKU
+                $productColor->sku = $request->sku[$index];
+                $productColor->save();  
+
+
                 // ✅ Find existing variant for the selected color
                 $variant = ProductColorVariant::where('id', $color_id)->first();
     
