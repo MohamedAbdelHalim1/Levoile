@@ -532,7 +532,8 @@ class ProductController extends Controller
             'variant_id' => 'required|exists:product_color_variants,id',
             'product_id' => 'required|exists:products,id',
             'status' => 'required|in:stop,cancel,postponed', // Added 'postponed'
-            'note' => 'required|string|max:512'
+            'note' => 'required|string|max:512',
+            'pending_date' => 'nullable|date',
         ]);
 
         try {
@@ -546,6 +547,7 @@ class ProductController extends Controller
             $variant->status = $request->status;
             $variant->receiving_status = $request->status;
             $variant->note = $request->note;
+            $variant->pending_date = $request->pending_date;
             $variant->save();
 
             // Get total count of variants

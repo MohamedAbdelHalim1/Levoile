@@ -382,9 +382,22 @@
                 $("#statusNote").val("");
 
                 let modalTitle = "";
-                if ($(this).data("status") === "stop") modalTitle = "إيقاف التصنيع";
-                else if ($(this).data("status") === "cancel") modalTitle = "إلغاء التصنيع";
-                else if ($(this).data("status") === "postponed") modalTitle = "تأجيل التصنيع";
+                let status = $(this).data("status");
+
+
+                if (status === "stop") {
+                    modalTitle = "إيقاف التصنيع";
+                    $("#pending-date-container").hide(); // Hide pending date input
+                    $("#pending_date").prop('required', false);
+                } else if (status === "cancel") {
+                    modalTitle = "إلغاء التصنيع";
+                    $("#pending-date-container").hide(); // Hide pending date input
+                    $("#pending_date").prop('required', false);
+                } else if (status === "postponed") {
+                    modalTitle = "تأجيل التصنيع";
+                    $("#pending-date-container").show(); // Show pending date input
+                    $("#pending_date").prop('required', true);
+                }
 
                 $("#statusModalLabel").text(modalTitle);
                 $("#statusModal").modal("show");
@@ -396,7 +409,9 @@
                     variant_id: $("#variantId").val(),
                     product_id: $("#productId").val(),
                     status: $("#statusType").val(),
-                    note: $("#statusNote").val().trim()
+                    note: $("#statusNote").val().trim(),
+                    pending_date: $("#pending_date").val() // Send pending date if applicable
+
                 }).done(response => {
                     alert(response.message);
                     $("#statusModal").modal("hide");

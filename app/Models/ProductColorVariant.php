@@ -23,7 +23,7 @@ class ProductColorVariant extends Model
         'marker_number',
         'material_id',
         'factory_id',
-
+        'pending_date',
 
     ];
 
