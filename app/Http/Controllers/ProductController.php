@@ -230,6 +230,7 @@ class ProductController extends Controller
                     ->where('id', $color_id)
                     ->first();
 
+                    dd($productColor , $color_id , $product->id);
                 if ($productColor) {
                     // ✅ Convert array to string before saving SKU
                     $productColor->sku = isset($request->sku[$index])
