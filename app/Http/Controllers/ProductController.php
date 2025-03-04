@@ -134,24 +134,24 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-    
+
             if (!$productColor) {
                 DB::rollBack();
                 dd('Color not found');
             }
-    
+
             // add request sku to product color sku column
-            $productColor->sku = $request->sku;
+            $productColor->sku = is_array($request->sku) ? implode(',', $request->sku) : $request->sku;
             $productColor->save();
 
             // ✅ Find an existing variant (Update First Record Instead of Creating)
             $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
-    
+
             if ($existingVariant) {
                 // ✅ Update the first record with the first input values
                 $existingVariant->update([
@@ -165,7 +165,7 @@ class ProductController extends Controller
                     'marker_number' => $request->marker_number[0] ?? null,
                 ]);
             }
-    
+
             // ✅ If more inputs exist, create new records
             for ($i = 1; $i < count($request->expected_delivery); $i++) {
                 ProductColorVariant::create([
@@ -180,7 +180,7 @@ class ProductController extends Controller
                     'marker_number' => $request->marker_number[$i] ?? null,
                 ]);
             }
-    
+
             // ✅ Log History
             History::create([
                 'product_id' => $product->id,
@@ -188,7 +188,7 @@ class ProductController extends Controller
                 'action_by' => auth()->user()->name,
                 'note' => "تم تحديث اللون '{$productColor->color->name}' بالكمية الأولى {$request->quantity[0]} والباقي تمت إضافته كإدخالات جديدة.",
             ]);
-    
+
             DB::commit();
             return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
@@ -197,14 +197,14 @@ class ProductController extends Controller
             return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
-    
-    
+
+
 
     public function bulkManufacture(Request $request, Product $product)
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Validate request input
             $request->validate([
                 'expected_delivery' => 'required|date',
@@ -215,13 +215,13 @@ class ProductController extends Controller
                 'quantities' => 'required|array',
                 'marker_numbers' => 'nullable|array',
             ]);
-    
+
             // ✅ Update product status
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-    
+
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
 
@@ -229,15 +229,18 @@ class ProductController extends Controller
                 $productColor = ProductColor::where('product_id', $product->id)
                     ->where('id', $color_id)
                     ->first();
-    
-                // ✅ Update the product color's SKU
-                $productColor->sku = $request->sku[$index];
-                $productColor->save();  
 
+                if ($productColor) {
+                    // ✅ Convert array to string before saving SKU
+                    $productColor->sku = isset($request->sku[$index])
+                        ? (is_array($request->sku[$index]) ? implode(',', $request->sku[$index]) : $request->sku[$index])
+                        : null;
+                    $productColor->save();
+                }
 
                 // ✅ Find existing variant for the selected color
                 $variant = ProductColorVariant::where('id', $color_id)->first();
-    
+
                 if ($variant) {
                     // ✅ If the record exists, update it
                     $variant->update([
@@ -264,7 +267,7 @@ class ProductController extends Controller
                         'marker_number' => $request->marker_numbers[$index] ?? null,
                     ]);
                 }
-    
+
                 // ✅ Log History
                 History::create([
                     'product_id' => $product->id,
@@ -273,7 +276,7 @@ class ProductController extends Controller
                     'note' => "تم تعديل تصنيع اللون '{$variant->productcolor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
                 ]);
             }
-    
+
             DB::commit();
             return redirect()->route('products.manufacture', $product->id)->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
@@ -282,7 +285,7 @@ class ProductController extends Controller
             return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
-    
+
 
 
     public function reschedule(Request $request)
