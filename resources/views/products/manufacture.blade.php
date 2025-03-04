@@ -51,7 +51,7 @@
                                                 @break
 
                                                 @case('postponed')
-                                                    {{ __($variant->pending_date . ' - ' . 'مؤجل') }}
+                                                    {{ __(' مؤجل الي' . $variant->pending_date ) }}
                                                 @break
 
                                                 @case('partial')
