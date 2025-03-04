@@ -104,11 +104,11 @@
                                 <div class="key-value">
                                     <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
                                 </div>
-                               
+
                                 <div class="key-value">
                                     <span>الموسم:</span><span>{{ $product->season->name ?? 'لا يوجد' }}</span>
                                 </div>
-                                
+
                                 <div class="key-value">
                                     <span>الحالة:</span>
                                     <span
@@ -122,15 +122,25 @@
                                         @elseif ($product->status === 'cancel') bg-danger
                                         @elseif ($product->status === 'pending') bg-info
                                         @else bg-primary @endif">
-                                        @if ($product->status === 'new') جديد
-                                        @elseif ($product->status === 'cancel') ملغي
-                                        @elseif ($product->status === 'pending') قيد الانتظار
-                                        @elseif ($product->status === 'postponed') مؤجل
-                                        @elseif ($product->status === 'stop') متوقف
-                                        @elseif ($product->status === 'complete') مكتمل
-                                        @elseif ($product->status === 'processing') قيد التنصيع
-                                        @elseif ($product->status === 'partial') جزئي
-                                        @else لا يوجد @endif
+                                        @if ($product->status === 'new')
+                                            جديد
+                                        @elseif ($product->status === 'cancel')
+                                            ملغي
+                                        @elseif ($product->status === 'pending')
+                                            قيد الانتظار
+                                        @elseif ($product->status === 'postponed')
+                                            مؤجل
+                                        @elseif ($product->status === 'stop')
+                                            متوقف
+                                        @elseif ($product->status === 'complete')
+                                            مكتمل
+                                        @elseif ($product->status === 'processing')
+                                            قيد التنصيع
+                                        @elseif ($product->status === 'partial')
+                                            جزئي
+                                        @else
+                                            لا يوجد
+                                        @endif
                                     </span>
                                 </div>
                             </div>
@@ -159,11 +169,20 @@
                                 <tbody>
                                     @foreach ($product->productColors as $productColor)
                                         @foreach ($productColor->productcolorvariants as $variant)
+                                            @php
+                                            /* i want to check if receving status is complete and quantity greater then receiving quantity to put in remeinaing to put beside quantity as cancelled quantity*/
+                                            $remainingQuantity = $variant->quantity - $variant->receiving_quantity;
+
+                                            @endphp
                                             <tr>
                                                 <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
                                                 <td>{{ $productColor->sku ?? 'لا يوجد' }}</td>
                                                 <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
-                                                <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
+                                                @if ($variant->status === 'complete' && $remainingQuantity > 0)
+                                                    <td>{{ $variant->quantity . ' ' . '(' . $remainingQuantity . 'ملغي' .')' }}</td>
+                                                @else
+                                                    <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
+                                                @endif
                                                 <td>
                                                     <input type="number" class="form-control receiving-quantity"
                                                         data-variant-id="{{ $variant->id }}"
@@ -241,7 +260,7 @@
                         <!-- Submit Button -->
                         <div class="mt-3">
                             <button type="button" id="submitReceiving" class="btn btn-success w-100">
-                                نعم، وتأكيد استلام اللون بالكامل 
+                                نعم، وتأكيد استلام اللون بالكامل
                             </button>
                         </div>
 
