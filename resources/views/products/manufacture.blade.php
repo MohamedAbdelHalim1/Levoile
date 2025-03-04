@@ -88,7 +88,7 @@
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
-                                                <a href="{{ asset('images/' . $variant->marker_file) }}" download
+                                                <a href="{{ asset($variant->marker_file) }}" download
                                                     class="ms-2">
                                                     <i class="bi bi-download" title="Download Marker File"></i>
                                                 </a>
