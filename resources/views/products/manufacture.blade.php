@@ -316,6 +316,12 @@
                     <input type="hidden" id="productId">
                     <input type="hidden" id="statusType">
 
+                    <!-- ✅ Pending Date Input (Initially Hidden) -->
+                    <div id="pending-date-container" style="display: none;">
+                        <label for="pending_date" class="form-label">تاريخ التأجيل</label>
+                        <input type="date" id="pending_date" class="form-control">
+                    </div>
+
                     <label for="statusNote" class="form-label">الملاحظات</label>
                     <textarea id="statusNote" class="form-control" rows="3" placeholder="أضف أي ملاحظات هنا..."></textarea>
 
