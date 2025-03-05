@@ -82,27 +82,14 @@
                                         </td>
 
                                         <td>
-                                            @php
-                                                $materials = $variant->materials->pluck('material.name')->toArray();
-                                            @endphp
-
-                                            @if (count($materials) > 2)
-                                                <span class="badge bg-primary">{{ $materials[0] }}</span>
-                                                <span class="badge bg-secondary">{{ $materials[1] }}</span>
-                                                <a href="#" class="view-all-materials"
-                                                    data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
-                                            @else
-                                                @foreach ($materials as $material)
-                                                    <span class="badge bg-primary">{{ $material }}</span>
-                                                @endforeach
-                                            @endif
+                                            {{ $variant->material->name ?? 'لا يوجد' }}
                                         </td>
-
 
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
-                                                <a href="{{ asset($variant->marker_file) }}" download class="ms-2">
+                                                <a href="{{ asset($variant->marker_file) }}" download
+                                                    class="ms-2">
                                                     <i class="bi bi-download" title="Download Marker File"></i>
                                                 </a>
                                             @endif
@@ -166,24 +153,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="materialsModal" tabindex="-1" aria-labelledby="materialsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="materialsModalLabel">جميع الخامات</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul id="materialsList"></ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <!-- ✅ Manufacturing Modal -->
     <div class="modal fade" id="manufacturingModal" tabindex="-1" aria-labelledby="manufacturingModalLabel"
         aria-hidden="true">
@@ -241,16 +210,16 @@
                                     </select>
                                 </div>
 
+                                <!-- ✅ Material Selection -->
                                 <div class="col-md-4 mb-3 material-container">
-                                    <label for="material_id" class="form-label">{{ __('الخامة') }}</label>
-                                    <select name="material_id[]" class="tom-select-material" multiple required>
+                                    <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
+                                    <select name="material_id[]" class="tom-select-material" required>
                                         <option value="">{{ __('اختر الخامه') }}</option>
                                         @foreach ($materials as $material)
                                             <option value="{{ $material->id }}">{{ $material->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
 
 
                                 <!-- ✅ Marker Number Input -->
@@ -324,7 +293,7 @@
 
                             <div class="col-md-3 mb-3">
                                 <label for="material_id" class="form-label">الخامة</label>
-                                <select name="material_id[]" class="tom-select-material" multiple required>
+                                <select name="material_id" class="form-control bulk-tom-select-material" required>
                                     <option value="">اختر الخامة</option>
                                     @foreach ($materials as $material)
                                         <option value="{{ $material->id }}">{{ $material->name }}</option>
@@ -380,154 +349,6 @@
 
 
 @section('scripts')
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        new TomSelect('.bulk-tom-select-factory', {
-            placeholder: "اختر المصنع"
-        });
-        new TomSelect('.bulk-tom-select-material', {
-            placeholder: "اختر الخامه"
-        });
-
-        const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
-
-        bulkManufacturingBtn.addEventListener("click", function() {
-            let checkboxes = document.querySelectorAll(".record-checkbox:checked");
-            let container = document.getElementById("bulk-inputs-container");
-
-            container.innerHTML = ""; // ✅ Clear previous inputs
-
-            checkboxes.forEach(checkbox => {
-                let row = checkbox.closest("tr");
-                let colorName = row.cells[1].innerText; // ✅ Color Name
-                let colorId = checkbox.value;
-
-                let inputGroup = `
-                <div class="manufacturing-input-group row border p-3 mb-2">
-                    <input type="hidden" name="color_ids[]" value="${colorId}">
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">اللون</label>
-                        <input type="text" class="form-control" value="${colorName}" disabled>
-                    </div>
-
-                    <div class="col-md-2 mb-3">
-                        <label for="quantity" class="form-label">الكمية</label>
-                        <input type="number" class="form-control" name="quantities[]" min="1" required>
-                    </div>
-
-                    <div class="col-md-2 mb-3">
-                        <label class="form-label">رقم الماركر</label>
-                        <input type="text" class="form-control" name="marker_numbers[]">
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <label class="form-label">الكود</label>
-                        <input type="text" class="form-control" name="sku[]" required>
-                    </div>
-                </div>
-            `;
-
-                container.innerHTML += inputGroup; // ✅ Append Inputs
-            });
-
-            $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $(".view-all-materials").on("click", function(e) {
-            e.preventDefault();
-            let variantId = $(this).data("variant-id");
-
-            $.ajax({
-                url: "/get-materials/" + variantId,
-                method: "GET",
-                success: function(response) {
-                    let materialsList = $("#materialsList");
-                    materialsList.empty();
-
-                    response.materials.forEach(material => {
-                        let listItem = `<li class="d-flex justify-content-between align-items-center">
-                                    ${material.name}
-                                    <button class="btn btn-sm btn-danger delete-material" data-id="${material.id}">حذف</button>
-                                </li>`;
-                        materialsList.append(listItem);
-                    });
-
-                    $("#materialsModal").modal("show");
-                }
-            });
-        });
-
-        $(document).on("click", ".delete-material", function() {
-            let materialId = $(this).data("id");
-            if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
-                $.ajax({
-                    url: "/delete-material/" + materialId,
-                    method: "DELETE",
-                    data: {
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        alert("تم حذف الخامة بنجاح.");
-                        location.reload();
-                    }
-                });
-            }
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let index = 0; // Start index counter
-
-        document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
-            let container = document.getElementById('additional-inputs-container');
-            let original = document.querySelector('.manufacturing-input-group');
-
-            // Clone the original input group
-            let newElement = original.cloneNode(true);
-
-            // ✅ Clear input values except for color name
-            newElement.querySelectorAll('input, select').forEach(element => {
-                if (!element.classList.contains("color-name-field")) {
-                    if (element.tagName === 'INPUT') {
-                        element.value = '';
-                    } else if (element.tagName === 'SELECT') {
-                        element.selectedIndex = 0;
-                    }
-                }
-            });
-
-            // ✅ Set unique name attributes for multiple select dropdown
-            let materialSelect = newElement.querySelector('.tom-select-material');
-            if (materialSelect) {
-                materialSelect.name = `material_id[${index}][]`; // Assign unique index
-            }
-
-            index++; // Increment index for next addition
-
-            // ✅ Append new element to container
-            container.appendChild(newElement);
-
-            // ✅ Reinitialize Tom Select for new selects
-            new TomSelect(materialSelect, {
-                plugins: ['remove_button'],
-                placeholder: "اختر الخامه"
-            });
-        });
-
-        // ✅ Initialize Tom Select on first load
-        new TomSelect('.tom-select-material', {
-            plugins: ['remove_button'],
-            placeholder: "اختر الخامه"
-        });
-    });
-</script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const selectAllCheckbox = document.getElementById("select-all");
@@ -740,5 +561,59 @@
         });
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
+            new TomSelect('.bulk-tom-select-factory', {
+                placeholder: "اختر المصنع"
+            });
+            new TomSelect('.bulk-tom-select-material', {
+                placeholder: "اختر الخامه"
+            });
+
+            const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
+
+            bulkManufacturingBtn.addEventListener("click", function() {
+                let checkboxes = document.querySelectorAll(".record-checkbox:checked");
+                let container = document.getElementById("bulk-inputs-container");
+
+                container.innerHTML = ""; // ✅ Clear previous inputs
+
+                checkboxes.forEach(checkbox => {
+                    let row = checkbox.closest("tr");
+                    let colorName = row.cells[1].innerText; // ✅ Color Name
+                    let colorId = checkbox.value;
+
+                    let inputGroup = `
+                    <div class="manufacturing-input-group row border p-3 mb-2">
+                        <input type="hidden" name="color_ids[]" value="${colorId}">
+    
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اللون</label>
+                            <input type="text" class="form-control" value="${colorName}" disabled>
+                        </div>
+    
+                        <div class="col-md-2 mb-3">
+                            <label for="quantity" class="form-label">الكمية</label>
+                            <input type="number" class="form-control" name="quantities[]" min="1" required>
+                        </div>
+    
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">رقم الماركر</label>
+                            <input type="text" class="form-control" name="marker_numbers[]">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">الكود</label>
+                            <input type="text" class="form-control" name="sku[]" required>
+                        </div>
+                    </div>
+                `;
+
+                    container.innerHTML += inputGroup; // ✅ Append Inputs
+                });
+
+                $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
+            });
+        });
+    </script>
 @endsection
