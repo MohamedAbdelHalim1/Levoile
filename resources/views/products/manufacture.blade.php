@@ -243,8 +243,7 @@
 
                                 <div class="col-md-4 mb-3 material-container">
                                     <label for="material_id" class="form-label">{{ __('الخامة') }}</label>
-                                    <select name="material_id[{{ $loop->index }}][]" class="tom-select-material"
-                                        multiple required>
+                                    <select name="material_id[]" class="tom-select-material" multiple required>
                                         <option value="">{{ __('اختر الخامه') }}</option>
                                         @foreach ($materials as $material)
                                             <option value="{{ $material->id }}">{{ $material->name }}</option>
@@ -325,7 +324,7 @@
 
                             <div class="col-md-3 mb-3">
                                 <label for="material_id" class="form-label">الخامة</label>
-                                <select name="material_id" class="form-control bulk-tom-select-material" required>
+                                <select name="material_id[]" class="tom-select-material" multiple required>
                                     <option value="">اختر الخامة</option>
                                     @foreach ($materials as $material)
                                         <option value="{{ $material->id }}">{{ $material->name }}</option>
@@ -690,6 +689,54 @@
                         }
                     });
                 }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let index = 0; // Start index counter
+
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
+                let container = document.getElementById('additional-inputs-container');
+                let original = document.querySelector('.manufacturing-input-group');
+
+                // Clone the original input group
+                let newElement = original.cloneNode(true);
+
+                // ✅ Clear input values except for color name
+                newElement.querySelectorAll('input, select').forEach(element => {
+                    if (!element.classList.contains("color-name-field")) {
+                        if (element.tagName === 'INPUT') {
+                            element.value = '';
+                        } else if (element.tagName === 'SELECT') {
+                            element.selectedIndex = 0;
+                        }
+                    }
+                });
+
+                // ✅ Set unique name attributes for multiple select dropdown
+                let materialSelect = newElement.querySelector('.tom-select-material');
+                if (materialSelect) {
+                    materialSelect.name = `material_id[${index}][]`; // Assign unique index
+                }
+
+                index++; // Increment index for next addition
+
+                // ✅ Append new element to container
+                container.appendChild(newElement);
+
+                // ✅ Reinitialize Tom Select for new selects
+                new TomSelect(materialSelect, {
+                    plugins: ['remove_button'],
+                    placeholder: "اختر الخامه"
+                });
+            });
+
+            // ✅ Initialize Tom Select on first load
+            new TomSelect('.tom-select-material', {
+                plugins: ['remove_button'],
+                placeholder: "اختر الخامه"
             });
         });
     </script>
