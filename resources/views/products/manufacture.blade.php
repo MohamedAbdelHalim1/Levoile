@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+
+
+
 @section('content')
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -379,15 +382,26 @@
 @endsection
 
 
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+
 @section('scripts')
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            new TomSelect('.bulk-tom-select-factory', { placeholder: "اختر المصنع" });
-            new TomSelect('.bulk-tom-select-material', { placeholder: "اختر الخامه" });
+        document.addEventListener("DOMContentLoaded", function() {
+            new TomSelect('.bulk-tom-select-factory', {
+                placeholder: "اختر المصنع"
+            });
+            new TomSelect('.bulk-tom-select-material', {
+                placeholder: "اختر الخامه"
+            });
 
             const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
 
-            bulkManufacturingBtn.addEventListener("click", function () {
+            bulkManufacturingBtn.addEventListener("click", function() {
                 let checkboxes = document.querySelectorAll(".record-checkbox:checked");
                 let container = document.getElementById("bulk-inputs-container");
 
@@ -425,14 +439,14 @@
                 $("#bulkManufacturingModal").modal("show");
             });
 
-            $(".view-all-materials").on("click", function (e) {
+            $(".view-all-materials").on("click", function(e) {
                 e.preventDefault();
                 let variantId = $(this).data("variant-id");
 
                 $.ajax({
                     url: "/get-materials/" + variantId,
                     method: "GET",
-                    success: function (response) {
+                    success: function(response) {
                         let materialsList = $("#materialsList");
                         materialsList.empty();
 
@@ -449,14 +463,16 @@
                 });
             });
 
-            $(document).on("click", ".delete-material", function () {
+            $(document).on("click", ".delete-material", function() {
                 let materialId = $(this).data("id");
                 if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
                     $.ajax({
                         url: "/delete-material/" + materialId,
                         method: "DELETE",
-                        data: { _token: "{{ csrf_token() }}" },
-                        success: function (response) {
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
                             alert("تم حذف الخامة بنجاح.");
                             location.reload();
                         }
@@ -465,7 +481,7 @@
             });
 
             let index = 0;
-            document.getElementById('add-manufacturing-inputs').addEventListener('click', function () {
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
                 let container = document.getElementById('additional-inputs-container');
                 let original = document.querySelector('.manufacturing-input-group');
                 let newElement = original.cloneNode(true);
@@ -482,21 +498,27 @@
                 index++;
                 container.appendChild(newElement);
 
-                new TomSelect(materialSelect, { plugins: ['remove_button'], placeholder: "اختر الخامه" });
+                new TomSelect(materialSelect, {
+                    plugins: ['remove_button'],
+                    placeholder: "اختر الخامه"
+                });
             });
 
-            new TomSelect('.tom-select-material', { plugins: ['remove_button'], placeholder: "اختر الخامه" });
+            new TomSelect('.tom-select-material', {
+                plugins: ['remove_button'],
+                placeholder: "اختر الخامه"
+            });
 
             const selectAllCheckbox = document.getElementById("select-all");
             const checkboxes = document.querySelectorAll(".record-checkbox");
 
-            selectAllCheckbox.addEventListener("change", function () {
+            selectAllCheckbox.addEventListener("change", function() {
                 checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
                 toggleBulkButton();
             });
 
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", function () {
+                checkbox.addEventListener("change", function() {
                     toggleBulkButton();
                 });
             });
@@ -506,7 +528,7 @@
                 bulkManufacturingBtn.style.display = checkedCount >= 2 ? "block" : "none";
             }
 
-            $(".start-manufacturing-btn").on("click", function () {
+            $(".start-manufacturing-btn").on("click", function() {
                 let colorId = $(this).data("color-id");
                 let colorName = $(this).data("color-name");
 
@@ -517,7 +539,7 @@
                 if (firstColorInput) firstColorInput.value = colorName;
             });
 
-            $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function () {
+            $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function() {
                 $("#variantId").val($(this).data("variant-id"));
                 $("#productId").val($(this).data("product-id"));
                 $("#statusType").val($(this).data("status"));
@@ -541,7 +563,7 @@
                 $("#statusModal").modal("show");
             });
 
-            $("#saveStatusBtn").off("click").on("click", function () {
+            $("#saveStatusBtn").off("click").on("click", function() {
                 $.post("/products/variants/update-status", {
                     _token: "{{ csrf_token() }}",
                     variant_id: $("#variantId").val(),
@@ -556,7 +578,7 @@
                 }).fail(xhr => alert("خطأ: " + xhr.responseJSON.message));
             });
 
-            document.getElementById('add-manufacturing-inputs').addEventListener('click', function () {
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
                 let container = document.getElementById('additional-inputs-container');
                 let original = document.querySelector('.manufacturing-input-group');
                 let newElement = original.cloneNode(true);
@@ -584,7 +606,8 @@
                 factoryDropdown.classList.add("tom-select-factory");
                 factoryDropdown.innerHTML = `<option value="">اختر المصنع</option>`;
                 @foreach ($factories as $factory)
-                    factoryDropdown.innerHTML += `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
+                    factoryDropdown.innerHTML +=
+                        `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
                 @endforeach
 
                 let materialDropdown = document.createElement('select');
@@ -592,15 +615,20 @@
                 materialDropdown.classList.add("tom-select-material");
                 materialDropdown.innerHTML = `<option value="">اختر الخامه</option>`;
                 @foreach ($materials as $material)
-                    materialDropdown.innerHTML += `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
+                    materialDropdown.innerHTML +=
+                        `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
                 @endforeach
 
                 newElement.querySelector('.factory-container').appendChild(factoryDropdown);
                 newElement.querySelector('.material-container').appendChild(materialDropdown);
                 container.appendChild(newElement);
 
-                new TomSelect(factoryDropdown, { placeholder: "اختر المصنع" });
-                new TomSelect(materialDropdown, { placeholder: "اختر الخامه" });
+                new TomSelect(factoryDropdown, {
+                    placeholder: "اختر المصنع"
+                });
+                new TomSelect(materialDropdown, {
+                    placeholder: "اختر الخامه"
+                });
             });
         });
     </script>
