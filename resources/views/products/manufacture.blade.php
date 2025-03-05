@@ -382,6 +382,154 @@
 @section('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+
+            new TomSelect('.bulk-tom-select-factory', {
+                placeholder: "اختر المصنع"
+            });
+            new TomSelect('.bulk-tom-select-material', {
+                placeholder: "اختر الخامه"
+            });
+
+            const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
+
+            bulkManufacturingBtn.addEventListener("click", function() {
+                let checkboxes = document.querySelectorAll(".record-checkbox:checked");
+                let container = document.getElementById("bulk-inputs-container");
+
+                container.innerHTML = ""; // ✅ Clear previous inputs
+
+                checkboxes.forEach(checkbox => {
+                    let row = checkbox.closest("tr");
+                    let colorName = row.cells[1].innerText; // ✅ Color Name
+                    let colorId = checkbox.value;
+
+                    let inputGroup = `
+                <div class="manufacturing-input-group row border p-3 mb-2">
+                    <input type="hidden" name="color_ids[]" value="${colorId}">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">اللون</label>
+                        <input type="text" class="form-control" value="${colorName}" disabled>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="quantity" class="form-label">الكمية</label>
+                        <input type="number" class="form-control" name="quantities[]" min="1" required>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">رقم الماركر</label>
+                        <input type="text" class="form-control" name="marker_numbers[]">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">الكود</label>
+                        <input type="text" class="form-control" name="sku[]" required>
+                    </div>
+                </div>
+            `;
+
+                    container.innerHTML += inputGroup; // ✅ Append Inputs
+                });
+
+                $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(".view-all-materials").on("click", function(e) {
+                e.preventDefault();
+                let variantId = $(this).data("variant-id");
+
+                $.ajax({
+                    url: "/get-materials/" + variantId,
+                    method: "GET",
+                    success: function(response) {
+                        let materialsList = $("#materialsList");
+                        materialsList.empty();
+
+                        response.materials.forEach(material => {
+                            let listItem = `<li class="d-flex justify-content-between align-items-center">
+                                    ${material.name}
+                                    <button class="btn btn-sm btn-danger delete-material" data-id="${material.id}">حذف</button>
+                                </li>`;
+                            materialsList.append(listItem);
+                        });
+
+                        $("#materialsModal").modal("show");
+                    }
+                });
+            });
+
+            $(document).on("click", ".delete-material", function() {
+                let materialId = $(this).data("id");
+                if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
+                    $.ajax({
+                        url: "/delete-material/" + materialId,
+                        method: "DELETE",
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            alert("تم حذف الخامة بنجاح.");
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let index = 0; // Start index counter
+
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
+                let container = document.getElementById('additional-inputs-container');
+                let original = document.querySelector('.manufacturing-input-group');
+
+                // Clone the original input group
+                let newElement = original.cloneNode(true);
+
+                // ✅ Clear input values except for color name
+                newElement.querySelectorAll('input, select').forEach(element => {
+                    if (!element.classList.contains("color-name-field")) {
+                        if (element.tagName === 'INPUT') {
+                            element.value = '';
+                        } else if (element.tagName === 'SELECT') {
+                            element.selectedIndex = 0;
+                        }
+                    }
+                });
+
+                // ✅ Set unique name attributes for multiple select dropdown
+                let materialSelect = newElement.querySelector('.tom-select-material');
+                if (materialSelect) {
+                    materialSelect.name = `material_id[${index}][]`; // Assign unique index
+                }
+
+                index++; // Increment index for next addition
+
+                // ✅ Append new element to container
+                container.appendChild(newElement);
+
+                // ✅ Reinitialize Tom Select for new selects
+                new TomSelect(materialSelect, {
+                    plugins: ['remove_button'],
+                    placeholder: "اختر الخامه"
+                });
+            });
+
+            // ✅ Initialize Tom Select on first load
+            new TomSelect('.tom-select-material', {
+                plugins: ['remove_button'],
+                placeholder: "اختر الخامه"
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
             const selectAllCheckbox = document.getElementById("select-all");
             const checkboxes = document.querySelectorAll(".record-checkbox");
             const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
@@ -587,155 +735,6 @@
                 placeholder: "اختر المصنع"
             });
             new TomSelect('.tom-select-material', {
-                placeholder: "اختر الخامه"
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-
-            new TomSelect('.bulk-tom-select-factory', {
-                placeholder: "اختر المصنع"
-            });
-            new TomSelect('.bulk-tom-select-material', {
-                placeholder: "اختر الخامه"
-            });
-
-            const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
-
-            bulkManufacturingBtn.addEventListener("click", function() {
-                let checkboxes = document.querySelectorAll(".record-checkbox:checked");
-                let container = document.getElementById("bulk-inputs-container");
-
-                container.innerHTML = ""; // ✅ Clear previous inputs
-
-                checkboxes.forEach(checkbox => {
-                    let row = checkbox.closest("tr");
-                    let colorName = row.cells[1].innerText; // ✅ Color Name
-                    let colorId = checkbox.value;
-
-                    let inputGroup = `
-                    <div class="manufacturing-input-group row border p-3 mb-2">
-                        <input type="hidden" name="color_ids[]" value="${colorId}">
-    
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">اللون</label>
-                            <input type="text" class="form-control" value="${colorName}" disabled>
-                        </div>
-    
-                        <div class="col-md-2 mb-3">
-                            <label for="quantity" class="form-label">الكمية</label>
-                            <input type="number" class="form-control" name="quantities[]" min="1" required>
-                        </div>
-    
-                        <div class="col-md-2 mb-3">
-                            <label class="form-label">رقم الماركر</label>
-                            <input type="text" class="form-control" name="marker_numbers[]">
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <label class="form-label">الكود</label>
-                            <input type="text" class="form-control" name="sku[]" required>
-                        </div>
-                    </div>
-                `;
-
-                    container.innerHTML += inputGroup; // ✅ Append Inputs
-                });
-
-                $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $(".view-all-materials").on("click", function(e) {
-                e.preventDefault();
-                let variantId = $(this).data("variant-id");
-
-                $.ajax({
-                    url: "/get-materials/" + variantId,
-                    method: "GET",
-                    success: function(response) {
-                        let materialsList = $("#materialsList");
-                        materialsList.empty();
-
-                        response.materials.forEach(material => {
-                            let listItem = `<li class="d-flex justify-content-between align-items-center">
-                                        ${material.name}
-                                        <button class="btn btn-sm btn-danger delete-material" data-id="${material.id}">حذف</button>
-                                    </li>`;
-                            materialsList.append(listItem);
-                        });
-
-                        $("#materialsModal").modal("show");
-                    }
-                });
-            });
-
-            $(document).on("click", ".delete-material", function() {
-                let materialId = $(this).data("id");
-                if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
-                    $.ajax({
-                        url: "/delete-material/" + materialId,
-                        method: "DELETE",
-                        data: {
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            alert("تم حذف الخامة بنجاح.");
-                            location.reload();
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let index = 0; // Start index counter
-
-            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
-                let container = document.getElementById('additional-inputs-container');
-                let original = document.querySelector('.manufacturing-input-group');
-
-                // Clone the original input group
-                let newElement = original.cloneNode(true);
-
-                // ✅ Clear input values except for color name
-                newElement.querySelectorAll('input, select').forEach(element => {
-                    if (!element.classList.contains("color-name-field")) {
-                        if (element.tagName === 'INPUT') {
-                            element.value = '';
-                        } else if (element.tagName === 'SELECT') {
-                            element.selectedIndex = 0;
-                        }
-                    }
-                });
-
-                // ✅ Set unique name attributes for multiple select dropdown
-                let materialSelect = newElement.querySelector('.tom-select-material');
-                if (materialSelect) {
-                    materialSelect.name = `material_id[${index}][]`; // Assign unique index
-                }
-
-                index++; // Increment index for next addition
-
-                // ✅ Append new element to container
-                container.appendChild(newElement);
-
-                // ✅ Reinitialize Tom Select for new selects
-                new TomSelect(materialSelect, {
-                    plugins: ['remove_button'],
-                    placeholder: "اختر الخامه"
-                });
-            });
-
-            // ✅ Initialize Tom Select on first load
-            new TomSelect('.tom-select-material', {
-                plugins: ['remove_button'],
                 placeholder: "اختر الخامه"
             });
         });
