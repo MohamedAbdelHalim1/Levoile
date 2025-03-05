@@ -82,14 +82,27 @@
                                         </td>
 
                                         <td>
-                                            {{ $variant->material->name ?? 'لا يوجد' }}
+                                            @php
+                                                $materials = $variant->materials->pluck('material.name')->toArray();
+                                            @endphp
+
+                                            @if (count($materials) > 2)
+                                                <span class="badge bg-primary">{{ $materials[0] }}</span>
+                                                <span class="badge bg-secondary">{{ $materials[1] }}</span>
+                                                <a href="#" class="view-all-materials"
+                                                    data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
+                                            @else
+                                                @foreach ($materials as $material)
+                                                    <span class="badge bg-primary">{{ $material }}</span>
+                                                @endforeach
+                                            @endif
                                         </td>
+
 
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
-                                                <a href="{{ asset($variant->marker_file) }}" download
-                                                    class="ms-2">
+                                                <a href="{{ asset($variant->marker_file) }}" download class="ms-2">
                                                     <i class="bi bi-download" title="Download Marker File"></i>
                                                 </a>
                                             @endif
@@ -153,6 +166,24 @@
         </div>
     </div>
 
+    <div class="modal fade" id="materialsModal" tabindex="-1" aria-labelledby="materialsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="materialsModalLabel">جميع الخامات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="materialsList"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ✅ Manufacturing Modal -->
     <div class="modal fade" id="manufacturingModal" tabindex="-1" aria-labelledby="manufacturingModalLabel"
         aria-hidden="true">
@@ -210,16 +241,17 @@
                                     </select>
                                 </div>
 
-                                <!-- ✅ Material Selection -->
                                 <div class="col-md-4 mb-3 material-container">
-                                    <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
-                                    <select name="material_id[]" class="tom-select-material" required>
+                                    <label for="material_id" class="form-label">{{ __('الخامة') }}</label>
+                                    <select name="material_id[{{ $loop->index }}][]" class="tom-select-material"
+                                        multiple required>
                                         <option value="">{{ __('اختر الخامه') }}</option>
                                         @foreach ($materials as $material)
                                             <option value="{{ $material->id }}">{{ $material->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
 
 
                                 <!-- ✅ Marker Number Input -->
@@ -613,6 +645,51 @@
                 });
 
                 $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(".view-all-materials").on("click", function(e) {
+                e.preventDefault();
+                let variantId = $(this).data("variant-id");
+
+                $.ajax({
+                    url: "/get-materials/" + variantId,
+                    method: "GET",
+                    success: function(response) {
+                        let materialsList = $("#materialsList");
+                        materialsList.empty();
+
+                        response.materials.forEach(material => {
+                            let listItem = `<li class="d-flex justify-content-between align-items-center">
+                                        ${material.name}
+                                        <button class="btn btn-sm btn-danger delete-material" data-id="${material.id}">حذف</button>
+                                    </li>`;
+                            materialsList.append(listItem);
+                        });
+
+                        $("#materialsModal").modal("show");
+                    }
+                });
+            });
+
+            $(document).on("click", ".delete-material", function() {
+                let materialId = $(this).data("id");
+                if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
+                    $.ajax({
+                        url: "/delete-material/" + materialId,
+                        method: "DELETE",
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            alert("تم حذف الخامة بنجاح.");
+                            location.reload();
+                        }
+                    });
+                }
             });
         });
     </script>

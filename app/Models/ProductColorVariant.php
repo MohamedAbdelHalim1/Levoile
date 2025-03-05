@@ -22,7 +22,6 @@ class ProductColorVariant extends Model
         'receiving_status',
         'marker_number',
         'marker_file',
-        'material_id',
         'factory_id',
         'pending_date',
 
@@ -49,9 +48,9 @@ class ProductColorVariant extends Model
         return $this->belongsTo(Factory::class);
     }
 
-    public function material()
+    public function materials()
     {
-        return $this->belongsTo(Material::class);
+        return $this->hasMany(ProductColorVariantMaterial::class, 'product_color_variant_id');
     }
-
+    
 }

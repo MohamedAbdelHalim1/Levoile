@@ -136,30 +136,30 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-
+    
             if (!$productColor) {
                 DB::rollBack();
-                dd('Color not found');
+                return back()->withErrors('Color not found');
             }
-
-            // add request sku to product color sku column
+    
+            // ✅ Update SKU
             $productColor->sku = is_array($request->sku) ? implode(',', $request->sku) : $request->sku;
             $productColor->save();
-
-            // ✅ Find an existing variant (Update First Record Instead of Creating)
-            $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
-
+    
             // ✅ Handle marker file upload
             $markerFilePath = null;
             if ($request->hasFile('marker_file.0')) {
-                $markerFilePath = $this->uploadFile($request->file('marker_file.0'), 'images');
+                $markerFilePath = $this->uploadFile($request->file('marker_file.0'), 'marker_files');
             }
-
+    
+            // ✅ Find an existing variant (Update First Record Instead of Creating)
+            $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
+    
             if ($existingVariant) {
                 // ✅ Update the first record with the first input values
                 $existingVariant->update([
@@ -169,23 +169,25 @@ class ProductController extends Controller
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                     'factory_id' => $request->factory_id[0],
-                    'material_id' => $request->material_id[0],
                     'marker_number' => $request->marker_number[0] ?? null,
-                    'marker_file' => $markerFilePath ?? $existingVariant->marker_file, // Keep old file if not updated
-
+                    'marker_file' => $markerFilePath ?? $existingVariant->marker_file,
                 ]);
+    
+                // ✅ Update Materials
+                $existingVariant->materials()->delete();
+                foreach ($request->material_id[0] as $material_id) {
+                    $existingVariant->materials()->create(['material_id' => $material_id]);
+                }
             }
-
-
+    
             // ✅ If more inputs exist, create new records
             for ($i = 1; $i < count($request->expected_delivery); $i++) {
-
                 $markerFilePath = null;
                 if ($request->hasFile("marker_file.$i")) {
                     $markerFilePath = $this->uploadFile($request->file("marker_file.$i"), 'marker_files');
                 }
-
-                ProductColorVariant::create([
+    
+                $variant = ProductColorVariant::create([
                     'product_color_id' => $productColor->id,
                     'expected_delivery' => $request->expected_delivery[$i],
                     'order_delivery' => $request->order_delivery[$i],
@@ -193,12 +195,16 @@ class ProductController extends Controller
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                     'factory_id' => $request->factory_id[$i],
-                    'material_id' => $request->material_id[$i],
                     'marker_number' => $request->marker_number[$i] ?? null,
                     'marker_file' => $markerFilePath,
                 ]);
+    
+                // ✅ Assign Materials
+                foreach ($request->material_id[$i] as $material_id) {
+                    $variant->materials()->create(['material_id' => $material_id]);
+                }
             }
-
+    
             // ✅ Log History
             History::create([
                 'product_id' => $product->id,
@@ -206,15 +212,16 @@ class ProductController extends Controller
                 'action_by' => auth()->user()->name,
                 'note' => "تم تحديث اللون '{$productColor->color->name}' بالكمية الأولى {$request->quantity[0]} والباقي تمت إضافته كإدخالات جديدة.",
             ]);
-
+    
             DB::commit();
             return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e); // ✅ Debugging: Dump error for debugging
-            return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
+            dd($e);
+            return back()->withErrors('Error updating manufacture: ' . $e->getMessage());
         }
     }
+    
 
     private function uploadFile($file, $directory)
     {
@@ -228,56 +235,62 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Validate request input
             $request->validate([
                 'expected_delivery' => 'required|date',
                 'order_delivery' => 'required|date',
                 'factory_id' => 'required|exists:factories,id',
-                'material_id' => 'required|exists:materials,id',
+                'material_id' => 'required|array|min:1',
                 'color_ids' => 'required|array',
                 'quantities' => 'required|array',
                 'marker_numbers' => 'nullable|array',
             ]);
-
+    
             // ✅ Update product status
             $product->update([
                 'status' => 'processing',
                 'receiving_status' => 'pending'
             ]);
-
+    
             // ✅ Loop through each selected color
             foreach ($request->color_ids as $index => $color_id) {
-
-
-
-                // ✅ Find existing variant for the selected color
                 $variant = ProductColorVariant::where('id', $color_id)->first();
-
-                // get productColor from color_id to update sku
-                $productColor = ProductColor::where('id', $variant->product_color_id)
-                    ->first();
-
+    
+                // ✅ Get productColor from color_id to update SKU
+                $productColor = ProductColor::where('id', $variant->product_color_id)->first();
+    
                 if ($productColor) {
-                    // ✅ Convert array to string before saving SKU
                     $productColor->sku = isset($request->sku[$index])
                         ? (is_array($request->sku[$index]) ? implode(',', $request->sku[$index]) : $request->sku[$index])
                         : null;
                     $productColor->save();
                 }
-
+    
+                // ✅ Handle Marker File
+                $markerFilePath = null;
+                if ($request->hasFile("marker_file.$index")) {
+                    $markerFilePath = $this->uploadFile($request->file("marker_file.$index"), 'marker_files');
+                }
+    
                 if ($variant) {
                     // ✅ If the record exists, update it
                     $variant->update([
-                        'expected_delivery' => $request->expected_delivery, // ✅ Common field
-                        'order_delivery' => $request->order_delivery, // ✅ Common field
-                        'quantity' => $request->quantities[$index], // ✅ Color-Specific
+                        'expected_delivery' => $request->expected_delivery,
+                        'order_delivery' => $request->order_delivery,
+                        'quantity' => $request->quantities[$index],
                         'status' => 'processing',
                         'receiving_status' => 'pending',
-                        'factory_id' => $request->factory_id, // ✅ Common field
-                        'material_id' => $request->material_id, // ✅ Common field
-                        'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
+                        'factory_id' => $request->factory_id,
+                        'marker_number' => $request->marker_numbers[$index] ?? null,
+                        'marker_file' => $markerFilePath ?? $variant->marker_file,
                     ]);
+    
+                    // ✅ Update Materials
+                    $variant->materials()->delete();
+                    foreach ($request->material_id as $material_id) {
+                        $variant->materials()->create(['material_id' => $material_id]);
+                    }
                 } else {
                     // ✅ If no record exists, create a new one
                     $variant = ProductColorVariant::create([
@@ -288,11 +301,16 @@ class ProductController extends Controller
                         'status' => 'processing',
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id,
-                        'material_id' => $request->material_id,
                         'marker_number' => $request->marker_numbers[$index] ?? null,
+                        'marker_file' => $markerFilePath,
                     ]);
+    
+                    // ✅ Assign Materials
+                    foreach ($request->material_id as $material_id) {
+                        $variant->materials()->create(['material_id' => $material_id]);
+                    }
                 }
-
+    
                 // ✅ Log History
                 History::create([
                     'product_id' => $product->id,
@@ -301,15 +319,16 @@ class ProductController extends Controller
                     'note' => "تم تعديل تصنيع اللون '{$variant->productcolor->color->name}' بكمية {$variant->quantity} وتاريخ استلام {$request->expected_delivery}",
                 ]);
             }
-
+    
             DB::commit();
             return redirect()->route('products.manufacture', $product->id)->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e); // ✅ Debugging: Dump error for debugging
-            return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
+            dd($e);
+            return back()->withErrors('حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
+    
 
 
 
