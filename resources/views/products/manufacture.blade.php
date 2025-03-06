@@ -446,56 +446,47 @@
                 placeholder: "اختر المصنع"
             });
 
-                // ✅ Fix for "+" button to add new manufacturing input groups
-                document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
-                    let container = document.getElementById('additional-inputs-container');
-                    let original = document.querySelector(
-                    '.manufacturing-input-group'); // Get the template
-                    let newElement = original.cloneNode(true); // Clone the template
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
+                let container = document.getElementById('additional-inputs-container');
+                let original = document.querySelector('.manufacturing-input-group');
 
-                    // Clear input values except for color name field
-                    newElement.querySelectorAll('input, select').forEach(element => {
-                        if (!element.classList.contains("color-name-field")) {
-                            element.value = (element.tagName === 'INPUT') ? "" : null;
-                        }
+                // Clone the original row
+                let newElement = original.cloneNode(true);
+
+                // Clear input values except for the color name field
+                newElement.querySelectorAll('input, select').forEach(element => {
+                    if (!element.classList.contains("color-name-field")) {
+                        element.value = "";
+                    }
+                });
+
+                // ✅ Fix TomSelect Dropdown for Factory Selection
+                let factoryDropdown = newElement.querySelector('.tom-select-factory');
+                if (factoryDropdown) {
+                    let newDropdown = factoryDropdown.cloneNode(true);
+                    factoryDropdown.parentNode.replaceChild(newDropdown, factoryDropdown);
+
+                    // ✅ Reinitialize TomSelect properly
+                    new TomSelect(newDropdown, {
+                        placeholder: "اختر المصنع"
                     });
+                }
 
-                    // Handle TomSelect for factory dropdown manually (destroy and reinitialize)
-                    let factoryDropdown = newElement.querySelector('.tom-select-factory');
-                    if (factoryDropdown) {
-                        if (factoryDropdown.tomselect) {
-                            factoryDropdown.tomselect.destroy(); // Destroy old instance
-                        }
-                        factoryDropdown.innerHTML = ''; // Clear options
+                // Append the new row to the container
+                container.appendChild(newElement);
+            });
 
-                        // ✅ Manually repopulate options for cloned factory dropdown
-                        @foreach ($factories as $factory)
-                            let option = document.createElement("option");
-                            option.value = "{{ $factory->id }}";
-                            option.text = "{{ $factory->name }}";
-                            factoryDropdown.appendChild(option);
-                        @endforeach
 
-                        // ✅ Reinitialize TomSelect only for this new factory dropdown
-                        new TomSelect(factoryDropdown, {
+            // ✅ Ensure dropdowns are initialized when modal opens
+            $('#manufacturingModal').on('shown.bs.modal', function() {
+                document.querySelectorAll('.tom-select-factory').forEach(select => {
+                    if (!select.tomselect) {
+                        new TomSelect(select, {
                             placeholder: "اختر المصنع"
                         });
                     }
-
-                    // Append cloned element to the container
-                    container.appendChild(newElement);
                 });
-
-                // ✅ Ensure dropdowns are initialized when modal opens
-                $('#manufacturingModal').on('shown.bs.modal', function() {
-                    document.querySelectorAll('.tom-select-factory').forEach(select => {
-                        if (!select.tomselect) {
-                            new TomSelect(select, {
-                                placeholder: "اختر المصنع"
-                            });
-                        }
-                    });
-                });
+            });
 
 
 
