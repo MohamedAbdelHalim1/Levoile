@@ -447,13 +447,13 @@
             });
 
             // ✅ Handling "Add More Manufacturing Inputs" Button (Restored "+ button" logic)
+            // ✅ Handle "Add More Manufacturing Inputs" Button (Fixed!)
             document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
                 let container = document.getElementById('additional-inputs-container');
-                let original = document.querySelector(
-                '.manufacturing-input-group'); // Clone the first input group
+                let original = document.querySelector('.manufacturing-input-group');
                 let newElement = original.cloneNode(true);
 
-                // Clear all input values except for the color name field
+                // Clear input values except for color name
                 newElement.querySelectorAll('input, select').forEach(element => {
                     if (!element.classList.contains("color-name-field")) {
                         element.value = (element.tagName === 'INPUT') ? "" : null;
@@ -463,16 +463,28 @@
                 // Handle TomSelect for new elements (Destroy old instances before cloning)
                 let factoryDropdown = newElement.querySelector('.tom-select-factory');
                 if (factoryDropdown) {
-                    if (factoryDropdown.tomselect) factoryDropdown.tomselect
-                .destroy(); // Destroy old TomSelect instance
+                    if (factoryDropdown.tomselect) {
+                        factoryDropdown.tomselect.destroy(); // Destroy old TomSelect instance
+                    }
+                    factoryDropdown.innerHTML = ''; // Clear options before re-adding
                     factoryDropdown.name = "factory_id[]";
-                    new TomSelect(factoryDropdown, {
-                        placeholder: "اختر المصنع"
-                    });
+
+                    // ✅ Re-add factory options from Laravel Blade (Manual Population)
+                    @foreach ($factories as $factory)
+                        let option = document.createElement("option");
+                        option.value = "{{ $factory->id }}";
+                        option.text = "{{ $factory->name }}";
+                        factoryDropdown.appendChild(option);
+                    @endforeach
                 }
 
                 // Append cloned element to the container
                 container.appendChild(newElement);
+
+                // ✅ Manually Reinitialize TomSelect for the New Dropdown
+                new TomSelect(factoryDropdown, {
+                    placeholder: "اختر المصنع"
+                });
             });
 
 
