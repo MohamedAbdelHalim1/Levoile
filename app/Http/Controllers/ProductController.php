@@ -10,12 +10,13 @@ use App\Models\Material;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductColorVariant;
+use App\Models\ProductColorVariantMaterial;
 use App\Models\ProductSeason;
 use App\Models\Season;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 
 class ProductController extends Controller
