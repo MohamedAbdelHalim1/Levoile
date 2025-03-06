@@ -189,6 +189,9 @@
                         <input type="hidden" name="variant_id" id="modal-variant-id">
 
                         <label for="materials" class="form-label">اختر الخامات</label>
+                        @php
+                            dd($materials);
+                        @endphp
                         <select name="materials[]" id="materials" class="form-control tom-select-materials" multiple
                             required>
                             <option value="">اختر الخامات</option>

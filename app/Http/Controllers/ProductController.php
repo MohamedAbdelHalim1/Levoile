@@ -127,8 +127,7 @@ class ProductController extends Controller
         $materials = Material::all();
         $factories = Factory::all();
     
-        // Debugging: Check if materials are being retrieved
-        dd($materials);
+       
     
         return view('products.manufacture', compact('product', 'materials', 'factories'));
     }
