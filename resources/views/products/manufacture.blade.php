@@ -472,10 +472,9 @@
                     });
                 }
 
-                // ✅ Reinitialize TomSelect properly
-                new TomSelect(newDropdown, {
+                new TomSelect(newElement.querySelector('.tom-select-factory'), {
                     placeholder: "اختر المصنع"
-                });
+                })
                 // Append the new row to the container
                 container.appendChild(newElement);
             });
