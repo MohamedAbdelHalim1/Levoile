@@ -95,7 +95,7 @@
                                                     data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
                                             @else
                                                 @foreach ($materials as $material)
-                                                    <span class="badge bg-primary">{{ $material }}</span>
+                                                    <span class="badge bg-primary">{{ $material->name }}</span>
                                                 @endforeach
                                             @endif
                                         </td>
