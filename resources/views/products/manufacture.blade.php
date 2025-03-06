@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @php
-        $materials = \App\Models\Material::all();
-    @endphp
+
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
