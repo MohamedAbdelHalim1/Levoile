@@ -82,25 +82,25 @@
                                             {{ $variant->factory->name ?? 'لا يوجد' }}
                                         </td>
 
-                                        <td class="materials-td" data-variant-id="{{ $variant->id }}"
-                                            style="cursor:pointer;">
+                                        <td class="materials-td" data-variant-id="{{ $variant->id }}" style="cursor:pointer;">
                                             @php
-                                                $materials = $variant->materials->pluck('name')->toArray();
+                                                // ✅ Fetch materials correctly
+                                                $materials = $variant->materials->map(function ($item) {
+                                                    return $item->material->name ?? 'غير معروف'; // ✅ Get the actual material name
+                                                })->toArray();
                                             @endphp
-
+                                        
                                             @if (count($materials) > 2)
                                                 <span class="badge bg-primary">{{ $materials[0] }}</span>
                                                 <span class="badge bg-secondary">{{ $materials[1] }}</span>
-                                                <a href="#" class="view-all-materials"
-                                                    data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
+                                                <a href="#" class="view-all-materials" data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
                                             @else
                                                 @foreach ($materials as $material)
-                                                    <span class="badge bg-primary">{{ $material->name }}</span>
+                                                    <span class="badge bg-primary">{{ $material }}</span>
                                                 @endforeach
                                             @endif
                                         </td>
-
-
+                                        
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
