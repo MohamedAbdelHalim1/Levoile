@@ -169,7 +169,6 @@ class ProductController extends Controller
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                     'factory_id' => $request->factory_id[0],
-                    'material_id' => $request->material_id[0],
                     'marker_number' => $request->marker_number[0] ?? null,
                     'marker_file' => $markerFilePath ?? $existingVariant->marker_file, // Keep old file if not updated
 
@@ -193,7 +192,6 @@ class ProductController extends Controller
                     'status' => 'processing',
                     'receiving_status' => 'pending',
                     'factory_id' => $request->factory_id[$i],
-                    'material_id' => $request->material_id[$i],
                     'marker_number' => $request->marker_number[$i] ?? null,
                     'marker_file' => $markerFilePath,
                 ]);
@@ -216,12 +214,7 @@ class ProductController extends Controller
         }
     }
 
-    private function uploadFile($file, $directory)
-    {
-        $fileName = Str::uuid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($directory), $fileName);
-        return "$directory/$fileName";
-    }
+
 
 
     public function bulkManufacture(Request $request, Product $product)
@@ -234,7 +227,6 @@ class ProductController extends Controller
                 'expected_delivery' => 'required|date',
                 'order_delivery' => 'required|date',
                 'factory_id' => 'required|exists:factories,id',
-                'material_id' => 'required|exists:materials,id',
                 'color_ids' => 'required|array',
                 'quantities' => 'required|array',
                 'marker_numbers' => 'nullable|array',
@@ -275,7 +267,6 @@ class ProductController extends Controller
                         'status' => 'processing',
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id, // ✅ Common field
-                        'material_id' => $request->material_id, // ✅ Common field
                         'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
                     ]);
                 } else {
@@ -288,7 +279,6 @@ class ProductController extends Controller
                         'status' => 'processing',
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id,
-                        'material_id' => $request->material_id,
                         'marker_number' => $request->marker_numbers[$index] ?? null,
                     ]);
                 }
@@ -309,6 +299,65 @@ class ProductController extends Controller
             dd($e); // ✅ Debugging: Dump error for debugging
             return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
+    }
+
+    public function assignMaterials(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            // ✅ Validate request
+            $request->validate([
+                'variant_id' => 'required|exists:product_color_variants,id',
+                'materials' => 'required|array',
+                'materials.*' => 'exists:materials,id',
+            ]);
+
+            $variant = ProductColorVariant::findOrFail($request->variant_id);
+
+            // ✅ Sync selected materials (Removes old ones and adds new ones)
+            $variant->materials()->sync($request->materials);
+
+            DB::commit();
+            return response()->json(['message' => 'تم تحديث الخامات بنجاح!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getMaterials($variant_id)
+    {
+        try {
+            $variant = ProductColorVariant::findOrFail($variant_id);
+            return response()->json(['materials' => $variant->materials]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'خطأ في جلب المواد: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteMaterial($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $material = Material::findOrFail($id);
+            $material->delete();
+
+            DB::commit();
+            return response()->json(['message' => 'تم حذف المادة بنجاح']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+    private function uploadFile($file, $directory)
+    {
+        $fileName = Str::uuid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path($directory), $fileName);
+        return "$directory/$fileName";
     }
 
 

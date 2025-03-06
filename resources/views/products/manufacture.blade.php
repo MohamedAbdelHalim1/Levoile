@@ -81,15 +81,27 @@
                                             {{ $variant->factory->name ?? 'لا يوجد' }}
                                         </td>
 
-                                        <td>
-                                            {{ $variant->material->name ?? 'لا يوجد' }}
+                                        <td class="materials-td" data-variant-id="{{ $variant->id }}" style="cursor:pointer;">
+                                            @php
+                                                $materials = $variant->materials->pluck('name')->toArray();
+                                            @endphp
+                                        
+                                            @if (count($materials) > 2)
+                                                <span class="badge bg-primary">{{ $materials[0] }}</span>
+                                                <span class="badge bg-secondary">{{ $materials[1] }}</span>
+                                                <a href="#" class="view-all-materials" data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
+                                            @else
+                                                @foreach ($materials as $material)
+                                                    <span class="badge bg-primary">{{ $material }}</span>
+                                                @endforeach
+                                            @endif
                                         </td>
+                                        
 
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
-                                                <a href="{{ asset($variant->marker_file) }}" download
-                                                    class="ms-2">
+                                                <a href="{{ asset($variant->marker_file) }}" download class="ms-2">
                                                     <i class="bi bi-download" title="Download Marker File"></i>
                                                 </a>
                                             @endif
@@ -100,6 +112,12 @@
                                         </td>
 
                                         <td>
+                                            <!-- ✅ New Button for Assigning Materials -->
+                                            <button type="button" class="btn btn-info assign-material-btn"
+                                                data-variant-id="{{ $variant->id }}" data-bs-toggle="modal"
+                                                data-bs-target="#assignMaterialsModal">
+                                                {{ __('اضف الخامات') }}
+                                            </button>
                                             @if ($variant->quantity > 0)
                                                 <button type="button" class="btn btn-warning start-manufacturing-btn"
                                                     data-color-id="{{ $productColor->id }}"
@@ -152,6 +170,60 @@
             </div>
         </div>
     </div>
+
+
+    <!-- ✅ Assign Materials Modal -->
+    <div class="modal fade" id="assignMaterialsModal" tabindex="-1" aria-labelledby="assignMaterialsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignMaterialsModalLabel">اضافة خامات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="assign-materials-form" action="{{ route('products.assign.materials') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="variant_id" id="modal-variant-id">
+
+                        <label for="materials" class="form-label">اختر الخامات</label>
+                        <select name="materials[]" id="materials" class="form-control tom-select-materials" multiple
+                            required>
+                            <option value="">اختر الخامات</option>
+                            @foreach ($materials as $material)
+                                <option value="{{ $material->id }}">{{ $material->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ✅ Materials List Modal -->
+    <div class="modal fade" id="materialsModal" tabindex="-1" aria-labelledby="materialsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="materialsModalLabel">جميع الخامات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="materialsList"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- ✅ Manufacturing Modal -->
     <div class="modal fade" id="manufacturingModal" tabindex="-1" aria-labelledby="manufacturingModalLabel"
@@ -209,18 +281,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <!-- ✅ Material Selection -->
-                                <div class="col-md-4 mb-3 material-container">
-                                    <label for="material_id" class="form-label">{{ __('الخامه') }}</label>
-                                    <select name="material_id[]" class="tom-select-material" required>
-                                        <option value="">{{ __('اختر الخامه') }}</option>
-                                        @foreach ($materials as $material)
-                                            <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
 
                                 <!-- ✅ Marker Number Input -->
                                 <div class="col-md-4 mb-3">
@@ -291,15 +351,6 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label for="material_id" class="form-label">الخامة</label>
-                                <select name="material_id" class="form-control bulk-tom-select-material" required>
-                                    <option value="">اختر الخامة</option>
-                                    @foreach ($materials as $material)
-                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </div>
 
                         <!-- ✅ Color-Specific Fields -->
@@ -347,8 +398,39 @@
     </div>
 @endsection
 
-
 @section('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // ✅ Initialize Tom Select for Materials in Assign Materials Modal
+            new TomSelect('.tom-select-materials', {
+                plugins: ['remove_button'],
+                placeholder: "اختر الخامات"
+            });
+
+            // ✅ When clicking "اضف الخامات" button, set variant ID in modal
+            $(".assign-material-btn").on("click", function() {
+                let variantId = $(this).data("variant-id");
+                $("#modal-variant-id").val(variantId);
+            });
+
+            // ✅ Handle Assign Materials Form Submission
+            $("#assign-materials-form").on("submit", function(event) {
+                event.preventDefault();
+
+                let form = $(this);
+                let formData = form.serialize();
+
+                $.post(form.attr("action"), formData)
+                    .done(response => {
+                        alert("تم تحديث الخامات بنجاح!");
+                        $("#assignMaterialsModal").modal("hide");
+                        location.reload();
+                    })
+                    .fail(xhr => alert("خطأ: " + xhr.responseJSON.message));
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const selectAllCheckbox = document.getElementById("select-all");
@@ -371,12 +453,11 @@
             // ✅ Show or hide the bulk action button based on selection
             function toggleBulkButton() {
                 let checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-
-                // ✅ Show the button only if two or more checkboxes are selected
                 bulkManufacturingBtn.style.display = checkedCount >= 2 ? "block" : "none";
             }
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $(".start-manufacturing-btn").on("click", function() {
@@ -393,7 +474,6 @@
                 }
             });
 
-
             $(".stop-btn, .cancel-btn, .postpone-btn").on("click", function() {
                 $("#variantId").val($(this).data("variant-id"));
                 $("#productId").val($(this).data("product-id"));
@@ -403,18 +483,17 @@
                 let modalTitle = "";
                 let status = $(this).data("status");
 
-
                 if (status === "stop") {
                     modalTitle = "إيقاف التصنيع";
-                    $("#pending-date-container").hide(); // Hide pending date input
+                    $("#pending-date-container").hide();
                     $("#pending_date").prop('required', false);
                 } else if (status === "cancel") {
                     modalTitle = "إلغاء التصنيع";
-                    $("#pending-date-container").hide(); // Hide pending date input
+                    $("#pending-date-container").hide();
                     $("#pending_date").prop('required', false);
                 } else if (status === "postponed") {
                     modalTitle = "تأجيل التصنيع";
-                    $("#pending-date-container").show(); // Show pending date input
+                    $("#pending-date-container").show();
                     $("#pending_date").prop('required', true);
                 }
 
@@ -439,138 +518,52 @@
             });
         });
     </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
-                let container = document.getElementById('additional-inputs-container');
-                let original = document.querySelector('.manufacturing-input-group');
+            $(".materials-td").on("click", function() {
+                let variantId = $(this).data("variant-id");
 
-                // Clone the original input group
-                let newElement = original.cloneNode(true);
+                $.ajax({
+                    url: "/products/get-materials/" + variantId,
+                    method: "GET",
+                    success: function(response) {
+                        let materialsList = $("#materialsList");
+                        materialsList.empty();
 
-                // ✅ Clear input values except for color name
-                newElement.querySelectorAll('input, select').forEach(element => {
-                    if (!element.classList.contains("color-name-field")) {
-                        if (element.tagName === 'INPUT') {
-                            element.value = '';
-                        } else if (element.tagName === 'SELECT') {
-                            element.selectedIndex = 0;
+                        response.materials.forEach(material => {
+                            let listItem = `<li class="d-flex justify-content-between align-items-center">
+                                ${material.name}
+                                <button class="btn btn-sm btn-danger delete-material" data-id="${material.id}">حذف</button>
+                            </li>`;
+                            materialsList.append(listItem);
+                        });
+
+                        $("#materialsModal").modal("show");
+                    }
+                });
+            });
+
+            $(document).on("click", ".delete-material", function() {
+                let materialId = $(this).data("id");
+
+                if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
+                    $.ajax({
+                        url: "/delete-material/" + materialId,
+                        method: "DELETE",
+                        data: { _token: "{{ csrf_token() }}" },
+                        success: function(response) {
+                            alert("تم حذف الخامة بنجاح.");
+                            location.reload();
                         }
-                    }
-                });
-
-                // ✅ Get Color Name from the First Input in the Modal
-                let originalColorInput = document.querySelector('#modal-color-name');
-                if (originalColorInput) {
-                    let originalColorName = originalColorInput.value;
-
-                    // ✅ Set the color name in the new cloned element
-                    let newColorInput = newElement.querySelector('.color-name-field');
-                    if (newColorInput) {
-                        newColorInput.value = originalColorName;
-                    }
+                    });
                 }
-
-
-                // ✅ Destroy Tom Select instances in cloned div before appending new ones
-                newElement.querySelectorAll('.tom-select-factory, .tom-select-material').forEach(select => {
-                    if (select.tomselect) {
-                        select.tomselect.destroy();
-                    }
-                    select.parentNode.removeChild(select);
-                });
-
-                // ✅ Create new select elements (Fresh dropdowns)
-                let factoryDropdown = document.createElement('select');
-                factoryDropdown.name = "factory_id[]";
-                factoryDropdown.classList.add("tom-select-factory");
-                factoryDropdown.innerHTML = `<option value="">اختر المصنع</option>`;
-                @foreach ($factories as $factory)
-                    factoryDropdown.innerHTML +=
-                        `<option value="{{ $factory->id }}">{{ $factory->name }}</option>`;
-                @endforeach
-
-                let factoryContainer = newElement.querySelector('.factory-container');
-                if (factoryContainer) {
-                    factoryContainer.appendChild(factoryDropdown);
-                } else {
-                    console.error("Error: '.factory-container' not found in cloned element.");
-                }
-
-                let materialDropdown = document.createElement('select');
-                materialDropdown.name = "material_id[]";
-                materialDropdown.classList.add("tom-select-material");
-                materialDropdown.innerHTML = `<option value="">اختر الخامه</option>`;
-                @foreach ($materials as $material)
-                    materialDropdown.innerHTML +=
-                        `<option value="{{ $material->id }}">{{ $material->name }}</option>`;
-                @endforeach
-
-                let materialContainer = newElement.querySelector('.material-container');
-                if (materialContainer) {
-                    materialContainer.appendChild(materialDropdown);
-                } else {
-                    console.error("Error: '.material-container' not found in cloned element.");
-                }
-
-                // ✅ Append new element to container
-                container.appendChild(newElement);
-
-                // ✅ Reinitialize Tom Select for new selects
-                new TomSelect(factoryDropdown, {
-                    placeholder: "اختر المصنع"
-                });
-                new TomSelect(materialDropdown, {
-                    placeholder: "اختر الخامه"
-                });
-
-                // ✅ Add remove button
-                let removeButton = document.createElement('button');
-                removeButton.innerHTML = '×';
-                removeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'remove-entry');
-                removeButton.style.position = 'absolute';
-                removeButton.style.top = '-10px';
-                removeButton.style.left = '-10px';
-                removeButton.style.borderRadius = '50%';
-
-                // ✅ Set position relative for parent div
-                newElement.style.position = 'relative';
-
-                // ✅ Append remove button
-                newElement.appendChild(removeButton);
-
-                // ✅ Remove button event
-                removeButton.addEventListener('click', function() {
-                    newElement.remove();
-                });
-            });
-
-            // ✅ Ensure the modal gets the correct color name on open
-            $(".start-manufacturing-btn").on("click", function() {
-                $("#modal-color-id").val($(this).data("color-id"));
-                $("#modal-color-name").val($(this).data("color-name"));
-            });
-
-            // ✅ Initialize Tom Select on page load for first dropdowns
-            new TomSelect('.tom-select-factory', {
-                placeholder: "اختر المصنع"
-            });
-            new TomSelect('.tom-select-material', {
-                placeholder: "اختر الخامه"
             });
         });
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            new TomSelect('.bulk-tom-select-factory', {
-                placeholder: "اختر المصنع"
-            });
-            new TomSelect('.bulk-tom-select-material', {
-                placeholder: "اختر الخامه"
-            });
-
             const bulkManufacturingBtn = document.getElementById("bulk-manufacturing-btn");
 
             bulkManufacturingBtn.addEventListener("click", function() {
@@ -617,3 +610,4 @@
         });
     </script>
 @endsection
+

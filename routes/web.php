@@ -203,17 +203,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/{product}/bulk-manufacture', [ProductController::class, 'bulkManufacture'])
     ->name('products.update.bulk-manufacture');
 
-    Route::get('/get-materials/{variant}', function ($variantId) {
-        $materials = ProductColorVariantMaterial::where('product_color_variant_id', $variantId)
-            ->with('material')
-            ->get();
-        return response()->json(['materials' => $materials]);
-    });
-    
-    Route::delete('/delete-material/{id}', function ($id) {
-        ProductColorVariantMaterial::findOrFail($id)->delete();
-        return response()->json(['success' => true]);
-    });
+    Route::post('/products/assign-materials', [ProductController::class, 'assignMaterials'])->name('products.assign.materials');
+    Route::get('/products/get-materials/{variant_id}', [ProductController::class, 'getMaterials']);
+    Route::delete('/delete-material/{id}', [ProductController::class, 'deleteMaterial']);
     
 
 
