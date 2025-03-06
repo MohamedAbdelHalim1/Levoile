@@ -124,10 +124,9 @@ class ProductController extends Controller
             }
         ])->findOrFail($id);
     
-        $materials = Material::all();
         $factories = Factory::all();
     
-        return view('products.manufacture', compact('product', 'materials', 'factories'));
+        return view('products.manufacture', compact('product', 'factories'));
     }
     
 
