@@ -404,7 +404,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // ✅ Initialize Tom Select for Materials in Assign Materials Modal
-            new TomSelect('.tom-select-materials', {
+            let materialSelect = new TomSelect('.tom-select-materials', {
                 plugins: ['remove_button'],
                 placeholder: "اختر الخامات"
             });
@@ -414,7 +414,7 @@
                 materialSelect.clear(); // Clear previous selections
                 materialSelect.refreshOptions(); // Refresh options in case they didn't load
             });
-            
+
             // ✅ When clicking "اضف الخامات" button, set variant ID in modal
             $(".assign-material-btn").on("click", function() {
                 let variantId = $(this).data("variant-id");
