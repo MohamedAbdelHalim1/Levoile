@@ -1,24 +1,25 @@
 @extends('layouts.app')
 
 @section('styles')
-
-<style>
-    .material-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border: 1px solid #87CEEB; /* Baby blue border */
-    border-radius: 4px; /* Small rounded corners */
-    color: #333; /* Dark text */
-    font-size: 14px;
-    margin-right: 5px; /* Small spacing between items */
-    background-color: transparent; /* No background */
-}
-
-</style>
-
+    <style>
+        .material-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border: 1px solid #87CEEB;
+            /* Baby blue border */
+            border-radius: 4px;
+            /* Small rounded corners */
+            color: #333;
+            /* Dark text */
+            font-size: 14px;
+            margin-right: 5px;
+            /* Small spacing between items */
+            background-color: transparent;
+            /* No background */
+        }
+    </style>
 @endsection
 @section('content')
-
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
@@ -99,26 +100,30 @@
                                             {{ $variant->factory->name ?? 'لا يوجد' }}
                                         </td>
 
-                                        <td class="materials-td" data-variant-id="{{ $variant->id }}" style="cursor:pointer;">
+                                        <td class="materials-td" data-variant-id="{{ $variant->id }}"
+                                            style="cursor:pointer;">
                                             @php
                                                 // ✅ Fetch materials correctly
-                                                $materials = $variant->materials->map(function ($item) {
-                                                    return $item->material->name ?? 'غير معروف'; // ✅ Get the actual material name
-                                                })->toArray();
+                                                $materials = $variant->materials
+                                                    ->map(function ($item) {
+                                                        return $item->material->name ?? 'غير معروف'; // ✅ Get the actual material name
+                                                    })
+                                                    ->toArray();
                                             @endphp
-                                        
+
                                             @if (count($materials) > 2)
                                                 <span class="material-badge">{{ $materials[0] }}</span>
                                                 <span class="material-badge">{{ $materials[1] }}</span>
-                                                <a href="#" class="view-all-materials" data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
+                                                <a href="#" class="view-all-materials"
+                                                    data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
                                             @else
                                                 @foreach ($materials as $material)
                                                     <span class="material-badge">{{ $material }}</span>
                                                 @endforeach
                                             @endif
                                         </td>
-                                        
-                                        
+
+
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
                                             @if (!empty($variant->marker_file))
@@ -440,6 +445,36 @@
             let bulkFactorySelect = new TomSelect('.bulk-tom-select-factory', {
                 placeholder: "اختر المصنع"
             });
+
+            // ✅ Handling "Add More Manufacturing Inputs" Button (Restored "+ button" logic)
+            document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
+                let container = document.getElementById('additional-inputs-container');
+                let original = document.querySelector(
+                '.manufacturing-input-group'); // Clone the first input group
+                let newElement = original.cloneNode(true);
+
+                // Clear all input values except for the color name field
+                newElement.querySelectorAll('input, select').forEach(element => {
+                    if (!element.classList.contains("color-name-field")) {
+                        element.value = (element.tagName === 'INPUT') ? "" : null;
+                    }
+                });
+
+                // Handle TomSelect for new elements (Destroy old instances before cloning)
+                let factoryDropdown = newElement.querySelector('.tom-select-factory');
+                if (factoryDropdown) {
+                    if (factoryDropdown.tomselect) factoryDropdown.tomselect
+                .destroy(); // Destroy old TomSelect instance
+                    factoryDropdown.name = "factory_id[]";
+                    new TomSelect(factoryDropdown, {
+                        placeholder: "اختر المصنع"
+                    });
+                }
+
+                // Append cloned element to the container
+                container.appendChild(newElement);
+            });
+
 
             // ✅ Ensure dropdown updates when opening the Assign Materials modal
             $('#assignMaterialsModal').on('shown.bs.modal', function() {
