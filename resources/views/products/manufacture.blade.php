@@ -460,24 +460,41 @@
                     }
                 });
 
-                // ✅ Fix TomSelect Dropdown for Factory Selection
+                // ✅ Properly Reinitialize TomSelect for Factory Dropdown
                 let factoryDropdown = newElement.querySelector('.tom-select-factory');
+
                 if (factoryDropdown) {
-                    let newDropdown = factoryDropdown.cloneNode(true);
+                    // Remove old TomSelect instance if exists
+                    if (factoryDropdown.tomselect) {
+                        factoryDropdown.tomselect.destroy();
+                    }
+
+                    // Create a fresh new dropdown element to prevent conflicts
+                    let newDropdown = document.createElement("select");
+                    newDropdown.className = "tom-select-factory form-control";
+                    newDropdown.name = "factory_id[]"; // ✅ Ensure correct name
+
+                    // ✅ Re-add factory options from Laravel Blade
+                    @foreach ($factories as $factory)
+                        let option = document.createElement("option");
+                        option.value = "{{ $factory->id }}";
+                        option.text = "{{ $factory->name }}";
+                        newDropdown.appendChild(option);
+                    @endforeach
+
+                    // Replace the old dropdown with the new one
                     factoryDropdown.parentNode.replaceChild(newDropdown, factoryDropdown);
 
-                    // ✅ Reinitialize TomSelect properly
+                    // ✅ Initialize TomSelect for the new factory dropdown
                     new TomSelect(newDropdown, {
                         placeholder: "اختر المصنع"
                     });
                 }
 
-                new TomSelect(newElement.querySelector('.tom-select-factory'), {
-                    placeholder: "اختر المصنع"
-                })
                 // Append the new row to the container
                 container.appendChild(newElement);
             });
+
 
 
             // ✅ Ensure dropdowns are initialized when modal opens
