@@ -403,16 +403,28 @@
 @section('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // ✅ Initialize Tom Select for Materials in Assign Materials Modal
+            // ✅ Initialize TomSelect for Materials in Assign Materials Modal
             let materialSelect = new TomSelect('.tom-select-materials', {
                 plugins: ['remove_button'],
                 placeholder: "اختر الخامات"
             });
 
-            // Ensure the dropdown updates when opening the modal
+            // ✅ Initialize TomSelect for Factories in Both Modals
+            let factorySelects = document.querySelectorAll('.tom-select-factory');
+            factorySelects.forEach(select => {
+                new TomSelect(select, {
+                    placeholder: "اختر المصنع"
+                });
+            });
+
+            let bulkFactorySelect = new TomSelect('.bulk-tom-select-factory', {
+                placeholder: "اختر المصنع"
+            });
+
+            // ✅ Ensure dropdown updates when opening the Assign Materials modal
             $('#assignMaterialsModal').on('shown.bs.modal', function() {
-                materialSelect.clear(); // Clear previous selections
-                materialSelect.refreshOptions(); // Refresh options in case they didn't load
+                materialSelect.clear();
+                materialSelect.refreshOptions();
             });
 
             // ✅ When clicking "اضف الخامات" button, set variant ID in modal
@@ -516,7 +528,7 @@
                     product_id: $("#productId").val(),
                     status: $("#statusType").val(),
                     note: $("#statusNote").val().trim(),
-                    pending_date: $("#pending_date").val() // Send pending date if applicable
+                    pending_date: $("#pending_date").val()
 
                 }).done(response => {
                     alert(response.message);
@@ -580,11 +592,11 @@
                 let checkboxes = document.querySelectorAll(".record-checkbox:checked");
                 let container = document.getElementById("bulk-inputs-container");
 
-                container.innerHTML = ""; // ✅ Clear previous inputs
+                container.innerHTML = "";
 
                 checkboxes.forEach(checkbox => {
                     let row = checkbox.closest("tr");
-                    let colorName = row.cells[1].innerText; // ✅ Color Name
+                    let colorName = row.cells[1].innerText;
                     let colorId = checkbox.value;
 
                     let inputGroup = `
@@ -612,10 +624,10 @@
                     </div>
                 `;
 
-                    container.innerHTML += inputGroup; // ✅ Append Inputs
+                    container.innerHTML += inputGroup;
                 });
 
-                $("#bulkManufacturingModal").modal("show"); // ✅ Show Modal
+                $("#bulkManufacturingModal").modal("show");
             });
         });
     </script>
