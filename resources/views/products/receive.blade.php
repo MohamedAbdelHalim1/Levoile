@@ -176,7 +176,7 @@
                                             @endphp
                                             <tr>
                                                 <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
-                                                <td>{{ $productColor->sku ?? 'لا يوجد' }}</td>
+                                                <td>{{ $variant->sku ?? 'لا يوجد' }}</td>
                                                 <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
                                                 @if ($variant->status === 'complete' && $remainingQuantity > 0)
                                                     <td>{{ $variant->quantity . ' ' . '(' . $remainingQuantity . 'ملغي' .')' }}</td>

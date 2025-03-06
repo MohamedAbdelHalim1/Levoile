@@ -134,7 +134,7 @@
                                         </td>
 
                                         <td>
-                                            {{ $productColor->sku ?? 'لا يوجد' }}
+                                            {{ $variant->sku ?? 'لا يوجد' }}
                                         </td>
 
                                         <td>
