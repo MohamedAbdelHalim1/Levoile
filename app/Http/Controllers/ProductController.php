@@ -129,7 +129,7 @@ class ProductController extends Controller
         $factories = Factory::all();
     
         
-        return view('products.manufacture', compact('product', 'materials', 'factories'));
+        return view('products.manufacture', compact('product', 'factories'));
     }
     
 
