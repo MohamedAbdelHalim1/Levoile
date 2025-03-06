@@ -460,9 +460,8 @@
                     }
                 });
 
-                // ✅ Properly Reinitialize TomSelect for Factory Dropdown
+                // ✅ Fix for TomSelect Dropdown (Factory Selection)
                 let factoryDropdown = newElement.querySelector('.tom-select-factory');
-
                 if (factoryDropdown) {
                     // Remove old TomSelect instance if exists
                     if (factoryDropdown.tomselect) {
@@ -474,12 +473,14 @@
                     newDropdown.className = "tom-select-factory form-control";
                     newDropdown.name = "factory_id[]"; // ✅ Ensure correct name
 
-                    // ✅ Re-add factory options from Laravel Blade
+                    // ✅ Re-add factory options from Laravel Blade (Fixing Duplicate Variable Issue)
                     @foreach ($factories as $factory)
-                        let option = document.createElement("option");
-                        option.value = "{{ $factory->id }}";
-                        option.text = "{{ $factory->name }}";
-                        newDropdown.appendChild(option);
+                        {
+                            let optionItem = document.createElement("option");
+                            optionItem.value = "{{ $factory->id }}";
+                            optionItem.text = "{{ $factory->name }}";
+                            newDropdown.appendChild(optionItem);
+                        }
                     @endforeach
 
                     // Replace the old dropdown with the new one
@@ -494,6 +495,7 @@
                 // Append the new row to the container
                 container.appendChild(newElement);
             });
+
 
 
 
