@@ -2,7 +2,6 @@
 
 @section('content')
 
-@dd($materials , $factories);
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
@@ -195,7 +194,7 @@
                         <select name="materials[]" id="materials" class="form-control tom-select-materials" multiple
                             required>
                             <option value="">اختر الخامات</option>
-                            @foreach ($materials as $material)
+                            @foreach ($all_materials as $material)
                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                             @endforeach
                         </select>

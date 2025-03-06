@@ -125,9 +125,9 @@ class ProductController extends Controller
         ])->findOrFail($id);
     
         $factories = Factory::all();
-        $materials = Material::all(); // ✅ Fetch materials and pass to the view
+        $all_materials = Material::all(); // ✅ Fetch materials and pass to the view
     
-        return view('products.manufacture', compact('product', 'factories', 'materials'));
+        return view('products.manufacture', compact('product', 'factories', 'all_materials'));
     }
     
     
