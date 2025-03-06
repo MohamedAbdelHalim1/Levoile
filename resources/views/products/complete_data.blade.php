@@ -80,35 +80,6 @@
                                     value="{{ $product->price }}">
                             </div>
 
-                            <!-- Colors Table -->
-                            <h2>الالوان</h2>
-                            @if ($product->productColors->isEmpty())
-                                <p>لا توجد الالوان</p>
-                            @else
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>اللون</th>
-                                                <th>الكود</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($product->productColors as $productColor)
-                                                <tr>
-                                                    <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
-                                                    <td>
-                                                        <input type="text"
-                                                            name="colors[{{ $productColor->color_id }}][sku]" required 
-                                                            class="form-control" value="{{ $productColor->sku }}">
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endif
-
                             <div class="mt-4">
                                 <button type="submit" class="btn btn-primary">اضافه</button>
                                 <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده

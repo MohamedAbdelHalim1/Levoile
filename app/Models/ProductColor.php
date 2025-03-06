@@ -12,7 +12,6 @@ class ProductColor extends Model
     protected $fillable = [
         'product_id',
         'color_id',
-        'sku',
     ];
 
     public function product()

@@ -24,6 +24,7 @@ class ProductColorVariant extends Model
         'marker_file',
         'factory_id',
         'pending_date',
+        'sku',
 
     ];
 

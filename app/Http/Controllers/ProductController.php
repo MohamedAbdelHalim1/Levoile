@@ -148,9 +148,6 @@ class ProductController extends Controller
                 dd('Color not found');
             }
 
-            // add request sku to product color sku column
-            $productColor->sku = is_array($request->sku) ? implode(',', $request->sku) : $request->sku;
-            $productColor->save();
 
             // ✅ Find an existing variant (Update First Record Instead of Creating)
             $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
@@ -172,6 +169,7 @@ class ProductController extends Controller
                     'factory_id' => $request->factory_id[0],
                     'marker_number' => $request->marker_number[0] ?? null,
                     'marker_file' => $markerFilePath ?? $existingVariant->marker_file, // Keep old file if not updated
+                    'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku,
 
                 ]);
             }
@@ -195,6 +193,7 @@ class ProductController extends Controller
                     'factory_id' => $request->factory_id[$i],
                     'marker_number' => $request->marker_number[$i] ?? null,
                     'marker_file' => $markerFilePath,
+                    'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku,
                 ]);
             }
 
@@ -251,13 +250,7 @@ class ProductController extends Controller
                 $productColor = ProductColor::where('id', $variant->product_color_id)
                     ->first();
 
-                if ($productColor) {
-                    // ✅ Convert array to string before saving SKU
-                    $productColor->sku = isset($request->sku[$index])
-                        ? (is_array($request->sku[$index]) ? implode(',', $request->sku[$index]) : $request->sku[$index])
-                        : null;
-                    $productColor->save();
-                }
+  
 
                 if ($variant) {
                     // ✅ If the record exists, update it
@@ -269,6 +262,7 @@ class ProductController extends Controller
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id, // ✅ Common field
                         'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
+                        'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku
                     ]);
                 } else {
                     // ✅ If no record exists, create a new one
@@ -281,6 +275,7 @@ class ProductController extends Controller
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id,
                         'marker_number' => $request->marker_numbers[$index] ?? null,
+                        'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku,
                     ]);
                 }
 
@@ -825,8 +820,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'store_launch' => 'required|string|max:255',
                 'price' => 'required|numeric|min:0',
-                'colors' => 'required|array',
-                'colors.*.sku' => 'nullable|string|max:255',
+                
             ]);
 
             // ✅ Start transaction
@@ -854,26 +848,6 @@ class ProductController extends Controller
                 }
             }
 
-            // ✅ Update SKU for each color and track changes
-            foreach ($validated['colors'] as $colorId => $colorData) {
-                $productColor = ProductColor::where('product_id', $product->id)
-                    ->where('color_id', $colorId)
-                    ->firstOrFail();
-
-                $originalSKU = $productColor->sku ?? null;
-                $newSKU = $colorData['sku'] ?? null;
-
-                $productColor->update([
-                    'sku' => $newSKU,
-                ]);
-
-                // Track SKU changes
-                if ($originalSKU != $newSKU) {
-                    $colorName = $productColor->color->name ?? 'غير معروف';
-                    $oldSkuText = $originalSKU === null ? "تم الإضافة" : "'$originalSKU'";
-                    $changes[] = "SKU للون '$colorName': $oldSkuText → '$newSKU'";
-                }
-            }
 
             // ✅ Log history entry only if changes exist
             if (!empty($changes)) {
