@@ -172,6 +172,7 @@
     </div>
 
 
+    @dd($materials)
     <!-- ✅ Assign Materials Modal -->
     <div class="modal fade" id="assignMaterialsModal" tabindex="-1" aria-labelledby="assignMaterialsModalLabel"
         aria-hidden="true">
