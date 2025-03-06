@@ -115,21 +115,22 @@ class ProductController extends Controller
         return view('products.receive', compact('product'));
     }
 
-
     public function manufacture($id)
     {
         $product = Product::with([
             'productColors.color',
             'productColors.productcolorvariants' => function ($query) {
-                $query->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
+                $query->orderBy('created_at', 'asc');
             }
         ])->findOrFail($id);
     
         $materials = Material::all();
         $factories = Factory::all();
     
-        
-        return view('products.manufacture', compact('product', 'factories'));
+        // Debugging: Check if materials are being retrieved
+        dd($materials);
+    
+        return view('products.manufacture', compact('product', 'materials', 'factories'));
     }
     
 
