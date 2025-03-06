@@ -305,19 +305,32 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
             // ✅ Validate request
             $request->validate([
                 'variant_id' => 'required|exists:product_color_variants,id',
                 'materials' => 'required|array',
                 'materials.*' => 'exists:materials,id',
             ]);
-
+    
             $variant = ProductColorVariant::findOrFail($request->variant_id);
-
-            // ✅ Sync selected materials (Removes old ones and adds new ones)
-            $variant->materials()->sync($request->materials);
-
+    
+            // ✅ Remove existing materials
+            ProductColorVariantMaterial::where('product_color_variant_id', $variant->id)->delete();
+    
+            // ✅ Insert new materials
+            $insertData = [];
+            foreach ($request->materials as $material_id) {
+                $insertData[] = [
+                    'product_color_variant_id' => $variant->id,
+                    'material_id' => $material_id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+    
+            ProductColorVariantMaterial::insert($insertData);
+    
             DB::commit();
             return response()->json(['message' => 'تم تحديث الخامات بنجاح!']);
         } catch (\Exception $e) {
@@ -325,33 +338,39 @@ class ProductController extends Controller
             return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
         }
     }
+    
 
     public function getMaterials($variant_id)
     {
         try {
             $variant = ProductColorVariant::findOrFail($variant_id);
-            return response()->json(['materials' => $variant->materials]);
+    
+            // ✅ Get related materials from the pivot table
+            $materials = $variant->materials()->with('material')->get()->pluck('material');
+    
+            return response()->json(['materials' => $materials]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'خطأ في جلب المواد: ' . $e->getMessage()], 500);
         }
     }
+    
 
     public function deleteMaterial($id)
     {
         try {
             DB::beginTransaction();
-
-            $material = Material::findOrFail($id);
-            $material->delete();
-
+    
+            // ✅ Find and delete the material from the pivot table, not the main table
+            ProductColorVariantMaterial::where('material_id', $id)->delete();
+    
             DB::commit();
-            return response()->json(['message' => 'تم حذف المادة بنجاح']);
+            return response()->json(['message' => 'تم إزالة المادة من المنتج بنجاح']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
         }
     }
-
+    
 
     private function uploadFile($file, $directory)
     {
