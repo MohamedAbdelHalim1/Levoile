@@ -124,13 +124,14 @@ class ProductController extends Controller
                 $query->orderBy('created_at', 'asc'); // Change 'asc' to 'desc' if needed
             }
         ])->findOrFail($id);
-
+    
         $materials = Material::all();
         $factories = Factory::all();
-
+    
+        
         return view('products.manufacture', compact('product', 'materials', 'factories'));
     }
-
+    
 
     public function update_manufacture(Request $request, Product $product)
     {

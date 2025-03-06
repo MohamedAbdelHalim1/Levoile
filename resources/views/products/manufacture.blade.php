@@ -81,22 +81,24 @@
                                             {{ $variant->factory->name ?? 'لا يوجد' }}
                                         </td>
 
-                                        <td class="materials-td" data-variant-id="{{ $variant->id }}" style="cursor:pointer;">
+                                        <td class="materials-td" data-variant-id="{{ $variant->id }}"
+                                            style="cursor:pointer;">
                                             @php
                                                 $materials = $variant->materials->pluck('name')->toArray();
                                             @endphp
-                                        
+
                                             @if (count($materials) > 2)
                                                 <span class="badge bg-primary">{{ $materials[0] }}</span>
                                                 <span class="badge bg-secondary">{{ $materials[1] }}</span>
-                                                <a href="#" class="view-all-materials" data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
+                                                <a href="#" class="view-all-materials"
+                                                    data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
                                             @else
                                                 @foreach ($materials as $material)
                                                     <span class="badge bg-primary">{{ $material }}</span>
                                                 @endforeach
                                             @endif
                                         </td>
-                                        
+
 
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
@@ -407,6 +409,12 @@
                 placeholder: "اختر الخامات"
             });
 
+            // Ensure the dropdown updates when opening the modal
+            $('#assignMaterialsModal').on('shown.bs.modal', function() {
+                materialSelect.clear(); // Clear previous selections
+                materialSelect.refreshOptions(); // Refresh options in case they didn't load
+            });
+            
             // ✅ When clicking "اضف الخامات" button, set variant ID in modal
             $(".assign-material-btn").on("click", function() {
                 let variantId = $(this).data("variant-id");
@@ -551,7 +559,9 @@
                     $.ajax({
                         url: "/delete-material/" + materialId,
                         method: "DELETE",
-                        data: { _token: "{{ csrf_token() }}" },
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
                         success: function(response) {
                             alert("تم حذف الخامة بنجاح.");
                             location.reload();
@@ -610,4 +620,3 @@
         });
     </script>
 @endsection
-
