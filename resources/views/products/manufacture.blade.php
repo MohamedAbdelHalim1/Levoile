@@ -1,5 +1,22 @@
 @extends('layouts.app')
 
+@section('styles')
+
+<style>
+    .material-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid #87CEEB; /* Baby blue border */
+    border-radius: 4px; /* Small rounded corners */
+    color: #333; /* Dark text */
+    font-size: 14px;
+    margin-right: 5px; /* Small spacing between items */
+    background-color: transparent; /* No background */
+}
+
+</style>
+
+@endsection
 @section('content')
 
     <div class="p-2">
@@ -91,15 +108,16 @@
                                             @endphp
                                         
                                             @if (count($materials) > 2)
-                                                <span class="badge bg-primary">{{ $materials[0] }}</span>
-                                                <span class="badge bg-secondary">{{ $materials[1] }}</span>
+                                                <span class="material-badge">{{ $materials[0] }}</span>
+                                                <span class="material-badge">{{ $materials[1] }}</span>
                                                 <a href="#" class="view-all-materials" data-variant-id="{{ $variant->id }}">+{{ count($materials) - 2 }}</a>
                                             @else
                                                 @foreach ($materials as $material)
-                                                    <span class="badge bg-primary">{{ $material }}</span>
+                                                    <span class="material-badge">{{ $material }}</span>
                                                 @endforeach
                                             @endif
                                         </td>
+                                        
                                         
                                         <td>
                                             {{ $variant->marker_number ?? 'لا يوجد' }}
