@@ -167,7 +167,12 @@ class ProductController extends Controller
                 $existingVariant->factory_id = $request->factory_id[0];
                 $existingVariant->marker_number = $request->marker_number[0] ?? null;
                 $existingVariant->marker_file = $markerFilePath ?? $existingVariant->marker_file; // Keep old file if not updated
-                $existingVariant->sku = is_array($request->sku) ? implode(',', $request->sku) : $request->sku;
+                
+                // ✅ Assign SKU only for the first variant
+                if (!empty($request->sku[0])) {
+                    $existingVariant->sku = $request->sku[0]; 
+                }
+    
                 $existingVariant->save();
             }
     
@@ -179,7 +184,7 @@ class ProductController extends Controller
                     $markerFilePath = $this->uploadFile($request->file("marker_file.$i"), 'marker_files');
                 }
     
-                // ✅ Create new variant (SKU should NOT be assigned)
+                // ✅ Create new variant (Do NOT assign SKU)
                 $newVariant = new ProductColorVariant();
                 $newVariant->product_color_id = $productColor->id;
                 $newVariant->expected_delivery = $request->expected_delivery[$i];
