@@ -195,6 +195,7 @@ class ProductController extends Controller
                 $newVariant->factory_id = $request->factory_id[$i];
                 $newVariant->marker_number = $request->marker_number[$i] ?? null;
                 $newVariant->marker_file = $markerFilePath;
+                $newVariant->sku = $request->sku[$i] ?? null;
                 $newVariant->save();
             }
     
