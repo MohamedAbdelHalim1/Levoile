@@ -435,12 +435,16 @@
             });
 
             // ✅ Initialize TomSelect for Factories in Both Modals
-            let factorySelects = document.querySelectorAll('.tom-select-factory');
-            factorySelects.forEach(select => {
-                new TomSelect(select, {
-                    placeholder: "اختر المصنع"
+            function initializeFactoryDropdowns() {
+                document.querySelectorAll('.tom-select-factory').forEach(select => {
+                    if (!select.tomselect) {
+                        new TomSelect(select, {
+                            placeholder: "اختر المصنع"
+                        });
+                    }
                 });
-            });
+            }
+            initializeFactoryDropdowns(); // Call this to initialize the existing ones
 
             let bulkFactorySelect = new TomSelect('.bulk-tom-select-factory', {
                 placeholder: "اختر المصنع"
@@ -452,8 +456,6 @@
 
                 // Clone the original row
                 let newElement = original.cloneNode(true);
-
-                // Clear input values except for the color name field
                 newElement.querySelectorAll('input, select').forEach(element => {
                     if (!element.classList.contains("color-name-field")) {
                         element.value = "";
@@ -461,19 +463,14 @@
                 });
 
                 // ✅ Fix for TomSelect Dropdown (Factory Selection)
-                let factoryDropdown = newElement.querySelector('.tom-select-factory');
-                if (factoryDropdown) {
-                    // Remove old TomSelect instance if exists
-                    if (factoryDropdown.tomselect) {
-                        factoryDropdown.tomselect.destroy();
-                    }
+                let oldDropdown = newElement.querySelector('.tom-select-factory');
 
-                    // Create a fresh new dropdown element to prevent conflicts
+                if (oldDropdown) {
                     let newDropdown = document.createElement("select");
                     newDropdown.className = "tom-select-factory form-control";
-                    newDropdown.name = "factory_id[]"; // ✅ Ensure correct name
+                    newDropdown.name = "factory_id[]";
 
-                    // ✅ Re-add factory options from Laravel Blade (Fixing Duplicate Variable Issue)
+                    // ✅ Re-add factory options from Laravel Blade
                     @foreach ($factories as $factory)
                         {
                             let optionItem = document.createElement("option");
@@ -484,31 +481,20 @@
                     @endforeach
 
                     // Replace the old dropdown with the new one
-                    factoryDropdown.parentNode.replaceChild(newDropdown, factoryDropdown);
-
-                    // ✅ Initialize TomSelect for the new factory dropdown
-                    new TomSelect(newDropdown);
+                    oldDropdown.parentNode.replaceChild(newDropdown, oldDropdown);
                 }
 
                 // Append the new row to the container
                 container.appendChild(newElement);
+
+                // ✅ Reinitialize TomSelect for the newly added dropdowns
+                initializeFactoryDropdowns();
             });
-
-
-
 
             // ✅ Ensure dropdowns are initialized when modal opens
             $('#manufacturingModal').on('shown.bs.modal', function() {
-                document.querySelectorAll('.tom-select-factory').forEach(select => {
-                    if (!select.tomselect) {
-                        new TomSelect(select, {
-                            placeholder: "اختر المصنع"
-                        });
-                    }
-                });
+                initializeFactoryDropdowns();
             });
-
-
 
             // ✅ Ensure dropdown updates when opening the Assign Materials modal
             $('#assignMaterialsModal').on('shown.bs.modal', function() {
