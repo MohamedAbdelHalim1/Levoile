@@ -487,9 +487,7 @@
                     factoryDropdown.parentNode.replaceChild(newDropdown, factoryDropdown);
 
                     // ✅ Initialize TomSelect for the new factory dropdown
-                    new TomSelect(newDropdown, {
-                        placeholder: "اختر المصنع"
-                    });
+                    new TomSelect(newDropdown);
                 }
 
                 // Append the new row to the container
