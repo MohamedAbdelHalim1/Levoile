@@ -124,39 +124,39 @@ class ProductController extends Controller
                 $query->orderBy('created_at', 'asc');
             }
         ])->findOrFail($id);
-    
+
         $factories = Factory::all();
         $all_materials = Material::all(); // ✅ Fetch materials and pass to the view
-    
+
         return view('products.manufacture', compact('product', 'factories', 'all_materials'));
     }
-    
-    
+
+
 
     public function update_manufacture(Request $request, Product $product)
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Validate color existence
             $productColor = ProductColor::where('product_id', $product->id)
                 ->where('id', $request->color_id)
                 ->first();
-    
+
             if (!$productColor) {
                 DB::rollBack();
                 return back()->with('error', 'Color not found.');
             }
-    
+
             // ✅ Find an existing variant (Update First Record Instead of Creating)
             $existingVariant = ProductColorVariant::where('product_color_id', $productColor->id)->first();
-    
+
             // ✅ Handle marker file upload
             $markerFilePath = null;
             if ($request->hasFile('marker_file.0')) {
                 $markerFilePath = $this->uploadFile($request->file('marker_file.0'), 'images');
             }
-    
+
             if ($existingVariant) {
                 // ✅ Update only the first record manually
                 $existingVariant->expected_delivery = $request->expected_delivery[0];
@@ -167,23 +167,23 @@ class ProductController extends Controller
                 $existingVariant->factory_id = $request->factory_id[0];
                 $existingVariant->marker_number = $request->marker_number[0] ?? null;
                 $existingVariant->marker_file = $markerFilePath ?? $existingVariant->marker_file; // Keep old file if not updated
-                
+
                 // ✅ Assign SKU only for the first variant
                 if (!empty($request->sku[0])) {
-                    $existingVariant->sku = $request->sku[0]; 
+                    $existingVariant->sku = $request->sku[0];
                 }
-    
+
                 $existingVariant->save();
             }
-    
+
             // ✅ If more inputs exist, create new records
             for ($i = 1; $i < count($request->expected_delivery); $i++) {
-    
+
                 $markerFilePath = null;
                 if ($request->hasFile("marker_file.$i")) {
                     $markerFilePath = $this->uploadFile($request->file("marker_file.$i"), 'marker_files');
                 }
-    
+
                 // ✅ Create new variant (Do NOT assign SKU)
                 $newVariant = new ProductColorVariant();
                 $newVariant->product_color_id = $productColor->id;
@@ -198,7 +198,7 @@ class ProductController extends Controller
                 $newVariant->sku = $request->sku[$i] ?? null;
                 $newVariant->save();
             }
-    
+
             // ✅ Log History
             History::create([
                 'product_id' => $product->id,
@@ -206,7 +206,7 @@ class ProductController extends Controller
                 'action_by' => auth()->user()->name,
                 'note' => "تم تحديث اللون '{$productColor->color->name}' بالكمية الأولى {$request->quantity[0]} والباقي تمت إضافته كإدخالات جديدة.",
             ]);
-    
+
             DB::commit();
             return redirect()->route('products.manufacture', ['id' => $product->id])->with('success', 'تم تحديث التصنيع بنجاح.');
         } catch (\Exception $e) {
@@ -214,7 +214,7 @@ class ProductController extends Controller
             return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
         }
     }
-    
+
 
 
 
@@ -251,7 +251,7 @@ class ProductController extends Controller
                 $productColor = ProductColor::where('id', $variant->product_color_id)
                     ->first();
 
-  
+
 
                 if ($variant) {
                     // ✅ If the record exists, update it
@@ -263,7 +263,8 @@ class ProductController extends Controller
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id, // ✅ Common field
                         'marker_number' => $request->marker_numbers[$index] ?? null, // ✅ Color-Specific
-                        'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku
+                        // ✅ Assign SKU only to the corresponding variant
+                        'sku' => isset($request->sku[$index]) ? $request->sku[$index] : null
                     ]);
                 } else {
                     // ✅ If no record exists, create a new one
@@ -276,7 +277,8 @@ class ProductController extends Controller
                         'receiving_status' => 'pending',
                         'factory_id' => $request->factory_id,
                         'marker_number' => $request->marker_numbers[$index] ?? null,
-                        'sku' => is_array($request->sku) ? implode(',', $request->sku) : $request->sku,
+                        // ✅ Assign SKU only to the corresponding variant
+                        'sku' => isset($request->sku[$index]) ? $request->sku[$index] : null
                     ]);
                 }
 
@@ -302,19 +304,19 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Validate request
             $request->validate([
                 'variant_id' => 'required|exists:product_color_variants,id',
                 'materials' => 'required|array',
                 'materials.*' => 'exists:materials,id',
             ]);
-    
+
             $variant = ProductColorVariant::findOrFail($request->variant_id);
-    
+
             // ✅ Remove existing materials
             ProductColorVariantMaterial::where('product_color_variant_id', $variant->id)->delete();
-    
+
             // ✅ Insert new materials
             $insertData = [];
             foreach ($request->materials as $material_id) {
@@ -325,9 +327,9 @@ class ProductController extends Controller
                     'updated_at' => now(),
                 ];
             }
-    
+
             ProductColorVariantMaterial::insert($insertData);
-    
+
             DB::commit();
             return response()->json(['message' => 'تم تحديث الخامات بنجاح!']);
         } catch (\Exception $e) {
@@ -335,31 +337,31 @@ class ProductController extends Controller
             return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
         }
     }
-    
+
 
     public function getMaterials($variant_id)
     {
         try {
             $variant = ProductColorVariant::findOrFail($variant_id);
-    
+
             // ✅ Get related materials from the pivot table
             $materials = $variant->materials()->with('material')->get()->pluck('material');
-    
+
             return response()->json(['materials' => $materials]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'خطأ في جلب المواد: ' . $e->getMessage()], 500);
         }
     }
-    
+
 
     public function deleteMaterial($id)
     {
         try {
             DB::beginTransaction();
-    
+
             // ✅ Find and delete the material from the pivot table, not the main table
             ProductColorVariantMaterial::where('material_id', $id)->delete();
-    
+
             DB::commit();
             return response()->json(['message' => 'تم إزالة المادة من المنتج بنجاح']);
         } catch (\Exception $e) {
@@ -367,7 +369,7 @@ class ProductController extends Controller
             return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
         }
     }
-    
+
 
     private function uploadFile($file, $directory)
     {
@@ -821,7 +823,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'store_launch' => 'required|string|max:255',
                 'price' => 'required|numeric|min:0',
-                
+
             ]);
 
             // ✅ Start transaction
