@@ -221,10 +221,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
-            let maxSteps = 4;
             let selectedType = "";
 
-            // Initialize Tom Select for multi-select fields
+            // Initialize Tom Select
             $(".tom-select").each(function() {
                 new TomSelect(this, {
                     plugins: ["remove_button"]
@@ -242,6 +241,11 @@
             });
 
             $(".next-btn").on("click", function() {
+                if ($(this).text() === "حفظ") {
+                    submitForm(); // Call function to submit form only on "حفظ"
+                    return;
+                }
+
                 if (!validateStep()) {
                     alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
                     return;
@@ -266,7 +270,7 @@
             });
 
             $(".prev-btn").on("click", function() {
-                clearInputs(step); // Clear inputs of the current step before going back
+                clearInputs(step);
 
                 step--;
                 $(".step").addClass("d-none");
@@ -285,26 +289,24 @@
                 if (step === 1) $(".prev-btn").prop("disabled", true);
             });
 
-            $(".next-btn").on("click", function() {
-                if ($(this).text() === "حفظ") {
-                    let formData = $("#shootingForm").serialize();
+            function submitForm() {
+                let formData = $("#shootingForm").serialize();
 
-                    $.ajax({
-                        url: "{{ route('shooting-products.start') }}",
-                        type: "POST",
-                        data: formData,
-                        success: function(response) {
-                            alert(response.message);
-                            $("#shootingModal").modal("hide");
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            alert("خطأ أثناء بدء التصوير. حاول مرة أخرى!");
-                            console.error(xhr.responseText);
-                        }
-                    });
-                }
-            });
+                $.ajax({
+                    url: "{{ route('shooting-products.start') }}",
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        alert(response.message);
+                        $("#shootingModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert("خطأ أثناء بدء التصوير. حاول مرة أخرى!");
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
 
             function validateStep() {
                 let valid = true;
