@@ -32,6 +32,7 @@
                             <th>تاريخ التعديل</th>
                             <th>المحرر</th>
                             <th>تاريخ التسليم</th>
+                            <th>الوقت المتبقي</th> <!-- New Column for Remaining Time -->
                             <th>لينك درايف</th> <!-- New Column for Drive Link -->
                             <th>الإجراءات</th>
                         </tr>
@@ -90,6 +91,25 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->date_of_delivery ?? '-' }}</td>
+                                <!-- New Column: Calculate Remaining Time -->
+                                <td>
+                                    @if (!empty($product->date_of_delivery))
+                                        @php
+                                            $delivery_date = \Carbon\Carbon::parse($product->date_of_delivery);
+                                            $remaining_days = \Carbon\Carbon::now()->diffInDays($delivery_date, false);
+                                        @endphp
+
+                                        @if ($remaining_days > 0)
+                                            <span class="badge bg-success">{{ $remaining_days }} يوم متبقي</span>
+                                        @elseif ($remaining_days == 0)
+                                            <span class="badge bg-warning">ينتهي اليوم</span>
+                                        @else
+                                            <span class="badge bg-danger">متأخر بـ {{ abs($remaining_days) }} يوم</span>
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <!-- New Column for Drive Link -->
                                 <td class="text-center">
                                     @if (!empty($product->drive_link))
@@ -100,7 +120,7 @@
                                         -
                                     @endif
                                 </td>
-                                
+
                                 <td>
                                     <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
                                         التصوير
@@ -422,5 +442,4 @@
             });
         });
     </script>
-    
 @endsection
