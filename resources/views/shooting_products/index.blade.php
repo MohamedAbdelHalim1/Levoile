@@ -292,10 +292,21 @@
             function submitForm() {
                 let formData = $("#shootingForm").serialize();
 
+                let dateOfDelivery = $("input[name='date_of_delivery']").val();
+                if (!dateOfDelivery) {
+                    alert("يجب إدخال تاريخ التسليم.");
+                    return;
+                }
+
+                formData.push({
+                    name: "date_of_delivery",
+                    value: dateOfDelivery
+                });
+
                 $.ajax({
                     url: "{{ route('shooting-products.start') }}",
                     type: "POST",
-                    data: formData,
+                    data: $.param(formData),
                     success: function(response) {
                         alert(response.message);
                         $("#shootingModal").modal("hide");
