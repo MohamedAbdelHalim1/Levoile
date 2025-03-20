@@ -94,12 +94,13 @@
                                 <td class="text-center">
                                     @if (!empty($product->drive_link))
                                         <a href="{{ $product->drive_link }}" target="_blank" class="text-success">
-                                            <i class="fa-brands fa-google-drive fa-2x"></i>
+                                            <i data-feather="external-link" class="fe-icon"></i>
                                         </a>
                                     @else
                                         -
                                     @endif
                                 </td>
+                                
                                 <td>
                                     <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
                                         التصوير
@@ -421,4 +422,10 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            feather.replace(); // Activate Feather Icons
+        });
+    </script>
+    
 @endsection
