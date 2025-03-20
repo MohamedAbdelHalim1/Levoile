@@ -60,6 +60,9 @@
                                             $photographers = json_decode($product->photographer, true);
                                         @endphp
                                         @foreach ($photographers as $photographerId)
+                                        @php
+                                         $photographerId = (int)$photographerId;
+                                        @endphp
                                             <span
                                                 class="badge bg-primary">{{ optional(\App\Models\User::find($photographerId))->name }}</span>
                                         @endforeach
@@ -75,6 +78,9 @@
                                             $editors = json_decode($product->editor, true);
                                         @endphp
                                         @foreach ($editors as $editorId)
+                                        @php
+                                         $editorId = (int)$editorId;
+                                        @endphp
                                             <span
                                                 class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
                                         @endforeach
