@@ -290,7 +290,7 @@
             });
 
             function submitForm() {
-                let formData = $("#shootingForm").serialize();
+                let formData = $("#shootingForm").serializeArray(); // Converts to array format
 
                 let dateOfDelivery = $("input[name='date_of_delivery']").val();
                 if (!dateOfDelivery) {
@@ -298,6 +298,7 @@
                     return;
                 }
 
+                // Ensure date_of_delivery is included
                 formData.push({
                     name: "date_of_delivery",
                     value: dateOfDelivery
@@ -306,7 +307,7 @@
                 $.ajax({
                     url: "{{ route('shooting-products.start') }}",
                     type: "POST",
-                    data: $.param(formData),
+                    data: formData, // No need for $.param()
                     success: function(response) {
                         alert(response.message);
                         $("#shootingModal").modal("hide");
@@ -318,6 +319,7 @@
                     }
                 });
             }
+
 
             function validateStep() {
                 let valid = true;
