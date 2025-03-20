@@ -115,17 +115,17 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير منتج" id="productShooting">
-                                <label class="form-check-label ms-2" for="productShooting">تصوير منتج</label>
+                                <label class="form-check-label ms-5" for="productShooting">تصوير منتج</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير موديل" id="modelShooting">
-                                <label class="form-check-label ms-2" for="modelShooting">تصوير موديل</label>
+                                <label class="form-check-label ms-5" for="modelShooting">تصوير موديل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تعديل لون" id="colorEditing">
-                                <label class="form-check-label ms-2" for="colorEditing">تعديل لون</label>
+                                <label class="form-check-label ms-5" for="colorEditing">تعديل لون</label>
                             </div>
                         </div>
 
@@ -135,12 +135,12 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالداخل">
-                                <label class="form-check-label ms-2">تصوير بالداخل</label>
+                                <label class="form-check-label ms-5">تصوير بالداخل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالخارج">
-                                <label class="form-check-label ms-2">تصوير بالخارج</label>
+                                <label class="form-check-label ms-5">تصوير بالخارج</label>
                             </div>
                         </div>
 
@@ -222,8 +222,9 @@
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
             let maxSteps = 4;
+            let selectedType = "";
 
-            // Initialize Tom Select
+            // Initialize Tom Select for multi-select fields
             $(".tom-select").each(function() {
                 new TomSelect(this, {
                     plugins: ["remove_button"]
@@ -237,6 +238,7 @@
 
             $(".shooting-type").on("change", function() {
                 $(".next-btn").prop("disabled", false);
+                selectedType = $("input[name='type_of_shooting']:checked").val();
             });
 
             $(".next-btn").on("click", function() {
@@ -248,18 +250,15 @@
                 $(".step").addClass("d-none");
 
                 if (step === 1) {
-                    let selectedType = $("input[name='type_of_shooting']:checked").val();
                     if (selectedType === "تصوير منتج" || selectedType === "تصوير موديل") {
                         $(".step-2").removeClass("d-none");
                     } else {
                         $(".step-4").removeClass("d-none");
                         $(".next-btn").text("حفظ");
-                        return;
                     }
                 } else if (step === 2) {
                     $(".step-3").removeClass("d-none");
                     $(".next-btn").text("حفظ");
-                    return;
                 }
 
                 step++;
@@ -267,16 +266,22 @@
             });
 
             $(".prev-btn").on("click", function() {
-                $(".step").eq(step - 1).find("input, select").val("");
+                clearInputs(step); // Clear inputs of the current step before going back
 
                 step--;
                 $(".step").addClass("d-none");
 
-                if (step === 1) $(".step-1").removeClass("d-none");
-                else if (step === 2) $(".step-2").removeClass("d-none");
-                else if (step === 3) $(".step-3").removeClass("d-none");
+                if (step === 1) {
+                    $(".step-1").removeClass("d-none");
+                    $(".next-btn").text("التالي");
+                } else if (step === 2) {
+                    $(".step-2").removeClass("d-none");
+                    $(".next-btn").text("التالي");
+                } else if (step === 3) {
+                    $(".step-3").removeClass("d-none");
+                    $(".next-btn").text("حفظ");
+                }
 
-                $(".next-btn").text("التالي");
                 if (step === 1) $(".prev-btn").prop("disabled", true);
             });
 
@@ -309,6 +314,10 @@
                     }
                 });
                 return valid;
+            }
+
+            function clearInputs(currentStep) {
+                $(".step-" + currentStep + " input, .step-" + currentStep + " select").val("").trigger("change");
             }
         });
     </script>
