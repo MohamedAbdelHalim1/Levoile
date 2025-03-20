@@ -59,6 +59,27 @@ class ShootingProductController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function updateDriveLink(Request $request)
+{
+    try {
+        $request->validate([
+            'product_id' => 'required|exists:shooting_products,id',
+            'drive_link' => 'required|url',
+        ]);
+
+        $product = ShootingProduct::findOrFail($request->product_id);
+        $product->drive_link = $request->drive_link;
+        $product->status = 'completed';
+        $product->save();
+
+        return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
+
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'خطأ أثناء تحديث لينك درايف'], 500);
+    }
+}
+
     
 
 

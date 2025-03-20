@@ -213,6 +213,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('shooting-products', ShootingProductController::class);
     Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
     ->name('shooting-products.start');
+    Route::post('/shooting-products/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
+    ->name('shooting-products.updateDriveLink');
 
 
 

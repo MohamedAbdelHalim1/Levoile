@@ -60,9 +60,9 @@
                                             $tmp_photographers = json_decode($product->photographer, true);
                                         @endphp
                                         @foreach ($tmp_photographers as $photographerId)
-                                        @php
-                                         $photographerId = (int)$photographerId;
-                                        @endphp
+                                            @php
+                                                $photographerId = (int) $photographerId;
+                                            @endphp
                                             <span
                                                 class="badge bg-primary">{{ optional(\App\Models\User::find($photographerId))->name }}</span>
                                         @endforeach
@@ -78,9 +78,9 @@
                                             $tmp_editors = json_decode($product->editor, true);
                                         @endphp
                                         @foreach ($tmp_editors as $editorId)
-                                        @php
-                                         $editorId = (int)$editorId;
-                                        @endphp
+                                            @php
+                                                $editorId = (int) $editorId;
+                                            @endphp
                                             <span
                                                 class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
                                         @endforeach
@@ -93,6 +93,12 @@
                                     <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
                                         التصوير
                                     </button>
+                                    @if ($product->status == 'in_progress')
+                                        <button class="btn btn-success open-drive-link-modal" data-id="{{ $product->id }}"
+                                            data-drive-link="{{ $product->drive_link }}">
+                                            لينك درايف
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -101,6 +107,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Drive Link Modal -->
+    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة لينك درايف</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="driveLinkForm">
+                        @csrf
+                        <input type="hidden" name="product_id" id="drive_product_id">
+
+                        <div class="mb-3">
+                            <label class="form-label">لينك درايف</label>
+                            <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Shooting Modal -->
     <div class="modal fade" id="shootingModal" tabindex="-1" aria-labelledby="shootingModalLabel" aria-hidden="true">
@@ -340,6 +372,42 @@
             function clearInputs(currentStep) {
                 $(".step-" + currentStep + " input, .step-" + currentStep + " select").val("").trigger("change");
             }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Open Drive Link Modal and Populate Input
+            $(".open-drive-link-modal").on("click", function() {
+                let productId = $(this).data("id");
+                let driveLink = $(this).data("drive-link") || '';
+
+                $("#drive_product_id").val(productId);
+                $("#drive_link_input").val(driveLink);
+                $("#driveLinkModal").modal("show");
+            });
+
+            // Handle Drive Link Submission
+            $("#driveLinkForm").on("submit", function(e) {
+                e.preventDefault();
+
+                let formData = $(this).serialize();
+
+                $.ajax({
+                    url: "{{ route('shooting-products.updateDriveLink') }}",
+                    type: "POST",
+                    data: formData,
+                    success: function(response) {
+                        alert(response.message);
+                        $("#driveLinkModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert("خطأ أثناء حفظ لينك درايف. حاول مرة أخرى!");
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
         });
     </script>
 @endsection

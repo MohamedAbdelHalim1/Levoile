@@ -21,7 +21,8 @@ class ShootingProduct extends Model
         'photographer', //multiple selection so it will be an array
         'date_of_editing',
         'editor', //multiple selection so it will be an array
-        'date_of_delivery'
+        'date_of_delivery',
+        'drive_link',
     ];
 
   
