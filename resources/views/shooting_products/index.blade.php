@@ -94,7 +94,7 @@
                                 <td class="text-center">
                                     @if (!empty($product->drive_link))
                                         <a href="{{ $product->drive_link }}" target="_blank" class="text-success">
-                                            <i data-feather="external-link" class="fe-icon"></i>
+                                            <i class="fe fe-link"></i>
                                         </a>
                                     @else
                                         -
@@ -420,11 +420,6 @@
                     }
                 });
             });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            feather.replace(); // Activate Feather Icons
         });
     </script>
     
