@@ -150,9 +150,11 @@
                                                 </li>
                                                 <li><a href="{{ route('reports.receive') }}" class="slide-item">تقرير
                                                         الاستلامات</a></li>
-                                                <li><a href="{{ route('reports.productStatusForSeason') }}" class="slide-item">تقرير
+                                                <li><a href="{{ route('reports.productStatusForSeason') }}"
+                                                        class="slide-item">تقرير
                                                         المواسم </a></li>
-                                                <li><a href="{{ route('reports.categoryStatus') }}" class="slide-item">تقرير
+                                                <li><a href="{{ route('reports.categoryStatus') }}"
+                                                        class="slide-item">تقرير
                                                         الاقسام </a></li>
                                             </ul>
                                         </div>
@@ -203,6 +205,33 @@
                         </ul>
                     </li>
                 @endif
+
+
+                <li class="sub-category">
+                    <h3>التصوير</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                            class="side-menu__icon fe fe-user"></i><span class="side-menu__label">المستخدمين</span><i
+                            class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="panel sidetab-menu">
+                            <div class="panel-body tabs-menu-body p-0 border-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="side">
+                                        <ul class="sidemenu-list">
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
+                                            </li>
+                                            <li><a href="{{ route('shooting-products.index') }}"
+                                                    class="slide-item">التصوير</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+
 
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
