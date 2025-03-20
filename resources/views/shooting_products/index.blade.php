@@ -115,17 +115,17 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير منتج" id="productShooting">
-                                <label class="form-check-label ms-5" for="productShooting">تصوير منتج</label>
+                                <label class="form-check-label ms-2" for="productShooting">تصوير منتج</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير موديل" id="modelShooting">
-                                <label class="form-check-label ms-5" for="modelShooting">تصوير موديل</label>
+                                <label class="form-check-label ms-2" for="modelShooting">تصوير موديل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تعديل لون" id="colorEditing">
-                                <label class="form-check-label ms-5" for="colorEditing">تعديل لون</label>
+                                <label class="form-check-label ms-2" for="colorEditing">تعديل لون</label>
                             </div>
                         </div>
 
@@ -135,12 +135,12 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالداخل" id="indoor">
-                                <label class="form-check-label ms-5" for="indoor">تصوير بالداخل</label>
+                                <label class="form-check-label ms-2" for="indoor">تصوير بالداخل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالخارج" id="outdoor">
-                                <label class="form-check-label ms-5" for="outdoor">تصوير بالخارج</label>
+                                <label class="form-check-label ms-2" for="outdoor">تصوير بالخارج</label>
                             </div>
                         </div>
 
@@ -196,6 +196,8 @@
             </div>
         </div>
     </div>
+
+    
 @endsection
 
 @section('scripts')
@@ -219,23 +221,23 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
             let maxSteps = 4;
-            let lastStepVisited = 1; // Track last visited step
-        
-            $(".start-shooting").on("click", function () {
+            let lastStepVisited = 1;
+
+            $(".start-shooting").on("click", function() {
                 $("#product_id").val($(this).data("id"));
                 $("#shootingModal").modal("show");
             });
-        
-            $(".shooting-type").on("change", function () {
+
+            $(".shooting-type").on("change", function() {
                 $(".next-btn").prop("disabled", false);
             });
-        
-            $(".next-btn").on("click", function () {
-                $(".step").addClass("d-none"); // Hide all steps
-        
+
+            $(".next-btn").on("click", function() {
+                $(".step").addClass("d-none");
+
                 if (step === 1) {
                     let selectedType = $("input[name='type_of_shooting']:checked").val();
                     if (selectedType === "تصوير منتج" || selectedType === "تصوير موديل") {
@@ -252,34 +254,30 @@
                 } else if (step === 3) {
                     $(".next-btn").text("حفظ");
                 }
-        
+
                 step++;
                 $(".prev-btn").prop("disabled", false);
                 if (step > maxSteps) step = maxSteps;
             });
-        
-            $(".prev-btn").on("click", function () {
-                $(".step").eq(lastStepVisited - 1).find("input, select").val(""); // Clear inputs
-        
+
+            $(".prev-btn").on("click", function() {
+                $(".step").eq(lastStepVisited - 1).find("input, select").val("");
+
                 step--;
-                $(".step").addClass("d-none"); // Hide all steps
-        
-                if (step === 1) {
-                    $(".step-1").removeClass("d-none");
-                } else if (step === 2) {
-                    $(".step-2").removeClass("d-none");
-                } else if (step === 3) {
-                    $(".step-3").removeClass("d-none");
-                }
-        
+                $(".step").addClass("d-none");
+
+                if (step === 1) $(".step-1").removeClass("d-none");
+                else if (step === 2) $(".step-2").removeClass("d-none");
+                else if (step === 3) $(".step-3").removeClass("d-none");
+
                 $(".next-btn").text("التالي");
                 if (step === 1) $(".prev-btn").prop("disabled", true);
             });
-        
-            $(".next-btn").on("click", function () {
+
+            $(".next-btn").on("click", function() {
                 if ($(this).text() === "حفظ") {
                     let formData = $("#shootingForm").serialize();
-        
+
                     $.ajax({
                         url: "{{ route('shooting-products.start') }}",
                         type: "POST",
@@ -297,5 +295,5 @@
                 }
             });
         });
-        </script>
+    </script>
 @endsection
