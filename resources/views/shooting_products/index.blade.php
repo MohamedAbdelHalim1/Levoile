@@ -57,9 +57,9 @@
                                     {{-- Photographer (IDs stored as an array) --}}
                                     @if (!empty($product->photographer))
                                         @php
-                                            $photographers = json_decode($product->photographer, true);
+                                            $tmp_photographers = json_decode($product->photographer, true);
                                         @endphp
-                                        @foreach ($photographers as $photographerId)
+                                        @foreach ($tmp_photographers as $photographerId)
                                         @php
                                          $photographerId = (int)$photographerId;
                                         @endphp
@@ -75,9 +75,9 @@
                                     {{-- Editor (IDs stored as an array) --}}
                                     @if (!empty($product->editor))
                                         @php
-                                            $editors = json_decode($product->editor, true);
+                                            $tmp_editors = json_decode($product->editor, true);
                                         @endphp
-                                        @foreach ($editors as $editorId)
+                                        @foreach ($tmp_editors as $editorId)
                                         @php
                                          $editorId = (int)$editorId;
                                         @endphp
@@ -160,7 +160,6 @@
                             <div class="mb-3">
                                 <label class="form-label">المصورون</label>
                                 <select name="photographer[]" class="form-control tom-select required-input" multiple>
-                                    @dd($photographers)
                                     @foreach ($photographers as $photographer)
                                         <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
                                     @endforeach
