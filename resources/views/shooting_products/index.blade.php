@@ -115,17 +115,17 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير منتج" id="productShooting">
-                                <label class="form-check-label ms-2" for="productShooting">تصوير منتج</label>
+                                <label class="form-check-label ms-5" for="productShooting">تصوير منتج</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تصوير موديل" id="modelShooting">
-                                <label class="form-check-label ms-2" for="modelShooting">تصوير موديل</label>
+                                <label class="form-check-label ms-5" for="modelShooting">تصوير موديل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
                                     value="تعديل لون" id="colorEditing">
-                                <label class="form-check-label ms-2" for="colorEditing">تعديل لون</label>
+                                <label class="form-check-label ms-5" for="colorEditing">تعديل لون</label>
                             </div>
                         </div>
 
@@ -135,12 +135,12 @@
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالداخل" id="indoor">
-                                <label class="form-check-label ms-2" for="indoor">تصوير بالداخل</label>
+                                <label class="form-check-label ms-5" for="indoor">تصوير بالداخل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
                                     value="تصوير بالخارج" id="outdoor">
-                                <label class="form-check-label ms-2" for="outdoor">تصوير بالخارج</label>
+                                <label class="form-check-label ms-5" for="outdoor">تصوير بالخارج</label>
                             </div>
                         </div>
 
@@ -197,7 +197,7 @@
         </div>
     </div>
 
-    
+
 @endsection
 
 @section('scripts')
