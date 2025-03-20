@@ -32,6 +32,7 @@
                             <th>تاريخ التعديل</th>
                             <th>المحرر</th>
                             <th>تاريخ التسليم</th>
+                            <th>لينك درايف</th> <!-- New Column for Drive Link -->
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -89,11 +90,21 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->date_of_delivery ?? '-' }}</td>
+                                <!-- New Column for Drive Link -->
+                                <td class="text-center">
+                                    @if (!empty($product->drive_link))
+                                        <a href="{{ $product->drive_link }}" target="_blank" class="text-success">
+                                            <i class="fa-brands fa-google-drive fa-2x"></i>
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>
                                     <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
                                         التصوير
                                     </button>
-                                    @if ($product->status == 'in_progress')
+                                    @if ($product->status == 'in_progress' || $product->status == 'completed')
                                         <button class="btn btn-success open-drive-link-modal" data-id="{{ $product->id }}"
                                             data-drive-link="{{ $product->drive_link }}">
                                             لينك درايف
