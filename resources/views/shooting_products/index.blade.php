@@ -160,8 +160,8 @@
                             <div class="mb-3">
                                 <label class="form-label">المصورون</label>
                                 <select name="photographer[]" class="form-control tom-select required-input" multiple>
+                                    @dd($photographers)
                                     @foreach ($photographers as $photographer)
-                                    @dd($photographer->id)
                                         <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
                                     @endforeach
                                 </select>
