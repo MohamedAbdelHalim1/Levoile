@@ -91,7 +91,7 @@
                                 <td>{{ $product->date_of_delivery ?? '-' }}</td>
                                 <td>
                                     <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
-                                        أبدا التصوير
+                                        التصوير
                                     </button>
                                 </td>
                             </tr>
