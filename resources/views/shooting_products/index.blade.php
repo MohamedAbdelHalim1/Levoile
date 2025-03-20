@@ -134,13 +134,13 @@
                             <h5>ماهو مكان التصوير؟</h5>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالداخل" id="indoor">
-                                <label class="form-check-label ms-2" for="indoor">تصوير بالداخل</label>
+                                    value="تصوير بالداخل">
+                                <label class="form-check-label ms-2">تصوير بالداخل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالخارج" id="outdoor">
-                                <label class="form-check-label ms-2" for="outdoor">تصوير بالخارج</label>
+                                    value="تصوير بالخارج">
+                                <label class="form-check-label ms-2">تصوير بالخارج</label>
                             </div>
                         </div>
 
@@ -149,11 +149,11 @@
                             <h5>تفاصيل التصوير</h5>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التصوير</label>
-                                <input type="date" name="date_of_shooting" class="form-control">
+                                <input type="date" name="date_of_shooting" class="form-control required-input">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">المصورون</label>
-                                <select name="photographer[]" class="form-control tom-select" multiple>
+                                <select name="photographer[]" class="form-control tom-select required-input" multiple>
                                     @foreach ($photographers as $photographer)
                                         <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
                                     @endforeach
@@ -161,7 +161,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control">
+                                <input type="date" name="date_of_delivery" class="form-control required-input">
                             </div>
                         </div>
 
@@ -170,11 +170,11 @@
                             <h5>تفاصيل التعديل</h5>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التعديل</label>
-                                <input type="date" name="date_of_editing" class="form-control">
+                                <input type="date" name="date_of_editing" class="form-control required-input">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">المحررون</label>
-                                <select name="editor[]" class="form-control tom-select" multiple>
+                                <select name="editor[]" class="form-control tom-select required-input" multiple>
                                     @foreach ($editors as $editor)
                                         <option value="{{ $editor->id }}">{{ $editor->name }}</option>
                                     @endforeach
@@ -182,7 +182,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control">
+                                <input type="date" name="date_of_delivery" class="form-control required-input">
                             </div>
                         </div>
 
@@ -223,6 +223,13 @@
             let step = 1;
             let maxSteps = 4;
 
+            // Initialize Tom Select
+            $(".tom-select").each(function() {
+                new TomSelect(this, {
+                    plugins: ["remove_button"]
+                });
+            });
+
             $(".start-shooting").on("click", function() {
                 $("#product_id").val($(this).data("id"));
                 $("#shootingModal").modal("show");
@@ -233,6 +240,11 @@
             });
 
             $(".next-btn").on("click", function() {
+                if (!validateStep()) {
+                    alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
+                    return;
+                }
+
                 $(".step").addClass("d-none");
 
                 if (step === 1) {
@@ -288,6 +300,16 @@
                     });
                 }
             });
+
+            function validateStep() {
+                let valid = true;
+                $(".step:not(.d-none) .required-input").each(function() {
+                    if (!$(this).val()) {
+                        valid = false;
+                    }
+                });
+                return valid;
+            }
         });
     </script>
 @endsection
