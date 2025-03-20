@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\ShootingProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Livewire\About;
 use App\Http\Livewire\Accordion;
@@ -146,6 +147,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -207,6 +209,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/get-materials/{variant_id}', [ProductController::class, 'getMaterials']);
     Route::delete('/delete-material/{id}', [ProductController::class, 'deleteMaterial']);
     
+
+    Route::resource('shooting-products', ShootingProductController::class);
+
 
 
 
