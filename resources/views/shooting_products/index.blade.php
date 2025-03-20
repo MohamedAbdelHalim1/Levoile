@@ -114,40 +114,40 @@
                             <h5>ما هو نوع التصوير؟</h5>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تصوير منتج">
-                                <label class="form-check-label">تصوير منتج</label>
+                                    value="تصوير منتج" id="productShooting">
+                                <label class="form-check-label ms-2" for="productShooting">تصوير منتج</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تصوير موديل">
-                                <label class="form-check-label">تصوير موديل</label>
+                                    value="تصوير موديل" id="modelShooting">
+                                <label class="form-check-label ms-2" for="modelShooting">تصوير موديل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تعديل لون">
-                                <label class="form-check-label">تعديل لون</label>
+                                    value="تعديل لون" id="colorEditing">
+                                <label class="form-check-label ms-2" for="colorEditing">تعديل لون</label>
                             </div>
                         </div>
 
-                        <!-- Step 2: Choose Shooting Location (only for تصوير منتج or تصوير موديل) -->
+                        <!-- Step 2: Choose Shooting Location -->
                         <div class="step step-2 d-none">
                             <h5>ماهو مكان التصوير؟</h5>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالداخل">
-                                <label class="form-check-label">تصوير بالداخل</label>
+                                    value="تصوير بالداخل" id="indoor">
+                                <label class="form-check-label ms-2" for="indoor">تصوير بالداخل</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالخارج">
-                                <label class="form-check-label">تصوير بالخارج</label>
+                                    value="تصوير بالخارج" id="outdoor">
+                                <label class="form-check-label ms-2" for="outdoor">تصوير بالخارج</label>
                             </div>
                         </div>
 
-                        <!-- Step 3: Dates & Users -->
+                        <!-- Step 3: Dates & Users (For تصوير منتج & تصوير موديل) -->
                         <div class="step step-3 d-none">
                             <h5>تفاصيل التصوير</h5>
-                            <div class="mb-3" id="date_of_shooting_container">
+                            <div class="mb-3">
                                 <label class="form-label">تاريخ التصوير</label>
                                 <input type="date" name="date_of_shooting" class="form-control">
                             </div>
@@ -165,7 +165,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 4: Editing Date & Editors (Only for تعديل لون) -->
+                        <!-- Step 4: Editing Details (For تعديل لون) -->
                         <div class="step step-4 d-none">
                             <h5>تفاصيل التعديل</h5>
                             <div class="mb-3">
@@ -219,57 +219,67 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             let step = 1;
             let maxSteps = 4;
-
-            $(".start-shooting").on("click", function() {
+            let lastStepVisited = 1; // Track last visited step
+        
+            $(".start-shooting").on("click", function () {
                 $("#product_id").val($(this).data("id"));
                 $("#shootingModal").modal("show");
             });
-
-            $(".shooting-type").on("change", function() {
+        
+            $(".shooting-type").on("change", function () {
                 $(".next-btn").prop("disabled", false);
             });
-
-            $(".next-btn").on("click", function() {
-                $(".step").addClass("d-none");
-
+        
+            $(".next-btn").on("click", function () {
+                $(".step").addClass("d-none"); // Hide all steps
+        
                 if (step === 1) {
                     let selectedType = $("input[name='type_of_shooting']:checked").val();
                     if (selectedType === "تصوير منتج" || selectedType === "تصوير موديل") {
                         $(".step-2").removeClass("d-none");
+                        lastStepVisited = 2;
                     } else {
                         $(".step-4").removeClass("d-none");
                         step = 3;
+                        lastStepVisited = 4;
                     }
                 } else if (step === 2) {
                     $(".step-3").removeClass("d-none");
+                    lastStepVisited = 3;
                 } else if (step === 3) {
                     $(".next-btn").text("حفظ");
                 }
-
+        
                 step++;
                 $(".prev-btn").prop("disabled", false);
                 if (step > maxSteps) step = maxSteps;
             });
-
-            $(".prev-btn").on("click", function() {
+        
+            $(".prev-btn").on("click", function () {
+                $(".step").eq(lastStepVisited - 1).find("input, select").val(""); // Clear inputs
+        
                 step--;
-                $(".step").addClass("d-none");
-
-                if (step === 1) $(".step-1").removeClass("d-none");
-                if (step === 2) $(".step-2").removeClass("d-none");
-                if (step === 3) $(".step-3").removeClass("d-none");
-
+                $(".step").addClass("d-none"); // Hide all steps
+        
+                if (step === 1) {
+                    $(".step-1").removeClass("d-none");
+                } else if (step === 2) {
+                    $(".step-2").removeClass("d-none");
+                } else if (step === 3) {
+                    $(".step-3").removeClass("d-none");
+                }
+        
                 $(".next-btn").text("التالي");
                 if (step === 1) $(".prev-btn").prop("disabled", true);
             });
-
-            $(".next-btn").on("click", function() {
+        
+            $(".next-btn").on("click", function () {
                 if ($(this).text() === "حفظ") {
                     let formData = $("#shootingForm").serialize();
-
+        
                     $.ajax({
                         url: "{{ route('shooting-products.start') }}",
                         type: "POST",
@@ -287,5 +297,5 @@
                 }
             });
         });
-    </script>
+        </script>
 @endsection
