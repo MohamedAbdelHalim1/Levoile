@@ -211,6 +211,8 @@ Route::middleware('auth')->group(function () {
     
 
     Route::resource('shooting-products', ShootingProductController::class);
+    Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
+    ->name('shooting-products.start');
 
 
 
