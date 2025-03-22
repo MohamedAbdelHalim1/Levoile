@@ -179,6 +179,7 @@
                                             @foreach ($tmp_editors as $editorId)
                                                 @php
                                                     $editorId = (int) $editorId;
+                                                    dd($editorId);
                                                 @endphp
                                                 <span
                                                     class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
