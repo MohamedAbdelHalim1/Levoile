@@ -432,10 +432,10 @@
                     return;
                 }
 
-               // if (!validateStep()) {
-               //     alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
-                //    return;
-                // }
+                if (!validateStep()) {
+                    alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
+                    return;
+                }
 
                 $(".step").addClass("d-none");
 
@@ -479,10 +479,10 @@
                 let formData = $("#shootingForm").serializeArray(); // Converts to array format
 
                 let dateOfDelivery = $("input[name='date_of_delivery']").val();
-                // if (!dateOfDelivery) {
-                //     alert("يجب إدخال تاريخ التسليم.");
-                //     return;
-                // }
+                if (!dateOfDelivery) {
+                    alert("يجب إدخال تاريخ التسليم.");
+                    return;
+                }
 
                 // Ensure date_of_delivery is included
                 formData.push({
@@ -509,13 +509,17 @@
 
             function validateStep() {
                 let valid = true;
-                $(".step:not(.d-none) .required-input").each(function() {
+
+                // فقط تحقق من الحقول الظاهرة حاليًا
+                $(".step:visible .required-input").each(function() {
                     if (!$(this).val()) {
                         valid = false;
                     }
                 });
+
                 return valid;
             }
+
 
             function clearInputs(currentStep) {
                 $(".step-" + currentStep + " input, .step-" + currentStep + " select").val("").trigger("change");
