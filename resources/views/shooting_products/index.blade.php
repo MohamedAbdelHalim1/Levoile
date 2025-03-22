@@ -148,21 +148,25 @@
                                 <td>{{ $product->location ?? '-' }}</td>
                                 <td>{{ $product->date_of_shooting ?? '-' }}</td>
                                 <td>
-                                    {{-- Photographer (IDs stored as an array) --}}
                                     @if (!empty($product->photographer))
                                         @php
                                             $tmp_photographers = json_decode($product->photographer, true);
                                         @endphp
-                                        @foreach ($tmp_photographers as $photographerId)
-                                            @php
-                                                $photographerId = (int) $photographerId;
-                                            @endphp
-                                            <span
-                                                class="badge bg-primary">{{ optional(\App\Models\User::find($photographerId))->name }}</span>
-                                        @endforeach
+
+                                        @if (is_array($tmp_photographers))
+                                            @foreach ($tmp_photographers as $photographerId)
+                                                @php $photographerId = (int) $photographerId; @endphp
+                                                <span class="badge bg-primary">
+                                                    {{ optional(\App\Models\User::find($photographerId))->name }}
+                                                </span>
+                                            @endforeach
+                                        @else
+                                            -
+                                        @endif
                                     @else
                                         -
                                     @endif
+
                                 </td>
                                 <td>{{ $product->date_of_editing ?? '-' }}</td>
                                 <td>
@@ -171,13 +175,17 @@
                                         @php
                                             $tmp_editors = json_decode($product->editor, true);
                                         @endphp
-                                        @foreach ($tmp_editors as $editorId)
-                                            @php
-                                                $editorId = (int) $editorId;
-                                            @endphp
-                                            <span
-                                                class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
-                                        @endforeach
+                                        @if (!is_array($tmp_editors))
+                                            @foreach ($tmp_editors as $editorId)
+                                                @php
+                                                    $editorId = (int) $editorId;
+                                                @endphp
+                                                <span
+                                                    class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
+                                            @endforeach
+                                        @else
+                                            -
+                                        @endif
                                     @else
                                         -
                                     @endif
