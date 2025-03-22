@@ -131,6 +131,20 @@
                                             لينك درايف
                                         </button>
                                     @endif
+                                    <!-- edit btn and delete form -->
+                                    <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-primary">
+                                        تعديل
+                                    </a>
+                                    <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
+                                        style="display: inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
+                                            حذف
+                                        </button>
+                                    </form>
+
                                 </td>
                             </tr>
                         @endforeach
