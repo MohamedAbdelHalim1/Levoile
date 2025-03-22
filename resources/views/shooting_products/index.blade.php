@@ -479,10 +479,10 @@
                 let formData = $("#shootingForm").serializeArray(); // Converts to array format
 
                 let dateOfDelivery = $("input[name='date_of_delivery']").val();
-                if (!dateOfDelivery) {
-                    alert("يجب إدخال تاريخ التسليم.");
-                    return;
-                }
+                // if (!dateOfDelivery) {
+                //     alert("يجب إدخال تاريخ التسليم.");
+                //     return;
+                // }
 
                 // Ensure date_of_delivery is included
                 formData.push({
