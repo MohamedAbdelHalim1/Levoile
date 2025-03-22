@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h2 class="text-lg font-bold mb-4">إضافة منتج جديد</h2>
+                <h2 class="text-lg font-bold mb-4">تعديل منتج جديد</h2>
 
                 <form action="{{ route('shooting-products.update' , $product->id) }}" method="POST">
                     @csrf
@@ -20,7 +20,7 @@
                         <input type="number" name="number_of_colors" value="{{ $product->number_of_colors }}" class="form-control">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">إضافة المنتج</button>
+                    <button type="submit" class="btn btn-primary">تعديل المنتج</button>
                 </form>
             </div>
         </div>
