@@ -347,7 +347,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control required-input">
+                                <input type="date" name="date_of_delivery_shooting"
+                                    class="form-control required-input">
                             </div>
                         </div>
 
@@ -368,7 +369,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control required-input">
+                                <input type="date" name="date_of_delivery_editing"
+                                    class="form-control required-input">
                             </div>
                         </div>
 
@@ -478,11 +480,15 @@
             function submitForm() {
                 let formData = $("#shootingForm").serializeArray(); // Converts to array format
 
-                let dateOfDelivery = $("input[name='date_of_delivery']").val();
+                let dateOfDelivery = selectedType === "تعديل لون" ?
+                    $("input[name='date_of_delivery_editing']").val() :
+                    $("input[name='date_of_delivery_shooting']").val();
+
                 if (!dateOfDelivery) {
                     alert("يجب إدخال تاريخ التسليم.");
                     return;
                 }
+
 
                 // Ensure date_of_delivery is included
                 formData.push({
