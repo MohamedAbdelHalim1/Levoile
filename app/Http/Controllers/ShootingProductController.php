@@ -88,9 +88,16 @@ class ShootingProductController extends Controller
                 $product->location = $request->location;
                 $product->date_of_shooting = $request->date_of_shooting;
                 $product->photographer = json_encode($request->photographer);
+                // Reset editor fields
+                $product->editor = null;
+                $product->date_of_editing = null;
             } else {
                 $product->date_of_editing = $request->date_of_editing;
                 $product->editor = json_encode($request->editor);
+                // Reset photographer fields
+                $product->photographer = null;
+                $product->location = null;
+                $product->date_of_shooting = null;
             }
 
             $product->date_of_delivery = $request->date_of_delivery;
@@ -101,6 +108,7 @@ class ShootingProductController extends Controller
             dd($e->getMessage());
         }
     }
+
 
     public function updateDriveLink(Request $request)
     {
