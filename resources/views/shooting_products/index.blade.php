@@ -175,11 +175,10 @@
                                         @php
                                             $tmp_editors = json_decode($product->editor, true);
                                         @endphp
-                                        @if (!is_array($tmp_editors))
+                                        @if (is_array($tmp_editors))
                                             @foreach ($tmp_editors as $editorId)
                                                 @php
                                                     $editorId = (int) $editorId;
-                                                    dd($editorId);
                                                 @endphp
                                                 <span
                                                     class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
