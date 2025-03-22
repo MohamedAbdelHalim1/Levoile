@@ -8,6 +8,8 @@
 
                 <form action="{{ route('shooting-products.update' , $product->id) }}" method="POST">
                     @csrf
+                    @method('PUT')
+
                     <div class="mb-3">
                         <label class="form-label">اسم المنتج</label>
                         <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
