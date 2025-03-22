@@ -9,6 +9,96 @@
                     {{ session('success') }}
                 </div>
             @endif
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
+
+                <form method="GET" action="{{ route('shooting-products.index') }}" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>اسم المنتج</label>
+                            <input type="text" name="name" class="form-control" value="{{ request('name') }}">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>الحالة</label>
+                            <select name="status" class="form-control">
+                                <option value="">كل الحالات</option>
+                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
+                                <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>قيد
+                                    التنفيذ</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>مكتمل
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>نوع التصوير</label>
+                            <select name="type_of_shooting" class="form-control">
+                                <option value="">الكل</option>
+                                <option value="تصوير منتج"
+                                    {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>تصوير منتج</option>
+                                <option value="تصوير موديل"
+                                    {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>تصوير موديل
+                                </option>
+                                <option value="تعديل لون"
+                                    {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>تعديل لون</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>الموقع</label>
+                            <select name="location" class="form-control">
+                                <option value="">الكل</option>
+                                <option value="تصوير بالداخل"
+                                    {{ request('location') == 'تصوير بالداخل' ? 'selected' : '' }}>تصوير بالداخل</option>
+                                <option value="تصوير بالخارج"
+                                    {{ request('location') == 'تصوير بالخارج' ? 'selected' : '' }}>تصوير بالخارج</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Filters -->
+                        <div class="col-md-3 mt-3">
+                            <label>تاريخ التصوير من</label>
+                            <input type="date" name="date_of_shooting_start" class="form-control"
+                                value="{{ request('date_of_shooting_start') }}">
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label>إلى</label>
+                            <input type="date" name="date_of_shooting_end" class="form-control"
+                                value="{{ request('date_of_shooting_end') }}">
+                        </div>
+
+                        <div class="col-md-3 mt-3">
+                            <label>تاريخ التسليم من</label>
+                            <input type="date" name="date_of_delivery_start" class="form-control"
+                                value="{{ request('date_of_delivery_start') }}">
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label>إلى</label>
+                            <input type="date" name="date_of_delivery_end" class="form-control"
+                                value="{{ request('date_of_delivery_end') }}">
+                        </div>
+
+                        <div class="col-md-3 mt-3">
+                            <label>تاريخ التعديل من</label>
+                            <input type="date" name="date_of_editing_start" class="form-control"
+                                value="{{ request('date_of_editing_start') }}">
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label>إلى</label>
+                            <input type="date" name="date_of_editing_end" class="form-control"
+                                value="{{ request('date_of_editing_end') }}">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="col-md-3 mt-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">فلتر</button>
+                            <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">إلغاء</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 @if (auth()->user()->hasPermission('إضافة منتج'))
@@ -132,7 +222,8 @@
                                         </button>
                                     @endif
                                     <!-- edit btn and delete form -->
-                                    <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">
+                                    <a href="{{ route('shooting-products.edit', $product->id) }}"
+                                        class="btn btn-secondary">
                                         تعديل
                                     </a>
                                     <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
@@ -155,7 +246,8 @@
     </div>
 
     <!-- Drive Link Modal -->
-    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel" aria-hidden="true">
+    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

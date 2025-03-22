@@ -8,18 +8,61 @@ use Illuminate\Http\Request;
 
 class ShootingProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $shooting_products = ShootingProduct::all();
-        $photographers = User::whereHas('role', function ($query) {
-            $query->where('name', 'photographer');
+        $query = ShootingProduct::query();
+
+        // Filters
+        if ($request->filled('name')) {
+            $query->where('name', 'LIKE', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('type_of_shooting')) {
+            $query->where('type_of_shooting', $request->type_of_shooting);
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', $request->location);
+        }
+
+        if ($request->filled('date_of_shooting_start') && $request->filled('date_of_shooting_end')) {
+            $query->whereBetween('date_of_shooting', [
+                $request->date_of_shooting_start,
+                $request->date_of_shooting_end
+            ]);
+        }
+
+        if ($request->filled('date_of_delivery_start') && $request->filled('date_of_delivery_end')) {
+            $query->whereBetween('date_of_delivery', [
+                $request->date_of_delivery_start,
+                $request->date_of_delivery_end
+            ]);
+        }
+
+        if ($request->filled('date_of_editing_start') && $request->filled('date_of_editing_end')) {
+            $query->whereBetween('date_of_editing', [
+                $request->date_of_editing_start,
+                $request->date_of_editing_end
+            ]);
+        }
+
+        $shooting_products = $query->orderBy('created_at', 'desc')->get();
+
+        $photographers = User::whereHas('role', function ($q) {
+            $q->where('name', 'photographer');
         })->get();
-        $editors = User::whereHas('role', function ($query) {
-            $query->where('name', 'editor');
+
+        $editors = User::whereHas('role', function ($q) {
+            $q->where('name', 'editor');
         })->get();
-                
-        return view('shooting_products.index', compact('shooting_products' , 'photographers', 'editors'));
+
+        return view('shooting_products.index', compact('shooting_products', 'photographers', 'editors'));
     }
+
 
     public function startShooting(Request $request)
     {
@@ -36,11 +79,11 @@ class ShootingProductController extends Controller
                 'editor.*' => 'exists:users,id',
                 'date_of_delivery' => 'required|date',
             ]);
-    
+
             $product = ShootingProduct::findOrFail($request->product_id);
             $product->type_of_shooting = $request->type_of_shooting;
             $product->status = 'in_progress';
-    
+
             if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                 $product->location = $request->location;
                 $product->date_of_shooting = $request->date_of_shooting;
@@ -49,38 +92,36 @@ class ShootingProductController extends Controller
                 $product->date_of_editing = $request->date_of_editing;
                 $product->editor = json_encode($request->editor);
             }
-    
+
             $product->date_of_delivery = $request->date_of_delivery;
             $product->save();
-    
+
             return response()->json(['success' => true, 'message' => 'تم بدء التصوير بنجاح']);
-    
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
     }
 
     public function updateDriveLink(Request $request)
-{
-    try {
-        $request->validate([
-            'product_id' => 'required|exists:shooting_products,id',
-            'drive_link' => 'required|url',
-        ]);
+    {
+        try {
+            $request->validate([
+                'product_id' => 'required|exists:shooting_products,id',
+                'drive_link' => 'required|url',
+            ]);
 
-        $product = ShootingProduct::findOrFail($request->product_id);
-        $product->drive_link = $request->drive_link;
-        $product->status = 'completed';
-        $product->save();
+            $product = ShootingProduct::findOrFail($request->product_id);
+            $product->drive_link = $request->drive_link;
+            $product->status = 'completed';
+            $product->save();
 
-        return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
-
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => 'خطأ أثناء تحديث لينك درايف'], 500);
+            return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'خطأ أثناء تحديث لينك درايف'], 500);
+        }
     }
-}
 
-    
+
 
 
     public function create()
