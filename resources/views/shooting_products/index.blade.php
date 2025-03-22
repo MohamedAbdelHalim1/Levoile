@@ -335,11 +335,11 @@
                             <h5>تفاصيل التصوير</h5>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التصوير</label>
-                                <input type="date" name="date_of_shooting" class="form-control required-input" required>
+                                <input type="date" name="date_of_shooting" class="form-control required-input">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">المصورون</label>
-                                <select name="photographer[]" class="form-control tom-select required-input" multiple required>
+                                <select name="photographer[]" class="form-control tom-select required-input" multiple>
                                     @foreach ($photographers as $photographer)
                                         <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
                                     @endforeach
@@ -347,7 +347,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control required-input" required>
+                                <input type="date" name="date_of_delivery" class="form-control required-input">
                             </div>
                         </div>
 
@@ -356,11 +356,11 @@
                             <h5>تفاصيل التعديل</h5>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التعديل</label>
-                                <input type="date" name="date_of_editing" class="form-control required-input" required>
+                                <input type="date" name="date_of_editing" class="form-control required-input">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">المحررون</label>
-                                <select name="editor[]" class="form-control tom-select required-input" multiple required>
+                                <select name="editor[]" class="form-control tom-select required-input" multiple>
                                     @foreach ($editors as $editor)
                                         <option value="{{ $editor->id }}">{{ $editor->name }}</option>
                                     @endforeach
@@ -368,7 +368,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery" class="form-control required-input" required>
+                                <input type="date" name="date_of_delivery" class="form-control required-input">
                             </div>
                         </div>
 
@@ -432,10 +432,10 @@
                     return;
                 }
 
-                if (!validateStep()) {
-                    alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
-                    return;
-                }
+               // if (!validateStep()) {
+               //     alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
+                //    return;
+                // }
 
                 $(".step").addClass("d-none");
 
