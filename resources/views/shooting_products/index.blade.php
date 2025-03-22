@@ -9,10 +9,11 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
 
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
                 <form method="GET" action="{{ route('shooting-products.index') }}" class="mb-4">
                     <div class="row">
+                        <!-- Text & Dropdown Filters -->
                         <div class="col-md-3">
                             <label>اسم المنتج</label>
                             <input type="text" name="name" class="form-control" value="{{ request('name') }}">
@@ -55,48 +56,49 @@
                             </select>
                         </div>
 
-                        <!-- Date Filters -->
-                        <div class="col-md-3 mt-3">
-                            <label>تاريخ التصوير من</label>
-                            <input type="date" name="date_of_shooting_start" class="form-control"
-                                value="{{ request('date_of_shooting_start') }}">
-                        </div>
-                        <div class="col-md-3 mt-3">
-                            <label>إلى</label>
-                            <input type="date" name="date_of_shooting_end" class="form-control"
-                                value="{{ request('date_of_shooting_end') }}">
-                        </div>
-
-                        <div class="col-md-3 mt-3">
-                            <label>تاريخ التسليم من</label>
-                            <input type="date" name="date_of_delivery_start" class="form-control"
-                                value="{{ request('date_of_delivery_start') }}">
-                        </div>
-                        <div class="col-md-3 mt-3">
-                            <label>إلى</label>
-                            <input type="date" name="date_of_delivery_end" class="form-control"
-                                value="{{ request('date_of_delivery_end') }}">
+                        <!-- Date Range: تصوير -->
+                        <div class="col-md-6 mt-3">
+                            <label>تاريخ التصوير</label>
+                            <div class="input-group">
+                                <input type="date" name="date_of_shooting_start" class="form-control"
+                                    value="{{ request('date_of_shooting_start') }}">
+                                <span class="input-group-text">-</span>
+                                <input type="date" name="date_of_shooting_end" class="form-control"
+                                    value="{{ request('date_of_shooting_end') }}">
+                            </div>
                         </div>
 
-                        <div class="col-md-3 mt-3">
-                            <label>تاريخ التعديل من</label>
-                            <input type="date" name="date_of_editing_start" class="form-control"
-                                value="{{ request('date_of_editing_start') }}">
+                        <!-- Date Range: تسليم -->
+                        <div class="col-md-6 mt-3">
+                            <label>تاريخ التسليم</label>
+                            <div class="input-group">
+                                <input type="date" name="date_of_delivery_start" class="form-control"
+                                    value="{{ request('date_of_delivery_start') }}">
+                                <span class="input-group-text">-</span>
+                                <input type="date" name="date_of_delivery_end" class="form-control"
+                                    value="{{ request('date_of_delivery_end') }}">
+                            </div>
                         </div>
-                        <div class="col-md-3 mt-3">
-                            <label>إلى</label>
-                            <input type="date" name="date_of_editing_end" class="form-control"
-                                value="{{ request('date_of_editing_end') }}">
+
+                        <!-- Date Range: تعديل -->
+                        <div class="col-md-6 mt-3">
+                            <label>تاريخ التعديل</label>
+                            <div class="input-group">
+                                <input type="date" name="date_of_editing_start" class="form-control"
+                                    value="{{ request('date_of_editing_start') }}">
+                                <span class="input-group-text">-</span>
+                                <input type="date" name="date_of_editing_end" class="form-control"
+                                    value="{{ request('date_of_editing_end') }}">
+                            </div>
                         </div>
 
                         <!-- Buttons -->
-                        <div class="col-md-3 mt-4 d-flex align-items-end">
+                        <div class="col-md-6 mt-4 d-flex align-items-end justify-content-start">
                             <button type="submit" class="btn btn-primary me-2">فلتر</button>
-                            <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">إلغاء</a>
+                            <a href="{{ route('shooting-products.index') }}" class="btn btn-success">إلغاء</a>
                         </div>
                     </div>
                 </form>
-
             </div>
 
 
