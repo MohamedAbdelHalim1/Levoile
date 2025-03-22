@@ -496,6 +496,7 @@
                     value: dateOfDelivery
                 });
 
+
                 $.ajax({
                     url: "{{ route('shooting-products.start') }}",
                     type: "POST",
