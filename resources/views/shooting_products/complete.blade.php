@@ -11,12 +11,12 @@
 
                     <div class="mb-3">
                         <label>اسم المنتج</label>
-                        <input type="text" name="name" value="{{ $product->name }}" class="form-control">
+                        <input type="text" name="name" value="{{ $product->name ?? '' }}" class="form-control">
                     </div>
 
                     <div class="mb-3">
                         <label>الوصف</label>
-                        <textarea name="description" class="form-control">{{ $product->description }}</textarea>
+                        <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
                     </div>
 
                     <hr>

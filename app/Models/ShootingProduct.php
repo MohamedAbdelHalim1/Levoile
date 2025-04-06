@@ -13,6 +13,7 @@ class ShootingProduct extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'number_of_colors',
         'status',
         'type_of_shooting',
