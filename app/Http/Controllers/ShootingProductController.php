@@ -51,6 +51,23 @@ class ShootingProductController extends Controller
             ]);
         }
 
+        $user = auth()->user();
+
+        if (!$user->hasRole('admin')) {
+            $userId = (string) $user->id;
+
+            $query->where(function ($q) use ($user, $userId) {
+                if ($user->hasRole('photographer')) {
+                    $q->whereJsonContains('photographer', $userId);
+                }
+
+                if ($user->hasRole('editor')) {
+                    $q->orWhereJsonContains('editor', $userId);
+                }
+            });
+        }
+
+
         $shooting_products = $query->orderBy('created_at', 'desc')->get();
 
         $photographers = User::whereHas('role', function ($q) {
