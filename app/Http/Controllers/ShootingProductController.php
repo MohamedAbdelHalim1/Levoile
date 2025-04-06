@@ -159,6 +159,40 @@ class ShootingProductController extends Controller
         return view('shooting_products.show', compact('product'));
     }
 
+    public function completeData(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:shooting_products,id',
+            'colors' => 'required|array',
+            'colors.*.name' => 'required|string',
+            'colors.*.code' => 'required|string',
+            'colors.*.image' => 'required|file|image|max:2048',
+        ]);
+
+        foreach ($request->colors as $index => $color) {
+            $file = $color['image'];
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('images/shooting');
+
+            // Create the directory if it doesn't exist
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+
+            \App\Models\ShootingProductColor::create([
+                'shooting_product_id' => $request->product_id,
+                'name' => $color['name'],
+                'code' => $color['code'],
+                'image' => 'images/shooting/' . $filename, // Save relative path
+            ]);
+        }
+
+        return response()->json(['message' => 'تم حفظ بيانات الألوان بنجاح']);
+    }
+
+
     public function edit($id)
     {
         $product = ShootingProduct::findOrFail($id);

@@ -25,5 +25,10 @@ class ShootingProduct extends Model
         'drive_link',
     ];
 
+    public function shootingProductColors()
+    {
+        return $this->hasMany(ShootingProductColor::class);
+    }
+
   
 }
