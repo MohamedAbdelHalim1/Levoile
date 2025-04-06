@@ -89,11 +89,6 @@
         function showImagePreview(src) {
             document.getElementById('previewImage').src = src;
         }
-    </script>
-    <script>
-        function showImagePreview(src) {
-            document.getElementById('previewImage').src = src;
-        }
 
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.querySelector("form");
