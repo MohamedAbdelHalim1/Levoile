@@ -90,26 +90,21 @@
             document.getElementById('previewImage').src = src;
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
+        window.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("form");
             const saveBtn = document.getElementById("saveButton");
 
-            let isChanged = false;
+            if (!form || !saveBtn) return;
 
-            // Any input or textarea or file input
-            form.querySelectorAll("input, textarea, select").forEach(input => {
-                input.addEventListener("input", () => {
-                    if (!isChanged) {
-                        isChanged = true;
-                        saveBtn.disabled = false;
-                    }
+            const inputs = form.querySelectorAll("input, textarea, select");
+
+            inputs.forEach(input => {
+                input.addEventListener("change", () => {
+                    saveBtn.disabled = false;
                 });
 
-                input.addEventListener("change", () => {
-                    if (!isChanged) {
-                        isChanged = true;
-                        saveBtn.disabled = false;
-                    }
+                input.addEventListener("input", () => {
+                    saveBtn.disabled = false;
                 });
             });
         });
