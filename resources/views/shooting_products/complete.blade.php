@@ -23,29 +23,40 @@
                     <h5>تفاصيل الألوان</h5>
 
                     <div class="row g-4">
-                        @for ($i = 1; $i <= $product->number_of_colors; $i++)
+                        @for ($i = 0; $i < $product->number_of_colors; $i++)
+                            @php
+                                $color = $colors[$i] ?? null;
+                            @endphp
                             <div class="col-md-4">
                                 <div class="border p-3 mb-3 rounded bg-light">
-                                    <h6>لون {{ $i }}</h6>
+                                    <h6>لون {{ $i + 1 }}</h6>
+                    
                                     <div class="mb-2">
                                         <label>اسم اللون</label>
-                                        <input type="text" name="colors[{{ $i }}][name]" class="form-control"
-                                            required>
+                                        <input type="text" name="colors[{{ $i + 1 }}][name]" class="form-control"
+                                            value="{{ $color?->name }}" required>
                                     </div>
+                    
                                     <div class="mb-2">
                                         <label>الكود</label>
-                                        <input type="text" name="colors[{{ $i }}][code]" class="form-control"
-                                            required>
+                                        <input type="text" name="colors[{{ $i + 1 }}][code]" class="form-control"
+                                            value="{{ $color?->code }}" required>
                                     </div>
+                    
                                     <div class="mb-2">
                                         <label>الصورة</label>
-                                        <input type="file" name="colors[{{ $i }}][image]" class="form-control"
-                                            accept="image/*" required>
+                                        <input type="file" name="colors[{{ $i + 1 }}][image]" class="form-control"
+                                            accept="image/*">
+                    
+                                        @if (!empty($color?->image) && file_exists(public_path('images/shooting/' . $color->image)))
+                                            <img src="{{ asset('images/shooting/' . $color->image) }}" class="img-thumbnail mt-2" width="100">
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         @endfor
                     </div>
+                    
 
                     <button type="submit" class="btn btn-primary">حفظ البيانات</button>
                     <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>

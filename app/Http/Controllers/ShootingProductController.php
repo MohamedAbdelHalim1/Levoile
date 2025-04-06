@@ -163,32 +163,34 @@ class ShootingProductController extends Controller
     public function completePage($id)
     {
         $product = ShootingProduct::findOrFail($id);
-        return view('shooting_products.complete', compact('product'));
+        $colors = ShootingProductColor::where('shooting_product_id', $product->id)->get();
+
+        return view('shooting_products.complete', compact('product', 'colors'));
     }
-    
+
     public function saveCompleteData(Request $request, $id)
     {
         $product = ShootingProduct::findOrFail($id);
-        
+
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->save();
-    
+
         foreach ($request->colors as $color) {
             $colorModel = new ShootingProductColor();
             $colorModel->shooting_product_id = $product->id;
             $colorModel->name = $color['name'];
             $colorModel->code = $color['code'];
-            
+
             if (isset($color['image'])) {
                 $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
                 $color['image']->move(public_path('images/shooting'), $imageName);
                 $colorModel->image = 'images/shooting/' . $imageName;
             }
-    
+
             $colorModel->save();
         }
-    
+
         return redirect()->route('shooting-products.index')->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
 
