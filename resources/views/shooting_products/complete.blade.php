@@ -62,7 +62,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary">حفظ البيانات</button>
+                    <button type="submit" class="btn btn-primary" disabled>حفظ البيانات</button>
                     <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>
                 </form>
             </div>
@@ -89,5 +89,34 @@
         function showImagePreview(src) {
             document.getElementById('previewImage').src = src;
         }
+    </script>
+    <script>
+        function showImagePreview(src) {
+            document.getElementById('previewImage').src = src;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            const saveBtn = document.getElementById("saveButton");
+
+            let isChanged = false;
+
+            // Any input or textarea or file input
+            form.querySelectorAll("input, textarea, select").forEach(input => {
+                input.addEventListener("input", () => {
+                    if (!isChanged) {
+                        isChanged = true;
+                        saveBtn.disabled = false;
+                    }
+                });
+
+                input.addEventListener("change", () => {
+                    if (!isChanged) {
+                        isChanged = true;
+                        saveBtn.disabled = false;
+                    }
+                });
+            });
+        });
     </script>
 @endsection
