@@ -27,20 +27,20 @@
                             @php
                                 $color = $colors[$i] ?? null;
                             @endphp
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="border p-3 mb-3 rounded bg-light">
                                     <h6>لون {{ $i + 1 }}</h6>
 
                                     <div class="mb-2">
                                         <label>اسم اللون</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][name]" class="form-control"
-                                            value="{{ $color?->name }}" required>
+                                            value="{{ $color?->name }}">
                                     </div>
 
                                     <div class="mb-2">
                                         <label>الكود</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][code]" class="form-control"
-                                            value="{{ $color?->code }}" required>
+                                            value="{{ $color?->code }}">
                                     </div>
 
                                     <div class="mb-2">
