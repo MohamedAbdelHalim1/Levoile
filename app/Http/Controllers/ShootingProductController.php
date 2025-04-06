@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShootingProduct;
+use App\Models\ShootingProductColor;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -159,37 +160,36 @@ class ShootingProductController extends Controller
         return view('shooting_products.show', compact('product'));
     }
 
-    public function completeData(Request $request)
+    public function completePage($id)
     {
-        $request->validate([
-            'product_id' => 'required|exists:shooting_products,id',
-            'colors' => 'required|array',
-            'colors.*.name' => 'required|string',
-            'colors.*.code' => 'required|string',
-            'colors.*.image' => 'required|file|image|max:2048',
-        ]);
-
-        foreach ($request->colors as $index => $color) {
-            $file = $color['image'];
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $destinationPath = public_path('images/shooting');
-
-            // Create the directory if it doesn't exist
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
+        $product = ShootingProduct::findOrFail($id);
+        return view('shooting_products.complete', compact('product'));
+    }
+    
+    public function saveCompleteData(Request $request, $id)
+    {
+        $product = ShootingProduct::findOrFail($id);
+        
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->save();
+    
+        foreach ($request->colors as $color) {
+            $colorModel = new ShootingProductColor();
+            $colorModel->shooting_product_id = $product->id;
+            $colorModel->name = $color['name'];
+            $colorModel->code = $color['code'];
+            
+            if (isset($color['image'])) {
+                $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
+                $color['image']->move(public_path('images/shooting'), $imageName);
+                $colorModel->image = 'images/shooting/' . $imageName;
             }
-
-            $file->move($destinationPath, $filename);
-
-            \App\Models\ShootingProductColor::create([
-                'shooting_product_id' => $request->product_id,
-                'name' => $color['name'],
-                'code' => $color['code'],
-                'image' => 'images/shooting/' . $filename, // Save relative path
-            ]);
+    
+            $colorModel->save();
         }
-
-        return response()->json(['message' => 'تم حفظ بيانات الألوان بنجاح']);
+    
+        return redirect()->route('shooting-products.index')->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
 
 

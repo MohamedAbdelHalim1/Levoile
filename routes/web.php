@@ -215,8 +215,9 @@ Route::middleware('auth')->group(function () {
     ->name('shooting-products.start');
     Route::post('/shooting-products/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
     ->name('shooting-products.updateDriveLink');
-    Route::post('/shooting-products/complete-data', [ShootingProductController::class, 'completeData'])->name('shooting-products.completeData');
-
+    Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
+    Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
+    
 
 
 

@@ -233,10 +233,10 @@
                                     @endif
                                     <!-- btn اكمال البيانات -->
                                     @if ($product->status == 'in_progress' || $product->status == 'completed')
-                                        <button class="btn btn-warning complete-data" data-id="{{ $product->id }}"
-                                            data-name="{{ $product->name }}">
+                                        <a href="{{ route('shooting-products.complete.page', $product->id) }}"
+                                            class="btn btn-warning">
                                             اكمال البيانات
-                                        </button>
+                                        </a>
                                     @endif
                                     <!-- edit btn and delete form -->
                                     <a href="{{ route('shooting-products.edit', $product->id) }}"
@@ -392,38 +392,7 @@
         </div>
     </div>
 
-    <!-- Complete Data Modal -->
-    <div class="modal fade" id="completeDataModal" tabindex="-1" aria-labelledby="completeDataModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <form id="completeDataForm">
-                    @csrf
-                    <input type="hidden" name="product_id" id="complete_data_product_id">
-
-                    <div class="modal-header">
-                        <h5 class="modal-title">اكمال بيانات المنتج</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <h5>المنتج: <span id="product-name-display" class="text-primary fw-bold"></span></h5>
-                        </div>
-                        <div id="color-inputs-container" class="row"></div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">حفظ البيانات</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+ 
 @endsection
 
 @section('scripts')
@@ -610,69 +579,5 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            $(".complete-data").on("click", function() {
-                let productId = $(this).data("id");
-                let productName = $(this).data("name");
-                $("#product-name-display").text(productName);
 
-                $("#complete_data_product_id").val(productId);
-                $("#color-inputs-container").empty();
-
-                // Get number of colors from table cell (3rd column = index 2)
-                let row = $(this).closest("tr");
-                let numberOfColors = parseInt(row.find("td").eq(2).text()) || 0;
-
-                for (let i = 1; i <= numberOfColors; i++) {
-                    let group = `
-                    <div class="col-md-12">
-                        <div class="border p-3 mb-3 rounded bg-light">
-                            <h6>لون ${i}</h6>
-                            <div class="mb-2">
-                                <label>اسم اللون</label>
-                                <input type="text" name="colors[${i}][name]" class="form-control" required>
-                            </div>
-                            <div class="mb-2">
-                                <label>الكود</label>
-                                <input type="text" name="colors[${i}][code]" class="form-control" required>
-                            </div>
-                            <div class="mb-2">
-                                <label>الصورة</label>
-                                <input type="file" name="colors[${i}][image]" class="form-control" accept="image/*" required>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    $("#color-inputs-container").append(group);
-                }
-
-                $("#completeDataModal").modal("show");
-            });
-
-            // Submit form via AJAX
-            $("#completeDataForm").on("submit", function(e) {
-                e.preventDefault();
-
-                let formData = new FormData(this);
-
-                $.ajax({
-                    url: "{{ route('shooting-products.completeData') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        alert(res.message);
-                        $("#completeDataModal").modal("hide");
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert("حدث خطأ أثناء حفظ البيانات.");
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script>
 @endsection
