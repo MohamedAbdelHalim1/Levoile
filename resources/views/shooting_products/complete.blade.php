@@ -90,22 +90,12 @@
             document.getElementById('previewImage').src = src;
         }
 
-        window.addEventListener("DOMContentLoaded", () => {
-            const form = document.querySelector("form");
-            const saveBtn = document.getElementById("saveButton");
+        $(document).ready(function () {
+            const $form = $('form');
+            const $saveBtn = $('#saveButton');
 
-            if (!form || !saveBtn) return;
-
-            const inputs = form.querySelectorAll("input, textarea, select");
-
-            inputs.forEach(input => {
-                input.addEventListener("change", () => {
-                    saveBtn.disabled = false;
-                });
-
-                input.addEventListener("input", () => {
-                    saveBtn.disabled = false;
-                });
+            $form.on('input change', 'input, textarea, select', function () {
+                $saveBtn.prop('disabled', false);
             });
         });
     </script>
