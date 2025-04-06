@@ -53,15 +53,15 @@ class ShootingProductController extends Controller
 
         $user = auth()->user();
 
-        if (!$user->hasRole('admin')) {
+        if (!$user->role->name == 'admin') {
             $userId = (string) $user->id;
 
             $query->where(function ($q) use ($user, $userId) {
-                if ($user->hasRole('photographer')) {
+                if ($user->role->name == 'photographer') {
                     $q->whereJsonContains('photographer', $userId);
                 }
 
-                if ($user->hasRole('editor')) {
+                if ($user->role->name == 'editor') {
                     $q->orWhereJsonContains('editor', $userId);
                 }
             });
