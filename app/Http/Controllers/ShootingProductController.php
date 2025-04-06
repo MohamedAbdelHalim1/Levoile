@@ -53,7 +53,7 @@ class ShootingProductController extends Controller
 
         $user = auth()->user();
 
-        if (!$user->role->name == 'admin') {
+        if ($user->role->name !== 'admin') {
             $userId = (string) $user->id;
 
             $query->where(function ($q) use ($user, $userId) {
