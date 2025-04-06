@@ -232,8 +232,9 @@
                                         </button>
                                     @endif
                                     <!-- btn اكمال البيانات -->
-                                    @if ($product->status == 'in_progress')
-                                        <button class="btn btn-warning complete-data" data-id="{{ $product->id }}">
+                                    @if ($product->status == 'in_progress' || $product->status == 'completed')
+                                        <button class="btn btn-warning complete-data" data-id="{{ $product->id }}"
+                                            data-name="{{ $product->name }}">
                                             اكمال البيانات
                                         </button>
                                     @endif
@@ -405,7 +406,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
+
+
                     <div class="modal-body">
+                        <div class="mb-3">
+                            <h5>المنتج: <span id="product-name-display" class="text-primary fw-bold"></span></h5>
+                        </div>
                         <div id="color-inputs-container" class="row"></div>
                     </div>
 
@@ -608,6 +614,9 @@
         $(document).ready(function() {
             $(".complete-data").on("click", function() {
                 let productId = $(this).data("id");
+                let productName = $(this).data("name");
+                $("#product-name-display").text(productName);
+
                 $("#complete_data_product_id").val(productId);
                 $("#color-inputs-container").empty();
 
@@ -617,7 +626,7 @@
 
                 for (let i = 1; i <= numberOfColors; i++) {
                     let group = `
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="border p-3 mb-3 rounded bg-light">
                             <h6>لون ${i}</h6>
                             <div class="mb-2">
