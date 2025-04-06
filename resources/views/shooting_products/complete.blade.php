@@ -62,7 +62,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary" disabled>حفظ البيانات</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton" disabled>حفظ البيانات</button>
                     <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>
                 </form>
             </div>
