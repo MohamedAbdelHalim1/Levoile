@@ -222,9 +222,11 @@
                                 </td>
 
                                 <td>
-                                    <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
-                                        التصوير
-                                    </button>
+                                    @if (auth()->user()->role->name == 'admin')
+                                        <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
+                                            التصوير
+                                        </button>
+                                    @endif
                                     @if ($product->status == 'in_progress' || $product->status == 'completed')
                                         <button class="btn btn-success open-drive-link-modal" data-id="{{ $product->id }}"
                                             data-drive-link="{{ $product->drive_link }}">
@@ -232,26 +234,28 @@
                                         </button>
                                     @endif
                                     <!-- btn اكمال البيانات -->
-                                    @if ($product->status == 'in_progress' || $product->status == 'completed')
+                                    @if (($product->status == 'in_progress' || $product->status == 'completed') && auth()->user()->role->name == 'admin')
                                         <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                             class="btn btn-warning">
                                             اكمال البيانات
                                         </a>
                                     @endif
-                                    <!-- edit btn and delete form -->
-                                    <a href="{{ route('shooting-products.edit', $product->id) }}"
-                                        class="btn btn-secondary">
-                                        تعديل
-                                    </a>
-                                    <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
-                                        style="display: inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
-                                            حذف
-                                        </button>
-                                    </form>
+                                    @if (auth()->user()->role->name == 'admin')
+                                        <!-- edit btn and delete form -->
+                                        <a href="{{ route('shooting-products.edit', $product->id) }}"
+                                            class="btn btn-secondary">
+                                            تعديل
+                                        </a>
+                                        <form action="{{ route('shooting-products.destroy', $product->id) }}"
+                                            method="POST" style="display: inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"
+                                                onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
+                                                حذف
+                                            </button>
+                                        </form>
+                                    @endif
 
                                 </td>
                             </tr>
@@ -392,7 +396,7 @@
         </div>
     </div>
 
- 
+
 @endsection
 
 @section('scripts')
@@ -578,6 +582,4 @@
             });
         });
     </script>
-
-
 @endsection
