@@ -22,7 +22,7 @@
                     <hr>
                     <h5>تفاصيل الألوان</h5>
 
-                    <div class="row">
+                    <div class="row g-4">
                         @for ($i = 1; $i <= $product->number_of_colors; $i++)
                             <div class="col-md-4">
                                 <div class="border p-3 mb-3 rounded bg-light">
