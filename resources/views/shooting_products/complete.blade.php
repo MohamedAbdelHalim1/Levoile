@@ -30,33 +30,37 @@
                             <div class="col-md-4">
                                 <div class="border p-3 mb-3 rounded bg-light">
                                     <h6>لون {{ $i + 1 }}</h6>
-                    
+
                                     <div class="mb-2">
                                         <label>اسم اللون</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][name]" class="form-control"
                                             value="{{ $color?->name }}" required>
                                     </div>
-                    
+
                                     <div class="mb-2">
                                         <label>الكود</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][code]" class="form-control"
                                             value="{{ $color?->code }}" required>
                                     </div>
-                    
+
                                     <div class="mb-2">
                                         <label>الصورة</label>
                                         <input type="file" name="colors[{{ $i + 1 }}][image]" class="form-control"
                                             accept="image/*">
-                    
+
                                         @if (!empty($color?->image) && file_exists(public_path($color->image)))
-                                            <img src="{{ asset($color->image) }}" class="img-thumbnail mt-2" width="100">
+                                            <img src="{{ asset($color->image) }}" class="img-thumbnail mt-2" width="100"
+                                                data-bs-toggle="modal" data-bs-target="#imagePreviewModal"
+                                                onclick="showImagePreview('{{ asset($color->image) }}')"
+                                                style="cursor: pointer;">
                                         @endif
+
                                     </div>
                                 </div>
                             </div>
                         @endfor
                     </div>
-                    
+
 
                     <button type="submit" class="btn btn-primary">حفظ البيانات</button>
                     <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>
@@ -64,4 +68,26 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- Image Preview Modal -->
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-body text-center">
+                    <img id="previewImage" src="" alt="Preview" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function showImagePreview(src) {
+            document.getElementById('previewImage').src = src;
+        }
+    </script>
 @endsection
