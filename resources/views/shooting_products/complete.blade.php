@@ -48,8 +48,8 @@
                                         <input type="file" name="colors[{{ $i + 1 }}][image]" class="form-control"
                                             accept="image/*">
                     
-                                        @if (!empty($color?->image) && file_exists(public_path('images/shooting/' . $color->image)))
-                                            <img src="{{ asset('images/shooting/' . $color->image) }}" class="img-thumbnail mt-2" width="100">
+                                        @if (!empty($color?->image) && file_exists(public_path($color->image)))
+                                            <img src="{{ asset($color->image) }}" class="img-thumbnail mt-2" width="100">
                                         @endif
                                     </div>
                                 </div>
