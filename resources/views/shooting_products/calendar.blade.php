@@ -16,9 +16,13 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <h4 class="mb-4">📅 جدول النشر - التقويم</h4>
-        <div id="calendar"></div>
+    <div class="p-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="bg-white shadow sm:rounded-lg p-4">
+                <h4 class="mb-4">📅 جدول النشر - التقويم</h4>
+                <div id="calendar"></div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -28,7 +32,7 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -40,8 +44,9 @@
                     end: 'dayGridMonth,timeGridWeek'
                 },
                 events: @json($events),
-                eventDidMount: function (info) {
-                    const tooltip = `${info.event.title}<br><strong>النوع:</strong> ${info.event.extendedProps.type}`;
+                eventDidMount: function(info) {
+                    const tooltip =
+                        `${info.event.title}<br><strong>النوع:</strong> ${info.event.extendedProps.type}`;
                     new Tooltip(info.el, {
                         title: tooltip,
                         placement: 'top',
