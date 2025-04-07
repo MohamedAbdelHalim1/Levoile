@@ -227,6 +227,7 @@ Route::middleware('auth')->group(function () {
     Route::post('social-media/publish', [ShootingProductController::class, 'publishSocial'])->name('social-media.publish');
     Route::post('social-media/reopen', [ShootingProductController::class, 'reopenSocial'])->name('social-media.reopen');
     Route::post('social-media/reopen', [ShootingProductController::class, 'reopenSocial'])->name('social-media.reopen');
+    Route::get('/social-media/calendar', [ShootingProductController::class, 'calendar'])->name('social-media.calendar');
 
 
 

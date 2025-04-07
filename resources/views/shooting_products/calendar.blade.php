@@ -1,0 +1,28 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h4 class="mb-4">جدول النشر - التقويم</h4>
+    <div id="calendar"></div>
+</div>
+@endsection
+
+@section('scripts')
+<!-- FullCalendar CDN -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ar', // Arabic language
+            events: @json($events)
+        });
+
+        calendar.render();
+    });
+</script>
+@endsection

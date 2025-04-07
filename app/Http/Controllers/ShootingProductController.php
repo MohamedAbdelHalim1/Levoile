@@ -333,7 +333,7 @@ class ShootingProductController extends Controller
 
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
-                
+
                 $product->platforms()->delete();
 
                 foreach ($request->platforms as $platformName => $platformData) {
@@ -347,9 +347,6 @@ class ShootingProductController extends Controller
 
                 $product->status = 'done';
                 $product->save();
-                
-
-
             });
 
             return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
@@ -370,5 +367,19 @@ class ShootingProductController extends Controller
         $product->save();
 
         return redirect()->route('social-media.index')->with('success', 'تم إعادة فتح المنتج للنشر.');
+    }
+
+    public function calendar()
+    {
+        $platforms = SocialMediaProductPlatform::with('socialMediaProduct.websiteAdminProduct')->get();
+
+        $events = $platforms->map(function ($item) {
+            return [
+                'title' => $item->socialMediaProduct->websiteAdminProduct->name . ' - ' . ucfirst($item->platform),
+                'start' => $item->publish_date,
+            ];
+        });
+
+        return view('shooting_products.calendar', ['events' => $events]);
     }
 }
