@@ -35,8 +35,7 @@
 
                                 <td>
                                     @if (optional($item->platforms)->count())
-                                        <a href="#" class="badge bg-info text-dark"
-                                           data-bs-toggle="modal"
+                                        <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
                                            data-bs-target="#platformsModal"
                                            data-platforms='@json($item->platforms->map(function ($p) {
                                                return [
@@ -51,8 +50,6 @@
                                         -
                                     @endif
                                 </td>
-                                
-
 
                                 <td>
                                     @if ($item->status == 'new')
