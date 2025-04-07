@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('styles')
+    <!-- FullCalendar CDN (styles + script) -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+@endsection
+
 @section('content')
 <div class="container">
     <h4 class="mb-4">جدول النشر - التقويم</h4>
@@ -8,9 +14,6 @@
 @endsection
 
 @section('scripts')
-<!-- FullCalendar CDN -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
