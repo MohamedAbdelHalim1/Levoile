@@ -34,16 +34,16 @@
                                 </td>
 
                                 <td>
-                                    @if ($item->platforms->count())
+                                    @if (optional($item->platforms)->count())
                                         <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
-                                           data-bs-target="#platformsModal" data-platforms='@json($item->platforms)'>
+                                            data-bs-target="#platformsModal" data-platforms='@json($item->platforms)'>
                                             {{ $item->platforms->count() }} منصة
                                         </a>
                                     @else
                                         -
                                     @endif
                                 </td>
-                                
+
 
                                 <td>
                                     @if ($item->status == 'new')
@@ -54,17 +54,20 @@
                                         </button>
                                     @elseif ($item->status == 'done')
                                         @if (auth()->user()->role->name === 'admin')
-                                            <form method="POST" action="{{ route('social-media.reopen') }}" class="d-inline">
+                                            <form method="POST" action="{{ route('social-media.reopen') }}"
+                                                class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $item->id }}">
-                                                <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('هل أنت متأكد من إعادة الفتح؟')">إعادة الفتح</button>
+                                                <button type="submit" class="btn btn-sm btn-warning"
+                                                    onclick="return confirm('هل أنت متأكد من إعادة الفتح؟')">إعادة
+                                                    الفتح</button>
                                             </form>
                                         @else
                                             <span class="badge bg-success">تم</span>
                                         @endif
                                     @endif
                                 </td>
-                                
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -153,31 +156,30 @@
 
 
     <!-- Modal عرض تفاصيل المنصات -->
-<div class="modal fade" id="platformsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">تفاصيل المنصات</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>المنصة</th>
-                            <th>نوع المنشور</th>
-                            <th>تاريخ النشر</th>
-                        </tr>
-                    </thead>
-                    <tbody id="platformsTableBody">
-                        <!-- Dynamic content -->
-                    </tbody>
-                </table>
+    <div class="modal fade" id="platformsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل المنصات</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>المنصة</th>
+                                <th>نوع المنشور</th>
+                                <th>تاريخ النشر</th>
+                            </tr>
+                        </thead>
+                        <tbody id="platformsTableBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 @endsection
 
 @section('scripts')
@@ -227,41 +229,44 @@
         });
     </script>
 
-<script>
-    const platformsModal = document.getElementById('platformsModal');
-    platformsModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const platforms = JSON.parse(button.getAttribute('data-platforms'));
-        const tableBody = document.getElementById('platformsTableBody');
+    <script>
+        const platformsModal = document.getElementById('platformsModal');
+        platformsModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const platforms = JSON.parse(button.getAttribute('data-platforms'));
+            const tableBody = document.getElementById('platformsTableBody');
 
-        tableBody.innerHTML = '';
+            tableBody.innerHTML = '';
 
-        platforms.forEach(platform => {
-            const published = new Date(platform.publish_date);
-            const now = new Date();
-            const diff = published.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);
+            platforms.forEach(platform => {
+                const published = new Date(platform.publish_date);
+                const now = new Date();
+                const diff = published.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);
 
-            let dateText = '';
-            if (diff === 0) {
-                dateText = `اليوم الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-            } else if (diff === -86400000) {
-                dateText = `أمس الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-            } else if (diff === 86400000) {
-                dateText = `غدًا الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-            } else {
-                const date = new Date(platform.publish_date);
-                dateText = `${date.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })} الساعة ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-            }
+                let dateText = '';
+                if (diff === 0) {
+                    dateText =
+                        `اليوم الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                } else if (diff === -86400000) {
+                    dateText =
+                        `أمس الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                } else if (diff === 86400000) {
+                    dateText =
+                        `غدًا الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                } else {
+                    const date = new Date(platform.publish_date);
+                    dateText =
+                        `${date.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })} الساعة ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                }
 
-            tableBody.innerHTML += `
+                tableBody.innerHTML += `
                 <tr>
                     <td>${platform.platform}</td>
                     <td>${platform.type}</td>
                     <td>${dateText}</td>
                 </tr>
             `;
+            });
         });
-    });
-</script>
-
+    </script>
 @endsection
