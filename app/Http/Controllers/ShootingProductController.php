@@ -372,14 +372,18 @@ class ShootingProductController extends Controller
     public function calendar()
     {
         $platforms = SocialMediaProductPlatform::with('socialMediaProduct.websiteAdminProduct')->get();
-
+    
         $events = $platforms->map(function ($item) {
             return [
                 'title' => $item->socialMediaProduct->websiteAdminProduct->name . ' - ' . ucfirst($item->platform),
                 'start' => $item->publish_date,
+                'extendedProps' => [
+                    'type' => $item->type,
+                ]
             ];
         });
-
+    
         return view('shooting_products.calendar', ['events' => $events]);
     }
+    
 }

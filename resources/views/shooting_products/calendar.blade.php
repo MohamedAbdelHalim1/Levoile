@@ -1,31 +1,61 @@
 @extends('layouts.app')
 
 @section('styles')
-    <!-- FullCalendar CDN (styles + script) -->
+    <!-- FullCalendar Styles -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+    <style>
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .fc-event {
+            cursor: pointer;
+        }
+    </style>
 @endsection
 
 @section('content')
-<div class="container">
-    <h4 class="mb-4">جدول النشر - التقويم</h4>
-    <div id="calendar"></div>
-</div>
+    <div class="container">
+        <h4 class="mb-4">📅 جدول النشر - التقويم</h4>
+        <div id="calendar"></div>
+    </div>
 @endsection
 
 @section('scripts')
+    <!-- FullCalendar Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
 
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'ar', // Arabic language
-            events: @json($events)
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'ar',
+                headerToolbar: {
+                    start: 'prev,next today',
+                    center: 'title',
+                    end: 'dayGridMonth,timeGridWeek'
+                },
+                events: @json($events),
+                eventDidMount: function (info) {
+                    const tooltip = `${info.event.title}<br><strong>النوع:</strong> ${info.event.extendedProps.type}`;
+                    new Tooltip(info.el, {
+                        title: tooltip,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body',
+                        html: true
+                    });
+                }
+            });
+
+            calendar.render();
         });
+    </script>
 
-        calendar.render();
-    });
-</script>
+    <!-- Tooltip dependency (Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
