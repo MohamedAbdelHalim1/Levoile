@@ -14,10 +14,6 @@ class SocialMediaProduct extends Model
         'status' // new | done
     ];
 
-    protected $casts = [
-        'platforms' => 'array',
-        'publish_datetime' => 'datetime',
-    ];
 
     public function websiteAdminProduct()
     {

@@ -333,16 +333,18 @@ class ShootingProductController extends Controller
 
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
-                $product->update(['status' => 'done']);
 
                 foreach ($request->platforms as $platformName => $platformData) {
-                    SocialMediaProductPlatform::create([
+                    SocialMediaProductPlatform::updateOrCreate([
                         'social_media_product_id' => $product->id,
                         'platform' => $platformName,
                         'publish_date' => $platformData['publish_date'],
                         'type' => $platformData['type'],
                     ]);
                 }
+
+                $product->update(['status' => 'done']);
+
             });
 
             return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
