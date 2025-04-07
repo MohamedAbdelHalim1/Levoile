@@ -314,6 +314,7 @@ class ShootingProductController extends Controller
 
     public function publishSocial(Request $request)
     {
+        
         $request->validate([
             'id' => 'required|exists:social_media_products,id',
             'platforms' => 'required|array',
@@ -321,6 +322,7 @@ class ShootingProductController extends Controller
             'platforms.*.type' => 'required|string',
         ]);
     
+        try {
         DB::transaction(function () use ($request) {
             $product = SocialMediaProduct::findOrFail($request->id);
             $product->update(['status' => 'done']);
@@ -338,6 +340,9 @@ class ShootingProductController extends Controller
         });
     
         return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
     
 }
