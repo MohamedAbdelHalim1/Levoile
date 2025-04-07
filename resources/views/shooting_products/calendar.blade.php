@@ -43,19 +43,9 @@
                     center: 'title',
                     end: 'dayGridMonth,timeGridWeek'
                 },
-                events: @json($events),
-                eventDidMount: function(info) {
-                    const tooltip =
-                        `${info.event.title}<br><strong>النوع:</strong> ${info.event.extendedProps.type}`;
-                    new Tooltip(info.el, {
-                        title: tooltip,
-                        placement: 'top',
-                        trigger: 'hover',
-                        container: 'body',
-                        html: true
-                    });
-                }
+                events: @json($events)
             });
+
 
             calendar.render();
         });

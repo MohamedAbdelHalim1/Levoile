@@ -375,11 +375,8 @@ class ShootingProductController extends Controller
     
         $events = $platforms->map(function ($item) {
             return [
-                'title' => $item->socialMediaProduct->websiteAdminProduct->name . ' - ' . ucfirst($item->platform),
-                'start' => $item->publish_date,
-                'extendedProps' => [
-                    'type' => $item->type,
-                ]
+                'title' => $item->socialMediaProduct->websiteAdminProduct->name,
+                'start' => \Carbon\Carbon::parse($item->publish_date)->toDateString(), // ✅ يوم فقط بدون وقت
             ];
         });
     
