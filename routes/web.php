@@ -219,7 +219,9 @@ Route::middleware('auth')->group(function () {
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
     
 
-
+    Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');
+    Route::post('website-admin/update-status', [ShootingProductController::class, 'updateWebsiteStatus'])->name('website-admin.update-status');
+    
 
 
 

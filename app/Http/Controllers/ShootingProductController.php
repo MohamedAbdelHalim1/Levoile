@@ -6,6 +6,9 @@ use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\WebsiteAdminProduct;
+use Illuminate\Support\Facades\DB;
+
 
 class ShootingProductController extends Controller
 {
@@ -130,20 +133,34 @@ class ShootingProductController extends Controller
 
     public function updateDriveLink(Request $request)
     {
+        DB::beginTransaction();
+    
         try {
             $request->validate([
                 'product_id' => 'required|exists:shooting_products,id',
                 'drive_link' => 'required|url',
             ]);
-
+    
             $product = ShootingProduct::findOrFail($request->product_id);
             $product->drive_link = $request->drive_link;
             $product->status = 'completed';
             $product->save();
-
-            return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
+    
+            WebsiteAdminProduct::updateOrCreate(
+                ['shooting_product_id' => $product->id],
+                [
+                    'name' => $product->name,
+                    'status' => 'new'
+                ]
+            );
+    
+            DB::commit();
+    
+            return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف وإضافة المنتج لمسؤول الموقع']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'خطأ أثناء تحديث لينك درايف'], 500);
+            DB::rollback();
+            dd($e->getMessage());
+            return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ'], 500);
         }
     }
 
@@ -240,4 +257,21 @@ class ShootingProductController extends Controller
 
         return redirect()->route('shooting-products.index')->with('success', 'تم حذف المنتج بنجاح');
     }
+
+    public function indexWebsite()
+    {
+        $products = WebsiteAdminProduct::orderBy('created_at', 'desc')->get();
+        return view('shooting-products.website', compact('products'));
+    }
+
+    public function updateWebsiteStatus(Request $request)
+    {
+        $product = WebsiteAdminProduct::findOrFail($request->id);
+        $product->status = 'done';
+        $product->note = $request->note;
+        $product->save();
+
+        return redirect()->route('website-admin.index')->with('success', 'تم نشر المنتج بنجاح');
+    }
+
 }
