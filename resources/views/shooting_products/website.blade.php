@@ -13,6 +13,7 @@
                             <th>الحالة</th>
                             <th>الالوان</th>
                             <th>لينك الدرايف</th>
+                            <th>تاريخ النشر</th>
                             <th>الملاحظات</th>
                             <th>الإجراء</th>
                         </tr>
@@ -37,6 +38,26 @@
                                         -
                                     @endif
                                 </td>
+                                <td>
+                                    @if ($item->published_at)
+                                        @php
+                                            $published = \Carbon\Carbon::parse($item->published_at);
+                                            $now = \Carbon\Carbon::now();
+                                        @endphp
+                                
+                                        @if ($published->isToday())
+                                            اليوم الساعة {{ $published->format('h:i A') }}
+                                        @elseif ($published->isYesterday())
+                                            أمس الساعة {{ $published->format('h:i A') }}
+                                        @elseif ($published->isTomorrow())
+                                            غدًا الساعة {{ $published->format('h:i A') }}
+                                        @else
+                                            {{ $published->translatedFormat('l d M Y') }} الساعة {{ $published->format('h:i A') }}
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
+                                </td>                                
                                 <td>{{ $item->note ?? '-' }}</td>
                                 <td>
                                     @if ($item->status == 'new')
