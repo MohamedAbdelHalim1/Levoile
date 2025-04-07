@@ -247,7 +247,7 @@
                                     <div class="tab-pane active" id="site-admin">
                                         <ul class="sidemenu-list">
                                             <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول الموقع</a></li>
-                                            <li><a href="{{ route('website-admins.index') }}" class="slide-item">مسؤول الموقع</a></li>
+                                            <li><a href="{{ route('website-admin.index') }}" class="slide-item">مسؤول الموقع</a></li>
                                            
                                         </ul>
                                     </div>
