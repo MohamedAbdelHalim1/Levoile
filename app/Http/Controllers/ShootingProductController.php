@@ -334,6 +334,7 @@ class ShootingProductController extends Controller
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
 
+                dd($product);
                 foreach ($request->platforms as $platformName => $platformData) {
                     SocialMediaProductPlatform::updateOrCreate([
                         'social_media_product_id' => $product->id,
