@@ -34,13 +34,63 @@
                                         {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
                                     </span>
                                 </td>
-                                <td>{{ $item->publish_datetime?->format('Y-m-d h:i A') ?? '-' }}</td>
+
                                 <td>
-                                    {{ implode(', ', optional($item->platforms)->pluck('platform')?->toArray() ?? []) ?: '-' }}
+                                    @if ($item->platforms && $item->platforms->count())
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach ($item->platforms as $platform)
+                                                <li>
+                                                    @php
+                                                        $published = \Carbon\Carbon::parse($platform->publish_date);
+                                                    @endphp
+                                
+                                                    @if ($published->isToday())
+                                                        اليوم الساعة {{ $published->format('h:i A') }}
+                                                    @elseif ($published->isYesterday())
+                                                        أمس الساعة {{ $published->format('h:i A') }}
+                                                    @elseif ($published->isTomorrow())
+                                                        غدًا الساعة {{ $published->format('h:i A') }}
+                                                    @else
+                                                        {{ $published->translatedFormat('l d M Y') }} الساعة {{ $published->format('h:i A') }}
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
+
+                                
                                 <td>
-                                    {{ implode(', ', optional($item->platforms)->pluck('type')?->toArray() ?? []) ?: '-' }}
+                                    @if ($item->platforms && $item->platforms->count())
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach ($item->platforms as $platform)
+                                                <span class="badge bg-primary">
+                                                    {{ ucfirst($platform->platform) }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
+                                
+                               
+                                
+                                <td>
+                                    @if ($item->platforms && $item->platforms->count())
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach ($item->platforms as $platform)
+                                                <span class="badge bg-info text-dark">{{ ucfirst($platform->type) }}</span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+
+                                
 
                                 <td>
                                     @if ($item->status == 'new')
@@ -49,10 +99,19 @@
                                             data-name="{{ $item->websiteAdminProduct->name }}">
                                             نشر
                                         </button>
-                                    @else
-                                        <span class="badge bg-success">تم</span>
+                                    @elseif ($item->status == 'done')
+                                        @if (auth()->user()->role->name === 'admin')
+                                            <form method="POST" action="{{ route('social-media.reopen') }}" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{ $item->id }}">
+                                                <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('هل أنت متأكد من إعادة الفتح؟')">إعادة الفتح</button>
+                                            </form>
+                                        @else
+                                            <span class="badge bg-success">تم</span>
+                                        @endif
                                     @endif
                                 </td>
+                                
                             </tr>
                         @endforeach
                     </tbody>
