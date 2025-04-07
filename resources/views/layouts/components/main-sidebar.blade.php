@@ -231,6 +231,32 @@
                         </li>
                     </ul>
                 </li>
+                <li class="sub-category">
+                    <h3>مسؤول الموقع</h3>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="side-menu__icon fe fe-globe"></i>
+                        <span class="side-menu__label">مسؤول الموقع</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="panel sidetab-menu">
+                            <div class="panel-body tabs-menu-body p-0 border-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="site-admin">
+                                        <ul class="sidemenu-list">
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول الموقع</a></li>
+                                            <li><a href="#" class="slide-item">مسؤول الموقع/a></li>
+                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                
 
 
             </ul>
