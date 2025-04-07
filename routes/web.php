@@ -221,7 +221,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');
     Route::post('website-admin/update-status', [ShootingProductController::class, 'updateWebsiteStatus'])->name('website-admin.update-status');
-    
+    Route::post('website-admin/reopen', [ShootingProductController::class, 'reopenWebsiteProduct'])->name('website-admin.reopen');
+
 
 
 

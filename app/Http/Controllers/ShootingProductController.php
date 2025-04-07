@@ -134,18 +134,18 @@ class ShootingProductController extends Controller
     public function updateDriveLink(Request $request)
     {
         DB::beginTransaction();
-    
+
         try {
             $request->validate([
                 'product_id' => 'required|exists:shooting_products,id',
                 'drive_link' => 'required|url',
             ]);
-    
+
             $product = ShootingProduct::findOrFail($request->product_id);
             $product->drive_link = $request->drive_link;
             $product->status = 'completed';
             $product->save();
-    
+
             WebsiteAdminProduct::updateOrCreate(
                 ['shooting_product_id' => $product->id],
                 [
@@ -153,9 +153,9 @@ class ShootingProductController extends Controller
                     'status' => 'new'
                 ]
             );
-    
+
             DB::commit();
-    
+
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف وإضافة المنتج لمسؤول الموقع']);
         } catch (\Exception $e) {
             DB::rollback();
@@ -274,4 +274,13 @@ class ShootingProductController extends Controller
         return redirect()->route('website-admin.index')->with('success', 'تم نشر المنتج بنجاح');
     }
 
+    public function reopenWebsiteProduct(Request $request)
+    {
+        $product = WebsiteAdminProduct::findOrFail($request->id);
+        $product->status = 'new';
+        $product->note = null;
+        $product->save();
+
+        return redirect()->route('website-admin.index')->with('success', 'تمت إعادة فتح المنتج بنجاح');
+    }
 }

@@ -45,10 +45,19 @@
                                             data-name="{{ $item->name }}">
                                             نشر
                                         </button>
-                                    @else
-                                        <span class="badge bg-success">تم النشر</span>
+                                    @elseif ($item->status == 'done')
+                                        @if (auth()->user()->role->name == 'admin')
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                data-bs-target="#reopenModal" data-id="{{ $item->id }}"
+                                                data-name="{{ $item->name }}">
+                                                إعادة الفتح
+                                            </button>
+                                        @else
+                                            <span class="badge bg-success">تم النشر</span>
+                                        @endif
                                     @endif
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -77,6 +86,29 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">تأكيد</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal إعادة الفتح -->
+    <div class="modal fade" id="reopenModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('website-admin.reopen') }}">
+                @csrf
+                <input type="hidden" name="id" id="reopen_product_id">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">تأكيد إعادة الفتح</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>هل أنت متأكد أنك تريد إعادة فتح المنتج <strong id="reopen_product_name"></strong>؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-warning">تأكيد</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
                     </div>
                 </div>
@@ -115,6 +147,17 @@
 
             document.getElementById('modal_product_id').value = id;
             document.getElementById('modal_product_name').textContent = name;
+        });
+    </script>
+    <script>
+        const reopenModal = document.getElementById('reopenModal');
+        reopenModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+
+            document.getElementById('reopen_product_id').value = id;
+            document.getElementById('reopen_product_name').textContent = name;
         });
     </script>
 @endsection
