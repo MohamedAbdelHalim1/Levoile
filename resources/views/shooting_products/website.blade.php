@@ -80,6 +80,10 @@
                     <div class="modal-body">
                         <p>هل أنت متأكد أنك تريد نشر المنتج <strong id="modal_product_name"></strong>؟</p>
                         <div class="mb-3">
+                            <label>تاريخ ووقت النشر</label>
+                            <input type="datetime-local" name="published_at" class="form-control" required>
+                        </div>                        
+                        <div class="mb-3">
                             <label>ملاحظات</label>
                             <textarea name="note" class="form-control" rows="3"></textarea>
                         </div>

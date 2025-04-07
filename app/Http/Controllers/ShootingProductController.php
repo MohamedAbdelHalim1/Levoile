@@ -266,13 +266,21 @@ class ShootingProductController extends Controller
 
     public function updateWebsiteStatus(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:website_admin_products,id',
+            'note' => 'nullable|string',
+            'published_at' => 'required|date',
+        ]);
+    
         $product = WebsiteAdminProduct::findOrFail($request->id);
         $product->status = 'done';
         $product->note = $request->note;
+        $product->published_at = $request->published_at;
         $product->save();
-
+    
         return redirect()->route('website-admin.index')->with('success', 'تم نشر المنتج بنجاح');
     }
+    
 
     public function reopenWebsiteProduct(Request $request)
     {

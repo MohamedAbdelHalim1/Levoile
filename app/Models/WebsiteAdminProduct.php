@@ -14,6 +14,7 @@ class WebsiteAdminProduct extends Model
         'name',
         'status',
         'note',
+        'published_at',
     ];
 
     public function shootingProduct()
