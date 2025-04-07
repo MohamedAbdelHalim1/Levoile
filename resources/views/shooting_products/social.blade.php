@@ -36,7 +36,7 @@
                                 <td>
                                     @php $platformCount = $platforms[$item->id]->count() ?? 0; @endphp
                                     @if ($platformCount)
-                                        <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
+                                        <a href="#" class="badge bg-info" data-bs-toggle="modal"
                                             data-bs-target="#platformsModal" data-product-id="{{ $item->id }}">
                                             {{ $platformCount }} منصة
                                         </a>
