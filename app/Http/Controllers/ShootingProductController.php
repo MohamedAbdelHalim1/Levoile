@@ -182,7 +182,6 @@ class ShootingProductController extends Controller
         $product = ShootingProduct::findOrFail($id);
         $colors = ShootingProductColor::where('shooting_product_id', $product->id)->get();
 
-        dd($colors);
         return view('shooting_products.complete', compact('product', 'colors'));
     }
 
