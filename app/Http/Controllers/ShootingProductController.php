@@ -197,6 +197,8 @@ class ShootingProductController extends Controller
             $colorModel->shooting_product_id = $product->id;
             $colorModel->name = $color['name'];
             $colorModel->code = $color['code'];
+            //price
+            $colorModel->price = $color['price'];
 
             if (isset($color['image'])) {
                 $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();

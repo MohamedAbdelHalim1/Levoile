@@ -43,6 +43,14 @@
                                             value="{{ $color?->code }}">
                                     </div>
 
+                                    <!-- for price -->
+
+                                    <div class="mb-2">
+                                        <label>السعر</label>
+                                        <input type="number" name="colors[{{ $i + 1 }}][price]" class="form-control"
+                                            value="{{ $color?->price }}">
+                                    </div>
+
                                     <div class="mb-2">
                                         <label>الصورة</label>
                                         <input type="file" name="colors[{{ $i + 1 }}][image]" class="form-control"
