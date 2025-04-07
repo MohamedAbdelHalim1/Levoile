@@ -44,7 +44,7 @@
                                             نشر
                                         </button>
                                     @else
-                                        <span>تم</span>
+                                        <span>تم النشر</span>
                                     @endif
                                 </td>
                             </tr>
