@@ -316,24 +316,24 @@ class ShootingProductController extends Controller
     {
         try {
             $selectedPlatforms = collect($request->platforms)->filter(fn($p) => isset($p['active']));
-    
+
             if ($selectedPlatforms->isEmpty()) {
                 return redirect()->back()->withErrors(['platforms' => 'يجب اختيار منصة واحدة على الأقل'])->withInput();
             }
-    
+
             $request->merge(['platforms' => $selectedPlatforms->toArray()]);
-    
+
             $request->validate([
                 'id' => 'required|exists:social_media_products,id',
                 'platforms' => 'required|array|min:1',
                 'platforms.*.publish_date' => 'required|date',
                 'platforms.*.type' => 'required|string',
             ]);
-    
+
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
                 $product->update(['status' => 'done']);
-    
+
                 foreach ($request->platforms as $platformName => $platformData) {
                     SocialMediaProductPlatform::create([
                         'social_media_product_id' => $product->id,
@@ -343,11 +343,24 @@ class ShootingProductController extends Controller
                     ]);
                 }
             });
-    
+
             return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
     }
-    
+
+    public function reopenSocial(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:social_media_products,id',
+        ]);
+
+        $product = SocialMediaProduct::findOrFail($request->id);
+        $product->status = 'new';
+        $product->platforms()->delete(); // remove old publishing schedule
+        $product->save();
+
+        return redirect()->route('social-media.index')->with('success', 'تم إعادة فتح المنتج للنشر.');
+    }
 }
