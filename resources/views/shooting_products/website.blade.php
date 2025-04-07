@@ -10,7 +10,6 @@
                     <thead>
                         <tr>
                             <th>اسم المنتج</th>
-                            <th>الوصف المختصر</th>
                             <th>الحالة</th>
                             <th>الإجراء</th>
                         </tr>
@@ -91,7 +90,7 @@
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
 
-    
+
     <script>
         const modal = document.getElementById('confirmModal');
         modal.addEventListener('show.bs.modal', function(event) {

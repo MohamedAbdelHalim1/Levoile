@@ -261,7 +261,7 @@ class ShootingProductController extends Controller
     public function indexWebsite()
     {
         $products = WebsiteAdminProduct::orderBy('created_at', 'desc')->get();
-        return view('shooting-products.website', compact('products'));
+        return view('shooting_products.website', compact('products'));
     }
 
     public function updateWebsiteStatus(Request $request)
