@@ -273,16 +273,16 @@ class ShootingProductController extends Controller
             'note' => 'nullable|string',
             'published_at' => 'required|date',
         ]);
-    
+
         $product = WebsiteAdminProduct::findOrFail($request->id);
         $product->status = 'done';
         $product->note = $request->note;
         $product->published_at = $request->published_at;
         $product->save();
-    
+
         return redirect()->route('website-admin.index')->with('success', 'تم نشر المنتج بنجاح');
     }
-    
+
 
     public function reopenWebsiteProduct(Request $request)
     {
@@ -298,51 +298,51 @@ class ShootingProductController extends Controller
     {
         // Sync all 'done' products from website_admin_products
         $doneProducts = WebsiteAdminProduct::where('status', 'done')->get();
-    
+
         foreach ($doneProducts as $item) {
             SocialMediaProduct::updateOrCreate(
                 ['website_admin_product_id' => $item->id],
                 ['status' => 'new']
             );
         }
-    
+
         $products = SocialMediaProduct::with(['websiteAdminProduct', 'platforms'])->latest()->get();
-    
+
         return view('shooting_products.social', compact('products'));
     }
-    
+
 
     public function publishSocial(Request $request)
     {
-        
-        $request->validate([
-            'id' => 'required|exists:social_media_products,id',
-            'platforms' => 'required|array',
-            'platforms.*.publish_date' => 'required|date',
-            'platforms.*.type' => 'required|string',
-        ]);
-    
+
         try {
-        DB::transaction(function () use ($request) {
-            $product = SocialMediaProduct::findOrFail($request->id);
-            $product->update(['status' => 'done']);
-    
-            foreach ($request->platforms as $platformName => $platformData) {
-                if (!isset($platformData['publish_date']) || !isset($platformData['type'])) continue;
-    
-                SocialMediaProductPlatform::create([
-                    'social_media_product_id' => $product->id,
-                    'platform' => $platformName,
-                    'publish_date' => $platformData['publish_date'],
-                    'type' => $platformData['type'],
-                ]);
-            }
-        });
-    
-        return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
+            $request->validate([
+                'id' => 'required|exists:social_media_products,id',
+                'platforms' => 'required|array',
+                'platforms.*.publish_date' => 'required|date',
+                'platforms.*.type' => 'required|string',
+            ]);
+
+
+            DB::transaction(function () use ($request) {
+                $product = SocialMediaProduct::findOrFail($request->id);
+                $product->update(['status' => 'done']);
+
+                foreach ($request->platforms as $platformName => $platformData) {
+                    if (!isset($platformData['publish_date']) || !isset($platformData['type'])) continue;
+
+                    SocialMediaProductPlatform::create([
+                        'social_media_product_id' => $product->id,
+                        'platform' => $platformName,
+                        'publish_date' => $platformData['publish_date'],
+                        'type' => $platformData['type'],
+                    ]);
+                }
+            });
+
+            return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
     }
-    
 }
