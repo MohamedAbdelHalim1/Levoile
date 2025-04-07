@@ -273,7 +273,7 @@
                                     <div class="tab-pane active" id="social-tab">
                                         <ul class="sidemenu-list">
                                             <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي السوشيال ميديا</a></li>
-                                            <li><a href="{{ route('social-media.index') }}" class="slide-item">المنتجات</a></li>
+                                            <li><a href="{{ route('social-media.index') }}" class="slide-item">السوشيال ميديا</a></li>
                                         </ul>
                                     </div>
                                 </div>
