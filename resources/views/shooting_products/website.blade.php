@@ -11,6 +11,8 @@
                         <tr>
                             <th>اسم المنتج</th>
                             <th>الحالة</th>
+                            <th>الالوان</th>
+                            <th>لينك الدرايف</th>
                             <th>الإجراء</th>
                         </tr>
                     </thead>
@@ -18,6 +20,17 @@
                         @foreach ($products as $item)
                             <tr>
                                 <td>{{ $item->name }}</td>
+                                <td>{{ $item->shootingProduct->number_of_colors }}</td>
+                                <td class="text-center">
+                                    @if (!empty($item->shootingProduct->drive_link))
+                                        <a href="{{ $item->shootingProduct->drive_link }}" target="_blank"
+                                            class="text-success">
+                                            <i class="fe fe-link"></i>
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>
                                     <span class="badge bg-{{ $item->status == 'done' ? 'success' : 'warning' }}">
                                         {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
