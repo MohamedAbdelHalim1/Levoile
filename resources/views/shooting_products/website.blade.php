@@ -13,6 +13,7 @@
                             <th>الحالة</th>
                             <th>الالوان</th>
                             <th>لينك الدرايف</th>
+                            <th>الملاحظات</th>
                             <th>الإجراء</th>
                         </tr>
                     </thead>
@@ -36,6 +37,7 @@
                                         {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
                                     </span>
                                 </td>
+                                <td>{{ $item->note ?? '-' }}</td>
                                 <td>
                                     @if ($item->status == 'new')
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
