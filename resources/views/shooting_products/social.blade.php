@@ -19,9 +19,7 @@
                         <tr>
                             <th>اسم المنتج</th>
                             <th>الحالة</th>
-                            <th>تاريخ النشر</th>
                             <th>المنصات</th>
-                            <th>نوع المنشور</th>
                             <th>الإجراء</th>
                         </tr>
                     </thead>
@@ -36,60 +34,15 @@
                                 </td>
 
                                 <td>
-                                    @if ($item->platforms && $item->platforms->count())
-                                        <ul class="list-unstyled mb-0">
-                                            @foreach ($item->platforms as $platform)
-                                                <li>
-                                                    @php
-                                                        $published = \Carbon\Carbon::parse($platform->publish_date);
-                                                    @endphp
-                                
-                                                    @if ($published->isToday())
-                                                        اليوم الساعة {{ $published->format('h:i A') }}
-                                                    @elseif ($published->isYesterday())
-                                                        أمس الساعة {{ $published->format('h:i A') }}
-                                                    @elseif ($published->isTomorrow())
-                                                        غدًا الساعة {{ $published->format('h:i A') }}
-                                                    @else
-                                                        {{ $published->translatedFormat('l d M Y') }} الساعة {{ $published->format('h:i A') }}
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                    @if ($item->platforms->count())
+                                        <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
+                                           data-bs-target="#platformsModal" data-platforms='@json($item->platforms)'>
+                                            {{ $item->platforms->count() }} منصة
+                                        </a>
                                     @else
                                         -
                                     @endif
                                 </td>
-
-                                
-                                <td>
-                                    @if ($item->platforms && $item->platforms->count())
-                                        <div class="d-flex flex-wrap gap-1">
-                                            @foreach ($item->platforms as $platform)
-                                                <span class="badge bg-primary">
-                                                    {{ ucfirst($platform->platform) }}
-                                                </span>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                
-                               
-                                
-                                <td>
-                                    @if ($item->platforms && $item->platforms->count())
-                                        <div class="d-flex flex-wrap gap-1">
-                                            @foreach ($item->platforms as $platform)
-                                                <span class="badge bg-info text-dark">{{ ucfirst($platform->type) }}</span>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
                                 
 
                                 <td>
@@ -197,6 +150,34 @@
             </form>
         </div>
     </div>
+
+
+    <!-- Modal عرض تفاصيل المنصات -->
+<div class="modal fade" id="platformsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تفاصيل المنصات</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>المنصة</th>
+                            <th>نوع المنشور</th>
+                            <th>تاريخ النشر</th>
+                        </tr>
+                    </thead>
+                    <tbody id="platformsTableBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -245,4 +226,42 @@
             document.getElementById('modal_product_name').textContent = name;
         });
     </script>
+
+<script>
+    const platformsModal = document.getElementById('platformsModal');
+    platformsModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const platforms = JSON.parse(button.getAttribute('data-platforms'));
+        const tableBody = document.getElementById('platformsTableBody');
+
+        tableBody.innerHTML = '';
+
+        platforms.forEach(platform => {
+            const published = new Date(platform.publish_date);
+            const now = new Date();
+            const diff = published.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);
+
+            let dateText = '';
+            if (diff === 0) {
+                dateText = `اليوم الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+            } else if (diff === -86400000) {
+                dateText = `أمس الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+            } else if (diff === 86400000) {
+                dateText = `غدًا الساعة ${new Date(platform.publish_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+            } else {
+                const date = new Date(platform.publish_date);
+                dateText = `${date.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })} الساعة ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+            }
+
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${platform.platform}</td>
+                    <td>${platform.type}</td>
+                    <td>${dateText}</td>
+                </tr>
+            `;
+        });
+    });
+</script>
+
 @endsection
