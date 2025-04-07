@@ -31,6 +31,10 @@
                                 <div class="border p-3 mb-3 rounded bg-light">
                                     <h6>لون {{ $i + 1 }}</h6>
 
+                                    <!-- Hidden ID for updateOrCreate -->
+                                    <input type="hidden" name="colors[{{ $i + 1 }}][id]"
+                                        value="{{ $color?->id }}">
+
                                     <div class="mb-2">
                                         <label>اسم اللون</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][name]" class="form-control"
@@ -47,14 +51,14 @@
 
                                     <div class="mb-2">
                                         <label>السعر</label>
-                                        <input type="text" name="colors[{{ $i + 1 }}][price]" class="form-control"
-                                            value="{{ $color?->price }}">
+                                        <input type="text" name="colors[{{ $i + 1 }}][price]"
+                                            class="form-control" value="{{ $color?->price }}">
                                     </div>
 
                                     <div class="mb-2">
                                         <label>الصورة</label>
-                                        <input type="file" name="colors[{{ $i + 1 }}][image]" class="form-control"
-                                            accept="image/*">
+                                        <input type="file" name="colors[{{ $i + 1 }}][image]"
+                                            class="form-control" accept="image/*">
 
                                         @if (!empty($color?->image) && file_exists(public_path($color->image)))
                                             <img src="{{ asset($color->image) }}" class="img-thumbnail mt-2" width="100"
@@ -98,11 +102,11 @@
             document.getElementById('previewImage').src = src;
         }
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             const $form = $('form');
             const $saveBtn = $('#saveButton');
 
-            $form.on('input change', 'input, textarea, select', function () {
+            $form.on('input change', 'input, textarea, select', function() {
                 $saveBtn.prop('disabled', false);
             });
         });

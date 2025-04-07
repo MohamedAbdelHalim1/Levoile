@@ -188,29 +188,35 @@ class ShootingProductController extends Controller
     public function saveCompleteData(Request $request, $id)
     {
         $product = ShootingProduct::findOrFail($id);
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->save();
+        $product->update([
+            'name' => $request->input('name'),
+            'description' => $request->input('description')
+        ]);
 
         foreach ($request->colors as $color) {
-            $colorModel = new ShootingProductColor();
-            $colorModel->shooting_product_id = $product->id;
-            $colorModel->name = $color['name'];
-            $colorModel->code = $color['code'];
-            //price
-            $colorModel->price = $color['price'];
+            $data = [
+                'shooting_product_id' => $product->id,
+                'name' => $color['name'] ?? null,
+                'code' => $color['code'] ?? null,
+                'price' => $color['price'] ?? null,
+            ];
 
-            if (isset($color['image'])) {
+            // Handle image upload
+            if (isset($color['image']) && $color['image']) {
                 $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
                 $color['image']->move(public_path('images/shooting'), $imageName);
-                $colorModel->image = 'images/shooting/' . $imageName;
+                $data['image'] = 'images/shooting/' . $imageName;
             }
 
-            $colorModel->save();
+            ShootingProductColor::updateOrCreate(
+                ['id' => $color['id'] ?? null],
+                $data
+            );
         }
 
-        return redirect()->route('shooting-products.index')->with('success', 'تم حفظ بيانات المنتج بنجاح');
+        return redirect()->route('shooting-products.complete.page', $id)->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
+
 
 
     public function edit($id)
