@@ -21,6 +21,11 @@
                         @foreach ($products as $item)
                             <tr>
                                 <td>{{ $item->name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $item->status == 'done' ? 'success' : 'warning' }}">
+                                        {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
+                                    </span>
+                                </td>
                                 <td>{{ $item->shootingProduct->number_of_colors }}</td>
                                 <td class="text-center">
                                     @if (!empty($item->shootingProduct->drive_link))
@@ -31,11 +36,6 @@
                                     @else
                                         -
                                     @endif
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $item->status == 'done' ? 'success' : 'warning' }}">
-                                        {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
-                                    </span>
                                 </td>
                                 <td>{{ $item->note ?? '-' }}</td>
                                 <td>
