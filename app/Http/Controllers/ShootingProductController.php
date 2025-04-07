@@ -187,7 +187,6 @@ class ShootingProductController extends Controller
 
     public function saveCompleteData(Request $request, $id)
     {
-        dd($request->all());
         $product = ShootingProduct::findOrFail($id);
         $product->name = $request->input('name');
         $product->description = $request->input('description');
