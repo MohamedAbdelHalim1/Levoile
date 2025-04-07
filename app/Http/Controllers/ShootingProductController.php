@@ -300,7 +300,7 @@ class ShootingProductController extends Controller
         $doneProducts = WebsiteAdminProduct::where('status', 'done')->get();
 
         foreach ($doneProducts as $item) {
-            SocialMediaProduct::updateOrCreate(
+            SocialMediaProduct::firstOrCreate(
                 ['website_admin_product_id' => $item->id],
                 ['status' => 'new']
             );
