@@ -44,7 +44,7 @@
                                             نشر
                                         </button>
                                     @else
-                                        <span>تم النشر</span>
+                                        <span class="badge bg-success">تم النشر</span>
                                     @endif
                                 </td>
                             </tr>
