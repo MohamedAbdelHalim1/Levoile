@@ -7,6 +7,7 @@ use App\Models\ShootingProductColor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\WebsiteAdminProduct;
+use App\Models\SocialMediaProduct;
 use Illuminate\Support\Facades\DB;
 
 
@@ -290,5 +291,41 @@ class ShootingProductController extends Controller
         $product->save();
 
         return redirect()->route('website-admin.index')->with('success', 'تمت إعادة فتح المنتج بنجاح');
+    }
+
+    public function indexSocial()
+    {
+        // Sync all 'done' products from website_admin_products
+        $doneProducts = WebsiteAdminProduct::where('status', 'done')->get();
+
+        foreach ($doneProducts as $item) {
+            SocialMediaProduct::updateOrCreate(
+                ['website_admin_product_id' => $item->id],
+                ['status' => 'new']
+            );
+        }
+
+        $products = SocialMediaProduct::latest()->with('websiteAdminProduct')->get();
+        return view('shooting_products.social', compact('products'));
+    }
+
+    public function publishSocial(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:social_media_products,id',
+            'platforms' => 'required|array',
+            'publish_datetime' => 'required|date',
+            'post_type' => 'required|string',
+        ]);
+
+        $product = SocialMediaProduct::findOrFail($request->id);
+        $product->update([
+            'platforms' => $request->platforms,
+            'publish_datetime' => $request->publish_datetime,
+            'post_type' => $request->post_type,
+            'status' => 'done',
+        ]);
+
+        return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
     }
 }

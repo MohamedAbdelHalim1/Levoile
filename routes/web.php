@@ -203,32 +203,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{id}/history', [ProductController::class, 'history'])->name('products.history');
 
     Route::post('/products/{product}/bulk-manufacture', [ProductController::class, 'bulkManufacture'])
-    ->name('products.update.bulk-manufacture');
+        ->name('products.update.bulk-manufacture');
 
     Route::post('/products/assign-materials', [ProductController::class, 'assignMaterials'])->name('products.assign.materials');
     Route::get('/products/get-materials/{variant_id}', [ProductController::class, 'getMaterials']);
     Route::delete('/delete-material/{id}', [ProductController::class, 'deleteMaterial']);
-    
+
 
     Route::resource('shooting-products', ShootingProductController::class);
     Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
-    ->name('shooting-products.start');
+        ->name('shooting-products.start');
     Route::post('/shooting-products/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
-    ->name('shooting-products.updateDriveLink');
+        ->name('shooting-products.updateDriveLink');
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
-    
+
 
     Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');
     Route::post('website-admin/update-status', [ShootingProductController::class, 'updateWebsiteStatus'])->name('website-admin.update-status');
     Route::post('website-admin/reopen', [ShootingProductController::class, 'reopenWebsiteProduct'])->name('website-admin.reopen');
+
+    Route::get('social-media', [ShootingProductController::class, 'indexSocial'])->name('social-media.index');
+    Route::post('social-media/publish', [ShootingProductController::class, 'publishSocial'])->name('social-media.publish');
 
 
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
-        Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::get('/', Index::class)->name('dashboard');
     Route::get('index2', Index2::class);
