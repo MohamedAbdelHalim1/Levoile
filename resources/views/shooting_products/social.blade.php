@@ -5,6 +5,13 @@
         <div class="bg-white p-4 shadow-sm rounded">
             <div class="bg-white shadow sm:rounded-lg p-4">
 
+                @if ($errors->has('platforms'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('platforms') }}
+                    </div>
+                @endif
+
+
                 <h4>منتجات السوشيال ميديا</h4>
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">

@@ -314,28 +314,27 @@ class ShootingProductController extends Controller
 
     public function publishSocial(Request $request)
     {
-
         try {
             $selectedPlatforms = collect($request->platforms)->filter(fn($p) => isset($p['active']));
-
-            $request->merge(['platforms' => $selectedPlatforms]);
-
+    
+            if ($selectedPlatforms->isEmpty()) {
+                return redirect()->back()->withErrors(['platforms' => 'يجب اختيار منصة واحدة على الأقل'])->withInput();
+            }
+    
+            $request->merge(['platforms' => $selectedPlatforms->toArray()]);
+    
             $request->validate([
                 'id' => 'required|exists:social_media_products,id',
                 'platforms' => 'required|array|min:1',
                 'platforms.*.publish_date' => 'required|date',
                 'platforms.*.type' => 'required|string',
             ]);
-
-
-
+    
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
                 $product->update(['status' => 'done']);
-
+    
                 foreach ($request->platforms as $platformName => $platformData) {
-                    if (!isset($platformData['publish_date']) || !isset($platformData['type'])) continue;
-
                     SocialMediaProductPlatform::create([
                         'social_media_product_id' => $product->id,
                         'platform' => $platformName,
@@ -344,10 +343,11 @@ class ShootingProductController extends Controller
                     ]);
                 }
             });
-
+    
             return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
     }
+    
 }
