@@ -5,7 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
     <style>
         #calendar {
-            max-width: 100%;
+            max-width: 75%;
             margin: 0 auto;
         }
 
