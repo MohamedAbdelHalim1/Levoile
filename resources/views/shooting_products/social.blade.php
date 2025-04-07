@@ -29,13 +29,12 @@
                                 </td>
                                 <td>{{ $item->publish_datetime?->format('Y-m-d h:i A') ?? '-' }}</td>
                                 <td>
-                                    @if ($item->platforms)
-                                        {{ implode(', ', $item->platforms) }}
-                                    @else
-                                        -
-                                    @endif
+                                    {{ implode(', ', optional($item->platforms)->pluck('platform')?->toArray() ?? []) ?: '-' }}
                                 </td>
-                                <td>{{ $item->post_type ?? '-' }}</td>
+                                <td>
+                                    {{ implode(', ', optional($item->platforms)->pluck('type')?->toArray() ?? []) ?: '-' }}
+                                </td>
+                                
                                 <td>
                                     @if ($item->status == 'new')
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
@@ -69,35 +68,58 @@
                     <div class="modal-body">
                         <p>هل أنت متأكد من نشر المنتج <strong id="modal_product_name"></strong>؟</p>
 
-                        <label>اختر المنصات</label><br>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="platforms[]" value="facebook"
-                                id="facebook">
-                            <label class="form-check-label" for="facebook">Facebook</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="platforms[]" value="instagram"
-                                id="instagram">
-                            <label class="form-check-label" for="instagram">Instagram</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="platforms[]" value="tiktok"
-                                id="tiktok">
-                            <label class="form-check-label" for="tiktok">TikTok</label>
+                        {{-- Platform: Facebook --}}
+                        <div class="mb-2">
+                            <input type="checkbox" id="facebook_cb" name="platforms[facebook][active]">
+                            <label for="facebook_cb">Facebook</label>
+
+                            <div class="mt-2 platform-options d-none" id="facebook_options">
+                                <label>تاريخ النشر</label>
+                                <input type="datetime-local" name="platforms[facebook][publish_date]" class="form-control">
+
+                                <label class="mt-2">نوع المنشور</label>
+                                <select name="platforms[facebook][type]" class="form-select">
+                                    <option value="post">منشور</option>
+                                    <option value="story">قصة</option>
+                                    <option value="reel">ريل</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="mb-3 mt-3">
-                            <label>تاريخ النشر</label>
-                            <input type="datetime-local" name="publish_datetime" class="form-control">
+                        {{-- Platform: Instagram --}}
+                        <div class="mb-2">
+                            <input type="checkbox" id="instagram_cb" name="platforms[instagram][active]">
+                            <label for="instagram_cb">Instagram</label>
+
+                            <div class="mt-2 platform-options d-none" id="instagram_options">
+                                <label>تاريخ النشر</label>
+                                <input type="datetime-local" name="platforms[instagram][publish_date]" class="form-control">
+
+                                <label class="mt-2">نوع المنشور</label>
+                                <select name="platforms[instagram][type]" class="form-select">
+                                    <option value="post">منشور</option>
+                                    <option value="story">قصة</option>
+                                    <option value="reel">ريل</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label>نوع المنشور</label>
-                            <select name="post_type" class="form-select">
-                                <option value="post">منشور</option>
-                                <option value="story">ستوري</option>
-                                <option value="reel">ريل</option>
-                            </select>
+                        {{-- Platform: TikTok --}}
+                        <div class="mb-2">
+                            <input type="checkbox" id="tiktok_cb" name="platforms[tiktok][active]">
+                            <label for="tiktok_cb">TikTok</label>
+
+                            <div class="mt-2 platform-options d-none" id="tiktok_options">
+                                <label>تاريخ النشر</label>
+                                <input type="datetime-local" name="platforms[tiktok][publish_date]" class="form-control">
+
+                                <label class="mt-2">نوع المنشور</label>
+                                <select name="platforms[tiktok][type]" class="form-select">
+                                    <option value="post">منشور</option>
+                                    <option value="story">قصة</option>
+                                    <option value="reel">ريل</option>
+                                </select>
+                            </div>
                         </div>
 
                     </div>
@@ -112,7 +134,6 @@
 @endsection
 
 @section('scripts')
-
     <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
     @vite('resources/assets/js/select2.js')
 
@@ -132,14 +153,21 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        const modal = document.getElementById('publishModal');
-        modal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const id = button.getAttribute('data-id');
-            const name = button.getAttribute('data-name');
+        document.addEventListener('DOMContentLoaded', function() {
+            const platforms = ['facebook', 'instagram', 'tiktok'];
 
-            document.getElementById('modal_product_id').value = id;
-            document.getElementById('modal_product_name').textContent = name;
+            platforms.forEach(platform => {
+                const checkbox = document.getElementById(`${platform}_cb`);
+                const options = document.getElementById(`${platform}_options`);
+
+                checkbox?.addEventListener('change', function() {
+                    if (this.checked) {
+                        options.classList.remove('d-none');
+                    } else {
+                        options.classList.add('d-none');
+                    }
+                });
+            });
         });
     </script>
 @endsection

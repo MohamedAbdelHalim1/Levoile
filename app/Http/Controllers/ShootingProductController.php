@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Models\WebsiteAdminProduct;
 use App\Models\SocialMediaProduct;
+use App\Models\SocialMediaProductPlatform;
+use App\Models\User;
+use App\Models\WebsiteAdminProduct;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -297,35 +298,46 @@ class ShootingProductController extends Controller
     {
         // Sync all 'done' products from website_admin_products
         $doneProducts = WebsiteAdminProduct::where('status', 'done')->get();
-
+    
         foreach ($doneProducts as $item) {
             SocialMediaProduct::updateOrCreate(
                 ['website_admin_product_id' => $item->id],
                 ['status' => 'new']
             );
         }
-
-        $products = SocialMediaProduct::latest()->with('websiteAdminProduct')->get();
+    
+        $products = SocialMediaProduct::with(['websiteAdminProduct', 'platforms'])->latest()->get();
+    
         return view('shooting_products.social', compact('products'));
     }
+    
 
     public function publishSocial(Request $request)
     {
         $request->validate([
             'id' => 'required|exists:social_media_products,id',
             'platforms' => 'required|array',
-            'publish_datetime' => 'required|date',
-            'post_type' => 'required|string',
+            'platforms.*.publish_date' => 'required|date',
+            'platforms.*.type' => 'required|string',
         ]);
-
-        $product = SocialMediaProduct::findOrFail($request->id);
-        $product->update([
-            'platforms' => $request->platforms,
-            'publish_datetime' => $request->publish_datetime,
-            'post_type' => $request->post_type,
-            'status' => 'done',
-        ]);
-
+    
+        DB::transaction(function () use ($request) {
+            $product = SocialMediaProduct::findOrFail($request->id);
+            $product->update(['status' => 'done']);
+    
+            foreach ($request->platforms as $platformName => $platformData) {
+                if (!isset($platformData['publish_date']) || !isset($platformData['type'])) continue;
+    
+                SocialMediaProductPlatform::create([
+                    'social_media_product_id' => $product->id,
+                    'platform' => $platformName,
+                    'publish_date' => $platformData['publish_date'],
+                    'type' => $platformData['type'],
+                ]);
+            }
+        });
+    
         return redirect()->route('social-media.index')->with('success', 'تم جدولة النشر بنجاح');
     }
+    
 }

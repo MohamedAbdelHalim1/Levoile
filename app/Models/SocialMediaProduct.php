@@ -11,9 +11,6 @@ class SocialMediaProduct extends Model
 
     protected $fillable = [
         'website_admin_product_id',
-        'platforms', // json (array of platforms)
-        'publish_datetime',
-        'post_type', // post | story | reel
         'status' // new | done
     ];
 
@@ -25,5 +22,10 @@ class SocialMediaProduct extends Model
     public function websiteAdminProduct()
     {
         return $this->belongsTo(WebsiteAdminProduct::class);
+    }
+
+    public function platforms()
+    {
+        return $this->hasMany(SocialMediaProductPlatform::class);
     }
 }
