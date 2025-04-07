@@ -316,12 +316,17 @@ class ShootingProductController extends Controller
     {
 
         try {
+            $selectedPlatforms = collect($request->platforms)->filter(fn($p) => isset($p['active']));
+
+            $request->merge(['platforms' => $selectedPlatforms]);
+
             $request->validate([
                 'id' => 'required|exists:social_media_products,id',
-                'platforms' => 'required|array',
+                'platforms' => 'required|array|min:1',
                 'platforms.*.publish_date' => 'required|date',
                 'platforms.*.type' => 'required|string',
             ]);
+
 
 
             DB::transaction(function () use ($request) {

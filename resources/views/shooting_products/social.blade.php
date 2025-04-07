@@ -34,7 +34,7 @@
                                 <td>
                                     {{ implode(', ', optional($item->platforms)->pluck('type')?->toArray() ?? []) ?: '-' }}
                                 </td>
-                                
+
                                 <td>
                                     @if ($item->status == 'new')
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
@@ -168,6 +168,15 @@
                     }
                 });
             });
+        });
+
+        document.getElementById('publishModal').addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+
+            document.getElementById('modal_product_id').value = id;
+            document.getElementById('modal_product_name').textContent = name;
         });
     </script>
 @endsection
