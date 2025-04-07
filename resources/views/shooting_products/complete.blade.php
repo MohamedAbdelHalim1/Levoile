@@ -47,7 +47,7 @@
 
                                     <div class="mb-2">
                                         <label>السعر</label>
-                                        <input type="number" name="colors[{{ $i + 1 }}][price]" class="form-control"
+                                        <input type="text" name="colors[{{ $i + 1 }}][price]" class="form-control"
                                             value="{{ $color?->price }}">
                                     </div>
 
