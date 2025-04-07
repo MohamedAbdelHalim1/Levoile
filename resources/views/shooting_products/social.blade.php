@@ -35,21 +35,23 @@
 
                                 <td>
                                     @if (optional($item->platforms)->count())
-                                        <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
-                                            data-bs-target="#platformsModal" data-platforms='@json(
-                                                $item->platforms->map(function ($p) {
-                                                    return [
-                                                        'platform' => $p->platform,
-                                                        'type' => $p->type,
-                                                        'publish_date' => $p->publish_date,
-                                                    ];
-                                                }))'>
+                                        <a href="#" class="badge bg-info text-dark"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#platformsModal"
+                                           data-platforms='@json($item->platforms->map(function ($p) {
+                                               return [
+                                                   "platform" => $p->platform,
+                                                   "type" => $p->type,
+                                                   "publish_date" => $p->publish_date,
+                                               ];
+                                           })->values())'>
                                             {{ $item->platforms->count() }} منصة
                                         </a>
                                     @else
                                         -
                                     @endif
                                 </td>
+                                
 
 
                                 <td>
