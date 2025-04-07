@@ -34,17 +34,11 @@
                                 </td>
 
                                 <td>
-                                    @if (optional($item->platforms)->count())
+                                    @php $platformCount = $platforms[$item->id]->count() ?? 0; @endphp
+                                    @if ($platformCount)
                                         <a href="#" class="badge bg-info text-dark" data-bs-toggle="modal"
-                                           data-bs-target="#platformsModal"
-                                           data-platforms='@json($item->platforms->map(function ($p) {
-                                               return [
-                                                   "platform" => $p->platform,
-                                                   "type" => $p->type,
-                                                   "publish_date" => $p->publish_date,
-                                               ];
-                                           })->values())'>
-                                            {{ $item->platforms->count() }} منصة
+                                            data-bs-target="#platformsModal" data-product-id="{{ $item->id }}">
+                                            {{ $platformCount }} منصة
                                         </a>
                                     @else
                                         -
@@ -236,15 +230,18 @@
     </script>
 
     <script>
+        const allPlatforms = @json($platforms);
+
         const platformsModal = document.getElementById('platformsModal');
         platformsModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
-            const platforms = JSON.parse(button.getAttribute('data-platforms'));
-            const tableBody = document.getElementById('platformsTableBody');
+            const productId = button.getAttribute('data-product-id');
+            const productPlatforms = allPlatforms[productId] || [];
 
+            const tableBody = document.getElementById('platformsTableBody');
             tableBody.innerHTML = '';
 
-            platforms.forEach(platform => {
+            productPlatforms.forEach(platform => {
                 const published = new Date(platform.publish_date);
                 const now = new Date();
                 const diff = published.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0);

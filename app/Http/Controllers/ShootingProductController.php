@@ -306,9 +306,10 @@ class ShootingProductController extends Controller
             );
         }
 
-        $products = SocialMediaProduct::with(['websiteAdminProduct', 'platforms'])->latest()->get();
+        $products = SocialMediaProduct::with('websiteAdminProduct')->latest()->get();
+        $platforms = SocialMediaProductPlatform::all()->groupBy('social_media_product_id');
 
-        return view('shooting_products.social', compact('products'));
+        return view('shooting_products.social', compact('products', 'platforms'));
     }
 
 
