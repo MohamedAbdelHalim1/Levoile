@@ -333,8 +333,6 @@ class ShootingProductController extends Controller
 
             DB::transaction(function () use ($request) {
                 $product = SocialMediaProduct::findOrFail($request->id);
-                $product->status = 'done';
-                $product->save();
                 
                 $product->platforms()->delete();
 
@@ -346,6 +344,10 @@ class ShootingProductController extends Controller
                         'type' => $platformData['type'],
                     ]);
                 }
+
+                $product->status = 'done';
+                $product->save();
+                
 
 
             });
