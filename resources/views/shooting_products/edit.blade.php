@@ -20,9 +20,78 @@
                         <input type="number" name="number_of_colors" value="{{ $product->number_of_colors }}" class="form-control">
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">السعر</label>
+                        <input type="number" step="0.01" name="price" class="form-control" value="{{ $product->price }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">الصورة الرئيسية</label>
+                        <input type="file" name="main_image" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">الصورة الحالية</label><br>
+                        @if($product->main_image)
+                            <img src="{{ asset('images/shooting/' . $product->main_image) }}" width="100">
+                        @else
+                            <span>لا توجد صورة</span>
+                        @endif
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">معرض الصور</label>
+                        <input type="file" name="gallery_images[]" class="form-control" multiple>
+                    </div>
+                    
+                    @if ($product->gallery->count())
+                        <div class="row mt-3">
+                            @foreach ($product->gallery as $image)
+                                <div class="col-md-3 position-relative mb-3">
+                                    <img src="{{ asset('images/shooting/' . $image->filename) }}" class="img-fluid rounded border">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-image"
+                                            data-id="{{ $image->id }}" style="z-index: 10;">X</button>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                    
+
                     <button type="submit" class="btn btn-primary">تعديل المنتج</button>
                 </form>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-image').forEach(button => {
+            button.addEventListener('click', function () {
+                if (!confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+
+                const imageId = this.dataset.id;
+                const imageBox = this.closest('.col-md-3');
+
+                fetch("{{ route('gallery.delete') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: imageId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        imageBox.remove();
+                    } else {
+                        alert('حدث خطأ أثناء الحذف');
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

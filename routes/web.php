@@ -217,6 +217,7 @@ Route::middleware('auth')->group(function () {
         ->name('shooting-products.updateDriveLink');
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
+    Route::post('/shooting-gallery/delete', [ShootingProductController::class, 'deleteGallery'])->name('gallery.delete');
 
 
     Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');

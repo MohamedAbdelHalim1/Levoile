@@ -9,14 +9,46 @@
                     enctype="multipart/form-data">
                     @csrf
 
-                    <div class="mb-3">
-                        <label>اسم المنتج</label>
-                        <input type="text" name="name" value="{{ $product->name ?? '' }}" class="form-control">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>اسم المنتج</label>
+                                <input type="text" name="name" value="{{ $product->name ?? '' }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>الوصف</label>
+                                <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>الصورة الرئيسية</label>
+                                @if ($product->main_image && file_exists(public_path($product->main_image)))
+                                    <img src="{{ asset($product->main_image) }}" class="img-thumbnail mb-2" width="150">
+                                @endif
+                            </div>
+
+                            <div class="mb-3">
+                                <label>السعر</label>
+                                <input type="text" class="form-control" value="{{ $product->price }}" readonly>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label>الوصف</label>
-                        <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
+                    <hr>
+                    <h5 class="mt-4">معرض الصور</h5>
+                    <div class="row">
+                        @foreach ($product->gallery as $image)
+                            <div class="col-md-3 mb-3">
+                                <div class="position-relative">
+                                    <img src="{{ asset($image->image_path) }}" class="img-fluid rounded shadow-sm"
+                                        style="max-height: 200px; object-fit: cover;">
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
                     <hr>
@@ -49,11 +81,11 @@
 
                                     <!-- for price -->
 
-                                    <div class="mb-2">
+                                    {{-- <div class="mb-2">
                                         <label>السعر</label>
                                         <input type="text" name="colors[{{ $i + 1 }}][price]"
                                             class="form-control" value="{{ $color?->price }}">
-                                    </div>
+                                    </div> --}}
 
                                     <div class="mb-2">
                                         <label>الصورة</label>

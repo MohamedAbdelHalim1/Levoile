@@ -179,16 +179,36 @@ class ShootingProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'number_of_colors' => 'nullable|integer',
+            'price' => 'required|numeric|min:0',
+            'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        ShootingProduct::create([
-            'name' => $request->name,
-            'number_of_colors' => $request->number_of_colors,
-            'status' => 'new', // Default status
-        ]);
+        $data = $request->only(['name', 'number_of_colors', 'price']);
+        $data['status'] = 'new';
+
+        if ($request->hasFile('main_image')) {
+            $imageName = time() . '_main.' . $request->main_image->extension();
+            $request->main_image->move(public_path('images/shooting'), $imageName);
+            $data['main_image'] = $imageName;
+        }
+
+        $product = ShootingProduct::create($data);
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $imgName = uniqid() . '.' . $image->extension();
+                $image->move(public_path('images/shooting'), $imgName);
+
+                $product->gallery()->create([
+                    'image' => $imgName,
+                ]);
+            }
+        }
 
         return redirect()->route('shooting-products.index')->with('success', 'تم إضافة المنتج بنجاح');
     }
+
 
     public function show($id)
     {
@@ -198,7 +218,7 @@ class ShootingProductController extends Controller
 
     public function completePage($id)
     {
-        $product = ShootingProduct::findOrFail($id);
+        $product = ShootingProduct::with('gallery')->findOrFail($id); // eager loading gallery
         $colors = ShootingProductColor::where('shooting_product_id', $product->id)->get();
 
         return view('shooting_products.complete', compact('product', 'colors'));
@@ -217,7 +237,6 @@ class ShootingProductController extends Controller
                 'shooting_product_id' => $product->id,
                 'name' => $color['name'] ?? null,
                 'code' => $color['code'] ?? null,
-                'price' => $color['price'] ?? null,
             ];
 
             // Handle image upload
@@ -240,17 +259,46 @@ class ShootingProductController extends Controller
 
     public function edit($id)
     {
-        $product = ShootingProduct::findOrFail($id);
+        $product = ShootingProduct::with('gallery')->findOrFail($id);
         return view('shooting_products.edit', compact('product'));
     }
 
     public function update(Request $request, $id)
     {
         $product = ShootingProduct::findOrFail($id);
-        $product->update($request->all());
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'number_of_colors' => 'nullable|integer',
+            'price' => 'required|numeric|min:0',
+            'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $data = $request->only(['name', 'number_of_colors', 'price']);
+
+        if ($request->hasFile('main_image')) {
+            $imageName = time() . '_main.' . $request->main_image->extension();
+            $request->main_image->move(public_path('images/shooting'), $imageName);
+            $data['main_image'] = $imageName;
+        }
+
+        $product->update($data);
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $imgName = uniqid() . '.' . $image->extension();
+                $image->move(public_path('images/shooting'), $imgName);
+
+                $product->gallery()->create([
+                    'image' => $imgName,
+                ]);
+            }
+        }
 
         return redirect()->route('shooting-products.index')->with('success', 'تم تحديث المنتج بنجاح');
     }
+
 
     public function destroy($id)
     {
@@ -259,6 +307,25 @@ class ShootingProductController extends Controller
 
         return redirect()->route('shooting-products.index')->with('success', 'تم حذف المنتج بنجاح');
     }
+
+    public function deleteGallery(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:shooting_product_gallery,id',
+        ]);
+
+        $gallery = ShootingProductGallery::findOrFail($request->id);
+        $path = public_path('images/shooting/' . $gallery->filename);
+
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        $gallery->delete();
+
+        return response()->json(['success' => true]);
+    }
+
 
     public function indexWebsite()
     {
@@ -372,15 +439,14 @@ class ShootingProductController extends Controller
     public function calendar()
     {
         $platforms = SocialMediaProductPlatform::with('socialMediaProduct.websiteAdminProduct')->get();
-    
+
         $events = $platforms->map(function ($item) {
             return [
                 'title' => $item->socialMediaProduct->websiteAdminProduct->name,
                 'start' => \Carbon\Carbon::parse($item->publish_date)->toDateString(), // ✅ يوم فقط بدون وقت
             ];
         });
-    
+
         return view('shooting_products.calendar', ['events' => $events]);
     }
-    
 }

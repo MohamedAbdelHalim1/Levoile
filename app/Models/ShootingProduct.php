@@ -15,6 +15,7 @@ class ShootingProduct extends Model
         'name',
         'description',
         'number_of_colors',
+        'price',
         'status',
         'type_of_shooting',
         'location',
@@ -24,6 +25,7 @@ class ShootingProduct extends Model
         'editor', //multiple selection so it will be an array
         'date_of_delivery',
         'drive_link',
+        'main_image',
     ];
 
     public function shootingProductColors()
@@ -31,5 +33,8 @@ class ShootingProduct extends Model
         return $this->hasMany(ShootingProductColor::class);
     }
 
-  
+    public function gallery()
+    {
+        return $this->hasMany(ShootingGallery::class);
+    }
 }

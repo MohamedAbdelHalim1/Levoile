@@ -18,6 +18,22 @@
                         <input type="number" name="number_of_colors" class="form-control">
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">السعر</label>
+                        <input type="number" step="0.01" name="price" class="form-control" required>
+                    </div>
+                    
+
+                    <div class="mb-3">
+                        <label class="form-label">الصورة الرئيسية</label>
+                        <input type="file" name="main_image" class="form-control">
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label">صور المنتج (جاليري)</label>
+                        <input type="file" name="gallery_images[]" class="form-control" multiple>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">إضافة المنتج</button>
                 </form>
             </div>
