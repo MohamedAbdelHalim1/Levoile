@@ -48,7 +48,7 @@
                         <div class="row mt-3">
                             @foreach ($product->gallery as $image)
                                 <div class="col-md-3 position-relative mb-3">
-                                    <img src="{{ asset('images/shooting/' . $image->filename) }}" class="img-fluid rounded border">
+                                    <img src="{{ asset('images/shooting/' . $image->image) }}" class="img-fluid rounded border">
                                     <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-image"
                                             data-id="{{ $image->id }}" style="z-index: 10;">X</button>
                                 </div>
