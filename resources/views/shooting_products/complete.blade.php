@@ -27,7 +27,7 @@
                             <div class="mb-3">
                                 <label>الصورة الرئيسية</label>
                                 @if ($product->main_image && file_exists(public_path($product->main_image)))
-                                    <img src="{{ asset($product->main_image) }}" class="img-thumbnail mb-2" width="150">
+                                    <img src="{{ asset('images/shooting/' . $product->main_image) }}" class="img-thumbnail mb-2" width="150">
                                 @endif
                             </div>
 
@@ -44,7 +44,7 @@
                         @foreach ($product->gallery as $image)
                             <div class="col-md-3 mb-3">
                                 <div class="position-relative">
-                                    <img src="{{ asset($image->image_path) }}" class="img-fluid rounded shadow-sm"
+                                    <img src="{{ asset('images/shooting/' . $image->image) }}" class="img-fluid rounded shadow-sm"
                                         style="max-height: 200px; object-fit: cover;">
                                 </div>
                             </div>
