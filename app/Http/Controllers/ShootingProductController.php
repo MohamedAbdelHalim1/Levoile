@@ -321,7 +321,7 @@ class ShootingProductController extends Controller
         ]);
 
         $gallery = ShootingGallery::findOrFail($request->id);
-        $path = public_path('images/shooting/' . $gallery->filename);
+        $path = public_path('images/shooting/' . $gallery->image);
 
         if (file_exists($path)) {
             unlink($path);
