@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label>الصورة الرئيسية</label>
-                                @if ($product->main_image && file_exists(public_path($product->main_image)))
+                                @if ($product->main_image && file_exists(public_path('images/shooting/' . $product->main_image)))
                                     <img src="{{ asset('images/shooting/' . $product->main_image) }}" class="img-thumbnail mb-2" width="150">
                                 @endif
                             </div>
