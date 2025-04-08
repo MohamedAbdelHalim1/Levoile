@@ -6,7 +6,7 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h2 class="text-lg font-bold mb-4">إضافة منتج جديد</h2>
 
-                <form action="{{ route('shooting-products.store') }}" method="POST">
+                <form action="{{ route('shooting-products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">اسم المنتج</label>

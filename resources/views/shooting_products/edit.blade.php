@@ -6,7 +6,7 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h2 class="text-lg font-bold mb-4">تعديل منتج جديد</h2>
 
-                <form action="{{ route('shooting-products.update' , $product->id) }}" method="POST">
+                <form action="{{ route('shooting-products.update' , $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
