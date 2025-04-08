@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShootingGallery;
 use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
 use App\Models\SocialMediaProduct;
@@ -319,7 +320,7 @@ class ShootingProductController extends Controller
             'id' => 'required|exists:shooting_product_gallery,id',
         ]);
 
-        $gallery = ShootingProductGallery::findOrFail($request->id);
+        $gallery = ShootingGallery::findOrFail($request->id);
         $path = public_path('images/shooting/' . $gallery->filename);
 
         if (file_exists($path)) {
