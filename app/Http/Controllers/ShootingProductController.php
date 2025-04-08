@@ -317,7 +317,7 @@ class ShootingProductController extends Controller
     public function deleteGallery(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:shooting_product_gallery,id',
+            'id' => 'required|exists:shooting_galleries,id',
         ]);
 
         $gallery = ShootingGallery::findOrFail($request->id);
