@@ -265,38 +265,43 @@ class ShootingProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        $product = ShootingProduct::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'number_of_colors' => 'nullable|integer',
-            'price' => 'required|numeric|min:0',
-            'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        try {
+            $product = ShootingProduct::findOrFail($id);
 
-        $data = $request->only(['name', 'number_of_colors', 'price']);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'number_of_colors' => 'nullable|integer',
+                'price' => 'required|numeric|min:0',
+                'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
 
-        if ($request->hasFile('main_image')) {
-            $imageName = time() . '_main.' . $request->main_image->extension();
-            $request->main_image->move(public_path('images/shooting'), $imageName);
-            $data['main_image'] = $imageName;
-        }
+            $data = $request->only(['name', 'number_of_colors', 'price']);
 
-        $product->update($data);
-
-        if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $image) {
-                $imgName = uniqid() . '.' . $image->extension();
-                $image->move(public_path('images/shooting'), $imgName);
-
-                $product->gallery()->create([
-                    'image' => $imgName,
-                ]);
+            if ($request->hasFile('main_image')) {
+                $imageName = time() . '_main.' . $request->main_image->extension();
+                $request->main_image->move(public_path('images/shooting'), $imageName);
+                $data['main_image'] = $imageName;
             }
-        }
 
-        return redirect()->route('shooting-products.index')->with('success', 'تم تحديث المنتج بنجاح');
+            $product->update($data);
+
+            if ($request->hasFile('gallery_images')) {
+                foreach ($request->file('gallery_images') as $image) {
+                    $imgName = uniqid() . '.' . $image->extension();
+                    $image->move(public_path('images/shooting'), $imgName);
+
+                    $product->gallery()->create([
+                        'image' => $imgName,
+                    ]);
+                }
+            }
+
+            return redirect()->route('shooting-products.index')->with('success', 'تم تحديث المنتج بنجاح');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
 
