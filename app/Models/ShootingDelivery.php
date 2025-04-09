@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShootingDelivery extends Model
 {
-    protected $fillable = ['filename', 'uploaded_at'];
-    public $timestamps = false;
+
+
+
+    protected $fillable = ['filename'];
+    public $timestamps = true; 
+
+
+
+
 }
