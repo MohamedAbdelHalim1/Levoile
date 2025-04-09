@@ -494,7 +494,8 @@ class ShootingProductController extends Controller
                 // سجل في جدول التسليمات
                 ShootingDelivery::create([
                     'filename' => $filename,
-                    'uploaded_at' => now()
+                    'uploaded_at' => now(),
+                    'created_at' => now(),
                 ]);
     
                 $grouped = [];
