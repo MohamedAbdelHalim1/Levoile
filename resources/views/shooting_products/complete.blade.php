@@ -33,7 +33,7 @@
 
                             <div class="mb-3">
                                 <label>السعر</label>
-                                <input type="text" class="form-control" value="{{ $product->price }}" readonly>
+                                <input type="text" class="form-control" value="{{ $product->price }}" name="price">
                             </div>
                         </div>
                     </div>

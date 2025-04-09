@@ -235,7 +235,8 @@ class ShootingProductController extends Controller
         $product = ShootingProduct::findOrFail($id);
         $product->update([
             'name' => $request->input('name'),
-            'description' => $request->input('description')
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
         ]);
 
         foreach ($request->colors as $color) {
