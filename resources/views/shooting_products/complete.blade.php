@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h3 class="mb-4">اكمال بيانات المنتج: {{ $product->name }}</h3>
+                <h3 class="mb-4">اكمال بيانات المنتج: {{ $product->name }} - {{ $product->custom_id }}</h3>
                 <form method="POST" action="{{ route('shooting-products.complete.save', $product->id) }}"
                     enctype="multipart/form-data">
                     @csrf
