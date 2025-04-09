@@ -21,9 +21,9 @@
                         @foreach ($deliveries as $delivery)
                             <tr>
                                 <td>{{ $delivery->filename }}</td>
-                                <td>{{ $delivery->uploaded_at }}</td>
+                                <td>{{ $delivery->created_at }}</td>
                                 <td>
-                                    <a href="{{ asset('uploads/shooting_excel/' . $delivery->filename) }}"
+                                    <a href="{{ asset('excel/' . $delivery->filename) }}"
                                         class="btn btn-sm btn-info" download>تحميل</a>
                                 </td>
                             </tr>
