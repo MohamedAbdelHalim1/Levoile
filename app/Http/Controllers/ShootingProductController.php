@@ -519,7 +519,7 @@ class ShootingProductController extends Controller
                 foreach ($grouped as $primaryId => $items) {
                     // إدخال المنتج الأساسي
                     $product = ShootingProduct::create([
-                        'id' => $primaryId,
+                        'custom_id' => $primaryId,
                         'name' => $items[0]['description'],
                         'number_of_colors' => count($items),
                         'quantity' => $items[0]['quantity'],
