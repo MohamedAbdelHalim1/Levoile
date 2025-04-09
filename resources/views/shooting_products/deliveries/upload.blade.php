@@ -16,7 +16,7 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="file" class="form-label">اختر ملف Excel</label>
+                        <label for="file" class="form-label"> (الملف من النوع xlsx و xls فقط) اختر ملف Excel</label>
                         <input type="file" name="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                     </div>
 
