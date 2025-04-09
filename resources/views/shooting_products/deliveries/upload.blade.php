@@ -16,7 +16,7 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="file" class="form-label"> (الملف من النوع xlsx و xls فقط) اختر ملف Excel</label>
+                        <label for="file" class="form-label"> اختر ملف Excel (الملف من النوع xlsx و xls فقط)</label>
                         <input type="file" name="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                     </div>
 
@@ -24,7 +24,7 @@
                 </form>
 
                 <div id="sheet-preview" class="mt-4 d-none">
-                    <h5 class="mb-3"><b>(بالرجاء تأكد من صحه واكتمال البيانات) معاينة البيانات </b></h5>
+                    <h5 class="mb-3"><b>معاينة البيانات(بالرجاء تأكد من صحه واكتمال البيانات) : </b></h5>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center" id="preview-table">
                             <thead class="table-light">
