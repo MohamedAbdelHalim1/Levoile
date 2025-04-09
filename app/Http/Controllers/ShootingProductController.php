@@ -188,9 +188,11 @@ class ShootingProductController extends Controller
             'price' => 'required|numeric|min:0',
             'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'quantity' => 'required|integer|min:1',
+            'custom_id' => 'nullable|integer',
         ]);
 
-        $data = $request->only(['name', 'number_of_colors', 'price']);
+        $data = $request->only(['name', 'number_of_colors', 'price', 'quantity', 'custom_id']);
         $data['status'] = 'new';
 
         if ($request->hasFile('main_image')) {
@@ -282,9 +284,11 @@ class ShootingProductController extends Controller
                 'price' => 'required|numeric|min:0',
                 'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'gallery_images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'quantity' => 'required|integer|min:1',
+                'custom_id' => 'nullable|integer',
             ]);
 
-            $data = $request->only(['name', 'number_of_colors', 'price']);
+            $data = $request->only(['name', 'number_of_colors', 'price', 'quantity', 'custom_id']);
 
             if ($request->hasFile('main_image')) {
                 $imageName = time() . '_main.' . $request->main_image->extension();
@@ -532,7 +536,6 @@ class ShootingProductController extends Controller
                         ShootingProductColor::create([
                             'shooting_product_id' => $product->id,
                             'code' => $color['item_no'],
-                            'name' => $color['description'],
                         ]);
                     }
                 }

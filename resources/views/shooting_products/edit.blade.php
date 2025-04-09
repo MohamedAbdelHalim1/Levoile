@@ -16,6 +16,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">الكود التعريفي (Primary ID)</label>
+                        <input type="number" name="custom_id" class="form-control" value="{{ $product->custom_id }}" required>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">عدد الألوان</label>
                         <input type="number" name="number_of_colors" value="{{ $product->number_of_colors }}" class="form-control">
                     </div>
@@ -24,6 +29,12 @@
                         <label class="form-label">السعر</label>
                         <input type="number" step="0.01" name="price" class="form-control" value="{{ $product->price }}" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">ألكميه</label>
+                        <input type="number" name="quantity" class="form-control" value="{{ $product->quantity }}" min="1">
+                    </div>
+                    
 
                     <div class="mb-3">
                         <label class="form-label">الصورة الرئيسية</label>
