@@ -24,7 +24,7 @@
                 </form>
 
                 <div id="sheet-preview" class="mt-4 d-none">
-                    <h5 class="mb-3">معاينة البيانات</h5>
+                    <h5 class="mb-3"><b>(بالرجاء تأكد من صحه واكتمال البيانات) معاينة البيانات </b></h5>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center" id="preview-table">
                             <thead class="table-light">
