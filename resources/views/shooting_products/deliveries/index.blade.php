@@ -24,7 +24,7 @@
                                 <td>{{ $delivery->created_at }}</td>
                                 <td>
                                     <a href="{{ asset('excel/' . $delivery->filename) }}"
-                                        class="btn btn-sm btn-info" download>تحميل</a>
+                                        class="btn btn-sm btn-info" download><i class="fa fa-download"></i></a>
                                 </td>
                             </tr>
                         @endforeach
