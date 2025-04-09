@@ -491,23 +491,24 @@ class ShootingProductController extends Controller
             $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
     
             DB::transaction(function () use ($rows, $filename) {
-                // حفظ معلومات التسليم
+                // سجل في جدول التسليمات
                 ShootingDelivery::create([
                     'filename' => $filename,
                     'uploaded_at' => now()
                 ]);
     
-                // إعداد البيانات
                 $grouped = [];
     
                 foreach ($rows as $index => $row) {
-                    if ($index === 1) continue; // تخطي العناوين
+                    if ($index === 1) continue; // أول سطر عبارة عن العناوين
     
                     $itemNo = $row['A'];
                     $description = $row['B'];
                     $quantity = $row['C'];
     
-                    $primaryId = substr($itemNo, 3, 6); // استخراج الـ ID
+                    if (!$itemNo || !$description) continue;
+    
+                    $primaryId = substr($itemNo, 3, 6); // استخلاص ID من الرقم
     
                     $grouped[$primaryId][] = [
                         'item_no' => $itemNo,
@@ -517,7 +518,7 @@ class ShootingProductController extends Controller
                 }
     
                 foreach ($grouped as $primaryId => $items) {
-                    // حفظ الـ Shooting Product
+                    // إدخال المنتج الأساسي
                     $product = ShootingProduct::create([
                         'id' => $primaryId,
                         'name' => $items[0]['description'],
@@ -526,23 +527,24 @@ class ShootingProductController extends Controller
                         'status' => 'new',
                     ]);
     
-                    // حفظ الألوان
+                    // إدخال كل لون
                     foreach ($items as $color) {
                         ShootingProductColor::create([
                             'shooting_product_id' => $product->id,
                             'code' => $color['item_no'],
+                            'name' => $color['description'],
                         ]);
                     }
                 }
             });
     
-            return redirect()->back()->with('success', 'تم رفع الشيت ومعالجة البيانات بنجاح');
+            return redirect()->back()->with('success', '✅ تم رفع الشيت ومعالجة البيانات بنجاح');
     
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ أثناء رفع الشيت: ' . $e->getMessage());
+            return redirect()->back()->with('error', '❌ حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
         }
     }
-
+    
 
 
 
