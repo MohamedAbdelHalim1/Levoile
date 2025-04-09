@@ -218,6 +218,9 @@ Route::middleware('auth')->group(function () {
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
     Route::post('/shooting-gallery/delete', [ShootingProductController::class, 'deleteGallery'])->name('gallery.delete');
+    Route::get('/shooting-deliveries', [ShootingProductController::class, 'deliveryIndex'])->name('shooting-deliveries.index');
+    Route::get('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUploadForm'])->name('shooting-deliveries.upload');
+    Route::post('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUpload'])->name('shooting-deliveries.upload.save');
 
 
     Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');

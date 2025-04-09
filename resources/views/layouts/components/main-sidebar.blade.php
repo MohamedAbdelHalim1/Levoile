@@ -222,6 +222,9 @@
                                         <ul class="sidemenu-list">
                                             <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
                                             </li>
+                                            <li>
+                                                <a href="{{ route('shooting-deliveries.index') }}" class="slide-item">تسليمات التصوير</a>
+                                            </li>
                                             <li><a href="{{ route('shooting-products.index') }}"
                                                     class="slide-item">التصوير</a></li>
                                         </ul>
@@ -231,6 +234,8 @@
                         </li>
                     </ul>
                 </li>
+
+
                 <li class="sub-category">
                     <h3>مسؤول الموقع</h3>
                 </li>

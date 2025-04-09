@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\WebsiteAdminProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\ShootingDelivery;
+
 
 
 class ShootingProductController extends Controller
@@ -454,5 +456,22 @@ class ShootingProductController extends Controller
         });
 
         return view('shooting_products.calendar', ['events' => $events]);
+    }
+
+
+    public function deliveryIndex()
+    {
+        $deliveries = ShootingDelivery::latest()->get();
+        return view('shooting_products.deliveries.index', compact('deliveries'));
+    }
+
+    public function deliveryUploadForm()
+    {
+        return view('shooting_products.deliveries.upload');
+    }
+
+    public function deliveryUpload(Request $request)
+    {
+        // بعدين نحط هنا معالجة الشيت
     }
 }

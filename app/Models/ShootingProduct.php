@@ -26,6 +26,7 @@ class ShootingProduct extends Model
         'date_of_delivery',
         'drive_link',
         'main_image',
+        'quantity'
     ];
 
     public function shootingProductColors()
