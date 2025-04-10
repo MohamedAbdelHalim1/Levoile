@@ -28,9 +28,9 @@
                                 <td>{{ $delivery->created_at }}</td>
                                 <td>{{ $delivery->status }}</td>
                                 <td>{{ $delivery->total_records }}</td>
-                                <td>{{ $delivery->sent_records }}</td>
+                                <td>{{ $delivery->sent_records ?? 0 }}</td>
                                 <td>{{ $delivery->user->name }}</td>
-                                <td>{{ $delivery->sender->name }}</td>
+                                <td>{{ $delivery->sender? $delivery->sender->name : '' }}</td>
                                 <td>
                                     <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
                                         download><i class="fa fa-download"></i></a>
