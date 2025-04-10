@@ -14,10 +14,10 @@
                         <tr>
                             <th>تاريخ الرفع</th>
                             <th>الحالة</th>
-                            <th>عدد السجلات</th>
-                            <th>عدد السجلات المرسلة</th>
-                            <th>اسم رافع الملف</th>
+                            <th>عدد الموديلات المرسله</th>
+                            <th>عدد الموديلات المستلمه</th>
                             <th>اسم المرسل</th>
+                            <th>اسم المستلم</th>
                             <th>تحميل</th>
                             <th>الإجراءات</th>
                         </tr>
@@ -27,19 +27,20 @@
                             <tr>
                                 <td>{{ $delivery->created_at }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                    <span
+                                        class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
                                 <td>{{ $delivery->total_records }}</td>
                                 <td>{{ $delivery->sent_records ?? 0 }}</td>
                                 <td>{{ $delivery->user->name }}</td>
-                                <td>{{ $delivery->sender? $delivery->sender->name : '' }}</td>
+                                <td>{{ $delivery->sender ? $delivery->sender->name : '' }}</td>
                                 <td>
                                     <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
                                         download><i class="fa fa-download"></i></a>
                                 </td>
                                 <td>
                                     <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                        class="btn btn-warning btn-sm">ارسال</a>
+                                        class="btn btn-warning btn-sm">استلام</a>
                                 </td>
                             </tr>
                         @endforeach
