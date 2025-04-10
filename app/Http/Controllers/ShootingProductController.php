@@ -514,18 +514,21 @@ class ShootingProductController extends Controller
     public function sendSave(Request $request, $id)
     {
         try {
-            $selectedRows = $request->input('rows', []);
-
-            if (empty($selectedRows)) {
+            $selectedIndexes = $request->input('selected_rows', []);
+    
+            if (empty($selectedIndexes)) {
                 return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
             }
     
-            DB::transaction(function () use ($selectedRows, $id) {
+            DB::transaction(function () use ($selectedIndexes, $request, $id) {
                 $delivery = ShootingDelivery::findOrFail($id);
+    
+                $rows = $request->input('rows', []);
     
                 $grouped = [];
     
-                foreach ($selectedRows as $row) {
+                foreach ($selectedIndexes as $index) {
+                    $row = $rows[$index];
                     $itemNo = $row['item_no'];
                     $description = $row['description'];
                     $quantity = $row['quantity'];
