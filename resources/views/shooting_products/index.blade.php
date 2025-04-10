@@ -157,6 +157,8 @@
                                         <span class="badge bg-warning">جديد</span>
                                     @elseif($product->status == 'in_progress')
                                         <span class="badge bg-info">قيد التنفيذ</span>
+                                    @elseif($product->status == 'partial')
+                                        <span class="badge bg-warning">تصوير جزئي</span>
                                     @elseif($product->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif

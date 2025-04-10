@@ -9,7 +9,7 @@ class ShootingProductColor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['shooting_product_id', 'name' ,  'code', 'image' , 'price'];
+    protected $fillable = ['shooting_product_id', 'name' ,  'code', 'image' , 'price','status'];
 
     public function shootingProduct()
     {

@@ -77,28 +77,29 @@
                         <table class="table table-bordered text-center">
                             <thead class="table-light">
                                 <tr>
+                                    <th><input type="checkbox" id="checkAll"></th>
                                     <th>#</th>
                                     <th>اسم المنتج</th>
                                     <th>كود اللون</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $variantIndex = 1;
-                                @endphp
-
+                                @php $variantIndex = 1; @endphp
                                 @foreach ($products as $product)
                                     @foreach ($product->shootingProductColors as $color)
                                         <tr>
+                                            <td>
+                                                <input type="checkbox" name="selected_colors[]" value="{{ $color->id }}">
+                                            </td>
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->code }}</td>
                                         </tr>
                                     @endforeach
                                 @endforeach
-
                             </tbody>
                         </table>
+                        
                     </div>
 
                     <button type="submit" class="btn btn-success mt-4">بدء التصوير</button>
