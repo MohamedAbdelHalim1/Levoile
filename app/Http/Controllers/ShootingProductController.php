@@ -507,7 +507,7 @@ class ShootingProductController extends Controller
                 'sent_records' => 0,
             ]);
 
-            foreach(array_slice($rows, 1) as $row) {
+            foreach (array_slice($rows, 1) as $row) {
                 ShootingDeliveryContent::create([
                     'shooting_delivery_id' => $delivery->id,
                     'item_no' => $row['A'],
@@ -585,6 +585,11 @@ class ShootingProductController extends Controller
                             'shooting_product_id' => $product->id,
                             'code' => $color['item_no'],
                         ]);
+
+                        // update delivery content
+                        ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                            ->where('item_no', $color['item_no'])
+                            ->update(['is_received' => 1]);
                     }
                 }
 
