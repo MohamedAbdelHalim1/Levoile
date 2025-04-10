@@ -12,6 +12,7 @@
                         <tr>
                             <th>#</th>
                             <th>اسم المنتج</th>
+                            <th>الكود الرئيسي</th>
                             <th>كود اللون</th>
                             <th>نوع التصوير</th>
                             <th>مكان التصوير</th>
@@ -28,6 +29,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $color->shootingProduct->name }}</td>
+                                <td>{{ $color->shootingProduct->custom_id }}</td>
                                 <td>{{ $color->code }}</td>
                                 <td>{{ $color->type_of_shooting ?? '-' }}</td>
                                 <td>{{ $color->location ?? '-' }}</td>
