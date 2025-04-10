@@ -489,9 +489,18 @@ class ShootingProductController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('excel'), $filename);
 
+            $filePath = public_path('excel/' . $filename);
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+    
+            $totalRecords = count($rows) - 1; // عشان اول صف titles
+    
             ShootingDelivery::create([
                 'filename' => $filename,
                 'user_id' => auth()->id(),
+                'status' => 'تم الرفع',
+                'total_records' => $totalRecords,
+                'sent_records' => 0,
             ]);
 
             return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
@@ -522,9 +531,7 @@ class ShootingProductController extends Controller
     
             DB::transaction(function () use ($selectedIndexes, $request, $id) {
                 $delivery = ShootingDelivery::findOrFail($id);
-    
                 $rows = $request->input('rows', []);
-    
                 $grouped = [];
     
                 foreach ($selectedIndexes as $index) {
@@ -560,6 +567,8 @@ class ShootingProductController extends Controller
     
                 $delivery->update([
                     'sent_by' => auth()->id(),
+                    'status' => 'تم الاستلام',
+                    'sent_records' => count($selectedIndexes),
                 ]);
             });
     
@@ -568,6 +577,7 @@ class ShootingProductController extends Controller
             return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
         }
     }
+    
     
 
 

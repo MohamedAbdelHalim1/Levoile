@@ -12,8 +12,12 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>اسم الملف</th>
                             <th>تاريخ الرفع</th>
+                            <th>الحالة</th>
+                            <th>عدد السجلات</th>
+                            <th>عدد السجلات المرسلة</th>
+                            <th>اسم رافع الملف</th>
+                            <th>اسم المرسل</th>
                             <th>تحميل</th>
                             <th>الإجراءات</th>
                         </tr>
@@ -21,14 +25,19 @@
                     <tbody>
                         @foreach ($deliveries as $delivery)
                             <tr>
-                                <td>{{ $delivery->filename }}</td>
                                 <td>{{ $delivery->created_at }}</td>
+                                <td>{{ $delivery->status }}</td>
+                                <td>{{ $delivery->total_records }}</td>
+                                <td>{{ $delivery->sent_records }}</td>
+                                <td>{{ $delivery->user->name }}</td>
+                                <td>{{ $delivery->sender->name }}</td>
                                 <td>
-                                    <a href="{{ asset('excel/' . $delivery->filename) }}"
-                                        class="btn btn-sm btn-info" download><i class="fa fa-download"></i></a>
+                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
+                                        download><i class="fa fa-download"></i></a>
                                 </td>
                                 <td>
-                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">ارسال</a>
+                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
+                                        class="btn btn-warning btn-sm">ارسال</a>
                                 </td>
                             </tr>
                         @endforeach
