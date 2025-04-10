@@ -29,17 +29,15 @@
                             @php
                                 $itemNos = array_count_values(array_column($rows, 'A'));
                             @endphp
-
-                            @foreach($rows as $index => $row)
-                                @continue($index === 0) {{-- skip first row (titles) --}}
-
+                        
+                            @foreach(array_slice($rows, 1) as $index => $row) {{-- skip first row --}}
                                 @php
                                     $itemNo = $row['A'] ?? '';
                                     $description = $row['B'] ?? '';
                                     $quantity = $row['C'] ?? '';
                                     $primaryId = substr($itemNo, 3, 6);
                                 @endphp
-
+                        
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="rows[{{ $index }}][item_no]" value="{{ $itemNo }}">
@@ -53,6 +51,7 @@
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
                 </div>
 
