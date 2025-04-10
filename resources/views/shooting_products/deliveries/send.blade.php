@@ -61,7 +61,7 @@
                     </table>
                 </div>
 
-                <button type="submit" class="btn btn-success mt-3">ارسال المحدد للتصوير</button>
+                <button type="submit" class="btn btn-success mt-3">استلام المحدد للتصوير</button>
                 <a href="{{ route('shooting-deliveries.index') }}" class="btn btn-secondary mt-3">رجوع</a>
             </form>
 

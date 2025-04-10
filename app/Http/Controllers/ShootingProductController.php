@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShootingDelivery;
+use App\Models\ShootingDeliveryContent;
 use App\Models\ShootingGallery;
 use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
@@ -11,9 +13,8 @@ use App\Models\User;
 use App\Models\WebsiteAdminProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\ShootingDelivery;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 
@@ -498,7 +499,7 @@ class ShootingProductController extends Controller
 
             $totalRecords = count($rows) - 1; // عشان اول صف titles
 
-            ShootingDelivery::create([
+            $delivery = ShootingDelivery::create([
                 'filename' => $filename,
                 'user_id' => auth()->id(),
                 'status' => 'تم الارسال',
@@ -506,12 +507,31 @@ class ShootingProductController extends Controller
                 'sent_records' => 0,
             ]);
 
+            foreach(array_slice($rows, 1) as $row) {
+                ShootingDeliveryContent::create([
+                    'shooting_delivery_id' => $delivery->id,
+                    'item_no' => $row['A'],
+                    'description' => $row['B'],
+                    'quantity' => $row['C'],
+                    'unit' => $row['D'],
+                    'primary_id' => substr($row['A'], 3, 6),
+                    'is_received' => 0,
+                ]);
+            }
+
             return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
         }
     }
 
+
+    public function showDelivery($id)
+    {
+        $delivery = ShootingDelivery::findOrFail($id);
+        $contents = ShootingDeliveryContent::where('shooting_delivery_id', $id)->get();
+        return view('shooting_products.deliveries.show', compact('delivery', 'contents'));
+    }
 
     public function sendPage($id)
     {

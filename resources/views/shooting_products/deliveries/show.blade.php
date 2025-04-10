@@ -4,53 +4,39 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h4>ملفات تسليمات التصوير</h4>
-                    <a href="{{ route('shooting-deliveries.upload') }}" class="btn btn-primary">رفع شيت جديد</a>
-                </div>
+             
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>تاريخ الرفع</th>
+                            <th>رقم الصنف</th>
+                            <th>الوصف</th>
+                            <th>الكمية</th>
+                            <th>الوحدة</th>
+                            <th>الرقم الاساسي</th>
                             <th>الحالة</th>
-                            <th>عدد الموديلات المرسله</th>
-                            <th>عدد الموديلات المستلمه</th>
-                            <th>اسم المرسل</th>
-                            <th>اسم المستلم</th>
-                            <th>تحميل</th>
-                            <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($deliveries as $delivery)
+                        @foreach($contents as $content)
                             <tr>
-                                <td>{{ $delivery->created_at }}</td>
+                                <td>{{ $content->item_no }}</td>
+                                <td>{{ $content->description }}</td>
+                                <td>{{ $content->quantity }}</td>
+                                <td>{{ $content->unit }}</td>
+                                <td>{{ $content->primary_id }}</td>
                                 <td>
-                                    <span
-                                        class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
-                                </td>
-                                <td>{{ $delivery->total_records }}</td>
-                                <td>{{ $delivery->sent_records ?? 0 }}</td>
-                                <td>{{ $delivery->user->name }}</td>
-                                <td>{{ $delivery->sender ? $delivery->sender->name : '' }}</td>
-                                <td>
-                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
-                                        download><i class="fa fa-download"></i></a>
-                                </td>
-                                <td>
-                                    @if ($delivery->status == 'تم الاستلام')
-                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
-                                            class="btn btn-info btn-sm">عرض</a>
+                                    @if($content->is_received == 1)
+                                        <span class="badge bg-success">تم الارسال</span>
                                     @else
-                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                            class="btn btn-warning btn-sm">استلام</a>
+                                        <span class="badge bg-danger">لم يتم الارسال</span>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                
             </div>
         </div>
     </div>
