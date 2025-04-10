@@ -514,25 +514,30 @@ class ShootingProductController extends Controller
     public function sendSave(Request $request, $id)
     {
         try {
-            DB::transaction(function () use ($request, $id) {
+            $selectedRows = $request->input('rows', []);
+    
+            if (empty($selectedRows)) {
+                return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
+            }
+    
+            DB::transaction(function () use ($selectedRows, $id) {
                 $delivery = ShootingDelivery::findOrFail($id);
-                $selectedRows = $request->input('rows', []);
-
+    
                 $grouped = [];
-
+    
                 foreach ($selectedRows as $row) {
                     $itemNo = $row['item_no'];
                     $description = $row['description'];
                     $quantity = $row['quantity'];
                     $primaryId = substr($itemNo, 3, 6);
-
+    
                     $grouped[$primaryId][] = [
                         'item_no' => $itemNo,
                         'description' => $description,
                         'quantity' => $quantity,
                     ];
                 }
-
+    
                 foreach ($grouped as $primaryId => $items) {
                     $product = ShootingProduct::create([
                         'custom_id' => $primaryId,
@@ -541,7 +546,7 @@ class ShootingProductController extends Controller
                         'quantity' => $items[0]['quantity'],
                         'status' => 'new',
                     ]);
-
+    
                     foreach ($items as $color) {
                         ShootingProductColor::create([
                             'shooting_product_id' => $product->id,
@@ -549,15 +554,20 @@ class ShootingProductController extends Controller
                         ]);
                     }
                 }
-
+    
                 $delivery->update([
                     'sent_by' => auth()->id(),
                 ]);
             });
-
+    
             return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
         }
     }
+    
+
+
+
+
 }
