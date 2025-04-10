@@ -515,7 +515,7 @@ class ShootingProductController extends Controller
     {
         try {
             $selectedRows = $request->input('rows', []);
-    
+
             if (empty($selectedRows)) {
                 return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
             }

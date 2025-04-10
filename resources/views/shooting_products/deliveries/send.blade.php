@@ -79,18 +79,19 @@
 @section('scripts')
 <script>
     document.getElementById('checkAll').addEventListener('change', function () {
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        document.querySelectorAll('input[name^="rows"]').forEach(checkbox => {
             checkbox.checked = this.checked;
         });
     });
 
     document.querySelector('form').addEventListener('submit', function (e) {
-        const selected = document.querySelectorAll('input[type="checkbox"]:checked').length;
-        if (selected <= 1) { // 1 ده عشان checkAll متحسبهوش
+        const selected = document.querySelectorAll('input[name^="rows"]:checked').length;
+        if (selected == 0) {
             e.preventDefault();
             alert('يجب اختيار منتج واحد على الأقل قبل الارسال');
         }
     });
 </script>
+
 
 @endsection
