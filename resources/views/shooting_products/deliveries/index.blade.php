@@ -26,7 +26,9 @@
                         @foreach ($deliveries as $delivery)
                             <tr>
                                 <td>{{ $delivery->created_at }}</td>
-                                <td>{{ $delivery->status }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                </td>
                                 <td>{{ $delivery->total_records }}</td>
                                 <td>{{ $delivery->sent_records ?? 0 }}</td>
                                 <td>{{ $delivery->user->name }}</td>
