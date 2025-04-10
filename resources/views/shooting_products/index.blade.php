@@ -103,20 +103,22 @@
 
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                @if (auth()->user()->hasPermission('إضافة منتج'))
-                    <div class="flex justify-end mb-4">
-                        <a href="{{ route('shooting-products.create') }}" class="btn btn-success">
+                <div class="flex justify-between mb-4 align-items-center">
+                    @if (auth()->user()->hasPermission('إضافة منتج'))
+                        <a href="{{ route('shooting-products.create') }}" class="btn btn-primary">
                             {{ __('إضافة منتج') }}
                         </a>
+                    @endif
+                
+                    <div id="startShootingContainer" style="display: none;">
+                        <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
+                            @csrf
+                            <input type="hidden" name="selected_products" id="selectedProducts">
+                            <button type="submit" class="btn btn-success">بدء التصوير</button>
+                        </form>
                     </div>
-                @endif
-                <div class="mb-3" id="startShootingContainer" style="display: none;">
-                    <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
-                        @csrf
-                        <input type="hidden" name="selected_products" id="selectedProducts">
-                        <button type="submit" class="btn btn-success">بدء التصوير</button>
-                    </form>
                 </div>
+                
                 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
