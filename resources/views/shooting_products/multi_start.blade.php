@@ -77,10 +77,27 @@
                         <table class="table table-bordered text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th><input type="checkbox" id="checkAll"></th>
+                                    @php
+                                        $allColorsAreNew = true;
+                                        foreach ($products as $product) {
+                                            foreach ($product->shootingProductColors as $color) {
+                                                if ($color->status != 'new') {
+                                                    $allColorsAreNew = false;
+                                                    break 2; // خروج من اللوب كله
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    <th>
+                                        @if ($allColorsAreNew)
+                                            <input type="checkbox" id="checkAll">
+                                        @endif
+                                    </th>
                                     <th>#</th>
                                     <th>اسم المنتج</th>
                                     <th>كود اللون</th>
+                                    <th>ألحالة</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,17 +106,29 @@
                                     @foreach ($product->shootingProductColors as $color)
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="selected_colors[]" value="{{ $color->id }}">
+                                                @if ($color->status == 'new')
+                                                    <input type="checkbox" name="selected_colors[]"
+                                                        value="{{ $color->id }}">
+                                                @endif
                                             </td>
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->code }}</td>
+                                            <td></td>
+                                            @if ($color->status == 'new')
+                                                <span class="badge bg-warning">جديد</span>
+                                            @elseif($color->status == 'in_progress')
+                                                <span class="badge bg-info">قيد التصوير</span>
+                                            @elseif($color->status == 'completed')
+                                                <span class="badge bg-success">مكتمل</span>
+                                            @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                     </div>
 
                     <button type="submit" class="btn btn-success mt-4">بدء التصوير</button>

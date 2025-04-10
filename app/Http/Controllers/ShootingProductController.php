@@ -185,6 +185,9 @@ class ShootingProductController extends Controller
             $product->status = 'completed';
             $product->save();
 
+            $product->shootingProductColors()->update(['status' => 'completed']);
+            
+
             WebsiteAdminProduct::updateOrCreate(
                 ['shooting_product_id' => $product->id],
                 [
