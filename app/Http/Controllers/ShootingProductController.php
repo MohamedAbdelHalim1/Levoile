@@ -113,23 +113,23 @@ class ShootingProductController extends Controller
     public function multiStartSave(Request $request)
     {
         $selectedColorIds = $request->selected_colors;
-    
+
         if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
         }
-    
+
         DB::transaction(function () use ($selectedColorIds, $request) {
-    
+
             // Update كل Color بالقيم الجديدة
             foreach ($selectedColorIds as $colorId) {
                 $color = ShootingProductColor::findOrFail($colorId);
-    
+
                 $dataToUpdate = [
                     'status' => 'in_progress',
                     'type_of_shooting' => $request->type_of_shooting,
                     'date_of_delivery' => $request->date_of_delivery,
                 ];
-    
+
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $dataToUpdate['location'] = $request->location;
                     $dataToUpdate['date_of_shooting'] = $request->date_of_shooting;
@@ -143,31 +143,31 @@ class ShootingProductController extends Controller
                     $dataToUpdate['location'] = null;
                     $dataToUpdate['date_of_shooting'] = null;
                 }
-    
+
                 $color->update($dataToUpdate);
             }
-    
+
             // جيب ال Products الخاصة بالألوان المختارة
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
                 ->toArray();
-    
+
             foreach ($productIds as $productId) {
                 $product = ShootingProduct::findOrFail($productId);
-    
+
                 $totalColors = $product->shootingProductColors()->count();
                 $inProgressColors = $product->shootingProductColors()->where('status', 'in_progress')->count();
-    
+
                 if ($totalColors == $inProgressColors) {
                     $product->status = 'in_progress';
                 } else {
                     $product->status = 'partial';
                 }
-    
+
                 $product->type_of_shooting = $request->type_of_shooting;
                 $product->date_of_delivery = $request->date_of_delivery;
-    
+
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $product->location = $request->location;
                     $product->date_of_shooting = $request->date_of_shooting;
@@ -181,14 +181,14 @@ class ShootingProductController extends Controller
                     $product->location = null;
                     $product->date_of_shooting = null;
                 }
-    
+
                 $product->save();
             }
         });
-    
+
         return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
     }
-    
+
 
 
 
@@ -208,7 +208,7 @@ class ShootingProductController extends Controller
             $product->save();
 
             $product->shootingProductColors()->update(['status' => 'completed']);
-            
+
 
             WebsiteAdminProduct::updateOrCreate(
                 ['shooting_product_id' => $product->id],
@@ -657,4 +657,18 @@ class ShootingProductController extends Controller
             return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
         }
     }
+
+
+
+    public function shootingSessions()
+    {
+        $colors = ShootingProductColor::whereIn('status', ['in_progress', 'completed'])
+            ->with('shootingProduct')
+            ->latest()
+            ->get();
+
+        return view('shooting_products.shooting_sessions', compact('colors'));
+    }
+
+    
 }

@@ -223,10 +223,14 @@
                                             <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
                                             </li>
                                             <li>
-                                                <a href="{{ route('shooting-deliveries.index') }}" class="slide-item">تسليمات التصوير</a>
+                                                <a href="{{ route('shooting-deliveries.index') }}"
+                                                    class="slide-item">تسليمات التصوير</a>
                                             </li>
                                             <li><a href="{{ route('shooting-products.index') }}"
                                                     class="slide-item">التصوير</a></li>
+                                            <li><a href="{{ route('shooting-sessions.index') }}"
+                                                    class="slide-item">جلسات التصوير</a></li>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -251,9 +255,11 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="site-admin">
                                         <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول الموقع</a></li>
-                                            <li><a href="{{ route('website-admin.index') }}" class="slide-item">مسؤول الموقع</a></li>
-                                           
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول الموقع</a>
+                                            </li>
+                                            <li><a href="{{ route('website-admin.index') }}" class="slide-item">مسؤول
+                                                    الموقع</a></li>
+
                                         </ul>
                                     </div>
                                 </div>
@@ -277,8 +283,10 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="social-tab">
                                         <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي السوشيال ميديا</a></li>
-                                            <li><a href="{{ route('social-media.index') }}" class="slide-item">السوشيال ميديا</a></li>
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي السوشيال
+                                                    ميديا</a></li>
+                                            <li><a href="{{ route('social-media.index') }}"
+                                                    class="slide-item">السوشيال ميديا</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -286,8 +294,8 @@
                         </li>
                     </ul>
                 </li>
-                
-                
+
+
 
 
             </ul>
