@@ -114,17 +114,52 @@ class ShootingProductController extends Controller
     {
         $selectedColorIds = $request->selected_colors;
     
-        if(empty($selectedColorIds)){
+        if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
         }
     
         DB::transaction(function () use ($selectedColorIds, $request) {
-            
-            // Update Colors Status to in_progress
-            ShootingProductColor::whereIn('id', $selectedColorIds)
-                ->update(['status' => 'in_progress']);
     
-            // جيب ال Products الخاصة بالألوان المختارة
+            // Update كل Color لوحده بالقيم الجديدة
+            foreach ($selectedColorIds as $colorId) {
+                $color = ShootingProductColor::findOrFail($colorId);
+    
+                $dataToUpdate = [
+                    'status' => 'in_progress'
+                ];
+    
+                if ($request->has('type_of_shooting')) {
+                    $dataToUpdate['type_of_shooting'] = $request->type_of_shooting;
+                }
+    
+                if ($request->has('location')) {
+                    $dataToUpdate['location'] = $request->location;
+                }
+    
+                if ($request->has('date_of_shooting')) {
+                    $dataToUpdate['date_of_shooting'] = $request->date_of_shooting;
+                }
+    
+                if ($request->has('photographer')) {
+                    $dataToUpdate['photographer'] = json_encode($request->photographer);
+                }
+    
+                if ($request->has('date_of_editing')) {
+                    $dataToUpdate['date_of_editing'] = $request->date_of_editing;
+                }
+    
+                if ($request->has('editor')) {
+                    $dataToUpdate['editor'] = json_encode($request->editor);
+                }
+    
+                if ($request->has('date_of_delivery')) {
+                    $dataToUpdate['date_of_delivery'] = $request->date_of_delivery;
+                }
+    
+                $color->update($dataToUpdate);
+            }
+    
+            // هات ال Products الخاصة بالألوان المختارة
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
@@ -132,7 +167,7 @@ class ShootingProductController extends Controller
     
             foreach ($productIds as $productId) {
                 $product = ShootingProduct::findOrFail($productId);
-                
+    
                 $totalColors = $product->shootingProductColors()->count();
                 $inProgressColors = $product->shootingProductColors()->where('status', 'in_progress')->count();
     
