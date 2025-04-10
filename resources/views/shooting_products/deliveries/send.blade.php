@@ -47,13 +47,14 @@
 
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="rows[{{ $index }}][item_no]"
-                                                value="{{ $itemNo }}">
-                                            <input type="hidden" name="rows[{{ $index }}][description]"
-                                                value="{{ $description }}">
-                                            <input type="hidden" name="rows[{{ $index }}][quantity]"
-                                                value="{{ $quantity }}">
+                                            <input type="checkbox" name="rows[{{ $index }}][item_no]" value="{{ $itemNo }}"
+                                                onclick="toggleInputs(this, {{ $index }})">
+                                            <div id="hidden-inputs-{{ $index }}" style="display:none;">
+                                                <input type="hidden" name="rows[{{ $index }}][description]" value="{{ $description }}">
+                                                <input type="hidden" name="rows[{{ $index }}][quantity]" value="{{ $quantity }}">
+                                            </div>
                                         </td>
+                                        
                                         <td @if ($itemNos[$itemNo] > 1) style="color:red" @endif>{{ $itemNo }}
                                         </td>
                                         <td>{{ $description }}</td>
@@ -77,10 +78,22 @@
 
 
 @section('scripts')
+
+
 <script>
+    function toggleInputs(checkbox, index) {
+        const inputsDiv = document.getElementById('hidden-inputs-' + index);
+        if (checkbox.checked) {
+            inputsDiv.style.display = 'block';
+        } else {
+            inputsDiv.style.display = 'none';
+        }
+    }
+
     document.getElementById('checkAll').addEventListener('change', function () {
         document.querySelectorAll('input[name^="rows"]').forEach(checkbox => {
             checkbox.checked = this.checked;
+            checkbox.dispatchEvent(new Event('click')); // عشان يشغل function toggleInputs
         });
     });
 
@@ -92,6 +105,7 @@
         }
     });
 </script>
+
 
 
 @endsection
