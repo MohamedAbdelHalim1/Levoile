@@ -114,7 +114,7 @@
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->code }}</td>
-                                            <td></td>
+                                            <td>
                                             @if ($color->status == 'new')
                                                 <span class="badge bg-warning">جديد</span>
                                             @elseif($color->status == 'in_progress')
