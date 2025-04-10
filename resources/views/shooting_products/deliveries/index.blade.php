@@ -6,7 +6,7 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <div class="d-flex justify-content-between mb-3">
                     <h4>ملفات تسليمات التصوير</h4>
-                    <a href="{{ route('shooting-deliveries.upload') }}" class="btn btn-primary">رفع شيت جديد</a>
+                    <a href="{{ route('shooting-deliveries.upload.create') }}" class="btn btn-primary">رفع شيت جديد</a>
                 </div>
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
