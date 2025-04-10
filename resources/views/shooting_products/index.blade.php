@@ -147,7 +147,11 @@
                         @foreach ($shooting_products as $index => $product)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td><input type="checkbox" name="selected_products[]" value="{{ $product->id }}"></td>
+                                <td>
+                                    @if ($product->status == 'new')
+                                        <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
+                                    @endif
+                                </td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->number_of_colors }}</td>
                                 <td>
