@@ -9,7 +9,7 @@ class ShootingDelivery extends Model
 
 
 
-    protected $fillable = ['filename'];
+    protected $fillable = ['filename', 'user_id', 'sent_by'];
     public $timestamps = true; 
 
 

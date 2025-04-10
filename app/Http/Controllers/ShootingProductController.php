@@ -484,45 +484,56 @@ class ShootingProductController extends Controller
             $request->validate([
                 'file' => 'required|file|mimes:xlsx,xls',
             ]);
-    
-            // حفظ الملف في public/excel
+
             $file = $request->file('file');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('excel'), $filename);
-    
-            // قراءة الملف
-            $filePath = public_path('excel/' . $filename);
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
-            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-    
-            DB::transaction(function () use ($rows, $filename) {
-                // سجل في جدول التسليمات
-                ShootingDelivery::create([
-                    'filename' => $filename,
-                ]);
-    
+
+            ShootingDelivery::create([
+                'filename' => $filename,
+                'user_id' => auth()->id(),
+            ]);
+
+            return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
+        }
+    }
+
+
+    public function sendPage($id)
+    {
+        $delivery = ShootingDelivery::findOrFail($id);
+        $filePath = public_path('excel/' . $delivery->filename);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+        return view('shooting_products.deliveries.send', compact('rows', 'delivery'));
+    }
+
+    public function sendSave(Request $request, $id)
+    {
+        try {
+            DB::transaction(function () use ($request, $id) {
+                $delivery = ShootingDelivery::findOrFail($id);
+                $selectedRows = $request->input('rows', []);
+
                 $grouped = [];
-    
-                foreach ($rows as $index => $row) {
-                    if ($index === 1) continue; // أول سطر عبارة عن العناوين
-    
-                    $itemNo = $row['A'];
-                    $description = $row['B'];
-                    $quantity = $row['C'];
-    
-                    if (!$itemNo || !$description) continue;
-    
-                    $primaryId = substr($itemNo, 3, 6); // استخلاص ID من الرقم
-    
+
+                foreach ($selectedRows as $row) {
+                    $itemNo = $row['item_no'];
+                    $description = $row['description'];
+                    $quantity = $row['quantity'];
+                    $primaryId = substr($itemNo, 3, 6);
+
                     $grouped[$primaryId][] = [
                         'item_no' => $itemNo,
                         'description' => $description,
                         'quantity' => $quantity,
                     ];
                 }
-    
+
                 foreach ($grouped as $primaryId => $items) {
-                    // إدخال المنتج الأساسي
                     $product = ShootingProduct::create([
                         'custom_id' => $primaryId,
                         'name' => $items[0]['description'],
@@ -530,8 +541,7 @@ class ShootingProductController extends Controller
                         'quantity' => $items[0]['quantity'],
                         'status' => 'new',
                     ]);
-    
-                    // إدخال كل لون
+
                     foreach ($items as $color) {
                         ShootingProductColor::create([
                             'shooting_product_id' => $product->id,
@@ -539,17 +549,15 @@ class ShootingProductController extends Controller
                         ]);
                     }
                 }
+
+                $delivery->update([
+                    'sent_by' => auth()->id(),
+                ]);
             });
-    
-            return redirect()->back()->with('success', '✅ تم رفع الشيت ومعالجة البيانات بنجاح');
-    
+
+            return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', '❌ حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
         }
     }
-    
-
-
-
-
 }

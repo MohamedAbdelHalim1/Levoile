@@ -221,7 +221,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/shooting-deliveries', [ShootingProductController::class, 'deliveryIndex'])->name('shooting-deliveries.index');
     Route::get('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUploadForm'])->name('shooting-deliveries.upload');
     Route::post('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUpload'])->name('shooting-deliveries.upload.save');
-
+    Route::get('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendPage'])->name('shooting-deliveries.send.page');
+    Route::post('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendSave'])->name('shooting-deliveries.send.save');
+    
 
     Route::get('website-admin', [ShootingProductController::class, 'indexWebsite'])->name('website-admin.index');
     Route::post('website-admin/update-status', [ShootingProductController::class, 'updateWebsiteStatus'])->name('website-admin.update-status');

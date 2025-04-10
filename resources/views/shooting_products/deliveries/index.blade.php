@@ -15,6 +15,7 @@
                             <th>اسم الملف</th>
                             <th>تاريخ الرفع</th>
                             <th>تحميل</th>
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,6 +26,9 @@
                                 <td>
                                     <a href="{{ asset('excel/' . $delivery->filename) }}"
                                         class="btn btn-sm btn-info" download><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">ارسال</a>
                                 </td>
                             </tr>
                         @endforeach
