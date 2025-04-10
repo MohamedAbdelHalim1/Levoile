@@ -148,9 +148,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    @if ($product->status == 'new')
-                                        <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
-                                    @endif
+                                    <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
                                 </td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->number_of_colors }}</td>
