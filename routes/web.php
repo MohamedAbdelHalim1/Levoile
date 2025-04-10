@@ -220,7 +220,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-gallery/delete', [ShootingProductController::class, 'deleteGallery'])->name('gallery.delete');
     Route::get('/shooting-deliveries', [ShootingProductController::class, 'deliveryIndex'])->name('shooting-deliveries.index');
     Route::get('/shooting-deliveries/{id}', [ShootingProductController::class, 'showDelivery'])->name('shooting-deliveries.show');
-    Route::get('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUploadForm'])->name('shooting-deliveries.upload.create');
+    Route::get('/shooting-deliveries/upload/create', [ShootingProductController::class, 'deliveryUploadForm'])->name('shooting-deliveries.upload.create');
     Route::post('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUpload'])->name('shooting-deliveries.upload.save');
     Route::get('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendPage'])->name('shooting-deliveries.send.page');
     Route::post('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendSave'])->name('shooting-deliveries.send.save');
