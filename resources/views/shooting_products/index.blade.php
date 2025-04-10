@@ -103,13 +103,14 @@
 
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="flex justify-between mb-4 align-items-center">
-                    @if (auth()->user()->hasPermission('إضافة منتج'))
-                        <a href="{{ route('shooting-products.create') }}" class="btn btn-primary">
-                            {{ __('إضافة منتج') }}
-                        </a>
-                    @endif
-                
+                <div class="row">
+                    <div>
+                        @if (auth()->user()->hasPermission('إضافة منتج'))
+                            <a href="{{ route('shooting-products.create') }}" class="btn btn-primary">
+                                {{ __('إضافة منتج') }}
+                            </a>
+                        @endif
+                    </div>
                     <div id="startShootingContainer" style="display: none;">
                         <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                             @csrf
@@ -117,9 +118,11 @@
                             <button type="submit" class="btn btn-success">بدء التصوير</button>
                         </form>
                     </div>
+
                 </div>
-                
-                
+
+
+
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
@@ -234,10 +237,10 @@
                                 </td>
 
                                 <td>
-                                    
+
                                     @if ($product->status == 'in_progress' || $product->status == 'completed')
-                                        <button class="btn btn-success open-drive-link-modal" data-id="{{ $product->id }}"
-                                            data-drive-link="{{ $product->drive_link }}">
+                                        <button class="btn btn-success open-drive-link-modal"
+                                            data-id="{{ $product->id }}" data-drive-link="{{ $product->drive_link }}">
                                             لينك درايف
                                         </button>
                                     @endif
@@ -491,29 +494,28 @@
     </script>
 
     <script>
-        $('#checkAll').on('change', function () {
-    $('input[name="selected_products[]"]').prop('checked', this.checked);
-    toggleStartButton();
-});
+        $('#checkAll').on('change', function() {
+            $('input[name="selected_products[]"]').prop('checked', this.checked);
+            toggleStartButton();
+        });
 
-$('input[name="selected_products[]"]').on('change', function () {
-    toggleStartButton();
-});
+        $('input[name="selected_products[]"]').on('change', function() {
+            toggleStartButton();
+        });
 
-function toggleStartButton() {
-    const selected = $('input[name="selected_products[]"]:checked').length;
-    if (selected > 0) {
-        $('#startShootingContainer').show();
-    } else {
-        $('#startShootingContainer').hide();
-    }
+        function toggleStartButton() {
+            const selected = $('input[name="selected_products[]"]:checked').length;
+            if (selected > 0) {
+                $('#startShootingContainer').show();
+            } else {
+                $('#startShootingContainer').hide();
+            }
 
-    let selectedProducts = [];
-    $('input[name="selected_products[]"]:checked').each(function () {
-        selectedProducts.push($(this).val());
-    });
-    $('#selectedProducts').val(selectedProducts.join(','));
-}
-
+            let selectedProducts = [];
+            $('input[name="selected_products[]"]:checked').each(function() {
+                selectedProducts.push($(this).val());
+            });
+            $('#selectedProducts').val(selectedProducts.join(','));
+        }
     </script>
 @endsection
