@@ -26,20 +26,27 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $itemNos = array_count_values(array_column($rows, 'A'));
+                            @endphp
+
                             @foreach($rows as $index => $row)
+                                @continue($index === 0) {{-- skip first row (titles) --}}
+
                                 @php
                                     $itemNo = $row['A'] ?? '';
                                     $description = $row['B'] ?? '';
                                     $quantity = $row['C'] ?? '';
                                     $primaryId = substr($itemNo, 3, 6);
                                 @endphp
+
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="rows[{{ $index }}][item_no]" value="{{ $itemNo }}">
                                         <input type="hidden" name="rows[{{ $index }}][description]" value="{{ $description }}">
                                         <input type="hidden" name="rows[{{ $index }}][quantity]" value="{{ $quantity }}">
                                     </td>
-                                    <td>{{ $itemNo }}</td>
+                                    <td @if($itemNos[$itemNo] > 1) style="color:red" @endif>{{ $itemNo }}</td>
                                     <td>{{ $description }}</td>
                                     <td>{{ $quantity }}</td>
                                     <td>{{ $primaryId }}</td>
@@ -57,6 +64,7 @@
     </div>
 </div>
 @endsection
+
 
 @section('scripts')
 <script>
