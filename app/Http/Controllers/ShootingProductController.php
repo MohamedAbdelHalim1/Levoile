@@ -120,46 +120,34 @@ class ShootingProductController extends Controller
     
         DB::transaction(function () use ($selectedColorIds, $request) {
     
-            // Update كل Color لوحده بالقيم الجديدة
+            // Update كل Color بالقيم الجديدة
             foreach ($selectedColorIds as $colorId) {
                 $color = ShootingProductColor::findOrFail($colorId);
     
                 $dataToUpdate = [
-                    'status' => 'in_progress'
+                    'status' => 'in_progress',
+                    'type_of_shooting' => $request->type_of_shooting,
+                    'date_of_delivery' => $request->date_of_delivery,
                 ];
     
-                if ($request->has('type_of_shooting')) {
-                    $dataToUpdate['type_of_shooting'] = $request->type_of_shooting;
-                }
-    
-                if ($request->has('location')) {
+                if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $dataToUpdate['location'] = $request->location;
-                }
-    
-                if ($request->has('date_of_shooting')) {
                     $dataToUpdate['date_of_shooting'] = $request->date_of_shooting;
-                }
-    
-                if ($request->has('photographer')) {
                     $dataToUpdate['photographer'] = json_encode($request->photographer);
-                }
-    
-                if ($request->has('date_of_editing')) {
+                    $dataToUpdate['editor'] = null;
+                    $dataToUpdate['date_of_editing'] = null;
+                } else {
                     $dataToUpdate['date_of_editing'] = $request->date_of_editing;
-                }
-    
-                if ($request->has('editor')) {
                     $dataToUpdate['editor'] = json_encode($request->editor);
-                }
-    
-                if ($request->has('date_of_delivery')) {
-                    $dataToUpdate['date_of_delivery'] = $request->date_of_delivery;
+                    $dataToUpdate['photographer'] = null;
+                    $dataToUpdate['location'] = null;
+                    $dataToUpdate['date_of_shooting'] = null;
                 }
     
                 $color->update($dataToUpdate);
             }
     
-            // هات ال Products الخاصة بالألوان المختارة
+            // جيب ال Products الخاصة بالألوان المختارة
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
@@ -201,7 +189,6 @@ class ShootingProductController extends Controller
         return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
     }
     
-
 
 
 
