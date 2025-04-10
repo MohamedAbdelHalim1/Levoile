@@ -93,23 +93,28 @@ class ShootingProductController extends Controller
     }
 
 
-    public function startShooting(Request $request)
+    public function multiStartPage(Request $request)
     {
-        try {
-            $request->validate([
-                'product_id' => 'required|exists:shooting_products,id',
-                'type_of_shooting' => 'required|string',
-                'location' => 'nullable|string',
-                'date_of_shooting' => 'nullable|date',
-                'photographer' => 'nullable|array',
-                'photographer.*' => 'exists:users,id',
-                'date_of_editing' => 'nullable|date',
-                'editor' => 'nullable|array',
-                'editor.*' => 'exists:users,id',
-                'date_of_delivery' => 'required|date',
-            ]);
+        $ids = explode(',', $request->selected_products);
+        $products = ShootingProduct::whereIn('id', $ids)->get();
 
-            $product = ShootingProduct::findOrFail($request->product_id);
+        $photographers = User::whereHas('role', function ($q) {
+            $q->where('name', 'photographer');
+        })->get();
+
+        $editors = User::whereHas('role', function ($q) {
+            $q->where('name', 'editor');
+        })->get();
+
+        return view('shooting_products.multi_start', compact('products', 'photographers', 'editors'));
+    }
+
+    public function multiStartSave(Request $request)
+    {
+        $productIds = $request->product_ids;
+
+        foreach ($productIds as $productId) {
+            $product = ShootingProduct::findOrFail($productId);
             $product->type_of_shooting = $request->type_of_shooting;
             $product->status = 'in_progress';
 
@@ -117,13 +122,11 @@ class ShootingProductController extends Controller
                 $product->location = $request->location;
                 $product->date_of_shooting = $request->date_of_shooting;
                 $product->photographer = json_encode($request->photographer);
-                // Reset editor fields
                 $product->editor = null;
                 $product->date_of_editing = null;
             } else {
                 $product->date_of_editing = $request->date_of_editing;
                 $product->editor = json_encode($request->editor);
-                // Reset photographer fields
                 $product->photographer = null;
                 $product->location = null;
                 $product->date_of_shooting = null;
@@ -131,12 +134,12 @@ class ShootingProductController extends Controller
 
             $product->date_of_delivery = $request->date_of_delivery;
             $product->save();
-
-            return response()->json(['success' => true, 'message' => 'تم بدء التصوير بنجاح']);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
         }
+
+        return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
     }
+
+
 
 
     public function updateDriveLink(Request $request)
@@ -492,9 +495,9 @@ class ShootingProductController extends Controller
             $filePath = public_path('excel/' . $filename);
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
             $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-    
+
             $totalRecords = count($rows) - 1; // عشان اول صف titles
-    
+
             ShootingDelivery::create([
                 'filename' => $filename,
                 'user_id' => auth()->id(),
@@ -524,30 +527,30 @@ class ShootingProductController extends Controller
     {
         try {
             $selectedIndexes = $request->input('selected_rows', []);
-    
+
             if (empty($selectedIndexes)) {
                 return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
             }
-    
+
             DB::transaction(function () use ($selectedIndexes, $request, $id) {
                 $delivery = ShootingDelivery::findOrFail($id);
                 $rows = $request->input('rows', []);
                 $grouped = [];
-    
+
                 foreach ($selectedIndexes as $index) {
                     $row = $rows[$index];
                     $itemNo = $row['item_no'];
                     $description = $row['description'];
                     $quantity = $row['quantity'];
                     $primaryId = substr($itemNo, 3, 6);
-    
+
                     $grouped[$primaryId][] = [
                         'item_no' => $itemNo,
                         'description' => $description,
                         'quantity' => $quantity,
                     ];
                 }
-    
+
                 foreach ($grouped as $primaryId => $items) {
                     $product = ShootingProduct::create([
                         'custom_id' => $primaryId,
@@ -556,7 +559,7 @@ class ShootingProductController extends Controller
                         'quantity' => $items[0]['quantity'],
                         'status' => 'new',
                     ]);
-    
+
                     foreach ($items as $color) {
                         ShootingProductColor::create([
                             'shooting_product_id' => $product->id,
@@ -564,23 +567,17 @@ class ShootingProductController extends Controller
                         ]);
                     }
                 }
-    
+
                 $delivery->update([
                     'sent_by' => auth()->id(),
                     'status' => 'تم الاستلام',
                     'sent_records' => count($selectedIndexes),
                 ]);
             });
-    
+
             return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
         }
     }
-    
-    
-
-
-
-
 }

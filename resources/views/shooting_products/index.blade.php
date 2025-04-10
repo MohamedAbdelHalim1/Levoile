@@ -110,10 +110,19 @@
                         </a>
                     </div>
                 @endif
+                <div class="mb-3" id="startShootingContainer" style="display: none;">
+                    <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
+                        @csrf
+                        <input type="hidden" name="selected_products" id="selectedProducts">
+                        <button type="submit" class="btn btn-success">بدء التصوير</button>
+                    </form>
+                </div>
+                
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>اختر المنتج</th>
                             <th>اسم المنتج</th>
                             <th>عدد الألوان</th>
                             <th>الحالة</th>
@@ -133,6 +142,7 @@
                         @foreach ($shooting_products as $index => $product)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
+                                <td><input type="checkbox" name="selected_products[]" value="{{ $product->id }}"></td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->number_of_colors }}</td>
                                 <td>
@@ -222,11 +232,7 @@
                                 </td>
 
                                 <td>
-                                    @if (auth()->user()->role->name == 'admin')
-                                        <button class="btn btn-primary start-shooting" data-id="{{ $product->id }}">
-                                            التصوير
-                                        </button>
-                                    @endif
+                                    
                                     @if ($product->status == 'in_progress' || $product->status == 'completed')
                                         <button class="btn btn-success open-drive-link-modal" data-id="{{ $product->id }}"
                                             data-drive-link="{{ $product->drive_link }}">
@@ -293,108 +299,7 @@
     </div>
 
 
-    <!-- Shooting Modal -->
-    <div class="modal fade" id="shootingModal" tabindex="-1" aria-labelledby="shootingModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">بدء التصوير</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="shootingForm">
-                        @csrf
-                        <input type="hidden" name="product_id" id="product_id">
 
-                        <!-- Step 1: Choose Shooting Type -->
-                        <div class="step step-1">
-                            <h5>ما هو نوع التصوير؟</h5>
-                            <div class="form-check">
-                                <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تصوير منتج" id="productShooting">
-                                <label class="form-check-label ms-5" for="productShooting">تصوير منتج</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تصوير موديل" id="modelShooting">
-                                <label class="form-check-label ms-5" for="modelShooting">تصوير موديل</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input shooting-type" type="radio" name="type_of_shooting"
-                                    value="تعديل لون" id="colorEditing">
-                                <label class="form-check-label ms-5" for="colorEditing">تعديل لون</label>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Choose Shooting Location -->
-                        <div class="step step-2 d-none">
-                            <h5>ماهو مكان التصوير؟</h5>
-                            <div class="form-check">
-                                <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالداخل">
-                                <label class="form-check-label ms-5">تصوير بالداخل</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input shooting-location" type="radio" name="location"
-                                    value="تصوير بالخارج">
-                                <label class="form-check-label ms-5">تصوير بالخارج</label>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Dates & Users (For تصوير منتج & تصوير موديل) -->
-                        <div class="step step-3 d-none">
-                            <h5>تفاصيل التصوير</h5>
-                            <div class="mb-3">
-                                <label class="form-label">تاريخ التصوير</label>
-                                <input type="date" name="date_of_shooting" class="form-control required-input">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">المصورون</label>
-                                <select name="photographer[]" class="form-control tom-select required-input" multiple>
-                                    @foreach ($photographers as $photographer)
-                                        <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery_shooting"
-                                    class="form-control required-input">
-                            </div>
-                        </div>
-
-                        <!-- Step 4: Editing Details (For تعديل لون) -->
-                        <div class="step step-4 d-none">
-                            <h5>تفاصيل التعديل</h5>
-                            <div class="mb-3">
-                                <label class="form-label">تاريخ التعديل</label>
-                                <input type="date" name="date_of_editing" class="form-control required-input">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">المحررون</label>
-                                <select name="editor[]" class="form-control tom-select required-input" multiple>
-                                    @foreach ($editors as $editor)
-                                        <option value="{{ $editor->id }}">{{ $editor->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">تاريخ التسليم</label>
-                                <input type="date" name="date_of_delivery_editing"
-                                    class="form-control required-input">
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary prev-btn" disabled>السابق</button>
-                    <button type="button" class="btn btn-primary next-btn" disabled>التالي</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 @endsection
@@ -581,5 +486,32 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        $('#checkAll').on('change', function () {
+    $('input[name="selected_products[]"]').prop('checked', this.checked);
+    toggleStartButton();
+});
+
+$('input[name="selected_products[]"]').on('change', function () {
+    toggleStartButton();
+});
+
+function toggleStartButton() {
+    const selected = $('input[name="selected_products[]"]:checked').length;
+    if (selected > 0) {
+        $('#startShootingContainer').show();
+    } else {
+        $('#startShootingContainer').hide();
+    }
+
+    let selectedProducts = [];
+    $('input[name="selected_products[]"]:checked').each(function () {
+        selectedProducts.push($(this).val());
+    });
+    $('#selectedProducts').val(selectedProducts.join(','));
+}
+
     </script>
 @endsection
