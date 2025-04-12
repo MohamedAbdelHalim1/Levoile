@@ -25,7 +25,7 @@
                     <input type="hidden" name="product_ids[]" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
 
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label>نوع التصوير</label>
                             <select name="type_of_shooting" id="shootingType" class="form-control" required>
                                 <option value="">اختر</option>
@@ -35,7 +35,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4" style="display: none;">
+                        <div class="col-md-6" style="display: none;">
                             <label>مكان التصوير</label>
                             <select name="location" id="shootingLocation" class="form-control">
                                 <option value="">اختر</option>
@@ -44,12 +44,12 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label>تاريخ التصوير</label>
                             <input type="date" name="date_of_shooting" class="form-control">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
