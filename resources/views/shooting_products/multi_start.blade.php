@@ -20,7 +20,7 @@
                     </span>
                 </h4>
 
-                <form method="POST" action="{{ route('shooting-products.multi.start.save.data') }}">
+                <form method="POST" action="{{ route('shooting-products.multi.start.save') }}">
                     @csrf
                     <input type="hidden" name="selected_products" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
                     <div class="row mb-4">
