@@ -33,7 +33,7 @@
                                 <option value="تعديل لون">تعديل لون</option>
                             </select>
                         </div>
-                    
+
                         <div class="col-md-4" style="display: none;">
                             <label>مكان التصوير</label>
                             <select name="location" id="shootingLocation" class="form-control">
@@ -42,12 +42,12 @@
                                 <option value="تصوير بالخارج">تصوير بالخارج</option>
                             </select>
                         </div>
-                    
+
                         <div class="col-md-4">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
-                    
+
                         {{-- المصورين --}}
                         <div class="col-md-6 mt-3 d-none" id="photographerSection">
                             <label>المصورين</label>
@@ -57,7 +57,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    
+
                         {{-- المحررين --}}
                         <div class="col-md-6 mt-3 d-none" id="editorSection">
                             <label>المحررين</label>
@@ -68,7 +68,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
 
                     <h5 class="mb-3">المنتجات المختارة</h5>
                     <div class="table-responsive">
@@ -146,18 +146,19 @@
 
                 if (type == 'تصوير منتج' || type == 'تصوير موديل') {
                     $('#shootingLocation').parent().show();
-                    $('#shootingDetails').removeClass('d-none');
-                    $('#editingDetails').addClass('d-none');
+                    $('#photographerSection').removeClass('d-none');
+                    $('#editorSection').addClass('d-none');
                 } else if (type == 'تعديل لون') {
                     $('#shootingLocation').parent().hide();
-                    $('#editingDetails').removeClass('d-none');
-                    $('#shootingDetails').addClass('d-none');
+                    $('#editorSection').removeClass('d-none');
+                    $('#photographerSection').addClass('d-none');
                 } else {
                     $('#shootingLocation').parent().hide();
-                    $('#editingDetails').addClass('d-none');
-                    $('#shootingDetails').addClass('d-none');
+                    $('#photographerSection').addClass('d-none');
+                    $('#editorSection').addClass('d-none');
                 }
             });
+
 
             $('.tom-select').each(function() {
                 new TomSelect(this, {
