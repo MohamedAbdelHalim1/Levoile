@@ -23,9 +23,8 @@
                 <form method="POST" action="{{ route('shooting-products.multi.start.save') }}">
                     @csrf
                     <input type="hidden" name="product_ids[]" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
-
                     <div class="row mb-4">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>نوع التصوير</label>
                             <select name="type_of_shooting" id="shootingType" class="form-control" required>
                                 <option value="">اختر</option>
@@ -34,8 +33,8 @@
                                 <option value="تعديل لون">تعديل لون</option>
                             </select>
                         </div>
-
-                        <div class="col-md-6" style="display: none;">
+                    
+                        <div class="col-md-4" style="display: none;">
                             <label>مكان التصوير</label>
                             <select name="location" id="shootingLocation" class="form-control">
                                 <option value="">اختر</option>
@@ -43,24 +42,14 @@
                                 <option value="تصوير بالخارج">تصوير بالخارج</option>
                             </select>
                         </div>
-
-                        <div class="col-md-6">
-                            <label>تاريخ التصوير</label>
-                            <input type="date" name="date_of_shooting" class="form-control">
-                        </div>
-
-                        <div class="col-md-6">
+                    
+                        <div class="col-md-4">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
-
-                    </div>
-
-                    {{-- تفاصيل التصوير --}}
-                    <div class="row mb-4 d-none" id="shootingDetails">
-
-
-                        <div class="col-md-8">
+                    
+                        {{-- المصورين --}}
+                        <div class="col-md-6 mt-3 d-none" id="photographerSection">
                             <label>المصورين</label>
                             <select name="photographer[]" class="form-control tom-select" multiple>
                                 @foreach ($photographers as $photographer)
@@ -68,16 +57,9 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-
-                    {{-- تفاصيل التعديل --}}
-                    <div class="row mb-4 d-none" id="editingDetails">
-                        <div class="col-md-4">
-                            <label>تاريخ التعديل</label>
-                            <input type="date" name="date_of_editing" class="form-control">
-                        </div>
-
-                        <div class="col-md-8">
+                    
+                        {{-- المحررين --}}
+                        <div class="col-md-6 mt-3 d-none" id="editorSection">
                             <label>المحررين</label>
                             <select name="editor[]" class="form-control tom-select" multiple>
                                 @foreach ($editors as $editor)
@@ -86,6 +68,7 @@
                             </select>
                         </div>
                     </div>
+                    
 
                     <h5 class="mb-3">المنتجات المختارة</h5>
                     <div class="table-responsive">
