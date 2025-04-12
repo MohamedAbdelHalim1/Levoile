@@ -113,81 +113,79 @@ class ShootingProductController extends Controller
     public function multiStartSave(Request $request)
     {
         $selectedColorIds = $request->selected_colors;
-
+    
         if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
         }
-
+    
         DB::transaction(function () use ($selectedColorIds, $request) {
-
-            // Update كل Color بالقيم الجديدة
+    
             foreach ($selectedColorIds as $colorId) {
+    
                 $color = ShootingProductColor::findOrFail($colorId);
-
-                $dataToUpdate = [
-                    'status' => 'in_progress',
-                    'type_of_shooting' => $request->type_of_shooting,
-                    'date_of_delivery' => $request->date_of_delivery,
+    
+                $updateData = [
+                    'status'            => 'in_progress',
+                    'type_of_shooting'  => $request->type_of_shooting,
+                    'date_of_delivery'  => $request->date_of_delivery,
                 ];
-
+    
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
-                    $dataToUpdate['location'] = $request->location;
-                    $dataToUpdate['date_of_shooting'] = $request->date_of_shooting;
-                    $dataToUpdate['photographer'] = json_encode($request->photographer);
-                    $dataToUpdate['editor'] = null;
-                    $dataToUpdate['date_of_editing'] = null;
+                    $updateData['location']         = $request->location;
+                    $updateData['date_of_shooting'] = $request->date_of_shooting;
+                    $updateData['photographer']     = json_encode($request->photographer);
+                    $updateData['editor']           = null;
+                    $updateData['date_of_editing']  = null;
                 } else {
-                    $dataToUpdate['date_of_editing'] = $request->date_of_editing;
-                    $dataToUpdate['editor'] = json_encode($request->editor);
-                    $dataToUpdate['photographer'] = null;
-                    $dataToUpdate['location'] = null;
-                    $dataToUpdate['date_of_shooting'] = null;
+                    $updateData['date_of_editing']  = $request->date_of_editing;
+                    $updateData['editor']           = json_encode($request->editor);
+                    $updateData['photographer']     = null;
+                    $updateData['location']         = null;
+                    $updateData['date_of_shooting'] = null;
                 }
-
-                $color->update($dataToUpdate);
+    
+                $color->update($updateData);
             }
-
-            // جيب ال Products الخاصة بالألوان المختارة
+    
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
                 ->toArray();
-
+    
             foreach ($productIds as $productId) {
+    
                 $product = ShootingProduct::findOrFail($productId);
-
+    
                 $totalColors = $product->shootingProductColors()->count();
-                $inProgressColors = $product->shootingProductColors()->where('status', 'in_progress')->count();
-
-                if ($totalColors == $inProgressColors) {
-                    $product->status = 'in_progress';
-                } else {
-                    $product->status = 'partial';
-                }
-
+                $inProgressColors = $product->shootingProductColors()
+                    ->where('status', 'in_progress')->count();
+    
+                $product->status = $totalColors == $inProgressColors ? 'in_progress' : 'partial';
+    
                 $product->type_of_shooting = $request->type_of_shooting;
                 $product->date_of_delivery = $request->date_of_delivery;
-
+    
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
-                    $product->location = $request->location;
+                    $product->location         = $request->location;
                     $product->date_of_shooting = $request->date_of_shooting;
-                    $product->photographer = json_encode($request->photographer);
-                    $product->editor = null;
-                    $product->date_of_editing = null;
+                    $product->photographer     = json_encode($request->photographer);
+                    $product->editor           = null;
+                    $product->date_of_editing  = null;
                 } else {
-                    $product->date_of_editing = $request->date_of_editing;
-                    $product->editor = json_encode($request->editor);
-                    $product->photographer = null;
-                    $product->location = null;
+                    $product->date_of_editing  = $request->date_of_editing;
+                    $product->editor           = json_encode($request->editor);
+                    $product->photographer     = null;
+                    $product->location         = null;
                     $product->date_of_shooting = null;
                 }
-
+    
                 $product->save();
             }
         });
-
+    
         return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
     }
+    
 
 
 

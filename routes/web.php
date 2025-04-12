@@ -229,6 +229,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-products/multi-start/save', [ShootingProductController::class, 'multiStartSave'])
     ->name('shooting-products.multi.start.save');
 
+
     Route::get('/shooting-sessions', [ShootingProductController::class, 'shootingSessions'])->name('shooting-sessions.index');
 
 
