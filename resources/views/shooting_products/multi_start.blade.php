@@ -22,7 +22,7 @@
 
                 <form method="POST" action="{{ route('shooting-products.multi.start.save.data') }}">
                     @csrf
-                    <input type="hidden" name="product_ids[]" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
+                    <input type="hidden" name="selected_products" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>نوع التصوير</label>
