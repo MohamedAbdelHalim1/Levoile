@@ -45,17 +45,19 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label>تاريخ التسليم</label>
-                            <input type="date" name="date_of_delivery" class="form-control" required>
-                        </div>
-                    </div>
-
-                    {{-- تفاصيل التصوير --}}
-                    <div class="row mb-4 d-none" id="shootingDetails">
-                        <div class="col-md-4">
                             <label>تاريخ التصوير</label>
                             <input type="date" name="date_of_shooting" class="form-control">
                         </div>
+                        
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>تاريخ التسليم</label>
+                        <input type="date" name="date_of_delivery" class="form-control" required>
+                    </div>
+                    {{-- تفاصيل التصوير --}}
+                    <div class="row mb-4 d-none" id="shootingDetails">
+                        
 
                         <div class="col-md-8">
                             <label>المصورين</label>
