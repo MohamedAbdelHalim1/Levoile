@@ -44,9 +44,15 @@
                         </div>
 
                         <div class="col-md-4">
+                            <label>تاريخ التصوير</label>
+                            <input type="date" name="date_of_shooting" class="form-control">
+                        </div>
+                        
+                        <div class="col-md-4">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
+                        
 
                         {{-- المصورين --}}
                         <div class="col-md-6 mt-3 d-none" id="photographerSection">
