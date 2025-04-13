@@ -158,11 +158,18 @@
                                     @elseif($product->status == 'in_progress')
                                         <span class="badge bg-info">قيد التنفيذ</span>
                                     @elseif($product->status == 'partial')
-                                        <span class="badge bg-warning">تصوير جزئي</span>
+                                        @php
+                                            $totalColors = $product->shootingProductColors->count();
+                                            $inProgressColors = $product->shootingProductColors->where('status', 'in_progress')->count();
+                                        @endphp
+                                        <span class="badge bg-warning">
+                                            تصوير جزئي {{ $inProgressColors }} / {{ $totalColors }}
+                                        </span>
                                     @elseif($product->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif
                                 </td>
+                                
                                 <td>{{ $product->type_of_shooting ?? '-' }}</td>
                                 <td>{{ $product->location ?? '-' }}</td>
                                 <td>{{ $product->date_of_shooting ?? '-' }}</td>

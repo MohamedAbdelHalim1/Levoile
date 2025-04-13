@@ -23,6 +23,7 @@ class ShootingProductColor extends Model
         'date_of_editing',
         'editor', //multiple selection so it will be an array
         'date_of_delivery',
+        'shooting_method',
     ];
 
     public function shootingProduct()
