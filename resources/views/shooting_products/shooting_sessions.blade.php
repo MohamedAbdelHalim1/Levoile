@@ -11,6 +11,8 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
+                            <th>جلسه التصوير</th>
+                            <th>عدد الألوان</th>
                             <th>اسم المنتج</th>
                             <th>الكود الرئيسي</th>
                             <th>كود اللون</th>
@@ -25,9 +27,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($colors as $index => $color)
+                    @foreach ($sessions as $index => $session)
+                        @php
+                            $colors = \App\Models\ShootingSession::where('reference', $session->reference)
+                                        ->with('color.shootingProduct')
+                                        ->get();
+                        @endphp
+                    
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
+                            <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
+                        </tr>
+                    
+                        @foreach ($colors as $colorSession)
+                            @php $color = $colorSession->color; @endphp
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td></td> {{-- فاضي عشان الريفرنس فوق --}}
+                                <td></td>
+                                <td></td>
                                 <td>{{ $color->shootingProduct->name }}</td>
                                 <td>{{ $color->shootingProduct->custom_id }}</td>
                                 <td>{{ $color->code }}</td>
@@ -63,7 +81,9 @@
                                 </td>
                             </tr>
                         @endforeach
+                    @endforeach
                     </tbody>
+                    
                 </table>
             </div>
 

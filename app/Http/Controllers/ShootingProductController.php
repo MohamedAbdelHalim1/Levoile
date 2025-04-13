@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\ShootingSession;
+use Carbon\Carbon;
+
 
 
 
@@ -113,17 +116,17 @@ class ShootingProductController extends Controller
     public function multiStartSave(Request $request)
     {
         $selectedColorIds = $request->selected_colors;
-    
+
         if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
         }
-    
+
         DB::transaction(function () use ($selectedColorIds, $request) {
-    
+
             foreach ($selectedColorIds as $colorId) {
-    
+
                 $color = ShootingProductColor::findOrFail($colorId);
-    
+
                 $updateData = [
                     'status'            => 'in_progress',
                     'type_of_shooting'  => $request->type_of_shooting,
@@ -131,7 +134,7 @@ class ShootingProductController extends Controller
                     'shooting_method'   => $request->shooting_method, // هنا الاضافة الجديدة
 
                 ];
-    
+
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $updateData['location']         = $request->location;
                     $updateData['date_of_shooting'] = $request->date_of_shooting;
@@ -145,30 +148,30 @@ class ShootingProductController extends Controller
                     $updateData['location']         = null;
                     $updateData['date_of_shooting'] = null;
                 }
-    
+
                 $color->update($updateData);
             }
-    
+
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
                 ->toArray();
-    
+
             foreach ($productIds as $productId) {
-    
+
                 $product = ShootingProduct::findOrFail($productId);
-    
+
                 $totalColors = $product->shootingProductColors()->count();
                 $inProgressColors = $product->shootingProductColors()
                     ->where('status', 'in_progress')->count();
-    
+
                 $product->status = $totalColors == $inProgressColors ? 'in_progress' : 'partial';
-    
+
                 $product->type_of_shooting = $request->type_of_shooting;
                 $product->date_of_delivery = $request->date_of_delivery;
                 $product->shooting_method  = $request->shooting_method; // هنا الاضافة الجديدة
 
-    
+
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $product->location         = $request->location;
                     $product->date_of_shooting = $request->date_of_shooting;
@@ -182,14 +185,38 @@ class ShootingProductController extends Controller
                     $product->location         = null;
                     $product->date_of_shooting = null;
                 }
-    
+
                 $product->save();
             }
         });
-    
+
+        $today = Carbon::now()->format('Y-m-d');
+
+        $lastReference = ShootingSession::where('reference', 'LIKE', $today . '%')
+            ->orderBy('reference', 'desc')
+            ->first();
+
+        if ($lastReference) {
+            $lastNumber = (int)substr($lastReference->reference, -3);
+            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '001';
+        }
+
+        $reference = $today . '-' . $newNumber;
+
+        // عمل Insert للالوان
+        foreach ($selectedColorIds as $colorId) {
+            ShootingSession::create([
+                'reference' => $reference,
+                'shooting_product_color_id' => $colorId,
+            ]);
+        }
+
+
         return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
     }
-    
+
 
 
 
@@ -664,13 +691,12 @@ class ShootingProductController extends Controller
 
     public function shootingSessions()
     {
-        $colors = ShootingProductColor::whereIn('status', ['in_progress', 'completed'])
-            ->with('shootingProduct')
+        $sessions = ShootingSession::select('reference')
+            ->groupBy('reference')
             ->latest()
             ->get();
-
-        return view('shooting_products.shooting_sessions', compact('colors'));
+    
+        return view('shooting_products.shooting_sessions', compact('sessions'));
     }
-
     
 }
