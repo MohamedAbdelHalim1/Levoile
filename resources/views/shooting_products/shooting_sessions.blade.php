@@ -47,7 +47,7 @@
                                 ->get();
                 @endphp
             
-                <div class="modal fade" id="detailsModal{{ $index }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $index }}" aria-hidden="true">
+                <div class="modal fade" id="detailsModal{{ $index }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $index }}" aria-hidden="true" style="width: 75%;">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
