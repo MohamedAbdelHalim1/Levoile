@@ -22,7 +22,8 @@
 
                 <form method="POST" action="{{ route('shooting-products.multi.start.save') }}">
                     @csrf
-                    <input type="hidden" name="selected_products" value="{{ implode(',', $products->pluck('id')->toArray()) }}">
+                    <input type="hidden" name="selected_products"
+                        value="{{ implode(',', $products->pluck('id')->toArray()) }}">
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>نوع التصوير</label>
@@ -47,15 +48,15 @@
                             <label>تاريخ التصوير</label>
                             <input type="date" name="date_of_shooting" class="form-control">
                         </div>
-                        
+
                         <div class="col-md-4">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
-                        
+
 
                         {{-- المصورين --}}
-                        <div class="col-md-6 mt-3 d-none" id="photographerSection">
+                        <div class="col-md-4 mt-3 d-none" id="photographerSection">
                             <label>المصورين</label>
                             <select name="photographer[]" class="form-control tom-select" multiple>
                                 @foreach ($photographers as $photographer)
@@ -65,7 +66,7 @@
                         </div>
 
                         {{-- المحررين --}}
-                        <div class="col-md-6 mt-3 d-none" id="editorSection">
+                        <div class="col-md-4 mt-3 d-none" id="editorSection">
                             <label>المحررين</label>
                             <select name="editor[]" class="form-control tom-select" multiple>
                                 @foreach ($editors as $editor)
@@ -73,6 +74,13 @@
                                 @endforeach
                             </select>
                         </div>
+                        {{-- طريقة التصوير --}}
+                        <div class="col-md-4 mt-3 d-none" id="shootingMethodSection">
+                            <label>طريقة التصوير </label>
+                            <input type="text" name="shooting_method" class="form-control"
+                                placeholder="ادخل طريقة التصوير او لينك">
+                        </div>
+
                     </div>
 
 
@@ -154,14 +162,20 @@
                     $('#shootingLocation').parent().show();
                     $('#photographerSection').removeClass('d-none');
                     $('#editorSection').addClass('d-none');
+                    $('#shootingMethodSection').removeClass('d-none');
+
                 } else if (type == 'تعديل لون') {
                     $('#shootingLocation').parent().hide();
                     $('#editorSection').removeClass('d-none');
                     $('#photographerSection').addClass('d-none');
+                    $('#shootingMethodSection').removeClass('d-none');
+
                 } else {
                     $('#shootingLocation').parent().hide();
                     $('#photographerSection').addClass('d-none');
                     $('#editorSection').addClass('d-none');
+                    $('#shootingMethodSection').addClass('d-none');
+
                 }
             });
 

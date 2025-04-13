@@ -128,6 +128,8 @@ class ShootingProductController extends Controller
                     'status'            => 'in_progress',
                     'type_of_shooting'  => $request->type_of_shooting,
                     'date_of_delivery'  => $request->date_of_delivery,
+                    'shooting_method'   => $request->shooting_method, // هنا الاضافة الجديدة
+
                 ];
     
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
@@ -164,6 +166,8 @@ class ShootingProductController extends Controller
     
                 $product->type_of_shooting = $request->type_of_shooting;
                 $product->date_of_delivery = $request->date_of_delivery;
+                $product->shooting_method  = $request->shooting_method; // هنا الاضافة الجديدة
+
     
                 if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
                     $product->location         = $request->location;

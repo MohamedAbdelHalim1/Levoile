@@ -27,7 +27,8 @@ class ShootingProduct extends Model
         'drive_link',
         'main_image',
         'quantity',
-        'custom_id'
+        'custom_id',
+        'shooting_method',
     ];
 
     public function shootingProductColors()
