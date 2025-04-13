@@ -3,6 +3,12 @@
 @section('content')
 <div class="p-2">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        @if (session('success'))
+                <div class="alert alert-primary" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">x</button>
+                    {{ session('success') }}
+                </div>
+            @endif
         <div class="bg-white shadow sm:rounded-lg p-4">
             <h4 class="mb-4">جلسات التصوير</h4>
 
@@ -28,10 +34,12 @@
                                 <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                 <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
                                 <td>
-                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#detailsModal{{ $index }}">
-                                        عرض المزيد
-                                    </button>
+                                    <td>
+                                        <a href="{{ route('shooting-sessions.show', $session->reference) }}" class="btn btn-info btn-sm">
+                                            عرض المزيد
+                                        </a>
+                                    </td>
+                                    
                                 </td>
                             </tr>
                         @endforeach
@@ -39,88 +47,7 @@
                 </table>
             </div>
             
-            {{-- المودالات كلها برا الجدول خالص --}}
-            @foreach ($sessions as $index => $session)
-                @php
-                    $colors = \App\Models\ShootingSession::where('reference', $session->reference)
-                                ->with('color.shootingProduct')
-                                ->get();
-                @endphp
-            
-                <div class="modal fade" id="detailsModal{{ $index }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $index }}" aria-hidden="true" style="width: 75%;">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">تفاصيل جلسة التصوير : {{ $session->reference }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered text-nowrap">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>اسم المنتج</th>
-                                                <th>الكود الرئيسي</th>
-                                                <th>كود اللون</th>
-                                                <th>نوع التصوير</th>
-                                                <th>مكان التصوير</th>
-                                                <th>تاريخ التصوير</th>
-                                                <th>المصورين</th>
-                                                <th>تاريخ التعديل</th>
-                                                <th>المحررين</th>
-                                                <th>تاريخ التسليم</th>
-                                                <th>الحالة</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($colors as $colorSession)
-                                                @php $color = $colorSession->color; @endphp
-                                                <tr>
-                                                    <td>{{ $color->shootingProduct->name }}</td>
-                                                    <td>{{ $color->shootingProduct->custom_id }}</td>
-                                                    <td>{{ $color->code }}</td>
-                                                    <td>{{ $color->type_of_shooting ?? '-' }}</td>
-                                                    <td>{{ $color->location ?? '-' }}</td>
-                                                    <td>{{ $color->date_of_shooting ?? '-' }}</td>
-                                                    <td>
-                                                        @if($color->photographer)
-                                                            @foreach(json_decode($color->photographer, true) as $photographerId)
-                                                                <span class="badge bg-primary">{{ optional(\App\Models\User::find($photographerId))->name }}</span>
-                                                            @endforeach
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $color->date_of_editing ?? '-' }}</td>
-                                                    <td>
-                                                        @if($color->editor)
-                                                            @foreach(json_decode($color->editor, true) as $editorId)
-                                                                <span class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
-                                                            @endforeach
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $color->date_of_delivery ?? '-' }}</td>
-                                                    <td>
-                                                        @if ($color->status == 'in_progress')
-                                                            <span class="badge bg-info">قيد التصوير</span>
-                                                        @elseif ($color->status == 'completed')
-                                                            <span class="badge bg-success">مكتمل</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-            
-
+     
         </div>
     </div>
 </div>

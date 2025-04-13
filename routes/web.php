@@ -225,12 +225,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendPage'])->name('shooting-deliveries.send.page');
     Route::post('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendSave'])->name('shooting-deliveries.send.save');
     Route::post('/shooting-products/multi-start/page', [ShootingProductController::class, 'multiStartPage'])
-    ->name('shooting-products.multi.start.page');
+        ->name('shooting-products.multi.start.page');
     Route::post('/shooting-products/multi-start/save', [ShootingProductController::class, 'multiStartSave'])
-    ->name('shooting-products.multi.start.save');
+        ->name('shooting-products.multi.start.save');
 
 
     Route::get('/shooting-sessions', [ShootingProductController::class, 'shootingSessions'])->name('shooting-sessions.index');
+    Route::get('/shooting-sessions/{reference}', [ShootingProductController::class, 'showShootingSession'])->name('shooting-sessions.show');
 
 
 

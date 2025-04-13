@@ -214,7 +214,7 @@ class ShootingProductController extends Controller
         }
 
 
-        return redirect()->route('shooting-products.index')->with('success', 'تم بدء التصوير بنجاح');
+        return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير بنجاح');
     }
 
 
@@ -695,8 +695,16 @@ class ShootingProductController extends Controller
             ->groupBy('reference')
             ->latest()
             ->get();
-    
+
         return view('shooting_products.shooting_sessions', compact('sessions'));
     }
-    
+
+    public function showShootingSession($reference)
+    {
+        $colors = ShootingSession::where('reference', $reference)
+            ->with('color.shootingProduct')
+            ->get();
+
+        return view('shooting_products.shooting_sessions_show', compact('colors', 'reference'));
+    }
 }
