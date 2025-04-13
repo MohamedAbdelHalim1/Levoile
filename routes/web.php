@@ -224,7 +224,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-deliveries/upload', [ShootingProductController::class, 'deliveryUpload'])->name('shooting-deliveries.upload.save');
     Route::get('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendPage'])->name('shooting-deliveries.send.page');
     Route::post('/shooting-deliveries/send/{id}', [ShootingProductController::class, 'sendSave'])->name('shooting-deliveries.send.save');
-    Route::post('/shooting-products/multi-start', [ShootingProductController::class, 'multiStartPage'])
+    Route::post('/shooting-products/multi-start/page', [ShootingProductController::class, 'multiStartPage'])
     ->name('shooting-products.multi.start.page');
     Route::post('/shooting-products/multi-start/save', [ShootingProductController::class, 'multiStartSave'])
     ->name('shooting-products.multi.start.save');
