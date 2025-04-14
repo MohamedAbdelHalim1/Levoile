@@ -303,14 +303,18 @@
                                 <td>{{ $product->shootingProductColors->count() }}</td>
                 
                                 <td>
-                                    {{ $product->shootingProductColors->flatMap->shootingSessions->pluck('reference')->unique()->count() }}
+                                    {{ $product->shootingProductColors->flatMap(function($color){
+                                        return $color->shootingSessions ?? collect();  // null safe
+                                    })->pluck('reference')->unique()->count() }}
                                 </td>
                 
                                 <td>
                                     @foreach ($product->shootingProductColors as $color)
-                                        @foreach ($color->shootingSessions as $session)
-                                            <span class="badge bg-dark d-block">{{ $session->reference }}</span>
-                                        @endforeach
+                                        @if($color->shootingSessions)
+                                            @foreach ($color->shootingSessions as $session)
+                                                <span class="badge bg-dark d-block">{{ $session->reference }}</span>
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                 </td>
                 
@@ -318,6 +322,7 @@
                                     @foreach ($product->shootingProductColors as $color)
                                         <div style="margin-bottom: 5px;">
                                             <span class="badge bg-secondary">{{ $color->location ?? '-' }}</span>
+                
                                             @if ($color->status == 'new')
                                                 <span class="badge bg-warning">جديد</span>
                                             @elseif ($color->status == 'in_progress')
@@ -330,13 +335,11 @@
                                 </td>
                 
                                 <td>
-                                    {{-- الإجراءات زي ما هي --}}
                                     <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">تعديل</a>
                 
                                     <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
                                         style="display: inline-block">
                                         @csrf
-                                 
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger"
                                             onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
@@ -350,6 +353,7 @@
                     </tbody>
                 </table>
                 
+
                 
             </div>
         </div>
