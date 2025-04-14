@@ -289,7 +289,8 @@
                             <th>عدد الألوان</th>
                             <th>عدد السيشنات</th>
                             <th>السيشنات</th>
-                            <th>أماكن التصوير وحالة الألوان</th>
+                            <th>أماكن التصوير</th>
+                            <th>حالة الألوان</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -304,7 +305,7 @@
                 
                                 <td>
                                     {{ $product->shootingProductColors->flatMap(function($color){
-                                        return $color->shootingSessions ?? collect();  // null safe
+                                        return $color->shootingSessions ?? collect();  
                                     })->pluck('reference')->unique()->count() }}
                                 </td>
                 
@@ -318,23 +319,28 @@
                                     @endforeach
                                 </td>
                 
+                                {{-- الأماكن --}}
                                 <td>
                                     @foreach ($product->shootingProductColors as $color)
-                                        <div style="margin-bottom: 5px;">
-                                            <span class="badge bg-secondary">{{ $color->location ?? '-' }}</span>
+                                        <span class="badge bg-secondary d-block">{{ $color->location ?? '-' }}</span>
+                                    @endforeach
+                                </td>
                 
-                                            @if ($color->status == 'new')
-                                                <span class="badge bg-warning">جديد</span>
-                                            @elseif ($color->status == 'in_progress')
-                                                <span class="badge bg-info">قيد التنفيذ</span>
-                                            @elseif ($color->status == 'completed')
-                                                <span class="badge bg-success">مكتمل</span>
-                                            @endif
-                                        </div>
+                                {{-- الحالة --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @if ($color->status == 'new')
+                                            <span class="badge bg-warning d-block">جديد</span>
+                                        @elseif ($color->status == 'in_progress')
+                                            <span class="badge bg-info d-block">قيد التنفيذ</span>
+                                        @elseif ($color->status == 'completed')
+                                            <span class="badge bg-success d-block">مكتمل</span>
+                                        @endif
                                     @endforeach
                                 </td>
                 
                                 <td>
+                                    {{-- الإجراءات زي ما هي --}}
                                     <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">تعديل</a>
                 
                                     <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
@@ -352,6 +358,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                
                 
 
                 
