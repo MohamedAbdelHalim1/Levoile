@@ -118,10 +118,10 @@
                                     @foreach ($product->shootingProductColors as $color)
                                         <tr>
                                             <td>
-                                                @if ($color->status == 'new')
+                                                {{-- @if ($color->status == 'new') --}}
                                                     <input type="checkbox" name="selected_colors[]"
                                                         value="{{ $color->id }}">
-                                                @endif
+                                                {{-- @endif --}}
                                             </td>
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
