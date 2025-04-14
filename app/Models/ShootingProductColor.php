@@ -30,4 +30,10 @@ class ShootingProductColor extends Model
     {
         return $this->belongsTo(ShootingProduct::class);
     }
+
+    public function sessions(){
+        return $this->hasMany(ShootingSession::class);
+    }
+
+    
 }

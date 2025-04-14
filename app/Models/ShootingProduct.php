@@ -40,4 +40,6 @@ class ShootingProduct extends Model
     {
         return $this->hasMany(ShootingGallery::class);
     }
+
+
 }

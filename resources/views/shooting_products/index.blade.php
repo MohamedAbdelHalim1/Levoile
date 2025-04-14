@@ -123,7 +123,7 @@
 
 
 
-                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -138,8 +138,8 @@
                             <th>تاريخ التعديل</th>
                             <th>المحرر</th>
                             <th>تاريخ التسليم</th>
-                            <th>الوقت المتبقي</th> <!-- New Column for Remaining Time -->
-                            <th>لينك درايف</th> <!-- New Column for Drive Link -->
+                            <th>الوقت المتبقي</th> 
+                            <th>لينك درايف</th> 
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -196,7 +196,6 @@
                                 </td>
                                 <td>{{ $product->date_of_editing ?? '-' }}</td>
                                 <td>
-                                    {{-- Editor (IDs stored as an array) --}}
                                     @if (!empty($product->editor))
                                         @php
                                             $tmp_editors = json_decode($product->editor, true);
@@ -217,7 +216,6 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->date_of_delivery ?? '-' }}</td>
-                                <!-- New Column: Calculate Remaining Time -->
                                 <td>
                                     @if (!empty($product->date_of_delivery))
                                         @php
@@ -236,7 +234,6 @@
                                         -
                                     @endif
                                 </td>
-                                <!-- New Column for Drive Link -->
                                 <td class="text-center">
                                     @if (!empty($product->drive_link))
                                         <a href="{{ $product->drive_link }}" target="_blank" class="text-success">
@@ -255,7 +252,6 @@
                                             لينك درايف
                                         </button>
                                     @endif
-                                    <!-- btn اكمال البيانات -->
                                     @if (($product->status == 'in_progress' || $product->status == 'completed') && auth()->user()->role->name == 'admin')
                                         <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                             class="btn btn-warning">
@@ -283,7 +279,78 @@
                             </tr>
                         @endforeach
                     </tbody>
+                </table> --}}
+
+                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم المنتج</th>
+                            <th>عدد الألوان</th>
+                            <th>عدد السيشنات</th>
+                            <th>السيشنات</th>
+                            <th>أماكن التصوير وحالة الألوان</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($shooting_products as $index => $product)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                
+                                <td>{{ $product->name }}</td>
+                
+                                <td>{{ $product->shootingProductColors->count() }}</td>
+                
+                                <td>
+                                    {{ $product->shootingProductColors->flatMap->shootingSessions->pluck('reference')->unique()->count() }}
+                                </td>
+                
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->shootingSessions as $session)
+                                            <span class="badge bg-dark d-block">{{ $session->reference }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+                
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        <div style="margin-bottom: 5px;">
+                                            <span class="badge bg-secondary">{{ $color->location ?? '-' }}</span>
+                                            @if ($color->status == 'new')
+                                                <span class="badge bg-warning">جديد</span>
+                                            @elseif ($color->status == 'in_progress')
+                                                <span class="badge bg-info">قيد التنفيذ</span>
+                                            @elseif ($color->status == 'completed')
+                                                <span class="badge bg-success">مكتمل</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </td>
+                
+                                <td>
+                                    {{-- الإجراءات زي ما هي --}}
+                                    <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">تعديل</a>
+                
+                                    <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
+                                        style="display: inline-block">
+                                        @csrf
+                                 
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
+                                            حذف
+                                        </button>
+                                    </form>
+                                </td>
+                
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
+                
+                
             </div>
         </div>
     </div>
