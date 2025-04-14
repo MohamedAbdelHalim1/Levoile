@@ -123,7 +123,7 @@
 
 
 
-                {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -279,9 +279,9 @@
                             </tr>
                         @endforeach
                     </tbody>
-                </table> --}}
+                </table>
 
-                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -319,14 +319,12 @@
                                     @endforeach
                                 </td>
                 
-                                {{-- الأماكن --}}
                                 <td>
                                     @foreach ($product->shootingProductColors as $color)
                                         <span class="badge bg-secondary d-block">{{ $color->location ?? '-' }}</span>
                                     @endforeach
                                 </td>
                 
-                                {{-- الحالة --}}
                                 <td>
                                     @foreach ($product->shootingProductColors as $color)
                                         @if ($color->status == 'new')
@@ -340,7 +338,6 @@
                                 </td>
                 
                                 <td>
-                                    {{-- الإجراءات زي ما هي --}}
                                     <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">تعديل</a>
                 
                                     <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
@@ -357,7 +354,7 @@
                             </tr>
                         @endforeach
                     </tbody>
-                </table>
+                </table> --}}
                 
                 
 
