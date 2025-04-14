@@ -102,9 +102,9 @@
                                     @endphp
 
                                     <th>
-                                        @if ($allColorsAreNew)
+                                        {{-- @if ($allColorsAreNew) --}}
                                             <input type="checkbox" id="checkAll">
-                                        @endif
+                                        {{-- @endif --}}
                                     </th>
                                     <th>#</th>
                                     <th>اسم المنتج</th>
