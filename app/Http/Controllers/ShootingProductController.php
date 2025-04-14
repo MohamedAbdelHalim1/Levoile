@@ -151,7 +151,7 @@ class ShootingProductController extends Controller
                     $updateData['date_of_shooting'] = null;
                 }
 
-                $color->update($updateData);
+                $color->create($updateData);
             }
 
             $productIds = ShootingProductColor::whereIn('id', $selectedColorIds)
