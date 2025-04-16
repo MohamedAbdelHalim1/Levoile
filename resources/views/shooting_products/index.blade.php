@@ -140,8 +140,8 @@
                             <th>تاريخ التعديل</th>
                             <th>المحرر</th>
                             <th>تاريخ التسليم</th>
-                            <th>الوقت المتبقي</th> 
-                            <th>لينك درايف</th> 
+                            <th>الوقت المتبقي</th>
+                            <th>لينك درايف</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -161,7 +161,9 @@
                                     @elseif($product->status == 'partial')
                                         @php
                                             $totalColors = $product->shootingProductColors->count();
-                                            $inProgressColors = $product->shootingProductColors->where('status', 'in_progress')->count();
+                                            $inProgressColors = $product->shootingProductColors
+                                                ->where('status', 'in_progress')
+                                                ->count();
                                         @endphp
                                         <span class="badge bg-warning">
                                             تصوير جزئي ({{ $inProgressColors }} / {{ $totalColors }})
@@ -172,21 +174,26 @@
                                 </td>
                                 <td>{{ $product->number_of_colors }}</td>
                                 <td>
-                                    {{ optional($product->shootingProductColors)->flatMap(function($color) {
-                                        return $color->sessions ?? collect();
-                                    })->count() ?? 0 }}
+                                    {{ $product->shootingProductColors->flatMap(fn($color) => $color->sessions ?? collect())->pluck('reference')->unique()->count() }}
                                 </td>
 
+
                                 <td>
-                                    @foreach ($product->shootingProductColors as $color)
-                                        @foreach ($color->sessions ?? [] as $session)
-                                            <span class="badge bg-dark d-block">{{ $session->reference }}</span>
-                                        @endforeach
+                                    @php
+                                        $uniqueSessions = $product->shootingProductColors
+                                            ->flatMap(fn($color) => $color->sessions ?? collect())
+                                            ->pluck('reference')
+                                            ->unique();
+                                    @endphp
+
+                                    @foreach ($uniqueSessions as $reference)
+                                        <span class="badge bg-dark d-block">{{ $reference }}</span>
                                     @endforeach
                                 </td>
-                                
-                                                               
-                                
+
+
+
+
                                 <td>{{ $product->type_of_shooting ?? '-' }}</td>
                                 <td>{{ $product->location ?? '-' }}</td>
                                 <td>{{ $product->date_of_shooting ?? '-' }}</td>
@@ -328,7 +335,7 @@
                 
                                 <td>
                                     @foreach ($product->shootingProductColors as $color)
-                                        @if($color->shootingSessions)
+                                        @if ($color->shootingSessions)
                                             @foreach ($color->shootingSessions as $session)
                                                 <span class="badge bg-dark d-block">{{ $session->reference }}</span>
                                             @endforeach
@@ -372,10 +379,10 @@
                         @endforeach
                     </tbody>
                 </table> --}}
-                
-                
 
-                
+
+
+
             </div>
         </div>
     </div>
