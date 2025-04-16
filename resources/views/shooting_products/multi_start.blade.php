@@ -109,7 +109,7 @@
                                     <th>#</th>
                                     <th>اسم المنتج</th>
                                     <th>كود اللون</th>
-                                    <th>ألحالة</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,15 +126,6 @@
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->code }}</td>
-                                            <td>
-                                                @if ($color->status == 'new')
-                                                    <span class="badge bg-warning">جديد</span>
-                                                @elseif($color->status == 'in_progress')
-                                                    <span class="badge bg-info">قيد التصوير</span>
-                                                @elseif($color->status == 'completed')
-                                                    <span class="badge bg-success">مكتمل</span>
-                                                @endif
-                                            </td>
                                         </tr>
                                     @endforeach
                                 @endforeach
