@@ -157,7 +157,7 @@
                                 <td>
                                     @if ($product->status == 'new')
                                         <span class="badge bg-warning">جديد</span>
-                                    @elseif ($product->status == 'partial')
+                                    @elseif ($product->status == 'partial' || $product->status == 'in_progress')
                                         <span class="badge bg-warning">تصوير جزئي</span>
                                     @elseif ($product->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
