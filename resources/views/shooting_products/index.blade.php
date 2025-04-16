@@ -319,12 +319,10 @@
 
 
                                 <td>
-                                    @if (($product->status == 'in_progress' || $product->status == 'completed') && auth()->user()->role->name == 'admin')
                                         <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                             class="btn btn-warning">
                                             اكمال البيانات
                                         </a>
-                                    @endif
                                     @if (auth()->user()->role->name == 'admin')
                                         <!-- edit btn and delete form -->
                                         <a href="{{ route('shooting-products.edit', $product->id) }}"
