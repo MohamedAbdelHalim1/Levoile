@@ -337,7 +337,7 @@ class ShootingProductController extends Controller
             'found' => true,
             'id' => $color->id,
             'code' => $color->code,
-            'product' => $color->product->name
+            'product' => $color->shootingProduct->name
         ]);
     }
 
