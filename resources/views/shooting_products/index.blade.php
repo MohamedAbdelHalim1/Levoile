@@ -103,15 +103,15 @@
 
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="row">
-                    <div>
+                <div class="row mb-4">
+                    <div class="m-2">
                         @if (auth()->user()->hasPermission('إضافة منتج'))
                             <a href="{{ route('shooting-products.create') }}" class="btn btn-primary">
                                 {{ __('إضافة منتج') }}
                             </a>
                         @endif
                     </div>
-                    <div id="startShootingContainer" style="display: none;">
+                    <div id="startShootingContainer" style="display: none;" class="m-2">
                         <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                             @csrf
                             <input type="hidden" name="selected_products" id="selectedProducts">
