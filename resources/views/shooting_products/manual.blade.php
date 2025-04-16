@@ -142,7 +142,7 @@
                         if (!res.found) {
                             $('#colorResult').html(
                                 `<div class="alert alert-danger">لم يتم العثور على اللون بهذا الكود</div>`
-                                );
+                            );
                             return;
                         }
 
@@ -155,9 +155,10 @@
                                 <td>${res.code}</td>
                                 <td>${res.product}</td>
                                 <td><button type="button" class="btn btn-sm btn-danger remove-row">X</button></td>
-                                <input type="hidden" name="selected_colors[]" value="${res.id}" form="manualShootingForm">
+                                <input type="hidden" name="selected_colors[]" value="${res.id}">
                             </tr>
                         `;
+
 
                         $('#colorsTableBody').append(row);
                         $('#colorCodeInput').val('').focus();

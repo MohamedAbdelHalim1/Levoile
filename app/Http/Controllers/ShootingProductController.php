@@ -345,9 +345,10 @@ class ShootingProductController extends Controller
     {
         $selectedColorIds = $request->selected_colors;
 
-        if (empty($selectedColorIds)) {
-            return redirect()->back()->with('error', 'يجب إدخال لون واحد على الأقل');
+        if (!$request->has('selected_colors') || empty($request->selected_colors)) {
+            return redirect()->back()->with('error', 'يرجى إدخال كود لون واحد على الأقل');
         }
+
 
         DB::transaction(function () use ($selectedColorIds, $request) {
             $finalColorIds = [];
