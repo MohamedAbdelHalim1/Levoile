@@ -132,6 +132,7 @@
                             <th>الحالة</th>
                             <th>عدد الألوان</th>
                             <th>عدد السيشنات</th>
+                            <th>السيشنات</th>
                             <th>نوع التصوير</th>
                             <th>الموقع</th>
                             <th>تاريخ التصوير</th>
@@ -170,8 +171,21 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->number_of_colors }}</td>
-                                <td>{{ $product->shootingProductColors->sessions()->count() }}</td>
-                               
+                                <td>
+                                    {{ optional($product->shootingProductColors)->flatMap(function($color) {
+                                        return $color->sessions ?? collect();
+                                    })->count() ?? 0 }}
+                                </td>
+
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions ?? [] as $session)
+                                            <span class="badge bg-dark d-block">{{ $session->reference }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+                                
+                                                               
                                 
                                 <td>{{ $product->type_of_shooting ?? '-' }}</td>
                                 <td>{{ $product->location ?? '-' }}</td>
