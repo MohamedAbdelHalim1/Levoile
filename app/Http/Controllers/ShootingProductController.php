@@ -327,7 +327,7 @@ class ShootingProductController extends Controller
             'code' => 'required|string'
         ]);
 
-        $color = ShootingProductColor::with('product')->where('code', $request->code)->first();
+        $color = ShootingProductColor::with('shootingProduct')->where('code', $request->code)->first();
 
         if (!$color) {
             return response()->json(['found' => false]);
