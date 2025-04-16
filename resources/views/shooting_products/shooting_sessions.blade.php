@@ -20,6 +20,7 @@
                                 <th>جلسة التصوير</th>
                                 <th>عدد الألوان</th>
                                 <th>الحالة</th>
+                                <th>الدرايف</th>
                                 <th>التحكم</th>
                             </tr>
                         </thead>
@@ -39,6 +40,15 @@
                                             <span class="badge bg-success">مكتمل</span>
                                         @else
                                             <span class="badge bg-warning">جديد</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($session->drive_link)
+                                            <a href="{{ $session->drive_link }}" class="btn btn-success btn-sm">
+                                                <i class="fa fa-link"></i>
+                                            </a>
+                                        @else
+                                            -
                                         @endif
                                     </td>
                                     <td>
