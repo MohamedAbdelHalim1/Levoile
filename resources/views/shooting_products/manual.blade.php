@@ -14,7 +14,7 @@
 
                     <div id="colorResult"></div>
 
-                    <form id="manualShootingForm" method="POST" action="{{ route('shooting-products.manual.save') }}">
+                    <form id="manualShootingForm" method="POST" action="{{ url('/shooting-product/manual/save') }}">
                         @csrf
                         <input type="hidden" name="selected_colors[]" id="selectedColorId">
 
@@ -43,7 +43,8 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label>نوع التصوير</label>
-                            <select name="type_of_shooting" id="shootingType" class="form-control" required form="manualShootingForm">
+                            <select name="type_of_shooting" id="shootingType" class="form-control" required
+                                form="manualShootingForm">
                                 <option value="">اختر</option>
                                 <option value="تصوير منتج">تصوير منتج</option>
                                 <option value="تصوير موديل">تصوير موديل</option>
@@ -67,7 +68,8 @@
 
                         <div class="col-md-6 mb-3">
                             <label>تاريخ التسليم</label>
-                            <input type="date" name="date_of_delivery" class="form-control" required form="manualShootingForm">
+                            <input type="date" name="date_of_delivery" class="form-control" required
+                                form="manualShootingForm">
                         </div>
 
                         <div class="col-md-12 mb-3 d-none" id="photographerWrapper">
@@ -110,7 +112,7 @@
     <script>
         let counter = 1;
 
-        $('#shootingType').on('change', function () {
+        $('#shootingType').on('change', function() {
             let type = $(this).val();
 
             $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper').addClass('d-none');
@@ -122,7 +124,7 @@
             }
         });
 
-        $('#colorCodeInput').on('keypress', function (e) {
+        $('#colorCodeInput').on('keypress', function(e) {
             if (e.which === 13) {
                 e.preventDefault();
 
@@ -136,9 +138,11 @@
                         _token: '{{ csrf_token() }}',
                         code: code
                     },
-                    success: function (res) {
+                    success: function(res) {
                         if (!res.found) {
-                            $('#colorResult').html(`<div class="alert alert-danger">لم يتم العثور على اللون بهذا الكود</div>`);
+                            $('#colorResult').html(
+                                `<div class="alert alert-danger">لم يتم العثور على اللون بهذا الكود</div>`
+                                );
                             return;
                         }
 
@@ -162,7 +166,7 @@
             }
         });
 
-        $(document).on('click', '.remove-row', function () {
+        $(document).on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
         });
     </script>
