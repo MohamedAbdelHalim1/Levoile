@@ -53,7 +53,8 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-success btn-sm open-drive-link-modal"
-                                            data-id="{{ $session->id }}" data-drive-link="{{ $session->drive_link }}">
+                                            data-reference="{{ $session->reference }}"
+                                            data-drive-link="{{ $session->drive_link }}">
                                             إضافة لينك درايف
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
@@ -83,7 +84,7 @@
                 <div class="modal-body">
                     <form id="driveLinkForm">
                         @csrf
-                        <input type="hidden" name="session_id" id="drive_session_id">
+                        <input type="hidden" name="reference" id="drive_session_reference">
 
                         <div class="mb-3">
                             <label class="form-label">لينك درايف</label>
@@ -122,13 +123,14 @@
 
     <script>
         $(".open-drive-link-modal").on("click", function() {
-            let sessionId = $(this).data("id");
+            let reference = $(this).data("reference");
             let driveLink = $(this).data("drive-link") || '';
 
-            $("#drive_session_id").val(sessionId);
+            $("#drive_session_reference").val(reference);
             $("#drive_link_input").val(driveLink);
             $("#driveLinkModal").modal("show");
         });
+
 
         $("#driveLinkForm").on("submit", function(e) {
             e.preventDefault();

@@ -358,52 +358,57 @@ class ShootingProductController extends Controller
     public function updateDriveLink(Request $request)
     {
         DB::beginTransaction();
-
+    
         try {
             $request->validate([
-                'session_id' => 'required|exists:shooting_sessions,id',
+                'reference' => 'required|string',
                 'drive_link' => 'required|url',
             ]);
-
-            $session = \App\Models\ShootingSession::findOrFail($request->session_id);
-            $session->drive_link = $request->drive_link;
-            $session->status = 'completed';
-            $session->save();
-
-            // تحديث حالة المنتج بناء على السيشنات
-            $product = $session->color->shootingProduct;
-            $statuses = $product->shootingProductColors->flatMap(function ($color) {
-                return $color->sessions->pluck('status');
-            });
-
-            if ($statuses->every(fn($s) => $s === 'completed')) {
-                $product->status = 'completed';
-            } elseif ($statuses->contains('completed')) {
-                $product->status = 'partial';
-            } else {
-                $product->status = 'new';
+    
+            $sessions = \App\Models\ShootingSession::where('reference', $request->reference)->get();
+    
+            foreach ($sessions as $session) {
+                $session->drive_link = $request->drive_link;
+                $session->status = 'completed';
+                $session->save();
             }
-
-            $product->save();
-
-            // لو عايز تضيفه للموقع
-            WebsiteAdminProduct::updateOrCreate(
-                ['shooting_product_id' => $product->id],
-                [
-                    'name' => $product->name,
-                    'status' => 'new'
-                ]
-            );
-
+    
+            // تحديث حالة المنتج بناءً على السيشنات المرتبطة بالبرودكت
+            if ($sessions->count()) {
+                $product = $sessions->first()->color->shootingProduct;
+    
+                $statuses = $product->shootingProductColors->flatMap(function ($color) {
+                    return $color->sessions->pluck('status');
+                });
+    
+                if ($statuses->every(fn($s) => $s === 'completed')) {
+                    $product->status = 'completed';
+                } elseif ($statuses->contains('completed')) {
+                    $product->status = 'partial';
+                } else {
+                    $product->status = 'new';
+                }
+    
+                $product->save();
+    
+                WebsiteAdminProduct::updateOrCreate(
+                    ['shooting_product_id' => $product->id],
+                    [
+                        'name' => $product->name,
+                        'status' => 'new'
+                    ]
+                );
+            }
+    
             DB::commit();
-
+    
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()], 500);
         }
     }
-
+    
 
 
 
