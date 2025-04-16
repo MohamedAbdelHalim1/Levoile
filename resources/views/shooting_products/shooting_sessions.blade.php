@@ -36,7 +36,7 @@
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                     <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
                                     <td>
-                                        @if ($session->status === 'completed')
+                                        @if ($session->status == 'completed')
                                             <span class="badge bg-success">مكتمل</span>
                                         @else
                                             <span class="badge bg-warning">جديد</span>
