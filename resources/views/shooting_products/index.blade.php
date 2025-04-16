@@ -159,7 +159,7 @@
                                         <span class="badge bg-info">قيد التنفيذ</span>
                                     @elseif($product->status == 'partial')
                                         @php
-                                            $totalColors = $product->number_of_colors;
+                                            $totalColors = $product->shootingProductColors->count();
                                             $inProgressColors = $product->shootingProductColors->where('status', 'in_progress')->count();
                                         @endphp
                                         <span class="badge bg-warning">
