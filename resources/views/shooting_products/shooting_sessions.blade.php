@@ -35,26 +35,41 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                     <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
+                                    @php
+                                        $groupedSessions = \App\Models\ShootingSession::where(
+                                            'reference',
+                                            $session->reference,
+                                        )->get();
+                                        $allCompleted = $groupedSessions->every(fn($s) => $s->status === 'completed');
+                                    @endphp
+
                                     <td>
-                                        @if ($session->status == 'completed')
+                                        @if ($allCompleted)
                                             <span class="badge bg-success">مكتمل</span>
                                         @else
                                             <span class="badge bg-warning">جديد</span>
                                         @endif
                                     </td>
+
+                                    @php
+                                        $firstLink = $groupedSessions->firstWhere('drive_link', '!=', null)
+                                            ?->drive_link;
+                                    @endphp
+
                                     <td>
-                                        @if ($session->drive_link)
-                                            <a href="{{ $session->drive_link }}" class="btn btn-success btn-sm">
+                                        @if ($firstLink)
+                                            <a href="{{ $firstLink }}" class="btn btn-success btn-sm">
                                                 <i class="fa fa-link"></i>
                                             </a>
                                         @else
                                             -
                                         @endif
                                     </td>
+
                                     <td>
                                         <button class="btn btn-success btn-sm open-drive-link-modal"
                                             data-reference="{{ $session->reference }}"
-                                            data-drive-link="{{ $session->drive_link }}">
+                                            data-drive-link="{{ $firstLink }}">
                                             إضافة لينك درايف
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
