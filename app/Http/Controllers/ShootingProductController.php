@@ -201,6 +201,7 @@ class ShootingProductController extends Controller
                 $totalColors = $product->shootingProductColors()->count();
                 $inProgressColors = $product->shootingProductColors()
                     ->where('status', 'in_progress')->count();
+                $product->status = $totalColors == $inProgressColors ? 'in_progress' : 'partial';
 
 
                 $product->type_of_shooting = $request->type_of_shooting;
@@ -358,29 +359,29 @@ class ShootingProductController extends Controller
     public function updateDriveLink(Request $request)
     {
         DB::beginTransaction();
-    
+
         try {
             $request->validate([
                 'reference' => 'required|string',
                 'drive_link' => 'required|url',
             ]);
-    
+
             $sessions = \App\Models\ShootingSession::where('reference', $request->reference)->get();
-    
+
             foreach ($sessions as $session) {
                 $session->drive_link = $request->drive_link;
                 $session->status = 'completed';
                 $session->save();
             }
-    
+
             // تحديث حالة المنتج بناءً على السيشنات المرتبطة بالبرودكت
             if ($sessions->count()) {
                 $product = $sessions->first()->color->shootingProduct;
-    
+
                 $statuses = $product->shootingProductColors->flatMap(function ($color) {
                     return $color->sessions->pluck('status');
                 });
-    
+
                 if ($statuses->every(fn($s) => $s === 'completed')) {
                     $product->status = 'completed';
                 } elseif ($statuses->contains('completed')) {
@@ -388,9 +389,9 @@ class ShootingProductController extends Controller
                 } else {
                     $product->status = 'new';
                 }
-    
+
                 $product->save();
-    
+
                 WebsiteAdminProduct::updateOrCreate(
                     ['shooting_product_id' => $product->id],
                     [
@@ -399,16 +400,16 @@ class ShootingProductController extends Controller
                     ]
                 );
             }
-    
+
             DB::commit();
-    
+
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()], 500);
         }
     }
-    
+
 
 
 
