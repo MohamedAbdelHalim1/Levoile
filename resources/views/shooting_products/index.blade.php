@@ -194,78 +194,139 @@
 
 
 
-                                <td>{{ $product->type_of_shooting ?? '-' }}</td>
-                                <td>{{ $product->location ?? '-' }}</td>
-                                <td>{{ $product->date_of_shooting ?? '-' }}</td>
+                                {{-- نوع التصوير --}}
                                 <td>
-                                    @if (!empty($product->photographer))
-                                        @php
-                                            $tmp_photographers = json_decode($product->photographer, true);
-                                        @endphp
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <span class="d-block">{{ $color->type_of_shooting ?? '-' }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
 
-                                        @if (is_array($tmp_photographers))
-                                            @foreach ($tmp_photographers as $photographerId)
-                                                @php $photographerId = (int) $photographerId; @endphp
-                                                <span class="badge bg-primary">
-                                                    {{ optional(\App\Models\User::find($photographerId))->name }}
+                                {{-- الموقع --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <span class="d-block">{{ $color->location ?? '-' }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+
+                                {{-- تاريخ التصوير --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <span class="d-block">{{ $color->date_of_shooting ?? '-' }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+
+                                {{-- المصور --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            @php
+                                                $photographers = json_decode($color->photographer, true);
+                                            @endphp
+                                            @if (is_array($photographers))
+                                                <span class="d-block">
+                                                    @foreach ($photographers as $id)
+                                                        <span
+                                                            class="badge bg-primary">{{ optional(\App\Models\User::find($id))->name }}</span>
+                                                    @endforeach
                                                 </span>
-                                            @endforeach
-                                        @else
-                                            -
-                                        @endif
-                                    @else
-                                        -
-                                    @endif
+                                            @else
+                                                <span class="d-block">-</span>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </td>
 
-                                </td>
-                                <td>{{ $product->date_of_editing ?? '-' }}</td>
+                                {{-- تاريخ التعديل --}}
                                 <td>
-                                    @if (!empty($product->editor))
-                                        @php
-                                            $tmp_editors = json_decode($product->editor, true);
-                                        @endphp
-                                        @if (is_array($tmp_editors))
-                                            @foreach ($tmp_editors as $editorId)
-                                                @php
-                                                    $editorId = (int) $editorId;
-                                                @endphp
-                                                <span
-                                                    class="badge bg-secondary">{{ optional(\App\Models\User::find($editorId))->name }}</span>
-                                            @endforeach
-                                        @else
-                                            -
-                                        @endif
-                                    @else
-                                        -
-                                    @endif
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <span class="d-block">{{ $color->date_of_editing ?? '-' }}</span>
+                                        @endforeach
+                                    @endforeach
                                 </td>
-                                <td>{{ $product->date_of_delivery ?? '-' }}</td>
-                                <td>
-                                    @if (!empty($product->date_of_delivery))
-                                        @php
-                                            $delivery_date = \Carbon\Carbon::parse($product->date_of_delivery);
-                                            $remaining_days = \Carbon\Carbon::now()->diffInDays($delivery_date, false);
-                                        @endphp
 
-                                        @if ($remaining_days > 0)
-                                            <span class="badge bg-success">{{ $remaining_days }} يوم متبقي</span>
-                                        @elseif ($remaining_days == 0)
-                                            <span class="badge bg-warning">ينتهي اليوم</span>
-                                        @else
-                                            <span class="badge bg-danger">متأخر بـ {{ abs($remaining_days) }} يوم</span>
-                                        @endif
-                                    @else
-                                        -
-                                    @endif
+                                {{-- المحرر --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            @php
+                                                $editors = json_decode($color->editor, true);
+                                            @endphp
+                                            @if (is_array($editors))
+                                                <span class="d-block">
+                                                    @foreach ($editors as $id)
+                                                        <span
+                                                            class="badge bg-secondary">{{ optional(\App\Models\User::find($id))->name }}</span>
+                                                    @endforeach
+                                                </span>
+                                            @else
+                                                <span class="d-block">-</span>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
                                 </td>
+
+                                {{-- تاريخ التسليم --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <span class="d-block">{{ $color->date_of_delivery ?? '-' }}</span>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+
+                                {{-- الوقت المتبقي --}}
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            @php
+                                                $delivery_date = $color->date_of_delivery
+                                                    ? \Carbon\Carbon::parse($color->date_of_delivery)
+                                                    : null;
+                                                $remaining_days = $delivery_date
+                                                    ? \Carbon\Carbon::now()->diffInDays($delivery_date, false)
+                                                    : null;
+                                            @endphp
+
+                                            @if (is_null($delivery_date))
+                                                <span class="d-block">-</span>
+                                            @else
+                                                <span class="d-block">
+                                                    @if ($remaining_days > 0)
+                                                        <span class="badge bg-success">{{ $remaining_days }} يوم
+                                                            متبقي</span>
+                                                    @elseif ($remaining_days == 0)
+                                                        <span class="badge bg-warning">ينتهي اليوم</span>
+                                                    @else
+                                                        <span class="badge bg-danger">متأخر بـ {{ abs($remaining_days) }}
+                                                            يوم</span>
+                                                    @endif
+                                                </span>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </td>
+
+                                {{-- لينك درايف --}}
                                 <td class="text-center">
-                                    @if (!empty($product->drive_link))
-                                        <a href="{{ $product->drive_link }}" target="_blank" class="text-success">
-                                            <i class="fe fe-link"></i>
-                                        </a>
-                                    @else
-                                        -
-                                    @endif
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            @if (!empty($color->shooting_method))
+                                                <a href="{{ $color->shooting_method }}" target="_blank"
+                                                    class="d-block text-success">
+                                                    <i class="fe fe-link"></i>
+                                                </a>
+                                            @else
+                                                <span class="d-block">-</span>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
                                 </td>
 
                                 <td>
@@ -412,11 +473,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 @endsection
 
 @section('scripts')
