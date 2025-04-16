@@ -359,29 +359,34 @@ class ShootingProductController extends Controller
     public function updateDriveLink(Request $request)
     {
         DB::beginTransaction();
-
+    
         try {
             $request->validate([
                 'reference' => 'required|string',
                 'drive_link' => 'required|url',
             ]);
-
+    
+            // جيب كل السيشنات اللي ليها نفس الreference
             $sessions = \App\Models\ShootingSession::where('reference', $request->reference)->get();
-
+    
+            // تحديث كل السيشنات بنفس اللينك والحالة
             foreach ($sessions as $session) {
                 $session->drive_link = $request->drive_link;
                 $session->status = 'completed';
                 $session->save();
             }
-
-            // تحديث حالة المنتج بناءً على السيشنات المرتبطة بالبرودكت
+    
+            // لو فيه سيشنات فعلاً، نحدث حالة المنتج
             if ($sessions->count()) {
                 $product = $sessions->first()->color->shootingProduct;
-
-                $statuses = $product->shootingProductColors->flatMap(function ($color) {
-                    return $color->sessions->pluck('status');
-                });
-
+    
+                // نجمع كل السيشنات اللي تبع المنتج ده (مش بس السيشنات دي)
+                $allProductSessions = \App\Models\ShootingSession::whereHas('color', function ($q) use ($product) {
+                    $q->where('shooting_product_id', $product->id);
+                })->get();
+    
+                $statuses = $allProductSessions->pluck('status');
+    
                 if ($statuses->every(fn($s) => $s === 'completed')) {
                     $product->status = 'completed';
                 } elseif ($statuses->contains('completed')) {
@@ -389,26 +394,28 @@ class ShootingProductController extends Controller
                 } else {
                     $product->status = 'new';
                 }
-
+    
                 $product->save();
-
+    
+                // تحديث الموقع لو مطلوب
                 WebsiteAdminProduct::updateOrCreate(
                     ['shooting_product_id' => $product->id],
                     [
                         'name' => $product->name,
-                        'status' => 'new'
+                        'status' => 'new' // هنا بتسجله جديد عند الأدمين دايمًا
                     ]
                 );
             }
-
+    
             DB::commit();
-
+    
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()], 500);
         }
     }
+    
 
 
 
