@@ -400,7 +400,7 @@ class ShootingProductController extends Controller
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ'], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
