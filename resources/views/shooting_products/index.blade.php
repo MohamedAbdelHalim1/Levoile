@@ -129,8 +129,9 @@
                             <th>#</th>
                             <th>اختر المنتج</th>
                             <th>اسم المنتج</th>
-                            <th>عدد الألوان</th>
                             <th>الحالة</th>
+                            <th>عدد الألوان</th>
+                            <th>عدد السيشنات</th>
                             <th>نوع التصوير</th>
                             <th>الموقع</th>
                             <th>تاريخ التصوير</th>
@@ -151,7 +152,6 @@
                                     <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
                                 </td>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->number_of_colors }}</td>
                                 <td>
                                     @if ($product->status == 'new')
                                         <span class="badge bg-warning">جديد</span>
@@ -169,6 +169,9 @@
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif
                                 </td>
+                                <td>{{ $product->number_of_colors }}</td>
+                                <td>{{ $product->shootingProductColors->sessions()->count() }}</td>
+                               
                                 
                                 <td>{{ $product->type_of_shooting ?? '-' }}</td>
                                 <td>{{ $product->location ?? '-' }}</td>
