@@ -251,142 +251,37 @@ class ShootingProductController extends Controller
 
 
 
-    //     public function multiStartSave(Request $request)
-    // {
-    //     $selectedColorIds = $request->selected_colors;
-
-    //     if (empty($selectedColorIds)) {
-    //         return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
-    //     }
-
-    //     DB::transaction(function () use ($selectedColorIds, $request) {
-
-    //         $newColorIds = [];
-
-    //         // Step 1 - Clone Colors
-    //         foreach ($selectedColorIds as $colorId) {
-
-    //             $oldColor = ShootingProductColor::findOrFail($colorId);
-
-    //             $newColor = $oldColor->replicate(); // ينسخ كل الداتا بدون الـ ID
-    //             $newColor->status           = 'in_progress';
-    //             $newColor->type_of_shooting = $request->type_of_shooting;
-    //             $newColor->date_of_delivery = $request->date_of_delivery;
-    //             $newColor->shooting_method  = $request->shooting_method;
-
-    //             if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
-    //                 $newColor->location         = $request->location;
-    //                 $newColor->date_of_shooting = $request->date_of_shooting;
-    //                 $newColor->photographer     = json_encode($request->photographer);
-    //                 $newColor->editor           = null;
-    //                 $newColor->date_of_editing  = null;
-    //             } else {
-    //                 $newColor->date_of_editing  = $request->date_of_editing;
-    //                 $newColor->editor           = json_encode($request->editor);
-    //                 $newColor->photographer     = null;
-    //                 $newColor->location         = null;
-    //                 $newColor->date_of_shooting = null;
-    //             }
-
-    //             $newColor->save();
-
-    //             $newColorIds[] = $newColor->id; // Add the new ID for session
-    //         }
-
-    //         // Step 2 - Update Products Status
-    //         $productIds = ShootingProductColor::whereIn('id', $newColorIds)
-    //             ->pluck('shooting_product_id')
-    //             ->unique()
-    //             ->toArray();
-
-    //         foreach ($productIds as $productId) {
-    //             $product = ShootingProduct::findOrFail($productId);
-
-    //             $totalColors     = $product->shootingProductColors()->count();
-    //             $inProgressColors = $product->shootingProductColors()->where('status', 'in_progress')->count();
-
-    //             $product->status = ($totalColors == $inProgressColors) ? 'in_progress' : 'partial';
-
-    //             $product->type_of_shooting = $request->type_of_shooting;
-    //             $product->date_of_delivery = $request->date_of_delivery;
-    //             $product->shooting_method  = $request->shooting_method;
-
-    //             if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
-    //                 $product->location         = $request->location;
-    //                 $product->date_of_shooting = $request->date_of_shooting;
-    //                 $product->photographer     = json_encode($request->photographer);
-    //                 $product->editor           = null;
-    //                 $product->date_of_editing  = null;
-    //             } else {
-    //                 $product->date_of_editing  = $request->date_of_editing;
-    //                 $product->editor           = json_encode($request->editor);
-    //                 $product->photographer     = null;
-    //                 $product->location         = null;
-    //                 $product->date_of_shooting = null;
-    //             }
-
-    //             $product->save();
-    //         }
-
-    //         // Step 3 - Create Shooting Session Rows
-    //         $today = Carbon::now()->format('Y-m-d');
-
-    //         $lastReference = ShootingSession::where('reference', 'LIKE', $today . '%')
-    //             ->orderBy('reference', 'desc')
-    //             ->first();
-
-    //         $newNumber = $lastReference
-    //             ? str_pad(((int)substr($lastReference->reference, -3)) + 1, 3, '0', STR_PAD_LEFT)
-    //             : '001';
-
-    //         $reference = $today . '-' . $newNumber;
-
-    //         foreach ($newColorIds as $colorId) {
-    //             ShootingSession::create([
-    //                 'reference'                 => $reference,
-    //                 'shooting_product_color_id' => $colorId,
-    //             ]);
-    //         }
-    //     });
-
-    //     return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير بنجاح');
-    // }
-
-
-
-
-
     public function updateDriveLink(Request $request)
     {
         DB::beginTransaction();
-    
+
         try {
             $request->validate([
                 'reference' => 'required|string',
                 'drive_link' => 'required|url',
             ]);
-    
+
             // جيب كل السيشنات اللي ليها نفس الreference
             $sessions = \App\Models\ShootingSession::where('reference', $request->reference)->get();
-    
+
             // تحديث كل السيشنات بنفس اللينك والحالة
             foreach ($sessions as $session) {
                 $session->drive_link = $request->drive_link;
                 $session->status = 'completed';
                 $session->save();
             }
-    
+
             // لو فيه سيشنات فعلاً، نحدث حالة المنتج
             if ($sessions->count()) {
                 $product = $sessions->first()->color->shootingProduct;
-    
+
                 // نجمع كل السيشنات اللي تبع المنتج ده (مش بس السيشنات دي)
                 $allProductSessions = \App\Models\ShootingSession::whereHas('color', function ($q) use ($product) {
                     $q->where('shooting_product_id', $product->id);
                 })->get();
-    
+
                 $statuses = $allProductSessions->pluck('status');
-    
+
                 if ($statuses->every(fn($s) => $s === 'completed')) {
                     $product->status = 'completed';
                 } elseif ($statuses->contains('completed')) {
@@ -394,9 +289,9 @@ class ShootingProductController extends Controller
                 } else {
                     $product->status = 'new';
                 }
-    
+
                 $product->save();
-    
+
                 // تحديث الموقع لو مطلوب
                 WebsiteAdminProduct::updateOrCreate(
                     ['shooting_product_id' => $product->id],
@@ -406,17 +301,116 @@ class ShootingProductController extends Controller
                     ]
                 );
             }
-    
+
             DB::commit();
-    
+
             return response()->json(['success' => true, 'message' => 'تم تحديث لينك درايف بنجاح']);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()], 500);
         }
     }
-    
 
+
+
+    public function manual()
+    {
+        $photographers = \App\Models\User::where('role_id', 7)->get(); // مثال
+        $editors = \App\Models\User::where('role_id', 8)->get(); // مثال
+
+        return view('shooting_products.manual', compact('photographers', 'editors'));
+    }
+
+    public function findColorByCode(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string'
+        ]);
+
+        $color = ShootingProductColor::with('product')->where('code', $request->code)->first();
+
+        if (!$color) {
+            return response()->json(['found' => false]);
+        }
+
+        return response()->json([
+            'found' => true,
+            'id' => $color->id,
+            'code' => $color->code,
+            'product' => $color->product->name
+        ]);
+    }
+
+    public function manualSave(Request $request)
+    {
+        $selectedColorIds = $request->selected_colors;
+
+        if (empty($selectedColorIds)) {
+            return redirect()->back()->with('error', 'يجب إدخال لون واحد على الأقل');
+        }
+
+        DB::transaction(function () use ($selectedColorIds, $request) {
+            $finalColorIds = [];
+
+            foreach ($selectedColorIds as $colorId) {
+                $color = ShootingProductColor::findOrFail($colorId);
+
+                $isFirstTime = is_null($color->type_of_shooting) && is_null($color->date_of_delivery);
+
+                if ($isFirstTime) {
+                    $color->status = 'in_progress';
+                    $color->type_of_shooting = $request->type_of_shooting;
+                    $color->date_of_delivery = $request->date_of_delivery;
+                    $color->shooting_method = $request->shooting_method;
+
+                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                        $color->location = $request->location;
+                        $color->date_of_shooting = $request->date_of_shooting;
+                        $color->photographer = json_encode($request->photographer);
+                    } else {
+                        $color->date_of_editing = $request->date_of_editing;
+                        $color->editor = json_encode($request->editor);
+                    }
+
+                    $color->save();
+                    $finalColorIds[] = $color->id;
+                } else {
+                    $newColor = $color->replicate();
+                    $newColor->status = 'in_progress';
+                    $newColor->type_of_shooting = $request->type_of_shooting;
+                    $newColor->date_of_delivery = $request->date_of_delivery;
+                    $newColor->shooting_method = $request->shooting_method;
+
+                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                        $newColor->location = $request->location;
+                        $newColor->date_of_shooting = $request->date_of_shooting;
+                        $newColor->photographer = json_encode($request->photographer);
+                    } else {
+                        $newColor->date_of_editing = $request->date_of_editing;
+                        $newColor->editor = json_encode($request->editor);
+                    }
+
+                    $newColor->save();
+                    $finalColorIds[] = $newColor->id;
+                }
+            }
+
+            // حفظ السيشن
+            $today = Carbon::now()->format('Y-m-d');
+            $lastRef = ShootingSession::where('reference', 'LIKE', "$today%")->orderBy('reference', 'desc')->first();
+            $newNumber = $lastRef ? str_pad(((int) substr($lastRef->reference, -3)) + 1, 3, '0', STR_PAD_LEFT) : '001';
+            $reference = "$today-$newNumber";
+
+            foreach ($finalColorIds as $colorId) {
+                ShootingSession::create([
+                    'reference' => $reference,
+                    'shooting_product_color_id' => $colorId
+                ]);
+            }
+        });
+
+        return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير اليدوي بنجاح');
+    }
 
 
 

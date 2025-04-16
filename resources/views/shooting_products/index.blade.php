@@ -111,6 +111,11 @@
                             </a>
                         @endif
                     </div>
+                    <div class="m-2">
+                        <a href="{{ route('shooting-products.manual') }}" class="btn btn-dark">
+                            التصوير اليدوي
+                        </a>
+                    </div>                    
                     <div id="startShootingContainer" style="display: none;" class="m-2">
                         <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                             @csrf
