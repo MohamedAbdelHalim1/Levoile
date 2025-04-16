@@ -124,38 +124,74 @@ class ShootingProductController extends Controller
         }
     
         DB::transaction(function () use ($selectedColorIds, $request) {
-            $newColorIds = [];
+            $finalColorIds = [];
     
             foreach ($selectedColorIds as $colorId) {
-                $originalColor = ShootingProductColor::findOrFail($colorId);
+                $color = ShootingProductColor::findOrFail($colorId);
     
-                $newColor = $originalColor->replicate();
-                $newColor->status           = 'in_progress';
-                $newColor->type_of_shooting = $request->type_of_shooting;
-                $newColor->date_of_delivery = $request->date_of_delivery;
-                $newColor->shooting_method  = $request->shooting_method;
+                // Check if it's a clean (first time) record
+                $isFirstTime = is_null($color->status) &&
+                    is_null($color->type_of_shooting) &&
+                    is_null($color->date_of_delivery) &&
+                    is_null($color->shooting_method) &&
+                    is_null($color->location) &&
+                    is_null($color->date_of_shooting) &&
+                    is_null($color->photographer) &&
+                    is_null($color->editor) &&
+                    is_null($color->date_of_editing);
     
-                if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
-                    $newColor->location         = $request->location;
-                    $newColor->date_of_shooting = $request->date_of_shooting;
-                    $newColor->photographer     = json_encode($request->photographer);
-                    $newColor->editor           = null;
-                    $newColor->date_of_editing  = null;
+                if ($isFirstTime) {
+                    // Just update the current one
+                    $color->status            = 'in_progress';
+                    $color->type_of_shooting  = $request->type_of_shooting;
+                    $color->date_of_delivery  = $request->date_of_delivery;
+                    $color->shooting_method   = $request->shooting_method;
+    
+                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                        $color->location         = $request->location;
+                        $color->date_of_shooting = $request->date_of_shooting;
+                        $color->photographer     = json_encode($request->photographer);
+                        $color->editor           = null;
+                        $color->date_of_editing  = null;
+                    } else {
+                        $color->date_of_editing  = $request->date_of_editing;
+                        $color->editor           = json_encode($request->editor);
+                        $color->photographer     = null;
+                        $color->location         = null;
+                        $color->date_of_shooting = null;
+                    }
+    
+                    $color->save();
+                    $finalColorIds[] = $color->id;
                 } else {
-                    $newColor->date_of_editing  = $request->date_of_editing;
-                    $newColor->editor           = json_encode($request->editor);
-                    $newColor->photographer     = null;
-                    $newColor->location         = null;
-                    $newColor->date_of_shooting = null;
+                    // Clone and create new record
+                    $newColor = $color->replicate();
+                    $newColor->status           = 'in_progress';
+                    $newColor->type_of_shooting = $request->type_of_shooting;
+                    $newColor->date_of_delivery = $request->date_of_delivery;
+                    $newColor->shooting_method  = $request->shooting_method;
+    
+                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                        $newColor->location         = $request->location;
+                        $newColor->date_of_shooting = $request->date_of_shooting;
+                        $newColor->photographer     = json_encode($request->photographer);
+                        $newColor->editor           = null;
+                        $newColor->date_of_editing  = null;
+                    } else {
+                        $newColor->date_of_editing  = $request->date_of_editing;
+                        $newColor->editor           = json_encode($request->editor);
+                        $newColor->photographer     = null;
+                        $newColor->location         = null;
+                        $newColor->date_of_shooting = null;
+                    }
+    
+                    $newColor->save();
+                    $finalColorIds[] = $newColor->id;
                 }
-    
-                $newColor->save();
-    
-                $newColorIds[] = $newColor->id;
             }
     
-            // Get the product IDs from the new color records
-            $productIds = ShootingProductColor::whereIn('id', $newColorIds)
+            // Update products status
+            $productIds = ShootingProductColor::whereIn('id', $finalColorIds)
                 ->pluck('shooting_product_id')
                 ->unique()
                 ->toArray();
@@ -197,17 +233,13 @@ class ShootingProductController extends Controller
                 ->orderBy('reference', 'desc')
                 ->first();
     
-            if ($lastReference) {
-                $lastNumber = (int)substr($lastReference->reference, -3);
-                $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-            } else {
-                $newNumber = '001';
-            }
+            $newNumber = $lastReference
+                ? str_pad(((int) substr($lastReference->reference, -3)) + 1, 3, '0', STR_PAD_LEFT)
+                : '001';
     
             $reference = $today . '-' . $newNumber;
     
-            // Create sessions for the new color records
-            foreach ($newColorIds as $colorId) {
+            foreach ($finalColorIds as $colorId) {
                 ShootingSession::create([
                     'reference' => $reference,
                     'shooting_product_color_id' => $colorId,
@@ -217,6 +249,7 @@ class ShootingProductController extends Controller
     
         return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير بنجاح');
     }
+    
     
 
 //     public function multiStartSave(Request $request)
