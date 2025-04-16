@@ -183,15 +183,20 @@
                                     @php
                                         $displayedSessions = [];
                                     @endphp
+
                                     @foreach ($product->shootingProductColors as $color)
                                         @foreach ($color->sessions as $session)
                                             @if (!in_array($session->reference, $displayedSessions))
                                                 @php $displayedSessions[] = $session->reference; @endphp
-                                                <span class="badge bg-dark d-block">{{ $session->reference }}</span>
+                                                <div
+                                                    style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
+                                                    {{ $session->reference }}
+                                                </div>
                                             @endif
                                         @endforeach
                                     @endforeach
                                 </td>
+
 
                                 {{-- باقي الأعمدة داخل box منظم لكل session --}}
                                 @php
@@ -229,8 +234,7 @@
                                                         @if (is_array($photographers))
                                                             <span class="d-block">
                                                                 @foreach ($photographers as $id)
-                                                                    <span
-                                                                        class="badge bg-primary">{{ optional(\App\Models\User::find($id))->name }}</span>
+                                                                    <span>{{ optional(\App\Models\User::find($id))->name }}</span>
                                                                 @endforeach
                                                             </span>
                                                         @else
@@ -247,8 +251,7 @@
                                                         @if (is_array($editors))
                                                             <span class="d-block">
                                                                 @foreach ($editors as $id)
-                                                                    <span
-                                                                        class="badge bg-secondary">{{ optional(\App\Models\User::find($id))->name }}</span>
+                                                                    <span>{{ optional(\App\Models\User::find($id))->name }}</span>
                                                                 @endforeach
                                                             </span>
                                                         @else
@@ -274,12 +277,12 @@
                                                         @else
                                                             <span class="d-block">
                                                                 @if ($remaining > 0)
-                                                                    <span class="badge bg-success">{{ $remaining }} يوم
+                                                                    <span>{{ $remaining }} يوم
                                                                         متبقي</span>
                                                                 @elseif ($remaining == 0)
-                                                                    <span class="badge bg-warning">ينتهي اليوم</span>
+                                                                    <span>ينتهي اليوم</span>
                                                                 @else
-                                                                    <span class="badge bg-danger">متأخر بـ {{ abs($remaining) }}
+                                                                    <span>متأخر بـ {{ abs($remaining) }}
                                                                         يوم</span>
                                                                 @endif
                                                             </span>
