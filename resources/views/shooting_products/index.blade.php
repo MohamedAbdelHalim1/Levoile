@@ -508,41 +508,7 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            // Open Drive Link Modal and Populate Input
-            $(".open-drive-link-modal").on("click", function() {
-                let productId = $(this).data("id");
-                let driveLink = $(this).data("drive-link") || '';
-
-                $("#drive_product_id").val(productId);
-                $("#drive_link_input").val(driveLink);
-                $("#driveLinkModal").modal("show");
-            });
-
-            // Handle Drive Link Submission
-            $("#driveLinkForm").on("submit", function(e) {
-                e.preventDefault();
-
-                let formData = $(this).serialize();
-
-                $.ajax({
-                    url: "{{ route('shooting-products.updateDriveLink') }}",
-                    type: "POST",
-                    data: formData,
-                    success: function(response) {
-                        alert(response.message);
-                        $("#driveLinkModal").modal("hide");
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert("خطأ أثناء حفظ لينك درايف. حاول مرة أخرى!");
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script>
+  
 
     <script>
         $('#checkAll').on('change', function() {
