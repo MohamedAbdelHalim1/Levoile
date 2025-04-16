@@ -215,7 +215,7 @@ Route::middleware('auth')->group(function () {
         ->name('shooting-products.start');
     Route::post('/shooting-sessions/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
         ->name('shooting-sessions.updateDriveLink');
-    Route::get('/shooting-products/manual', [ShootingProductController::class, 'manual'])->name('shooting-products.manual');
+    Route::get('/shooting-product/manual', [ShootingProductController::class, 'manual'])->name('shooting-products.manual');
     Route::post('/shooting-products/manual/save', [ShootingProductController::class, 'manualSave'])->name('shooting-products.manual.save');
     Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
 
