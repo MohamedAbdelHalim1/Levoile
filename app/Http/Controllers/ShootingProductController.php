@@ -202,7 +202,6 @@ class ShootingProductController extends Controller
                 $inProgressColors = $product->shootingProductColors()
                     ->where('status', 'in_progress')->count();
 
-                $product->status = $totalColors == $inProgressColors ? 'in_progress' : 'partial';
 
                 $product->type_of_shooting = $request->type_of_shooting;
                 $product->date_of_delivery = $request->date_of_delivery;
