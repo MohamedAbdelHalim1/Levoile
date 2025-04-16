@@ -213,8 +213,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('shooting-products', ShootingProductController::class);
     Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
         ->name('shooting-products.start');
-    Route::post('/shooting-products/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
-        ->name('shooting-products.updateDriveLink');
+    Route::post('/shooting-sessions/update-drive-link', [ShootingProductController::class, 'updateDriveLink'])
+        ->name('shooting-sessions.updateDriveLink');
+
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
     Route::post('/shooting-gallery/delete', [ShootingProductController::class, 'deleteGallery'])->name('gallery.delete');

@@ -19,6 +19,7 @@
                                 <th>#</th>
                                 <th>جلسة التصوير</th>
                                 <th>عدد الألوان</th>
+                                <th>الحالة</th>
                                 <th>التحكم</th>
                             </tr>
                         </thead>
@@ -34,6 +35,17 @@
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                     <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
                                     <td>
+                                        @if ($session->status === 'completed')
+                                            <span class="badge bg-success">مكتمل</span>
+                                        @else
+                                            <span class="badge bg-warning">جديد</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm open-drive-link-modal"
+                                            data-id="{{ $session->id }}" data-drive-link="{{ $session->drive_link }}">
+                                            إضافة لينك درايف
+                                        </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
                                             عرض المزيد
@@ -47,6 +59,30 @@
                 </div>
 
 
+            </div>
+        </div>
+    </div>
+    <!-- Drive Link Modal -->
+    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة لينك درايف</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="driveLinkForm">
+                        @csrf
+                        <input type="hidden" name="session_id" id="drive_session_id">
+
+                        <div class="mb-3">
+                            <label class="form-label">لينك درايف</label>
+                            <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -72,4 +108,34 @@
     <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
+
+
+    <script>
+        $(".open-drive-link-modal").on("click", function() {
+            let sessionId = $(this).data("id");
+            let driveLink = $(this).data("drive-link") || '';
+
+            $("#drive_session_id").val(sessionId);
+            $("#drive_link_input").val(driveLink);
+            $("#driveLinkModal").modal("show");
+        });
+
+        $("#driveLinkForm").on("submit", function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "{{ route('shooting-sessions.updateDriveLink') }}",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert(response.message);
+                    $("#driveLinkModal").modal("hide");
+                    location.reload();
+                },
+                error: function(xhr) {
+                    alert("حدث خطأ أثناء حفظ لينك درايف");
+                }
+            });
+        });
+    </script>
 @endsection

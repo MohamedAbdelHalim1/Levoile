@@ -133,6 +133,7 @@
                             <th>عدد الألوان</th>
                             <th>عدد السيشنات</th>
                             <th>السيشنات</th>
+                            <th>حاله السيشن</th>
                             <th>نوع التصوير</th>
                             <th>الموقع</th>
                             <th>تاريخ التصوير</th>
@@ -156,22 +157,13 @@
                                 <td>
                                     @if ($product->status == 'new')
                                         <span class="badge bg-warning">جديد</span>
-                                    @elseif($product->status == 'in_progress')
-                                        <span class="badge bg-info">قيد التنفيذ</span>
-                                    @elseif($product->status == 'partial')
-                                        @php
-                                            $totalColors = $product->shootingProductColors->count();
-                                            $inProgressColors = $product->shootingProductColors
-                                                ->where('status', 'in_progress')
-                                                ->count();
-                                        @endphp
-                                        <span class="badge bg-warning">
-                                            تصوير جزئي ({{ $inProgressColors }} / {{ $totalColors }})
-                                        </span>
-                                    @elseif($product->status == 'completed')
+                                    @elseif ($product->status == 'partial')
+                                        <span class="badge bg-warning">تصوير جزئي</span>
+                                    @elseif ($product->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif
                                 </td>
+                                {{-- عدد الألوان --}}                                
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
                                 <td>
@@ -197,6 +189,26 @@
                                     @endforeach
                                 </td>
 
+                                <td>
+                                    @php
+                                        $shownSessionStatuses = [];
+                                    @endphp
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            @if (!in_array($session->reference, $shownSessionStatuses))
+                                                @php $shownSessionStatuses[] = $session->reference; @endphp
+                                                <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
+                                                    @if ($session->status == 'completed')
+                                                        <span>مكتمل</span>
+                                                    @else
+                                                        <span>جديد</span>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </td>
+                                
 
                                 {{-- باقي الأعمدة داخل box منظم لكل session --}}
                                 @php
@@ -307,13 +319,6 @@
 
 
                                 <td>
-
-                                    @if ($product->status == 'in_progress' || $product->status == 'completed')
-                                        <button class="btn btn-success open-drive-link-modal"
-                                            data-id="{{ $product->id }}" data-drive-link="{{ $product->drive_link }}">
-                                            لينك درايف
-                                        </button>
-                                    @endif
                                     @if (($product->status == 'in_progress' || $product->status == 'completed') && auth()->user()->role->name == 'admin')
                                         <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                             class="btn btn-warning">
@@ -343,80 +348,7 @@
                     </tbody>
                 </table>
 
-                {{-- <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>اسم المنتج</th>
-                            <th>عدد الألوان</th>
-                            <th>عدد السيشنات</th>
-                            <th>السيشنات</th>
-                            <th>أماكن التصوير</th>
-                            <th>حالة الألوان</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($shooting_products as $index => $product)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                
-                                <td>{{ $product->name }}</td>
-                
-                                <td>{{ $product->shootingProductColors->count() }}</td>
-                
-                                <td>
-                                    {{ $product->shootingProductColors->flatMap(function($color){
-                                        return $color->shootingSessions ?? collect();  
-                                    })->pluck('reference')->unique()->count() }}
-                                </td>
-                
-                                <td>
-                                    @foreach ($product->shootingProductColors as $color)
-                                        @if ($color->shootingSessions)
-                                            @foreach ($color->shootingSessions as $session)
-                                                <span class="badge bg-dark d-block">{{ $session->reference }}</span>
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                </td>
-                
-                                <td>
-                                    @foreach ($product->shootingProductColors as $color)
-                                        <span class="badge bg-secondary d-block">{{ $color->location ?? '-' }}</span>
-                                    @endforeach
-                                </td>
-                
-                                <td>
-                                    @foreach ($product->shootingProductColors as $color)
-                                        @if ($color->status == 'new')
-                                            <span class="badge bg-warning d-block">جديد</span>
-                                        @elseif ($color->status == 'in_progress')
-                                            <span class="badge bg-info d-block">قيد التنفيذ</span>
-                                        @elseif ($color->status == 'completed')
-                                            <span class="badge bg-success d-block">مكتمل</span>
-                                        @endif
-                                    @endforeach
-                                </td>
-                
-                                <td>
-                                    <a href="{{ route('shooting-products.edit', $product->id) }}" class="btn btn-secondary">تعديل</a>
-                
-                                    <form action="{{ route('shooting-products.destroy', $product->id) }}" method="POST"
-                                        style="display: inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
-                                            حذف
-                                        </button>
-                                    </form>
-                                </td>
-                
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table> --}}
+       
 
 
 
@@ -425,31 +357,7 @@
         </div>
     </div>
 
-    <!-- Drive Link Modal -->
-    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">إضافة لينك درايف</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="driveLinkForm">
-                        @csrf
-                        <input type="hidden" name="product_id" id="drive_product_id">
-
-                        <div class="mb-3">
-                            <label class="form-label">لينك درايف</label>
-                            <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">حفظ</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+ 
 @endsection
 
 @section('scripts')

@@ -9,10 +9,14 @@ class ShootingSession extends Model
     protected $fillable = [
         'reference',
         'shooting_product_color_id',
+        'status',
+        'drive_link',
     ];
 
     public function color()
     {
         return $this->belongsTo(ShootingProductColor::class, 'shooting_product_color_id');
     }
+
+
 }

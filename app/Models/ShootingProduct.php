@@ -24,7 +24,6 @@ class ShootingProduct extends Model
         'date_of_editing',
         'editor', //multiple selection so it will be an array
         'date_of_delivery',
-        'drive_link',
         'main_image',
         'quantity',
         'custom_id',
@@ -40,6 +39,7 @@ class ShootingProduct extends Model
     {
         return $this->hasMany(ShootingGallery::class);
     }
+
 
 
 }
