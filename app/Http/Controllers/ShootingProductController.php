@@ -130,8 +130,7 @@ class ShootingProductController extends Controller
                 $color = ShootingProductColor::findOrFail($colorId);
     
                 // Check if it's a clean (first time) record
-                $isFirstTime = is_null($color->status) &&
-                    is_null($color->type_of_shooting) &&
+                $isFirstTime = is_null($color->type_of_shooting) &&
                     is_null($color->date_of_delivery) &&
                     is_null($color->shooting_method) &&
                     is_null($color->location) &&
