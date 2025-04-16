@@ -143,6 +143,7 @@
                             <th>تاريخ التسليم</th>
                             <th>الوقت المتبقي</th>
                             <th>طريقه التصوير</th>
+                            <th>حاله البيانات</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -316,6 +317,16 @@
                                         @endforeach
                                     </td>
                                 @endforeach
+
+                                @if($product->main_image != null && $product->price != null)
+                                    <td>
+                                        البيانات مكتملة
+                                    </td>
+                                @else
+                                    <td>
+                                        البيانات غير مكتملة
+                                    </td>
+                                @endif
 
 
                                 <td>
