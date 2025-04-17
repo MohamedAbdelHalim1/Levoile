@@ -994,7 +994,7 @@ class ShootingProductController extends Controller
 
                 $delivery->update([
                     'sent_by' => auth()->id(),
-                    'status' => 'تم الاستلام',
+                    'status' => 'تم ألنشر',
                     'sent_records' => count($selectedIndexes),
                 ]);
             });
