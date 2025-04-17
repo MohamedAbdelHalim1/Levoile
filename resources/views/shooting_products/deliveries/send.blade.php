@@ -69,7 +69,11 @@
                                         <td>{{ $primaryId }}</td>
                                         <td>
                                             @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
-                                                {{ $content->status }}
+                                                 @if($content->status === 'new')
+                                                    <span class="badge bg-success">جديد</span>
+                                                @elseif($content->status === 'old')
+                                                    <span class="badge bg-warning">قديم</span>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
