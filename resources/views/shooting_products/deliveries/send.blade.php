@@ -20,6 +20,11 @@
                         <input type="checkbox" id="checkAll"> <label for="checkAll">تحديد الكل</label>
                     </div> --}}
 
+                    <div class="mb-3">
+                        <input type="checkbox" id="checkAllNew"> <label for="checkAllNew">تحديد كل العناصر الجديدة</label>
+                    </div>
+                    
+
                     <div class="table-responsive">
                         <table class="table table-bordered text-center">
                             <thead class="table-light">
@@ -93,18 +98,27 @@
 
 @section('scripts')
     <script>
-        document.getElementById('checkAll').addEventListener('change', function() {
+        // تحديد كل العناصر الجديدة فقط
+        document.getElementById('checkAllNew').addEventListener('change', function () {
             document.querySelectorAll('input[name="selected_rows[]"]').forEach(checkbox => {
-                checkbox.checked = this.checked;
+                checkbox.checked = false;
             });
+
+            if (this.checked) {
+                document.querySelectorAll('input[name="selected_rows[]"]').forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+            }
         });
 
-        document.querySelector('form').addEventListener('submit', function(e) {
+        // تحقق قبل الإرسال
+        document.querySelector('form').addEventListener('submit', function (e) {
             const selected = document.querySelectorAll('input[name="selected_rows[]"]:checked').length;
             if (selected == 0) {
                 e.preventDefault();
-                alert('يجب اختيار منتج واحد على الأقل قبل الارسال');
+                alert('يجب اختيار منتج واحد على الأقل قبل النشر');
             }
         });
     </script>
 @endsection
+
