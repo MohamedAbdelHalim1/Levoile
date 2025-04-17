@@ -115,7 +115,7 @@
                         <a href="{{ route('shooting-products.manual') }}" class="btn btn-dark">
                             التصوير اليدوي
                         </a>
-                    </div>                    
+                    </div>
                     <div id="startShootingContainer" style="display: none;" class="m-2">
                         <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                             @csrf
@@ -169,7 +169,7 @@
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif
                                 </td>
-                                {{-- عدد الألوان --}}                                
+                                {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
                                 <td>
@@ -203,7 +203,8 @@
                                         @foreach ($color->sessions as $session)
                                             @if (!in_array($session->reference, $shownSessionStatuses))
                                                 @php $shownSessionStatuses[] = $session->reference; @endphp
-                                                <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
+                                                <div
+                                                    style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                                     @if ($session->status == 'completed')
                                                         <span>مكتمل</span>
                                                     @else
@@ -214,7 +215,7 @@
                                         @endforeach
                                     @endforeach
                                 </td>
-                                
+
 
                                 {{-- باقي الأعمدة داخل box منظم لكل session --}}
                                 @php
@@ -323,22 +324,24 @@
                                     </td>
                                 @endforeach
 
-                                @if($product->main_image != null && $product->price != null)
-                                    <td>
-                                        البيانات مكتملة
-                                    </td>
+                                @php
+                                    $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
+                                        return !is_null($color->name) && $color->name !== '';
+                                    });
+                                @endphp
+
+                                @if ($product->main_image != null && $product->price != null && $hasAllColorNames)
+                                    <td>البيانات مكتملة</td>
                                 @else
-                                    <td>
-                                        البيانات غير مكتملة
-                                    </td>
+                                    <td>البيانات غير مكتملة</td>
                                 @endif
 
 
                                 <td>
-                                        <a href="{{ route('shooting-products.complete.page', $product->id) }}"
-                                            class="btn btn-warning">
-                                            اكمال البيانات
-                                        </a>
+                                    <a href="{{ route('shooting-products.complete.page', $product->id) }}"
+                                        class="btn btn-warning">
+                                        اكمال البيانات
+                                    </a>
                                     @if (auth()->user()->role->name == 'admin')
                                         <!-- edit btn and delete form -->
                                         <a href="{{ route('shooting-products.edit', $product->id) }}"
@@ -362,7 +365,7 @@
                     </tbody>
                 </table>
 
-       
+
 
 
 
@@ -370,8 +373,6 @@
             </div>
         </div>
     </div>
-
- 
 @endsection
 
 @section('scripts')
@@ -522,7 +523,7 @@
         });
     </script>
 
-  
+
 
     <script>
         $('#checkAll').on('change', function() {
