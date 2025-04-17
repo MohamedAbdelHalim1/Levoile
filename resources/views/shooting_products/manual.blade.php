@@ -16,7 +16,7 @@
 
                     <form id="manualShootingForm" method="POST" action="{{ url('/shooting-product/manual/save') }}">
                         @csrf
-                        <input type="hidden" name="selected_colors[]" id="selectedColorId">
+                        
 
                         <table class="table table-bordered mt-4 d-none" id="selectedColorsTable">
                             <thead>
