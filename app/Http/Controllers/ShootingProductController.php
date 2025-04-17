@@ -798,7 +798,7 @@ class ShootingProductController extends Controller
             $delivery = ShootingDelivery::create([
                 'filename' => $filename,
                 'user_id' => auth()->id(),
-                'status' => 'تم الارسال',
+                'status' => 'تم ألرفع',
                 'total_records' => $totalRecords,
                 'sent_records' => 0,
             ]);

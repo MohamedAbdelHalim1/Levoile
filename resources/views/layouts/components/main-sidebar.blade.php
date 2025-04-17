@@ -224,10 +224,10 @@
                                             </li>
                                             <li>
                                                 <a href="{{ route('shooting-deliveries.index') }}"
-                                                    class="slide-item">تسليمات التصوير</a>
+                                                    class="slide-item">المنتجات الجديده</a>
                                             </li>
                                             <li><a href="{{ route('shooting-products.index') }}"
-                                                    class="slide-item">التصوير</a></li>
+                                                    class="slide-item">منتجات التصوير</a></li>
                                             <li><a href="{{ route('shooting-sessions.index') }}"
                                                     class="slide-item">جلسات التصوير</a></li>
 
