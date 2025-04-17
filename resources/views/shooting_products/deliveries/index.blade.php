@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{ $delivery->created_at->format('Y-m-d') }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                    <span class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
                                 <td>{{ $delivery->total_records }}</td>
                                 <td>{{ $delivery->new_records ?? 0 }}</td>
@@ -41,7 +41,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    @if ($delivery->status == 'تم الاستلام')
+                                    @if ($delivery->status == 'تم ألنشر')
                                         <a href="{{ route('shooting-deliveries.show', $delivery->id) }}" class="btn btn-info btn-sm">عرض</a>
                                     @else
                                         <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">نشر</a>

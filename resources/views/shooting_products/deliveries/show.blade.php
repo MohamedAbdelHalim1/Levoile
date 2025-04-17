@@ -27,9 +27,9 @@
                                 <td>{{ $content->primary_id }}</td>
                                 <td>
                                     @if($content->is_received == 1)
-                                        <span class="badge bg-success">تم الارسال</span>
+                                        <span class="badge bg-success">تم النشر</span>
                                     @else
-                                        <span class="badge bg-danger">لم يتم الارسال</span>
+                                        <span class="badge bg-danger">لم يتم النشر</span>
                                     @endif
                                 </td>
                             </tr>
