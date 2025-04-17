@@ -25,10 +25,11 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>اختيار</th>
-                                    <th>Item No</th>
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>PrimaryId</th>
+                                    <th>الكود</th>
+                                    <th>الوصف</th>
+                                    <th>الكمية</th>
+                                    <th>الرقم الاساسي</th>
+                                    <th>الحاله</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,6 +67,11 @@
                                         <td>{{ $description }}</td>
                                         <td>{{ $quantity }}</td>
                                         <td>{{ $primaryId }}</td>
+                                        <td>
+                                            @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
+                                                {{ $content->status }}
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
