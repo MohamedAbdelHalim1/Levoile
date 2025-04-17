@@ -26,7 +26,7 @@
                     <tbody>
                         @foreach ($deliveries as $delivery)
                             <tr>
-                                <td>{{ $delivery->created_at->format('Y-m-d') }}</td>
+                                <td>{{ $delivery->created_at->format('Y-m-d H:i') }}</td>
                                 <td>
                                     <span class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
