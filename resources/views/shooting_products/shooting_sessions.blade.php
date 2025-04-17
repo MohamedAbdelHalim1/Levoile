@@ -20,6 +20,13 @@
                                 <th>جلسة التصوير</th>
                                 <th>عدد الألوان</th>
                                 <th>الحالة</th>
+                                <th>نوع التصوير</th>
+                                <th>مكان التصوير</th>
+                                <th>المصور</th>
+                                <th>المحرر</th>
+                                <th>تاريخ التصوير</th>
+                                <th>تاريخ التسليم</th>
+                                <th>الوقت المتبقي</th>
                                 <th>الدرايف</th>
                                 <th>التحكم</th>
                             </tr>
@@ -50,6 +57,85 @@
                                             <span class="badge bg-warning">جديد</span>
                                         @endif
                                     </td>
+
+                                    <td>
+                                        {{ $colors->first()->color->type_of_shooting ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $colors->first()->color->location ?? '-' }}
+                                    </td>
+
+                                    {{-- المصور --}}
+                                    <td>
+                                        @php
+                                            $firstColor = $colors->first()?->color;
+                                            $photographers = json_decode($firstColor?->photographer, true);
+                                        @endphp
+
+                                        @if (is_array($photographers) && count($photographers))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach ($photographers as $id)
+                                                    <li>{{ optional(\App\Models\User::find($id))->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+
+                                    {{-- المحرر --}}
+                                    <td>
+                                        @php
+                                            $editors = json_decode($firstColor?->editor, true);
+                                        @endphp
+
+                                        @if (is_array($editors) && count($editors))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach ($editors as $id)
+                                                    <li>{{ optional(\App\Models\User::find($id))->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        {{ $colors->first()->color->date_of_shooting ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $colors->first()->color->date_of_editing ?? '-' }}
+                                    </td>
+
+                                    {{-- الوقت المتبقي --}}
+                                    <td>
+                                        @php
+                                            $deliveryDate = $colors->first()?->color->date_of_delivery;
+                                            $remaining = $deliveryDate
+                                                ? \Carbon\Carbon::now()->diffInDays(
+                                                    \Carbon\Carbon::parse($deliveryDate),
+                                                    false,
+                                                )
+                                                : null;
+                                        @endphp
+
+                                        @if (is_null($deliveryDate))
+                                            <span>-</span>
+                                        @else
+                                            @if ($remaining > 0)
+                                                <span class="badge bg-primary">{{ $remaining }} يوم متبقي</span>
+                                            @elseif ($remaining == 0)
+                                                <span class="badge bg-warning">ينتهي اليوم</span>
+                                            @else
+                                                <span class="badge bg-danger">متأخر بـ {{ abs($remaining) }} يوم</span>
+                                            @endif
+                                        @endif
+                                    </td>
+
+
+
 
                                     @php
                                         $firstLink = $groupedSessions->firstWhere('drive_link', '!=', null)

@@ -41,8 +41,8 @@
                                     </a>
                                 </td>
                                 <td>
-                                    @if ($delivery->status == 'تم ألنشر')
-                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}" class="btn btn-info btn-sm">عرض</a>
+                                    @if ($delivery->new_records == 0 || $delivery->status == 'تم ألنشر')
+                                    <a href="{{ route('shooting-deliveries.show', $delivery->id) }}" class="btn btn-info btn-sm">عرض</a>
                                     @else
                                         <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">نشر</a>
                                     @endif
