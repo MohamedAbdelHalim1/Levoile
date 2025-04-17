@@ -14,6 +14,7 @@ class ShootingDeliveryContent extends Model
         'unit',
         'primary_id',
         'is_received',
+        'status',
     ];
 
     public function delivery()

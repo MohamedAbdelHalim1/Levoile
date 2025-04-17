@@ -14,10 +14,11 @@
                         <tr>
                             <th>تاريخ الرفع</th>
                             <th>الحالة</th>
-                            <th>عدد الموديلات المرسله</th>
-                            <th>عدد الموديلات المستلمه</th>
-                            <th>اسم المرسل</th>
-                            <th>اسم المستلم</th>
+                            <th>عدد الموديلات</th>
+                            <th>عدد الموديلات الجديده</th>
+                            <th>عدد الموديلات القديمه</th>
+                            <th>اسم الرافع</th>
+                            <th>اسم الناشر</th>
                             <th>تحميل</th>
                             <th>الإجراءات</th>
                         </tr>
@@ -25,31 +26,31 @@
                     <tbody>
                         @foreach ($deliveries as $delivery)
                             <tr>
-                                <td>{{ $delivery->created_at }}</td>
+                                <td>{{ $delivery->created_at->format('Y-m-d') }}</td>
                                 <td>
-                                    <span
-                                        class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                    <span class="badge bg-{{ $delivery->status == 'تم الاستلام' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
                                 <td>{{ $delivery->total_records }}</td>
-                                <td>{{ $delivery->sent_records ?? 0 }}</td>
+                                <td>{{ $delivery->new_records ?? 0 }}</td>
+                                <td>{{ $delivery->old_records ?? 0 }}</td>
                                 <td>{{ $delivery->user->name }}</td>
-                                <td>{{ $delivery->sender ? $delivery->sender->name : '' }}</td>
+                                <td>{{ optional($delivery->sender)->name }}</td>
                                 <td>
-                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
-                                        download><i class="fa fa-download"></i></a>
+                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info" download>
+                                        <i class="fa fa-download"></i>
+                                    </a>
                                 </td>
                                 <td>
                                     @if ($delivery->status == 'تم الاستلام')
-                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
-                                            class="btn btn-info btn-sm">عرض</a>
+                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}" class="btn btn-info btn-sm">عرض</a>
                                     @else
-                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                            class="btn btn-warning btn-sm">استلام</a>
+                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">نشر</a>
                                     @endif
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
+                    
                 </table>
             </div>
         </div>

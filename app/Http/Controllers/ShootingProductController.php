@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ShootingSession;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+
 
 
 
@@ -707,16 +709,74 @@ class ShootingProductController extends Controller
     }
 
 
+    // public function deliveryIndex()
+    // {
+    //     $deliveries = ShootingDelivery::latest()->get();
+    //     return view('shooting_products.deliveries.index', compact('deliveries'));
+    // }
+
     public function deliveryIndex()
     {
         $deliveries = ShootingDelivery::latest()->get();
+
+        foreach ($deliveries as $delivery) {
+            $contents = $delivery->hasMany(ShootingDeliveryContent::class)->get();
+
+            $delivery->new_records = $contents->where('status', 'new')->count();
+            $delivery->old_records = $contents->where('status', 'old')->count();
+        }
+
         return view('shooting_products.deliveries.index', compact('deliveries'));
     }
+
 
     public function deliveryUploadForm()
     {
         return view('shooting_products.deliveries.upload');
     }
+
+    // public function deliveryUpload(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'file' => 'required|file|mimes:xlsx,xls',
+    //         ]);
+
+    //         $file = $request->file('file');
+    //         $filename = time() . '_' . $file->getClientOriginalName();
+    //         $file->move(public_path('excel'), $filename);
+
+    //         $filePath = public_path('excel/' . $filename);
+    //         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+    //         $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+    //         $totalRecords = count($rows) - 1; // عشان اول صف titles
+
+    //         $delivery = ShootingDelivery::create([
+    //             'filename' => $filename,
+    //             'user_id' => auth()->id(),
+    //             'status' => 'تم الارسال',
+    //             'total_records' => $totalRecords,
+    //             'sent_records' => 0,
+    //         ]);
+
+    //         foreach (array_slice($rows, 1) as $row) {
+    //             ShootingDeliveryContent::create([
+    //                 'shooting_delivery_id' => $delivery->id,
+    //                 'item_no' => $row['A'],
+    //                 'description' => $row['B'],
+    //                 'quantity' => $row['C'],
+    //                 'unit' => $row['D'],
+    //                 'primary_id' => substr($row['A'], 3, 6),
+    //                 'is_received' => 0,
+    //             ]);
+    //         }
+
+    //         return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
+    //     }
+    // }
 
     public function deliveryUpload(Request $request)
     {
@@ -733,7 +793,7 @@ class ShootingProductController extends Controller
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
             $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-            $totalRecords = count($rows) - 1; // عشان اول صف titles
+            $totalRecords = count($rows) - 1;
 
             $delivery = ShootingDelivery::create([
                 'filename' => $filename,
@@ -743,15 +803,21 @@ class ShootingProductController extends Controller
                 'sent_records' => 0,
             ]);
 
+            $existingItemNos = ShootingDeliveryContent::select('item_no')->distinct()->pluck('item_no')->flip();
+
             foreach (array_slice($rows, 1) as $row) {
+                $itemNo = $row['A'];
+                $status = isset($existingItemNos[$itemNo]) ? 'old' : 'new';
+
                 ShootingDeliveryContent::create([
                     'shooting_delivery_id' => $delivery->id,
-                    'item_no' => $row['A'],
+                    'item_no' => $itemNo,
                     'description' => $row['B'],
                     'quantity' => $row['C'],
                     'unit' => $row['D'],
-                    'primary_id' => substr($row['A'], 3, 6),
+                    'primary_id' => substr($itemNo, 3, 6),
                     'is_received' => 0,
+                    'status' => $status,
                 ]);
             }
 
@@ -760,6 +826,7 @@ class ShootingProductController extends Controller
             return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
         }
     }
+
 
 
     public function showDelivery($id)
@@ -779,13 +846,76 @@ class ShootingProductController extends Controller
         return view('shooting_products.deliveries.send', compact('rows', 'delivery'));
     }
 
+    // public function sendSave(Request $request, $id)
+    // {
+    //     try {
+    //         $selectedIndexes = $request->input('selected_rows', []);
+
+    //         if (empty($selectedIndexes)) {
+    //             return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
+    //         }
+
+    //         DB::transaction(function () use ($selectedIndexes, $request, $id) {
+    //             $delivery = ShootingDelivery::findOrFail($id);
+    //             $rows = $request->input('rows', []);
+    //             $grouped = [];
+
+    //             foreach ($selectedIndexes as $index) {
+    //                 $row = $rows[$index];
+    //                 $itemNo = $row['item_no'];
+    //                 $description = $row['description'];
+    //                 $quantity = $row['quantity'];
+    //                 $primaryId = substr($itemNo, 3, 6);
+
+    //                 $grouped[$primaryId][] = [
+    //                     'item_no' => $itemNo,
+    //                     'description' => $description,
+    //                     'quantity' => $quantity,
+    //                 ];
+    //             }
+
+    //             foreach ($grouped as $primaryId => $items) {
+    //                 $product = ShootingProduct::create([
+    //                     'custom_id' => $primaryId,
+    //                     'name' => $items[0]['description'],
+    //                     'number_of_colors' => count($items),
+    //                     'quantity' => $items[0]['quantity'],
+    //                     'status' => 'new',
+    //                 ]);
+
+    //                 foreach ($items as $color) {
+    //                     ShootingProductColor::create([
+    //                         'shooting_product_id' => $product->id,
+    //                         'code' => $color['item_no'],
+    //                     ]);
+
+    //                     // update delivery content
+    //                     ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+    //                         ->where('item_no', $color['item_no'])
+    //                         ->update(['is_received' => 1]);
+    //                 }
+    //             }
+
+    //             $delivery->update([
+    //                 'sent_by' => auth()->id(),
+    //                 'status' => 'تم الاستلام',
+    //                 'sent_records' => count($selectedIndexes),
+    //             ]);
+    //         });
+
+    //         return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
+    //     }
+    // }
+
     public function sendSave(Request $request, $id)
     {
         try {
             $selectedIndexes = $request->input('selected_rows', []);
 
             if (empty($selectedIndexes)) {
-                return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
+                return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل النشر');
             }
 
             DB::transaction(function () use ($selectedIndexes, $request, $id) {
@@ -808,24 +938,57 @@ class ShootingProductController extends Controller
                 }
 
                 foreach ($grouped as $primaryId => $items) {
-                    $product = ShootingProduct::create([
-                        'custom_id' => $primaryId,
-                        'name' => $items[0]['description'],
-                        'number_of_colors' => count($items),
-                        'quantity' => $items[0]['quantity'],
-                        'status' => 'new',
-                    ]);
+                    $firstItem = $items[0];
+                    $description = $firstItem['description'];
 
-                    foreach ($items as $color) {
-                        ShootingProductColor::create([
-                            'shooting_product_id' => $product->id,
-                            'code' => $color['item_no'],
+                    // هل المنتج ده موجود بنفس الـ primaryId؟
+                    $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
+
+                    if (
+                        $existingProduct &&
+                        Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))
+                    ) {
+                        // المنتج موجود بنفس الاسم → ضيف الألوان الجديدة بس
+                        foreach ($items as $color) {
+                            $existingColor = ShootingProductColor::where('code', $color['item_no'])->first();
+
+                            if (!$existingColor) {
+                                ShootingProductColor::create([
+                                    'shooting_product_id' => $existingProduct->id,
+                                    'code' => $color['item_no'],
+                                ]);
+                            }
+
+                            // update delivery content status
+                            ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                                ->where('item_no', $color['item_no'])
+                                ->update(['is_received' => 1]);
+                        }
+
+                        // تحديث عدد الألوان
+                        $existingProduct->number_of_colors = $existingProduct->shootingProductColors()->count();
+                        $existingProduct->save();
+                    } else {
+                        // منتج جديد
+                        $product = ShootingProduct::create([
+                            'custom_id' => $primaryId,
+                            'name' => $description,
+                            'number_of_colors' => count($items),
+                            'quantity' => $firstItem['quantity'],
+                            'status' => 'new',
                         ]);
 
-                        // update delivery content
-                        ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                            ->where('item_no', $color['item_no'])
-                            ->update(['is_received' => 1]);
+                        foreach ($items as $color) {
+                            ShootingProductColor::create([
+                                'shooting_product_id' => $product->id,
+                                'code' => $color['item_no'],
+                            ]);
+
+                            // update delivery content status
+                            ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                                ->where('item_no', $color['item_no'])
+                                ->update(['is_received' => 1]);
+                        }
                     }
                 }
 
@@ -836,11 +999,12 @@ class ShootingProductController extends Controller
                 ]);
             });
 
-            return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
+            return redirect()->route('shooting-deliveries.index')->with('success', 'تم نشر البيانات الجديدة بنجاح');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'حصل خطأ أثناء النشر: ' . $e->getMessage());
         }
     }
+
 
 
 
