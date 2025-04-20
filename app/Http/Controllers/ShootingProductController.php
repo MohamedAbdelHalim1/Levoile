@@ -288,16 +288,12 @@ class ShootingProductController extends Controller
             if ($sessions->count()) {
                 $product = $sessions->first()->color->shootingProduct;
 
-                // نجمع كل السيشنات اللي تبع المنتج ده (مش بس السيشنات دي)
-                $allProductSessions = \App\Models\ShootingSession::whereHas('color', function ($q) use ($product) {
-                    $q->where('shooting_product_id', $product->id);
-                })->get();
+                // ✅ تعديل منطقي يعتمد على حالة الألوان نفسها مش السيشنات
+                $colorStatuses = $product->shootingProductColors->pluck('status');
 
-                $statuses = $allProductSessions->pluck('status');
-
-                if ($statuses->every(fn($s) => $s === 'completed')) {
+                if ($colorStatuses->every(fn($s) => $s === 'completed')) {
                     $product->status = 'completed';
-                } elseif ($statuses->contains('completed')) {
+                } elseif ($colorStatuses->contains('completed')) {
                     $product->status = 'partial';
                 } else {
                     $product->status = 'new';
