@@ -279,6 +279,9 @@ class ShootingProductController extends Controller
                 $session->drive_link = $request->drive_link;
                 $session->status = 'completed';
                 $session->save();
+                // ✅ تحديث حالة اللون المرتبط بالسيشن
+                $session->color->status = 'completed';
+                $session->color->save();
             }
 
             // لو فيه سيشنات فعلاً، نحدث حالة المنتج
