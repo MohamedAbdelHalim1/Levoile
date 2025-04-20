@@ -28,6 +28,7 @@ class ShootingProduct extends Model
         'quantity',
         'custom_id',
         'shooting_method',
+        'is_reviewed',
     ];
 
     public function shootingProductColors()

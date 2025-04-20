@@ -149,6 +149,7 @@
                             <th>الوقت المتبقي</th>
                             <th>طريقه التصوير</th>
                             <th>حاله البيانات</th>
+                            <th>المراجعة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -336,6 +337,12 @@
                                     <td>البيانات غير مكتملة</td>
                                 @endif
 
+
+                                <td>
+                                    <input type="checkbox" class="form-check-input review-toggle"
+                                        data-id="{{ $product->id }}"
+                                        {{ $product->is_reviewed ? 'checked disabled' : '' }}>
+                                </td>
 
                                 <td>
                                     <a href="{{ route('shooting-products.complete.page', $product->id) }}"
@@ -549,5 +556,39 @@
             });
             $('#selectedProducts').val(selectedProducts.join(','));
         }
+    </script>
+
+    <script>
+        $(document).on('change', '.review-toggle', function() {
+            const checkbox = $(this);
+            const productId = checkbox.data('id');
+
+            if (!confirm('هل أنت متأكد من مراجعة هذا المنتج؟')) {
+                checkbox.prop('checked', false);
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('shooting-products.review') }}",
+                method: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: productId,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        checkbox.prop('checked', true).attr('disabled', true);
+                        alert('تم مراجعة المنتج وإرساله لموقع الادمن بنجاح');
+                    } else {
+                        alert('فشل في تنفيذ المراجعة');
+                        checkbox.prop('checked', false);
+                    }
+                },
+                error: function() {
+                    alert('حدث خطأ أثناء التنفيذ');
+                    checkbox.prop('checked', false);
+                }
+            });
+        });
     </script>
 @endsection

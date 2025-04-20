@@ -305,14 +305,7 @@ class ShootingProductController extends Controller
 
                 $product->save();
 
-                // تحديث الموقع لو مطلوب
-                WebsiteAdminProduct::updateOrCreate(
-                    ['shooting_product_id' => $product->id],
-                    [
-                        'name' => $product->name,
-                        'status' => 'new' // هنا بتسجله جديد عند الأدمين دايمًا
-                    ]
-                );
+                
             }
 
 
@@ -661,6 +654,23 @@ class ShootingProductController extends Controller
         }
 
         $gallery->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markReviewed(Request $request)
+    {
+        $request->validate(['id' => 'required|exists:shooting_products,id']);
+
+        $product = ShootingProduct::findOrFail($request->id);
+        $product->is_reviewed = 1;
+        $product->save();
+
+        // ✅ أضفه لموقع الادمن
+        WebsiteAdminProduct::updateOrCreate(
+            ['shooting_product_id' => $product->id],
+            ['name' => $product->name, 'status' => 'new']
+        );
 
         return response()->json(['success' => true]);
     }

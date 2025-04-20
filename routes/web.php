@@ -238,6 +238,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/shooting-sessions', [ShootingProductController::class, 'shootingSessions'])->name('shooting-sessions.index');
     Route::get('/shooting-sessions/{reference}', [ShootingProductController::class, 'showShootingSession'])->name('shooting-sessions.show');
+    Route::post('/shooting-products/review', [ShootingProductController::class, 'markReviewed'])->name('shooting-products.review');
 
 
 
