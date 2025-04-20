@@ -344,10 +344,10 @@
                                     </a>
                                     @if (auth()->user()->role->name == 'admin')
                                         <!-- edit btn and delete form -->
-                                        <a href="{{ route('shooting-products.edit', $product->id) }}"
+                                        {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
                                             class="btn btn-secondary">
                                             تعديل
-                                        </a>
+                                        </a> --}}
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
                                             method="POST" style="display: inline-block">
                                             @csrf

@@ -497,23 +497,78 @@ class ShootingProductController extends Controller
         return view('shooting_products.complete', compact('product', 'colors'));
     }
 
+    // public function saveCompleteData(Request $request, $id)
+    // {
+    //     $product = ShootingProduct::findOrFail($id);
+    //     $product->update([
+    //         'name' => $request->input('name'),
+    //         'description' => $request->input('description'),
+    //         'price' => $request->input('price'),
+    //     ]);
+
+    //     foreach ($request->colors as $color) {
+    //         $data = [
+    //             'shooting_product_id' => $product->id,
+    //             'name' => $color['name'] ?? null,
+    //             'code' => $color['code'] ?? null,
+    //         ];
+
+    //         // Handle image upload
+    //         if (isset($color['image']) && $color['image']) {
+    //             $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
+    //             $color['image']->move(public_path('images/shooting'), $imageName);
+    //             $data['image'] = 'images/shooting/' . $imageName;
+    //         }
+
+    //         ShootingProductColor::updateOrCreate(
+    //             ['id' => $color['id'] ?? null],
+    //             $data
+    //         );
+    //     }
+
+    //     return redirect()->route('shooting-products.complete.page', $id)->with('success', 'تم حفظ بيانات المنتج بنجاح');
+    // }
+
     public function saveCompleteData(Request $request, $id)
     {
         $product = ShootingProduct::findOrFail($id);
+
+        // ✅ تحديث الحقول الأساسية
         $product->update([
-            'name' => $request->input('name'),
+            'name'        => $request->input('name'),
             'description' => $request->input('description'),
-            'price' => $request->input('price'),
+            'price'       => $request->input('price'),
         ]);
 
+        // ✅ رفع الصورة الرئيسية إن وُجدت
+        if ($request->hasFile('main_image')) {
+            $imageName = time() . '_main.' . $request->main_image->extension();
+            $request->main_image->move(public_path('images/shooting'), $imageName);
+            $product->main_image = $imageName;
+            $product->save();
+        }
+
+        // ✅ رفع صور المعرض (الجاليري) إن وُجدت
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $imgName = uniqid() . '.' . $image->extension();
+                $image->move(public_path('images/shooting'), $imgName);
+
+                $product->gallery()->create([
+                    'image' => $imgName,
+                ]);
+            }
+        }
+
+        // ✅ تحديث أو إنشاء الألوان المرتبطة
         foreach ($request->colors as $color) {
             $data = [
                 'shooting_product_id' => $product->id,
-                'name' => $color['name'] ?? null,
-                'code' => $color['code'] ?? null,
+                'name'                => $color['name'] ?? null,
+                'code'                => $color['code'] ?? null,
             ];
 
-            // Handle image upload
+            // ✅ حفظ صورة اللون لو موجودة
             if (isset($color['image']) && $color['image']) {
                 $imageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
                 $color['image']->move(public_path('images/shooting'), $imageName);
@@ -526,7 +581,9 @@ class ShootingProductController extends Controller
             );
         }
 
-        return redirect()->route('shooting-products.complete.page', $id)->with('success', 'تم حفظ بيانات المنتج بنجاح');
+        return redirect()
+            ->route('shooting-products.complete.page', $id)
+            ->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
 
 
