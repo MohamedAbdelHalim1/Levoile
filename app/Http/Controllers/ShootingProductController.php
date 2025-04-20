@@ -200,10 +200,18 @@ class ShootingProductController extends Controller
             foreach ($productIds as $productId) {
                 $product = ShootingProduct::findOrFail($productId);
 
-                $totalColors = $product->shootingProductColors()->count();
-                $inProgressColors = $product->shootingProductColors()
-                    ->where('status', 'in_progress')->count();
-                $product->status = $totalColors == $inProgressColors ? 'in_progress' : 'partial';
+                $colors = $product->shootingProductColors;
+                $total = $colors->count();
+                $completed = $colors->where('status', 'completed')->count();
+                $new = $colors->where('status', 'new')->count();
+
+                if ($completed === $total) {
+                    $product->status = 'completed';
+                } elseif ($new === $total) {
+                    $product->status = 'new';
+                } else {
+                    $product->status = 'partial';
+                }
 
 
                 $product->type_of_shooting = $request->type_of_shooting;
@@ -410,6 +418,17 @@ class ShootingProductController extends Controller
                     'shooting_product_color_id' => $colorId
                 ]);
             }
+            // ✅ تحديث حالة المنتجات بناءً على حالة الألوان
+            $productIds = ShootingProductColor::whereIn('id', $finalColorIds)
+                ->pluck('shooting_product_id')
+                ->unique();
+
+            foreach ($productIds as $productId) {
+                $product = ShootingProduct::find($productId);
+                if ($product) {
+                    $product->refreshStatusBasedOnColors();
+                }
+            }
         });
 
         return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير اليدوي بنجاح');
@@ -539,6 +558,7 @@ class ShootingProductController extends Controller
             }
 
             $product->update($data);
+            $product->refreshStatusBasedOnColors();
 
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $image) {
@@ -968,6 +988,7 @@ class ShootingProductController extends Controller
                         // تحديث عدد الألوان
                         $existingProduct->number_of_colors = $existingProduct->shootingProductColors()->count();
                         $existingProduct->save();
+                        $existingProduct->refreshStatusBasedOnColors();
                     } else {
                         // منتج جديد
                         $product = ShootingProduct::create([

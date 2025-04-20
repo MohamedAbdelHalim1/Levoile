@@ -28,6 +28,7 @@
                                 <th>تاريخ التسليم</th>
                                 <th>الوقت المتبقي</th>
                                 <th>الدرايف</th>
+                                <th>لينك طريقه التصوير</th>
                                 <th>التحكم</th>
                             </tr>
                         </thead>
@@ -151,6 +152,22 @@
                                             -
                                         @endif
                                     </td>
+
+                                    <td>
+                                        @php
+                                            $shootingMethod = $colors->first()?->color?->shooting_method ?? null;
+                                        @endphp
+                                    
+                                        @if (!empty($shootingMethod))
+                                            <a href="{{ $shootingMethod }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                                <i class="fa fa-link"></i>
+                                            </a>
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+                                    
+                                    
 
                                     <td>
                                         <button class="btn btn-success btn-sm open-drive-link-modal"

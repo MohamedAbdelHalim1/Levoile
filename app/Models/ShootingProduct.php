@@ -40,6 +40,18 @@ class ShootingProduct extends Model
         return $this->hasMany(ShootingGallery::class);
     }
 
+    public function refreshStatusBasedOnColors()
+    {
+        $statuses = $this->shootingProductColors()->pluck('status');
 
+        if ($statuses->every(fn($status) => $status === 'completed')) {
+            $this->status = 'completed';
+        } elseif ($statuses->every(fn($status) => $status === 'new')) {
+            $this->status = 'new';
+        } else {
+            $this->status = 'partial';
+        }
 
+        $this->save();
+    }
 }
