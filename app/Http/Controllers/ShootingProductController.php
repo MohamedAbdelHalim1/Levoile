@@ -284,9 +284,13 @@ class ShootingProductController extends Controller
                 $session->color->save();
             }
 
-            // لو فيه سيشنات فعلاً، نحدث حالة المنتج
-            if ($sessions->count()) {
-                $product = $sessions->first()->color->shootingProduct;
+            // ✅ جيب كل المنتجات المرتبطة بالسيشنات
+            $productIds = $sessions->pluck('color.shootingProduct.id')->unique();
+
+            foreach ($productIds as $productId) {
+                $product = \App\Models\ShootingProduct::find($productId);
+
+                if (!$product) continue;
 
                 // ✅ تعديل منطقي يعتمد على حالة الألوان نفسها مش السيشنات
                 $colorStatuses = $product->shootingProductColors->pluck('status');
@@ -310,6 +314,7 @@ class ShootingProductController extends Controller
                     ]
                 );
             }
+
 
             DB::commit();
 
