@@ -998,30 +998,39 @@ class ShootingProductController extends Controller
     
                     if ($existingProduct) {
                         if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
-                            // موجود بنفس الاسم
+                            // المنتج موجود بنفس الاسم
                             foreach ($items as $color) {
-                                $existingColor = ShootingProductColor::where('code', $color['item_no'])->first();
+                                $itemNo = $color['item_no'];
+                                $colorCode = substr($itemNo, -5, 3);
+                                $sizeCode = substr($itemNo, -2);
+                                $sizeName = self::getSizeName($sizeCode); // <-- هنجيب اسم المقاس من هنا
+    
+                                $existingColor = ShootingProductColor::where('code', $itemNo)->first();
     
                                 if (!$existingColor) {
                                     ShootingProductColor::create([
                                         'shooting_product_id' => $existingProduct->id,
-                                        'code' => $color['item_no'],
+                                        'code' => $itemNo,
+                                        'color_code' => $colorCode,
+                                        'size_code' => $sizeCode,
+                                        'size_name' => $sizeName,
                                     ]);
                                 }
     
                                 ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                                    ->where('item_no', $color['item_no'])
+                                    ->where('item_no', $itemNo)
                                     ->update([
                                         'is_received' => 1,
                                         'status' => 'old',
                                     ]);
                             }
     
-                            $existingProduct->number_of_colors = $existingProduct->shootingProductColors()->count();
+                            $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
+                                ->pluck('color_code')->unique()->count();
                             $existingProduct->save();
                             $existingProduct->refreshStatusBasedOnColors();
                         } else {
-                            // الاسم مختلف → skip وخلي حالته old بس
+                            // نفس الرقم لكن باسم مختلف → تجاهل وأعلِم إنه قديم
                             foreach ($items as $color) {
                                 ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                                     ->where('item_no', $color['item_no'])
@@ -1034,22 +1043,34 @@ class ShootingProductController extends Controller
                         }
                     } else {
                         // منتج جديد
+                        $uniqueColors = collect($items)->map(function ($item) {
+                            return substr($item['item_no'], -5, 3);
+                        })->unique();
+    
                         $product = ShootingProduct::create([
                             'custom_id' => $primaryId,
                             'name' => $description,
-                            'number_of_colors' => count($items),
+                            'number_of_colors' => $uniqueColors->count(),
                             'quantity' => $firstItem['quantity'],
                             'status' => 'new',
                         ]);
     
                         foreach ($items as $color) {
+                            $itemNo = $color['item_no'];
+                            $colorCode = substr($itemNo, -5, 3);
+                            $sizeCode = substr($itemNo, -2);
+                            $sizeName = self::getSizeName($sizeCode);
+    
                             ShootingProductColor::create([
                                 'shooting_product_id' => $product->id,
-                                'code' => $color['item_no'],
+                                'code' => $itemNo,
+                                'color_code' => $colorCode,
+                                'size_code' => $sizeCode,
+                                'size_name' => $sizeName,
                             ]);
     
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                                ->where('item_no', $color['item_no'])
+                                ->where('item_no', $itemNo)
                                 ->update([
                                     'is_received' => 1,
                                     'status' => 'old',
@@ -1071,6 +1092,7 @@ class ShootingProductController extends Controller
         }
     }
     
+
 
 
 
