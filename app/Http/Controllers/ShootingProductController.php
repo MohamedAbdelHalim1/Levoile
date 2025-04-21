@@ -954,64 +954,72 @@ class ShootingProductController extends Controller
     }
 
 
-
     public function sendSave(Request $request, $id)
     {
         try {
             $selectedIndexes = $request->input('selected_rows', []);
-
+    
             if (empty($selectedIndexes)) {
                 return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل النشر');
             }
-
+    
             DB::transaction(function () use ($selectedIndexes, $request, $id) {
                 $delivery = ShootingDelivery::findOrFail($id);
                 $rows = $request->input('rows', []);
+    
                 $grouped = [];
-
+                $addedCodes = []; // لتجنب التكرار
+    
                 foreach ($selectedIndexes as $index) {
                     $row = $rows[$index];
                     $itemNo = $row['item_no'];
+    
+                    // تجاهل أي كود مكرر في نفس الشيت
+                    if (isset($addedCodes[$itemNo])) {
+                        continue;
+                    }
+                    $addedCodes[$itemNo] = true;
+    
                     $description = $row['description'];
                     $quantity = $row['quantity'];
                     $primaryId = substr($itemNo, 3, 6);
-
+    
                     $grouped[$primaryId][] = [
                         'item_no' => $itemNo,
                         'description' => $description,
                         'quantity' => $quantity,
                     ];
                 }
-
+    
                 foreach ($grouped as $primaryId => $items) {
                     $firstItem = $items[0];
                     $description = $firstItem['description'];
-
-                    // هل المنتج ده موجود بنفس الـ primaryId؟
+    
                     $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
-
+    
                     if (
                         $existingProduct &&
                         Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))
                     ) {
-                        // المنتج موجود بنفس الاسم → ضيف الألوان الجديدة بس
+                        // المنتج موجود → ضيف الألوان الجديدة
                         foreach ($items as $color) {
                             $existingColor = ShootingProductColor::where('code', $color['item_no'])->first();
-
+    
                             if (!$existingColor) {
                                 ShootingProductColor::create([
                                     'shooting_product_id' => $existingProduct->id,
                                     'code' => $color['item_no'],
                                 ]);
                             }
-
-                            // update delivery content status
+    
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                                 ->where('item_no', $color['item_no'])
-                                ->update(['is_received' => 1 , 'status' => 'old']);
+                                ->update([
+                                    'is_received' => 1,
+                                    'status' => 'old',
+                                ]);
                         }
-
-                        // تحديث عدد الألوان
+    
                         $existingProduct->number_of_colors = $existingProduct->shootingProductColors()->count();
                         $existingProduct->save();
                         $existingProduct->refreshStatusBasedOnColors();
@@ -1024,36 +1032,36 @@ class ShootingProductController extends Controller
                             'quantity' => $firstItem['quantity'],
                             'status' => 'new',
                         ]);
-
+    
                         foreach ($items as $color) {
                             ShootingProductColor::create([
                                 'shooting_product_id' => $product->id,
                                 'code' => $color['item_no'],
                             ]);
-
+    
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                            ->where('item_no', $color['item_no'])
-                            ->update([
-                                'is_received' => 1,
-                                'status' => 'old', // مهم لو لسه موجود
-                            ]);
-                        
+                                ->where('item_no', $color['item_no'])
+                                ->update([
+                                    'is_received' => 1,
+                                    'status' => 'old',
+                                ]);
                         }
                     }
                 }
-
+    
                 $delivery->update([
                     'sent_by' => auth()->id(),
                     'status' => 'تم ألنشر',
-                    'sent_records' => count($selectedIndexes),
+                    'sent_records' => count($addedCodes),
                 ]);
             });
-
+    
             return redirect()->route('shooting-deliveries.index')->with('success', 'تم نشر البيانات الجديدة بنجاح');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء النشر: ' . $e->getMessage());
         }
     }
+    
 
 
 
