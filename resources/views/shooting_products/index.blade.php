@@ -174,8 +174,8 @@
                                 </td> --}}
                                 <td>
                                     @php
-                                        $tooltipContent = '<table class="table table-bordered m-0">
-                                            <thead>
+                                        $tooltipContent = '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'>
+                                            <thead class=\'table-light\'>
                                                 <tr>
                                                     <th>اللون</th>
                                                     <th>الكود</th>
@@ -184,22 +184,31 @@
                                             </thead>
                                             <tbody>';
                                         foreach ($product->shootingProductColors as $color) {
-                                            $tooltipContent .= '<tr>
-                                                <td>' . ($color->name ?? '-') . '</td>
-                                                <td>' . ($color->code ?? '-') . '</td>
-                                                <td>' . ($color->status === 'completed' ? 'مكتمل' : 'جديد') . '</td>
-                                            </tr>';
+                                            $colorStatus = match ($color->status) {
+                                                'completed' => 'مكتمل',
+                                                'in_progress' => 'قيد التصوير',
+                                                default => 'جديد',
+                                            };
+                                            $tooltipContent .= "<tr>
+                                                <td>" . ($color->name ?? '-') . "</td>
+                                                <td>" . ($color->code ?? '-') . "</td>
+                                                <td>" . $colorStatus . "</td>
+                                            </tr>";
                                         }
-                                        $tooltipContent .= '</tbody></table>';
+                                        $tooltipContent .= '</tbody></table></div>';
+                                
                                         $badgeClass = match ($product->status) {
                                             'new' => 'bg-warning',
                                             'completed' => 'bg-success',
-                                            default => 'bg-secondary text-white',
+                                            'partial', 'in_progress' => 'bg-secondary text-white',
+                                            default => 'bg-dark',
                                         };
+                                
                                         $statusText = match ($product->status) {
                                             'new' => 'جديد',
                                             'completed' => 'مكتمل',
-                                            default => 'جزئي',
+                                            'in_progress', 'partial' => 'جزئي',
+                                            default => 'غير معروف',
                                         };
                                     @endphp
                                 
@@ -213,6 +222,7 @@
                                         {{ $statusText }}
                                     </span>
                                 </td>
+                                
                                 
 
                                 {{-- عدد الألوان --}}
@@ -470,14 +480,14 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            popoverTriggerList.forEach(function(popoverTriggerEl) {
+            popoverTriggerList.forEach(function (popoverTriggerEl) {
                 new bootstrap.Popover(popoverTriggerEl);
             });
         });
     </script>
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
