@@ -591,6 +591,7 @@
                     if (response.success) {
                         checkbox.prop('checked', true).attr('disabled', true);
                         alert('تم مراجعة المنتج وإرساله لموقع الادمن بنجاح');
+                        location.reload();
                     } else {
                         alert('فشل في تنفيذ المراجعة');
                         checkbox.prop('checked', false);
