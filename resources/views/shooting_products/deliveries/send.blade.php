@@ -42,7 +42,7 @@
                                     $itemNos = array_count_values(array_column($rows, 'A'));
                                 @endphp
 
-                                @foreach (array_slice($rows, 1) as $index => $row)
+                                @foreach ($rows as $index => $row)
                                     @php
                                         $itemNo = $row['A'] ?? '';
                                         $description = $row['B'] ?? '';
