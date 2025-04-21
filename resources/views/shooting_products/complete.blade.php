@@ -16,39 +16,30 @@
                     @csrf
 
                     <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label>اسم المنتج</label>
-                                <input type="text" name="name" value="{{ $product->name ?? '' }}"
-                                    class="form-control">
-                            </div>
-
-                            <div class="mb-3">
-                                <label>الوصف</label>
-                                <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label>اسم المنتج</label>
+                            <input type="text" name="name" value="{{ $product->name ?? '' }}" class="form-control">
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label>الصورة الرئيسية</label>
-                                <div class="position-relative">
-                                    @if ($product->main_image && file_exists(public_path('images/shooting/' . $product->main_image)))
-                                        <img src="{{ asset('images/shooting/' . $product->main_image) }}"
-                                            class="img-thumbnail mb-2" width="150">
-                                    @else
-                                        <span class="text-muted">لا توجد صورة حالية</span>
-                                    @endif
-                                </div>
-
-                                <input type="file" name="main_image" class="form-control mt-2" accept="image/*">
+                        <div class="col-md-6 mb-3">
+                            <label>السعر</label>
+                            <input type="text" class="form-control" value="{{ $product->price }}" name="price">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>الوصف</label>
+                            <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>الصورة الرئيسية</label>
+                            <div class="position-relative">
+                                @if ($product->main_image && file_exists(public_path('images/shooting/' . $product->main_image)))
+                                    <img src="{{ asset('images/shooting/' . $product->main_image) }}"
+                                        class="img-thumbnail mb-2" width="150">
+                                @else
+                                    <span class="text-muted">لا توجد صورة حالية</span>
+                                @endif
                             </div>
 
-
-                            <div class="mb-3">
-                                <label>السعر</label>
-                                <input type="text" class="form-control" value="{{ $product->price }}" name="price">
-                            </div>
+                            <input type="file" name="main_image" class="form-control mt-2" accept="image/*">
                         </div>
                     </div>
 
