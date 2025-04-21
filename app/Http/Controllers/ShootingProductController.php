@@ -480,11 +480,6 @@ class ShootingProductController extends Controller
     }
 
 
-    public function show($id)
-    {
-        $product = ShootingProduct::findOrFail($id);
-        return view('shooting_products.show', compact('product'));
-    }
 
     public function completePage($id)
     {
