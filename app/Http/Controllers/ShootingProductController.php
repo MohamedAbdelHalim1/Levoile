@@ -304,8 +304,6 @@ class ShootingProductController extends Controller
                 }
 
                 $product->save();
-
-                
             }
 
 
@@ -429,6 +427,12 @@ class ShootingProductController extends Controller
         });
 
         return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير اليدوي بنجاح');
+    }
+
+    public function show($id)
+    {
+        $product = ShootingProduct::with(['shootingProductColors.sessions'])->findOrFail($id);
+        return view('shooting_products.show', compact('product'));
     }
 
 
@@ -941,7 +945,7 @@ class ShootingProductController extends Controller
                 $content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                     ->where('item_no', $itemNo)
                     ->first();
-        
+
                 return array_merge($row, [
                     'is_received' => $content?->is_received ?? 0,
                     'status' => $content?->status ?? null,
@@ -950,7 +954,7 @@ class ShootingProductController extends Controller
             ->sortBy('is_received')
             ->values()
             ->toArray();
-        
+
         return view('shooting_products.deliveries.send', compact('rows', 'delivery'));
     }
 

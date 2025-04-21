@@ -162,7 +162,12 @@
                                 <td>
                                     <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
                                 </td>
-                                <td>{{ $product->name }}</td>
+                                <td>
+                                    <a href="{{ route('shooting-products.show', $product->id) }}"
+                                        class="text-primary text-decoration-underline">
+                                        {{ $product->name }}
+                                    </a>
+                                </td>
                                 {{-- <td>
                                     @if ($product->status == 'new')
                                         <span class="badge bg-warning">جديد</span>
@@ -178,28 +183,35 @@
                                             <thead class=\'table-light\'><tr>
                                                 <th>اللون</th><th>الكود</th><th>الحالة</th>
                                             </tr></thead><tbody>';
-                                
+
                                         foreach ($product->shootingProductColors as $color) {
                                             $colorStatus = match ($color->status) {
                                                 'completed' => 'مكتمل',
                                                 'in_progress' => 'قيد التصوير',
                                                 default => 'جديد',
                                             };
-                                            $tooltipContent .= "<tr>
-                                                <td>" . ($color->name ?? '-') . "</td>
-                                                <td>" . ($color->code ?? '-') . "</td>
-                                                <td>" . $colorStatus . "</td>
+                                            $tooltipContent .=
+                                                "<tr>
+                                                <td>" .
+                                                ($color->name ?? '-') .
+                                                "</td>
+                                                <td>" .
+                                                ($color->code ?? '-') .
+                                                "</td>
+                                                <td>" .
+                                                $colorStatus .
+                                                "</td>
                                             </tr>";
                                         }
                                         $tooltipContent .= '</tbody></table></div>';
-                                
+
                                         $badgeClass = match ($product->status) {
                                             'new' => 'bg-warning',
                                             'completed' => 'bg-success',
                                             'partial', 'in_progress' => 'bg-secondary text-white',
                                             default => 'bg-dark',
                                         };
-                                
+
                                         $statusText = match ($product->status) {
                                             'new' => 'جديد',
                                             'completed' => 'مكتمل',
@@ -207,17 +219,14 @@
                                             default => 'غير معروف',
                                         };
                                     @endphp
-                                
-                                    <span class="badge {{ $badgeClass }}"
-                                          tabindex="0"
-                                          data-bs-toggle="popover"
-                                          data-bs-trigger="hover focus"
-                                          data-bs-html="true"
-                                          data-bs-content="{!! htmlentities($tooltipContent, ENT_QUOTES, 'UTF-8') !!}">
+
+                                    <span class="badge {{ $badgeClass }}" tabindex="0" data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus" data-bs-html="true"
+                                        data-bs-content="{!! htmlentities($tooltipContent, ENT_QUOTES, 'UTF-8') !!}">
                                         {{ $statusText }}
                                     </span>
                                 </td>
-                                
+
                                 {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
