@@ -1003,7 +1003,6 @@ class ShootingProductController extends Controller
                                 $itemNo = $color['item_no'];
                                 $colorCode = substr($itemNo, -5, 3);
                                 $sizeCode = substr($itemNo, -2);
-                                $sizeName = self::getSizeName($sizeCode); // <-- هنجيب اسم المقاس من هنا
     
                                 $existingColor = ShootingProductColor::where('code', $itemNo)->first();
     
@@ -1013,7 +1012,6 @@ class ShootingProductController extends Controller
                                         'code' => $itemNo,
                                         'color_code' => $colorCode,
                                         'size_code' => $sizeCode,
-                                        'size_name' => $sizeName,
                                     ]);
                                 }
     
@@ -1059,14 +1057,12 @@ class ShootingProductController extends Controller
                             $itemNo = $color['item_no'];
                             $colorCode = substr($itemNo, -5, 3);
                             $sizeCode = substr($itemNo, -2);
-                            $sizeName = self::getSizeName($sizeCode);
     
                             ShootingProductColor::create([
                                 'shooting_product_id' => $product->id,
                                 'code' => $itemNo,
                                 'color_code' => $colorCode,
                                 'size_code' => $sizeCode,
-                                'size_name' => $sizeName,
                             ]);
     
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)

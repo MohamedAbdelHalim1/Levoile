@@ -26,6 +26,7 @@ class ShootingProductColor extends Model
         'shooting_method',
         'color_code',
         'size_code',
+        'size_name',
     ];
 
     public function shootingProduct()
