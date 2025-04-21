@@ -947,7 +947,7 @@ class ShootingProductController extends Controller
                     'status' => $content?->status ?? null,
                 ]);
             })
-            ->sortByAsc('is_received') // ✅ هنا الترتيب
+            ->sortBy('is_received')
             ->values()
             ->toArray();
         
