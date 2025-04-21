@@ -189,10 +189,10 @@
                                         @foreach ($color->sessions as $session)
                                             @if (!in_array($session->reference, $displayedSessions))
                                                 @php $displayedSessions[] = $session->reference; @endphp
-                                                <div
-                                                    style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
+                                                <a href="{{ route('shooting-sessions.show', $session->reference) }}"
+                                                    class="session-link">
                                                     {{ $session->reference }}
-                                                </div>
+                                                </a>                                                
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -386,6 +386,26 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .session-link {
+            display: block;
+            border: 1px solid #bce0fd;
+            border-radius: 6px;
+            padding: 4px;
+            margin-bottom: 6px;
+            text-decoration: none;
+            color: #000;
+            transition: 0.3s ease;
+        }
+    
+        .session-link:hover {
+            background-color: #bce0fd;
+            color: white;
+        }
+    </style>
+
+
 @endsection
 
 @section('scripts')
