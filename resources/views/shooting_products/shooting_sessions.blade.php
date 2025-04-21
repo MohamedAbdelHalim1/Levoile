@@ -107,8 +107,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $colors->first()->color->date_of_editing ?? '-' }}
+                                        @if ($allCompleted)
+                                            <span class="badge bg-success">تم التسليم</span>
+                                        @else
+                                            {{ $colors->first()->color->date_of_delivery ?? '-' }}
+                                        @endif
                                     </td>
+                                    
 
                                     {{-- الوقت المتبقي --}}
                                     <td>
