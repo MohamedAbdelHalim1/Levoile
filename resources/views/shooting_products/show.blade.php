@@ -37,6 +37,9 @@
                                         <th>اللون</th>
                                         <th>الكود</th>
                                         <th>الحالة</th>
+                                        <th>كود اللون</th> {{-- ✅ Color Code --}}
+                                        <th>كود المقاس</th> {{-- ✅ Size Code --}}
+                                        <th>اسم المقاس</th> {{-- ✅ Size Name --}}
                                         <th>الموقع</th>
                                         <th>تاريخ التصوير</th>
                                         <th>المصور</th>
@@ -55,14 +58,24 @@
                                             <td>
                                                 <span
                                                     class="badge 
-                                            {{ $color->status == 'completed'
-                                                ? 'bg-success'
-                                                : ($color->status == 'in_progress'
-                                                    ? 'bg-warning text-dark'
-                                                    : 'bg-secondary') }}">
+                                                    {{ $color->status == 'completed'
+                                                        ? 'bg-success'
+                                                        : ($color->status == 'in_progress'
+                                                            ? 'bg-warning text-dark'
+                                                            : 'bg-secondary') }}">
                                                     {{ $color->status == 'completed' ? 'مكتمل' : ($color->status == 'in_progress' ? 'قيد التصوير' : 'جديد') }}
                                                 </span>
                                             </td>
+
+                                            {{-- ✅ Color Code --}}
+                                            <td>{{ $color->color_code ?? '-' }}</td>
+
+                                            {{-- ✅ Size Code --}}
+                                            <td>{{ $color->size_code ?? '-' }}</td>
+
+                                            {{-- ✅ Size Name --}}
+                                            <td>{{ $color->size_name ?? '-' }}</td>
+
                                             <td>{{ $color->location ?? '-' }}</td>
                                             <td>{{ $color->date_of_shooting ?? '-' }}</td>
                                             <td>
@@ -118,6 +131,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
