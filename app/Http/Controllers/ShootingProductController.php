@@ -968,13 +968,12 @@ class ShootingProductController extends Controller
                 $rows = $request->input('rows', []);
     
                 $grouped = [];
-                $addedCodes = []; // لتجنب التكرار
+                $addedCodes = [];
     
                 foreach ($selectedIndexes as $index) {
                     $row = $rows[$index];
                     $itemNo = $row['item_no'];
     
-                    // تجاهل أي كود مكرر في نفس الشيت
                     if (isset($addedCodes[$itemNo])) {
                         continue;
                     }
@@ -994,24 +993,22 @@ class ShootingProductController extends Controller
                 foreach ($grouped as $primaryId => $items) {
                     $firstItem = $items[0];
                     $description = $firstItem['description'];
-                
+    
                     $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
-                
+    
                     if ($existingProduct) {
-                        if (
-                            Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))
-                        ) {
+                        if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
                             // موجود بنفس الاسم
                             foreach ($items as $color) {
                                 $existingColor = ShootingProductColor::where('code', $color['item_no'])->first();
-                
+    
                                 if (!$existingColor) {
                                     ShootingProductColor::create([
                                         'shooting_product_id' => $existingProduct->id,
                                         'code' => $color['item_no'],
                                     ]);
                                 }
-                
+    
                                 ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                                     ->where('item_no', $color['item_no'])
                                     ->update([
@@ -1019,13 +1016,21 @@ class ShootingProductController extends Controller
                                         'status' => 'old',
                                     ]);
                             }
-                
+    
                             $existingProduct->number_of_colors = $existingProduct->shootingProductColors()->count();
                             $existingProduct->save();
                             $existingProduct->refreshStatusBasedOnColors();
                         } else {
-                            // نفس الـ custom_id لكن اسم مختلف → خطأ واضح
-                            throw new \Exception("المنتج بالرقم الأساسي {$primaryId} موجود باسم مختلف: {$existingProduct->name}");
+                            // الاسم مختلف → skip وخلي حالته old بس
+                            foreach ($items as $color) {
+                                ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                                    ->where('item_no', $color['item_no'])
+                                    ->update([
+                                        'is_received' => 1,
+                                        'status' => 'old',
+                                    ]);
+                            }
+                            continue;
                         }
                     } else {
                         // منتج جديد
@@ -1036,13 +1041,13 @@ class ShootingProductController extends Controller
                             'quantity' => $firstItem['quantity'],
                             'status' => 'new',
                         ]);
-                
+    
                         foreach ($items as $color) {
                             ShootingProductColor::create([
                                 'shooting_product_id' => $product->id,
                                 'code' => $color['item_no'],
                             ]);
-                
+    
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                                 ->where('item_no', $color['item_no'])
                                 ->update([
@@ -1052,7 +1057,6 @@ class ShootingProductController extends Controller
                         }
                     }
                 }
-                
     
                 $delivery->update([
                     'sent_by' => auth()->id(),
