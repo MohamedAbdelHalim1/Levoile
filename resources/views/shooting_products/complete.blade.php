@@ -64,57 +64,40 @@
 
 
                     <hr>
-                    <h5>تفاصيل الألوان</h5>
-
+                    <h5>تفاصيل الألوان والمقاسات</h5>
                     <div class="row g-4">
-                        @for ($i = 0; $i < $product->number_of_colors; $i++)
-                            @php
-                                $color = $colors[$i] ?? null;
-                            @endphp
-                            <div class="col-md-3">
+                        @foreach ($groupedColors as $colorCode => $colorGroup)
+                            <div class="col-md-4">
                                 <div class="border p-3 mb-3 rounded bg-light">
-                                    <h6>لون {{ $i + 1 }}</h6>
-
-                                    <!-- Hidden ID for updateOrCreate -->
-                                    <input type="hidden" name="colors[{{ $i + 1 }}][id]"
-                                        value="{{ $color?->id }}">
-
+                                    <h6>كود اللون: {{ $colorCode }}</h6>
+                                    <input type="hidden" name="colors[{{ $loop->index + 1 }}][color_code]" value="{{ $colorCode }}">
+                                    <input type="hidden" name="colors[{{ $loop->index + 1 }}][ids]" value="{{ implode(',', $colorGroup->pluck('id')->toArray()) }}">
+                                    
                                     <div class="mb-2">
                                         <label>اسم اللون</label>
-                                        <input type="text" name="colors[{{ $i + 1 }}][name]" class="form-control"
-                                            value="{{ $color?->name }}">
+                                        <input type="text" name="colors[{{ $loop->index + 1 }}][name]" class="form-control"
+                                            value="{{ $colorGroup->first()->name }}">
                                     </div>
-
-                                    <div class="mb-2">
-                                        <label>الكود</label>
-                                        <input type="text" name="colors[{{ $i + 1 }}][code]" class="form-control"
-                                            value="{{ $color?->code }}">
-                                    </div>
-
-                                    <!-- for price -->
-
-                                    {{-- <div class="mb-2">
-                                        <label>السعر</label>
-                                        <input type="text" name="colors[{{ $i + 1 }}][price]"
-                                            class="form-control" value="{{ $color?->price }}">
-                                    </div> --}}
 
                                     <div class="mb-2">
                                         <label>الصورة</label>
-                                        <input type="file" name="colors[{{ $i + 1 }}][image]"
-                                            class="form-control" accept="image/*">
-
-                                        @if (!empty($color?->image) && file_exists(public_path($color->image)))
-                                            <img src="{{ asset($color->image) }}" class="img-thumbnail mt-2" width="100"
-                                                data-bs-toggle="modal" data-bs-target="#imagePreviewModal"
-                                                onclick="showImagePreview('{{ asset($color->image) }}')"
-                                                style="cursor: pointer;">
+                                        <input type="file" name="colors[{{ $loop->index + 1 }}][image]" class="form-control" accept="image/*">
+                                        @if (!empty($colorGroup->first()->image) && file_exists(public_path($colorGroup->first()->image)))
+                                            <img src="{{ asset($colorGroup->first()->image) }}" class="img-thumbnail mt-2" width="100">
                                         @endif
-
                                     </div>
+
+                                    <h6 class="mt-3">المقاسات:</h6>
+                                    @foreach ($colorGroup as $size)
+                                        <div class="mb-2">
+                                            <label>مقاس ({{ $size->size_code }})</label>
+                                            <input type="text" name="colors[{{ $loop->parent->index + 1 }}][sizes][{{ $size->id }}]" class="form-control"
+                                                value="{{ $size->size_name }}">
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
-                        @endfor
+                        @endforeach
                     </div>
 
 
