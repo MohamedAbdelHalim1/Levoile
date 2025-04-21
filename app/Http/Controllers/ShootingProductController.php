@@ -518,6 +518,8 @@ class ShootingProductController extends Controller
             }
         }
     
+        $originalProductId = $id;
+
         foreach ($request->colors as $key => $colorData) {
             $colorCode = $colorData['color_code'];
             $ids = explode(',', $colorData['ids'] ?? '');
@@ -544,7 +546,7 @@ class ShootingProductController extends Controller
         }
         
     
-        return redirect()->route('shooting-products.complete.page', $id)->with('success', 'تم حفظ بيانات المنتج بنجاح');
+        return redirect()->route('shooting-products.complete.page', $originalProductId)->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
     
 
