@@ -187,36 +187,34 @@
                                             $tooltipContent .= '<tr>
                                                 <td>' . ($color->name ?? '-') . '</td>
                                                 <td>' . ($color->code ?? '-') . '</td>
-                                                <td>' . ($color->status == 'completed' ? 'مكتمل' : 'جديد') . '</td>
+                                                <td>' . ($color->status === 'completed' ? 'مكتمل' : 'جديد') . '</td>
                                             </tr>';
                                         }
                                         $tooltipContent .= '</tbody></table>';
+                                        $badgeClass = match ($product->status) {
+                                            'new' => 'bg-warning',
+                                            'completed' => 'bg-success',
+                                            default => 'bg-secondary text-white',
+                                        };
+                                        $statusText = match ($product->status) {
+                                            'new' => 'جديد',
+                                            'completed' => 'مكتمل',
+                                            default => 'جزئي',
+                                        };
                                     @endphp
                                 
-                                    @if ($product->status == 'new')
-                                        <span class="badge bg-warning"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                            title="{!! $tooltipContent !!}">
-                                            جديد
-                                        </span>
-                                    @elseif ($product->status == 'partial' || $product->status == 'in_progress')
-                                        <span class="badge bg-secondary text-white"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                            title="{!! $tooltipContent !!}">
-                                            جزئي
-                                        </span>
-                                    @elseif ($product->status == 'completed')
-                                        <span class="badge bg-success"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-html="true"
-                                            title="{!! $tooltipContent !!}">
-                                            مكتمل
-                                        </span>
-                                    @endif
+                                    <span class="badge {{ $badgeClass }}"
+                                          tabindex="0"
+                                          data-bs-toggle="popover"
+                                          data-bs-trigger="hover focus"
+                                          data-bs-html="true"
+                                          title="تفاصيل الألوان"
+                                          data-bs-content="{{ $tooltipContent }}">
+                                        {{ $statusText }}
+                                    </span>
                                 </td>
                                 
+
                                 {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
@@ -237,7 +235,7 @@
                                                 <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                                     class="session-link">
                                                     {{ $session->reference }}
-                                                </a>                                                
+                                                </a>
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -393,7 +391,7 @@
                                             data-id="{{ $product->id }}">
                                     @endif
                                 </td>
-                                
+
 
                                 <td>
                                     <a href="{{ route('shooting-products.complete.page', $product->id) }}"
@@ -443,14 +441,12 @@
             color: #000;
             transition: 0.3s ease;
         }
-    
+
         .session-link:hover {
             background-color: #bce0fd;
             color: white;
         }
     </style>
-
-
 @endsection
 
 @section('scripts')
@@ -474,14 +470,14 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                new bootstrap.Tooltip(tooltipTriggerEl)
-            })
+        document.addEventListener("DOMContentLoaded", function() {
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            popoverTriggerList.forEach(function(popoverTriggerEl) {
+                new bootstrap.Popover(popoverTriggerEl);
+            });
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
