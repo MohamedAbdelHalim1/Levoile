@@ -55,7 +55,7 @@
                                         @if ($allCompleted)
                                             <span class="badge bg-success">مكتمل</span>
                                         @else
-                                            <span class="badge bg-warning">جديد</span>
+                                            <span class="badge bg-warning">قيد التنفيذ</span>
                                         @endif
                                     </td>
 
