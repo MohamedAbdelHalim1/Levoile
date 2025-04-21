@@ -28,7 +28,8 @@
                             <tr>
                                 <td>{{ $delivery->created_at->format('Y-m-d H:i') }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                    <span
+                                        class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
                                 <td>{{ $delivery->total_records }}</td>
                                 <td>{{ $delivery->new_records ?? 0 }}</td>
@@ -36,21 +37,35 @@
                                 <td>{{ $delivery->user->name }}</td>
                                 <td>{{ optional($delivery->sender)->name }}</td>
                                 <td>
-                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info" download>
+                                    <a href="{{ asset('excel/' . $delivery->filename) }}" class="btn btn-sm btn-info"
+                                        download>
                                         <i class="fa fa-download"></i>
                                     </a>
                                 </td>
+                                @php
+                                    $allReceived =
+                                        \App\Models\ShootingDeliveryContent::where(
+                                            'shooting_delivery_id',
+                                            $delivery->id,
+                                        )
+                                            ->where('is_received', 0)
+                                            ->count() === 0;
+                                @endphp
+
                                 <td>
-                                    @if ($delivery->new_records == 0 || $delivery->status == 'تم ألنشر')
-                                    <a href="{{ route('shooting-deliveries.show', $delivery->id) }}" class="btn btn-info btn-sm">عرض</a>
+                                    @if ($allReceived)
+                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
+                                            class="btn btn-info btn-sm">عرض</a>
                                     @else
-                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}" class="btn btn-warning btn-sm">نشر</a>
+                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
+                                            class="btn btn-warning btn-sm">نشر</a>
                                     @endif
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
-                    
+
                 </table>
             </div>
         </div>
