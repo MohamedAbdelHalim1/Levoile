@@ -518,7 +518,7 @@ class ShootingProductController extends Controller
             }
         }
     
-        foreach ($request->colors as $colorData) {
+        foreach ($request->colors as $key => $colorData) {
             $colorCode = $colorData['color_code'];
             $ids = explode(',', $colorData['ids'] ?? '');
             foreach ($ids as $id) {
@@ -529,17 +529,20 @@ class ShootingProductController extends Controller
                         'color_code' => $colorCode,
                         'size_name' => $colorData['sizes'][$id] ?? null,
                     ]);
-    
-                    if (isset($colorData['image']) && $colorData['image'] instanceof \Illuminate\Http\UploadedFile) {
-                        $img = $colorData['image'];
-                        $imgName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-                        $img->move(public_path('images/shooting'), $imgName);
-                        $color->update(['image' => 'images/shooting/' . $imgName]);
+        
+                    $imageField = "colors.{$key}.image";
+                    if ($request->hasFile($imageField)) {
+                        $img = $request->file($imageField);
+                        if ($img && $img->isValid()) {
+                            $imgName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
+                            $img->move(public_path('images/shooting'), $imgName);
+                            $color->update(['image' => 'images/shooting/' . $imgName]);
+                        }
                     }
-                    
                 }
             }
         }
+        
     
         return redirect()->route('shooting-products.complete.page', $id)->with('success', 'تم حفظ بيانات المنتج بنجاح');
     }
