@@ -253,9 +253,62 @@
 
 
                                 {{-- عدد الألوان --}}
-                                <td>{{ $product->number_of_colors }}</td>
+                                <td>
+                                    @php
+                                        $colors = $product->shootingProductColors
+                                            ->groupBy('color_code')
+                                            ->map(function ($group) {
+                                                $first = $group->first();
+                                                return [
+                                                    'color_code' => $first->color_code,
+                                                    'color_name' => $first->name,
+                                                ];
+                                            });
+                                
+                                        $colorTooltip = '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>الكود</th><th>اللون</th></tr></thead><tbody>';
+                                
+                                        foreach ($colors as $color) {
+                                            $colorTooltip .= "<tr><td>{$color['color_code']}</td><td>{$color['color_name']}</td></tr>";
+                                        }
+                                
+                                        $colorTooltip .= '</tbody></table></div>';
+                                    @endphp
+                                
+                                    <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus" data-bs-html="true"
+                                        data-bs-content="{!! htmlentities($colorTooltip, ENT_QUOTES, 'UTF-8') !!}">
+                                        {{ $colors->count() }}
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    @php
+                                        $sizes = $product->shootingProductColors
+                                            ->groupBy('size_code')
+                                            ->map(function ($group) {
+                                                $first = $group->first();
+                                                return [
+                                                    'size_code' => $first->size_code,
+                                                    'size_name' => $first->size_name,
+                                                ];
+                                            });
 
-                                <td>{{ $product->shootingProductColors->groupBy('color_code')->map->count() }}</td>
+                                        $sizeTooltip =
+                                            '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>الكود</th><th>الاسم</th></tr></thead><tbody>';
+
+                                        foreach ($sizes as $size) {
+                                            $sizeTooltip .= "<tr><td>{$size['size_code']}</td><td>{$size['size_name']}</td></tr>";
+                                        }
+
+                                        $sizeTooltip .= '</tbody></table></div>';
+                                    @endphp
+
+                                    <span class="badge bg-info text-dark" tabindex="0" data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus" data-bs-html="true"
+                                        data-bs-content="{!! htmlentities($sizeTooltip, ENT_QUOTES, 'UTF-8') !!}">
+                                        {{ $sizes->count() }}
+                                    </span>
+                                </td>
                                 {{-- عدد السيشنات --}}
                                 <td>
                                     {{ $product->shootingProductColors->flatMap(fn($color) => $color->sessions ?? collect())->pluck('reference')->unique()->count() }}
