@@ -132,7 +132,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>اختر المنتج</th>
+                            <th>
+                                <input type="checkbox" id="checkAll"> اختر المنتج
+                            </th>
                             <th>اسم المنتج</th>
                             <th>الحالة</th>
                             <th>عدد الألوان</th>
@@ -534,8 +536,14 @@
 
     <script>
         $('#checkAll').on('change', function() {
-            $('input[name="selected_products[]"]').prop('checked', this.checked);
-            toggleStartButton();
+            const isChecked = $(this).is(':checked');
+
+            // حدد فقط العناصر الظاهرة حاليًا في الصفحة
+            $('#file-datatable')
+                .find('tbody tr:visible input[name="selected_products[]"]')
+                .prop('checked', isChecked);
+
+            toggleStartButton(); // حدث زر بدء التصوير
         });
 
         $('input[name="selected_products[]"]').on('change', function() {

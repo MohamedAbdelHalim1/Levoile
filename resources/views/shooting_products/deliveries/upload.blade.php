@@ -87,7 +87,7 @@
                 const rows = XLSX.utils.sheet_to_json(sheet);
 
                 rows.forEach(row => {
-                    const itemNo = row['Item No.(SKU-CODE)']?.toString() || '';
+                    const itemNo = row['Item No.']?.toString() || '';
                     const description = row['Description'] || '';
                     const quantity = row['Quantity'] || '';
                     const unit = row['Unit of Measure Code'] || '';
