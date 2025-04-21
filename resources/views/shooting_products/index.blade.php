@@ -303,7 +303,7 @@
                                         $sizeTooltip .= '</tbody></table></div>';
                                     @endphp
 
-                                    <span class="badge bg-info text-dark" tabindex="0" data-bs-toggle="popover"
+                                    <span class="badge bg-primary text-dark" tabindex="0" data-bs-toggle="popover"
                                         data-bs-trigger="hover focus" data-bs-html="true"
                                         data-bs-content="{!! htmlentities($sizeTooltip, ENT_QUOTES, 'UTF-8') !!}">
                                         {{ $sizes->count() }}
