@@ -42,24 +42,16 @@
                                         <i class="fa fa-download"></i>
                                     </a>
                                 </td>
-                                @php
-                                    $allReceived =
-                                        \App\Models\ShootingDeliveryContent::where(
-                                            'shooting_delivery_id',
-                                            $delivery->id,
-                                        )
-                                            ->where('is_received', 0)
-                                            ->count() === 0;
-                                @endphp
 
-                                @if ($delivery->contents()->where('is_received', 0)->count() === 0)
-                                    <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
-                                        class="btn btn-info">عرض</a>
-                                @else
-                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                        class="btn btn-warning">نشر</a>
-                                @endif
-
+                                <td>
+                                    @if ($delivery->contents()->where('is_received', 0)->count() === 0)
+                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
+                                            class="btn btn-info">عرض</a>
+                                    @else
+                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
+                                            class="btn btn-warning">نشر</a>
+                                    @endif
+                                </td>
 
                             </tr>
                         @endforeach
