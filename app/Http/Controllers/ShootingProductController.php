@@ -932,73 +932,29 @@ class ShootingProductController extends Controller
         $delivery = ShootingDelivery::findOrFail($id);
         $filePath = public_path('excel/' . $delivery->filename);
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
-        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $rawRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
+        // ربط كل صف بمحتواه من جدول shooting_delivery_contents
+        $rows = collect(array_slice($rawRows, 1))
+            ->map(function ($row) use ($delivery) {
+                $itemNo = $row['A'];
+                $content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                    ->where('item_no', $itemNo)
+                    ->first();
+        
+                return array_merge($row, [
+                    'is_received' => $content?->is_received ?? 0,
+                    'status' => $content?->status ?? null,
+                ]);
+            })
+            ->sortByDesc('is_received') // ✅ هنا الترتيب
+            ->values()
+            ->toArray();
+        
         return view('shooting_products.deliveries.send', compact('rows', 'delivery'));
     }
 
-    // public function sendSave(Request $request, $id)
-    // {
-    //     try {
-    //         $selectedIndexes = $request->input('selected_rows', []);
 
-    //         if (empty($selectedIndexes)) {
-    //             return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل الارسال');
-    //         }
-
-    //         DB::transaction(function () use ($selectedIndexes, $request, $id) {
-    //             $delivery = ShootingDelivery::findOrFail($id);
-    //             $rows = $request->input('rows', []);
-    //             $grouped = [];
-
-    //             foreach ($selectedIndexes as $index) {
-    //                 $row = $rows[$index];
-    //                 $itemNo = $row['item_no'];
-    //                 $description = $row['description'];
-    //                 $quantity = $row['quantity'];
-    //                 $primaryId = substr($itemNo, 3, 6);
-
-    //                 $grouped[$primaryId][] = [
-    //                     'item_no' => $itemNo,
-    //                     'description' => $description,
-    //                     'quantity' => $quantity,
-    //                 ];
-    //             }
-
-    //             foreach ($grouped as $primaryId => $items) {
-    //                 $product = ShootingProduct::create([
-    //                     'custom_id' => $primaryId,
-    //                     'name' => $items[0]['description'],
-    //                     'number_of_colors' => count($items),
-    //                     'quantity' => $items[0]['quantity'],
-    //                     'status' => 'new',
-    //                 ]);
-
-    //                 foreach ($items as $color) {
-    //                     ShootingProductColor::create([
-    //                         'shooting_product_id' => $product->id,
-    //                         'code' => $color['item_no'],
-    //                     ]);
-
-    //                     // update delivery content
-    //                     ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-    //                         ->where('item_no', $color['item_no'])
-    //                         ->update(['is_received' => 1]);
-    //                 }
-    //             }
-
-    //             $delivery->update([
-    //                 'sent_by' => auth()->id(),
-    //                 'status' => 'تم الاستلام',
-    //                 'sent_records' => count($selectedIndexes),
-    //             ]);
-    //         });
-
-    //         return redirect()->route('shooting-deliveries.index')->with('success', 'تم الارسال للتصوير بنجاح');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', 'حصل خطأ أثناء الارسال: ' . $e->getMessage());
-    //     }
-    // }
 
     public function sendSave(Request $request, $id)
     {
