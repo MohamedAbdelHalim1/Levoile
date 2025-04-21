@@ -163,7 +163,7 @@
                                     <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
                                 </td>
                                 <td>{{ $product->name }}</td>
-                                <td>
+                                {{-- <td>
                                     @if ($product->status == 'new')
                                         <span class="badge bg-warning">جديد</span>
                                     @elseif ($product->status == 'partial' || $product->status == 'in_progress')
@@ -171,7 +171,52 @@
                                     @elseif ($product->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
                                     @endif
+                                </td> --}}
+                                <td>
+                                    @php
+                                        $tooltipContent = '<table class="table table-bordered m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>اللون</th>
+                                                    <th>الكود</th>
+                                                    <th>الحالة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        foreach ($product->shootingProductColors as $color) {
+                                            $tooltipContent .= '<tr>
+                                                <td>' . ($color->name ?? '-') . '</td>
+                                                <td>' . ($color->code ?? '-') . '</td>
+                                                <td>' . ($color->status == 'completed' ? 'مكتمل' : 'جديد') . '</td>
+                                            </tr>';
+                                        }
+                                        $tooltipContent .= '</tbody></table>';
+                                    @endphp
+                                
+                                    @if ($product->status == 'new')
+                                        <span class="badge bg-warning"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-html="true"
+                                            title="{!! $tooltipContent !!}">
+                                            جديد
+                                        </span>
+                                    @elseif ($product->status == 'partial' || $product->status == 'in_progress')
+                                        <span class="badge bg-secondary text-white"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-html="true"
+                                            title="{!! $tooltipContent !!}">
+                                            جزئي
+                                        </span>
+                                    @elseif ($product->status == 'completed')
+                                        <span class="badge bg-success"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-html="true"
+                                            title="{!! $tooltipContent !!}">
+                                            مكتمل
+                                        </span>
+                                    @endif
                                 </td>
+                                
                                 {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
@@ -428,6 +473,15 @@
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        });
+    </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
