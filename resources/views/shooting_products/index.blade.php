@@ -341,10 +341,14 @@
 
 
                                 <td>
-                                    <input type="checkbox" class="form-check-input review-toggle"
-                                        data-id="{{ $product->id }}"
-                                        {{ $product->is_reviewed ? 'checked disabled' : '' }}>
+                                    @if ($product->is_reviewed)
+                                        <span class="badge bg-success">تم التكويد</span>
+                                    @else
+                                        <input type="checkbox" class="form-check-input review-toggle"
+                                            data-id="{{ $product->id }}">
+                                    @endif
                                 </td>
+                                
 
                                 <td>
                                     <a href="{{ route('shooting-products.complete.page', $product->id) }}"
