@@ -106,6 +106,11 @@
                                         {{ $colors->first()->color->date_of_shooting ?? '-' }}
                                     </td>
 
+                                    @php
+                                        $firstLink = $groupedSessions->firstWhere('drive_link', '!=', null)
+                                            ?->drive_link;
+                                    @endphp
+
                                     <td>
                                         @if ($firstLink)
                                             <span class="badge bg-success">
@@ -151,10 +156,7 @@
 
 
 
-                                    @php
-                                        $firstLink = $groupedSessions->firstWhere('drive_link', '!=', null)
-                                            ?->drive_link;
-                                    @endphp
+                                    
 
                                     <td>
                                         @if ($firstLink)
