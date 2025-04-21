@@ -107,38 +107,46 @@
                                     </td>
 
                                     <td>
-                                        @if ($allCompleted)
-                                            <span class="badge bg-success">تم التسليم</span>
+                                        @if ($firstLink)
+                                            <span class="badge bg-success">
+                                                {{ \Carbon\Carbon::parse($groupedSessions->firstWhere('drive_link', '!=', null)?->updated_at)->format('Y-m-d') }}
+                                            </span>
                                         @else
                                             {{ $colors->first()->color->date_of_delivery ?? '-' }}
                                         @endif
                                     </td>
                                     
+                                    
 
                                     {{-- الوقت المتبقي --}}
                                     <td>
-                                        @php
-                                            $deliveryDate = $colors->first()?->color->date_of_delivery;
-                                            $remaining = $deliveryDate
-                                                ? \Carbon\Carbon::now()->diffInDays(
-                                                    \Carbon\Carbon::parse($deliveryDate),
-                                                    false,
-                                                )
-                                                : null;
-                                        @endphp
-
-                                        @if (is_null($deliveryDate))
+                                        @if ($firstLink)
                                             <span>-</span>
                                         @else
-                                            @if ($remaining > 0)
-                                                <span class="badge bg-primary">{{ $remaining }} يوم متبقي</span>
-                                            @elseif ($remaining == 0)
-                                                <span class="badge bg-warning">ينتهي اليوم</span>
+                                            @php
+                                                $deliveryDate = $colors->first()?->color->date_of_delivery;
+                                                $remaining = $deliveryDate
+                                                    ? \Carbon\Carbon::now()->diffInDays(
+                                                        \Carbon\Carbon::parse($deliveryDate),
+                                                        false
+                                                    )
+                                                    : null;
+                                            @endphp
+                                    
+                                            @if (is_null($deliveryDate))
+                                                <span>-</span>
                                             @else
-                                                <span class="badge bg-danger">متأخر بـ {{ abs($remaining) }} يوم</span>
+                                                @if ($remaining > 0)
+                                                    <span class="badge bg-primary">{{ $remaining }} يوم متبقي</span>
+                                                @elseif ($remaining == 0)
+                                                    <span class="badge bg-warning">ينتهي اليوم</span>
+                                                @else
+                                                    <span class="badge bg-danger">متأخر بـ {{ abs($remaining) }} يوم</span>
+                                                @endif
                                             @endif
                                         @endif
                                     </td>
+                                    
 
 
 
