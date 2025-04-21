@@ -175,14 +175,10 @@
                                 <td>
                                     @php
                                         $tooltipContent = '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'>
-                                            <thead class=\'table-light\'>
-                                                <tr>
-                                                    <th>اللون</th>
-                                                    <th>الكود</th>
-                                                    <th>الحالة</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
+                                            <thead class=\'table-light\'><tr>
+                                                <th>اللون</th><th>الكود</th><th>الحالة</th>
+                                            </tr></thead><tbody>';
+                                
                                         foreach ($product->shootingProductColors as $color) {
                                             $colorStatus = match ($color->status) {
                                                 'completed' => 'مكتمل',
@@ -217,14 +213,11 @@
                                           data-bs-toggle="popover"
                                           data-bs-trigger="hover focus"
                                           data-bs-html="true"
-                                          title="تفاصيل الألوان"
-                                          data-bs-content="{{ $tooltipContent }}">
+                                          data-bs-content="{!! htmlentities($tooltipContent, ENT_QUOTES, 'UTF-8') !!}">
                                         {{ $statusText }}
                                     </span>
                                 </td>
                                 
-                                
-
                                 {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
                                 {{-- عدد السيشنات --}}
@@ -480,14 +473,19 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            popoverTriggerList.forEach(function (popoverTriggerEl) {
-                new bootstrap.Popover(popoverTriggerEl);
+            popoverTriggerList.forEach(function(popoverTriggerEl) {
+                new bootstrap.Popover(popoverTriggerEl, {
+                    html: true,
+                    sanitize: false, // ضروري عشان HTML زي الجدول يشتغل
+                    trigger: 'hover focus'
+                });
             });
         });
     </script>
-    
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let step = 1;
