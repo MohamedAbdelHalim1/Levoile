@@ -1031,10 +1031,13 @@ class ShootingProductController extends Controller
                                 'code' => $color['item_no'],
                             ]);
 
-                            // update delivery content status
                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                                ->where('item_no', $color['item_no'])
-                                ->update(['is_received' => 1]);
+                            ->where('item_no', $color['item_no'])
+                            ->update([
+                                'is_received' => 1,
+                                'status' => 'new', // مهم لو لسه موجود
+                            ]);
+                        
                         }
                     }
                 }

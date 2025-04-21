@@ -52,15 +52,14 @@
                                             ->count() === 0;
                                 @endphp
 
-                                <td>
-                                    @if ($allReceived)
-                                        <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
-                                            class="btn btn-info btn-sm">عرض</a>
-                                    @else
-                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                            class="btn btn-warning btn-sm">نشر</a>
-                                    @endif
-                                </td>
+                                @if ($delivery->contents()->where('is_received', 0)->count() === 0)
+                                    <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
+                                        class="btn btn-info">عرض</a>
+                                @else
+                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
+                                        class="btn btn-warning">نشر</a>
+                                @endif
+
 
                             </tr>
                         @endforeach
