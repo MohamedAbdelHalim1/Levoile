@@ -138,6 +138,7 @@
                             <th>اسم المنتج</th>
                             <th>الحالة</th>
                             <th>عدد الألوان</th>
+                            <th>عدد المقاسات</th>
                             <th>عدد السيشنات</th>
                             <th>السيشنات</th>
                             <th>حاله السيشن</th>
@@ -179,28 +180,36 @@
                                 </td> --}}
                                 <td>
                                     @php
-                                        $tooltipContent = '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>اللون</th><th>الكود</th><th>الحالة</th></tr></thead><tbody>';
-                                
+                                        $tooltipContent =
+                                            '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>اللون</th><th>الكود</th><th>الحالة</th></tr></thead><tbody>';
+
                                         $statuses = ['new' => 0, 'in_progress' => 0, 'completed' => 0];
-                                        
+
                                         foreach ($product->shootingProductColors as $color) {
                                             $statuses[$color->status] = ($statuses[$color->status] ?? 0) + 1;
-                                
+
                                             $colorStatus = match ($color->status) {
                                                 'completed' => 'مكتمل',
                                                 'in_progress' => 'قيد التصوير',
                                                 default => 'جديد',
                                             };
-                                
-                                            $tooltipContent .= "<tr>
-                                                <td>" . ($color->name ?? '-') . "</td>
-                                                <td>" . ($color->code ?? '-') . "</td>
-                                                <td>" . $colorStatus . "</td>
+
+                                            $tooltipContent .=
+                                                "<tr>
+                                                <td>" .
+                                                ($color->name ?? '-') .
+                                                "</td>
+                                                <td>" .
+                                                ($color->code ?? '-') .
+                                                "</td>
+                                                <td>" .
+                                                $colorStatus .
+                                                "</td>
                                             </tr>";
                                         }
-                                
+
                                         $tooltipContent .= '</tbody></table></div>';
-                                
+
                                         // منطق تحديد الحالة النهائية للمنتج
                                         $total = array_sum($statuses);
                                         if ($statuses['completed'] === $total) {
@@ -209,12 +218,15 @@
                                             $productStatus = 'new';
                                         } elseif ($statuses['in_progress'] + $statuses['completed'] === $total) {
                                             $productStatus = 'in_progress';
-                                        } elseif ($statuses['new'] > 0 && ($statuses['in_progress'] > 0 || $statuses['completed'] > 0)) {
+                                        } elseif (
+                                            $statuses['new'] > 0 &&
+                                            ($statuses['in_progress'] > 0 || $statuses['completed'] > 0)
+                                        ) {
                                             $productStatus = 'partial';
                                         } else {
                                             $productStatus = 'unknown';
                                         }
-                                
+
                                         $badgeClass = match ($productStatus) {
                                             'new' => 'bg-warning',
                                             'completed' => 'bg-success',
@@ -222,7 +234,7 @@
                                             'partial' => 'bg-secondary text-white',
                                             default => 'bg-dark',
                                         };
-                                
+
                                         $statusText = match ($productStatus) {
                                             'new' => 'جديد',
                                             'completed' => 'مكتمل',
@@ -231,17 +243,19 @@
                                             default => 'غير معروف',
                                         };
                                     @endphp
-                                
+
                                     <span class="badge {{ $badgeClass }}" tabindex="0" data-bs-toggle="popover"
                                         data-bs-trigger="hover focus" data-bs-html="true"
                                         data-bs-content="{!! htmlentities($tooltipContent, ENT_QUOTES, 'UTF-8') !!}">
                                         {{ $statusText }}
                                     </span>
                                 </td>
-                                
+
 
                                 {{-- عدد الألوان --}}
                                 <td>{{ $product->number_of_colors }}</td>
+
+                                <td>{{ $product->shootingProductColors->groupBy('color_code')->map->count() }}</td>
                                 {{-- عدد السيشنات --}}
                                 <td>
                                     {{ $product->shootingProductColors->flatMap(fn($color) => $color->sessions ?? collect())->pluck('reference')->unique()->count() }}
