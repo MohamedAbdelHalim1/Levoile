@@ -530,12 +530,13 @@ class ShootingProductController extends Controller
                         'size_name' => $colorData['sizes'][$id] ?? null,
                     ]);
     
-                    if (isset($colorData['image']) && $colorData['image']) {
+                    if (isset($colorData['image']) && $colorData['image'] instanceof \Illuminate\Http\UploadedFile) {
                         $img = $colorData['image'];
                         $imgName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
                         $img->move(public_path('images/shooting'), $imgName);
                         $color->update(['image' => 'images/shooting/' . $imgName]);
                     }
+                    
                 }
             }
         }
