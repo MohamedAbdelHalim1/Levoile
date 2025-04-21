@@ -44,7 +44,7 @@
                                 </td>
 
                                 <td>
-                                    @if ($delivery->contents()->where('is_received', 0)->count() === 0)
+                                    @if ($delivery->contents()->where('status', 'new')->count() === 0)
                                         <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
                                             class="btn btn-info">عرض</a>
                                     @else
