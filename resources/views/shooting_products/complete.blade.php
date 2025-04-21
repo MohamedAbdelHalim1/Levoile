@@ -78,15 +78,6 @@
                                         <input type="text" name="colors[{{ $loop->index + 1 }}][name]" class="form-control"
                                             value="{{ $colorGroup->first()->name }}">
                                     </div>
-
-                                    <div class="mb-2">
-                                        <label>الصورة</label>
-                                        <input type="file" name="colors[{{ $loop->index + 1 }}][image]" class="form-control" accept="image/*">
-                                        @if (!empty($colorGroup->first()->image) && file_exists(public_path($colorGroup->first()->image)))
-                                            <img src="{{ asset($colorGroup->first()->image) }}" class="img-thumbnail mt-2" width="100">
-                                        @endif
-                                    </div>
-
                                     <h6 class="mt-3">المقاسات:</h6>
                                     @foreach ($colorGroup as $size)
                                         <div class="mb-2">
@@ -95,6 +86,14 @@
                                                 value="{{ $size->size_name }}">
                                         </div>
                                     @endforeach
+                                    <hr>
+                                    <div class="mb-2">
+                                        <label>الصورة</label>
+                                        <input type="file" name="colors[{{ $loop->index + 1 }}][image]" class="form-control" accept="image/*">
+                                        @if (!empty($colorGroup->first()->image) && file_exists(public_path($colorGroup->first()->image)))
+                                            <img src="{{ asset($colorGroup->first()->image) }}" class="img-thumbnail mt-2" width="100">
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
