@@ -832,54 +832,121 @@ class ShootingProductController extends Controller
     //     }
     // }
 
+    // public function deliveryUpload(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'file' => 'required|file|mimes:xlsx,xls',
+    //         ]);
+
+    //         $file = $request->file('file');
+    //         $filename = time() . '_' . $file->getClientOriginalName();
+    //         $file->move(public_path('excel'), $filename);
+
+    //         $filePath = public_path('excel/' . $filename);
+    //         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+    //         $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+    //         $totalRecords = count($rows) - 1;
+
+    //         $delivery = ShootingDelivery::create([
+    //             'filename' => $filename,
+    //             'user_id' => auth()->id(),
+    //             'status' => 'تم ألرفع',
+    //             'total_records' => $totalRecords,
+    //             'sent_records' => 0,
+    //         ]);
+
+    //         $existingItemNos = ShootingDeliveryContent::select('item_no')->distinct()->pluck('item_no')->flip();
+
+    //         foreach (array_slice($rows, 1) as $row) {
+    //             $itemNo = $row['A'];
+    //             $status = isset($existingItemNos[$itemNo]) ? 'old' : 'new';
+
+    //             ShootingDeliveryContent::create([
+    //                 'shooting_delivery_id' => $delivery->id,
+    //                 'item_no' => $itemNo,
+    //                 'description' => $row['B'],
+    //                 'quantity' => $row['C'],
+    //                 'unit' => $row['D'],
+    //                 'primary_id' => substr($itemNo, 3, 6),
+    //                 'is_received' => 0,
+    //                 'status' => $status,
+    //             ]);
+    //         }
+
+    //         return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
+    //     }
+    // }
     public function deliveryUpload(Request $request)
-    {
-        try {
-            $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls',
-            ]);
+{
+    try {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
 
-            $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('excel'), $filename);
+        $file = $request->file('file');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('excel'), $filename);
 
-            $filePath = public_path('excel/' . $filename);
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
-            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $filePath = public_path('excel/' . $filename);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-            $totalRecords = count($rows) - 1;
+        $totalRecords = count($rows) - 1;
 
-            $delivery = ShootingDelivery::create([
-                'filename' => $filename,
-                'user_id' => auth()->id(),
-                'status' => 'تم ألرفع',
-                'total_records' => $totalRecords,
-                'sent_records' => 0,
-            ]);
+        // إنشاء سجل الشحن بدون new/old records مؤقتًا
+        $delivery = ShootingDelivery::create([
+            'filename' => $filename,
+            'user_id' => auth()->id(),
+            'status' => 'تم ألرفع',
+            'total_records' => $totalRecords,
+            'sent_records' => 0,
+        ]);
 
-            $existingItemNos = ShootingDeliveryContent::select('item_no')->distinct()->pluck('item_no')->flip();
+        // الحصول على كل الـ item_no اللي موجودة من قبل في جدول المحتوى
+        $existingItemNos = ShootingDeliveryContent::select('item_no')->distinct()->pluck('item_no')->flip();
 
-            foreach (array_slice($rows, 1) as $row) {
-                $itemNo = $row['A'];
-                $status = isset($existingItemNos[$itemNo]) ? 'old' : 'new';
+        $newCount = 0;
+        $oldCount = 0;
 
-                ShootingDeliveryContent::create([
-                    'shooting_delivery_id' => $delivery->id,
-                    'item_no' => $itemNo,
-                    'description' => $row['B'],
-                    'quantity' => $row['C'],
-                    'unit' => $row['D'],
-                    'primary_id' => substr($itemNo, 3, 6),
-                    'is_received' => 0,
-                    'status' => $status,
-                ]);
+        foreach (array_slice($rows, 1) as $row) {
+            $itemNo = $row['A'];
+            $status = isset($existingItemNos[$itemNo]) ? 'old' : 'new';
+
+            // زيادة العدادات
+            if ($status === 'new') {
+                $newCount++;
+            } else {
+                $oldCount++;
             }
 
-            return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
+            ShootingDeliveryContent::create([
+                'shooting_delivery_id' => $delivery->id,
+                'item_no' => $itemNo,
+                'description' => $row['B'],
+                'quantity' => $row['C'],
+                'unit' => $row['D'],
+                'primary_id' => substr($itemNo, 3, 6),
+                'is_received' => 0,
+                'status' => $status,
+            ]);
         }
+
+        // ✅ تحديث عدد الجديد والقديم في الجدول الرئيسي
+        $delivery->update([
+            'new_records' => $newCount,
+            'old_records' => $oldCount,
+        ]);
+
+        return redirect()->route('shooting-deliveries.index')->with('success', 'تم رفع الشيت بنجاح');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
     }
+}
+
 
 
 
