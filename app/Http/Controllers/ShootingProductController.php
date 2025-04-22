@@ -780,14 +780,6 @@ class ShootingProductController extends Controller
     public function deliveryIndex()
     {
         $deliveries = ShootingDelivery::latest()->get();
-
-        foreach ($deliveries as $delivery) {
-            $contents = $delivery->hasMany(ShootingDeliveryContent::class)->get();
-
-            $delivery->new_records = $contents->where('status', 'new')->count();
-            $delivery->old_records = $contents->where('status', 'old')->count();
-        }
-
         return view('shooting_products.deliveries.index', compact('deliveries'));
     }
 
@@ -1051,6 +1043,8 @@ class ShootingProductController extends Controller
                     'sent_by' => auth()->id(),
                     'status' => 'تم ألنشر',
                     'sent_records' => count($addedCodes),
+                    'new_records' => $delivery->contents()->where('status', 'new')->count(),
+                    'old_records' => $delivery->contents()->where('status', 'old')->count(),
                 ]);
             });
     
