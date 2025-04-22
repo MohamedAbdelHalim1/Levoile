@@ -15,7 +15,9 @@ class ShootingDelivery extends Model
         'sent_by',
         'status',
         'total_records',
-        'sent_records'
+        'sent_records',
+        'new_records',
+        'old_records',
     ];
 
     public $timestamps = true;
