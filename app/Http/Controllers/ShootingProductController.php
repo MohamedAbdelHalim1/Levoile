@@ -1110,8 +1110,6 @@ class ShootingProductController extends Controller
                     'sent_by' => auth()->id(),
                     'status' => 'تم ألنشر',
                     'sent_records' => count($addedCodes),
-                    'new_records' => $delivery->contents()->where('status', 'new')->count(),
-                    'old_records' => $delivery->contents()->where('status', 'old')->count(),
                 ]);
             });
     
