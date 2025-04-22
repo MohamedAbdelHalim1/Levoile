@@ -14,7 +14,7 @@
 
                 <h4>منتجات السوشيال ميديا</h4>
                 <div class="mb-3 text-end">
-                    <a href="{{ route('social-media.calendar') }}" class="btn btn-secondary">عرض التقويم</a>
+                    <a href="{{ route('social-media.calendar') }}" class="btn btn-secondary">عرض البوستينج بلان</a>
                 </div>
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
