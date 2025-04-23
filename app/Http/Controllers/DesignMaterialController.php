@@ -37,18 +37,30 @@ class DesignMaterialController extends Controller
             $materialData = [
                 'name' => $request->name,
             ];
-
+    
             if ($request->hasFile('image')) {
                 $imageName = time() . '_' . uniqid() . '.' . $request->image->getClientOriginalExtension();
                 $request->image->move(public_path('images/materials'), $imageName);
                 $materialData['image'] = 'images/materials/' . $imageName;
             }
-
+    
             $material = DesignMaterial::create($materialData);
-
-            // إضافة الألوان
-            if ($request->colors) {
+    
+            $colorCount = 0;
+    
+            // إضافة الألوان فقط لو فيها بيانات
+            if ($request->colors && is_array($request->colors)) {
                 foreach ($request->colors as $color) {
+                    // لو كل القيم فاضية/فاضية ميدخلهاش
+                    if (
+                        empty($color['name']) &&
+                        empty($color['code']) &&
+                        empty($color['required_quantity']) &&
+                        empty($color['received_quantity']) &&
+                        empty($color['delivery_date'])
+                    ) {
+                        continue;
+                    }
                     $colorData = [
                         'design_material_id'   => $material->id,
                         'name'                 => $color['name'] ?? null,
@@ -58,9 +70,11 @@ class DesignMaterialController extends Controller
                         'delivery_date'        => $color['delivery_date'] ?? null,
                     ];
                     DesignMaterialColor::create($colorData);
+                    $colorCount++;
                 }
             }
-
+    
+    
             DB::commit();
             return redirect()->route('design-materials.index')->with('success', 'تم إضافة الخامة بنجاح');
         } catch (\Exception $e) {
@@ -68,7 +82,7 @@ class DesignMaterialController extends Controller
             return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
         }
     }
-
+    
 
     // شاشة تعديل الخامة وكل ألوانها (نفس شاشة الإنشاء)
     public function edit($id)
