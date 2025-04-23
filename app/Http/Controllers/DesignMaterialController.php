@@ -13,20 +13,20 @@ class DesignMaterialController extends Controller
     public function index()
     {
         $materials = DesignMaterial::withCount('colors')->get();
-        return view('design_materials.index', compact('materials'));
+        return view('design-materials.index', compact('materials'));
     }
 
     // شاشة التفاصيل (الخامة + كل الألوان)
     public function show($id)
     {
         $material = DesignMaterial::with('colors')->findOrFail($id);
-        return view('design_materials.show', compact('material'));
+        return view('design-materials.show', compact('material'));
     }
 
     // شاشة إنشاء خامة (وفيها إضافة ألوان فورية)
     public function create()
     {
-        return view('design_materials.create');
+        return view('design-materials.create');
     }
 
     // حفظ خامة جديدة وكل ألوانها
@@ -76,7 +76,7 @@ class DesignMaterialController extends Controller
     public function edit($id)
     {
         $material = DesignMaterial::with('colors')->findOrFail($id);
-        return view('design_materials.edit', compact('material'));
+        return view('design-materials.edit', compact('material'));
     }
 
     // تعديل خامة وكل ألوانها (إضافة، تحديث، حذف)
