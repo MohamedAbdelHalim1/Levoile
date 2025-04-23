@@ -18,7 +18,7 @@
                         <div class="col-md-6">
                             <label>الصورة الحالية</label><br>
                             @if ($material->image)
-                                <img src="{{ asset('uploads/materials/' . $material->image) }}" alt="صورة الخامة"
+                                <img src="{{ asset($material->image) }}" alt="صورة الخامة"
                                     width="100" class="mb-2 rounded">
                             @else
                                 <span class="text-muted">لا توجد صورة</span>
