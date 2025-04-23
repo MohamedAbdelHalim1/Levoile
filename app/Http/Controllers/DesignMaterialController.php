@@ -37,17 +37,17 @@ class DesignMaterialController extends Controller
             $materialData = [
                 'name' => $request->name,
             ];
-    
+
             if ($request->hasFile('image')) {
                 $imageName = time() . '_' . uniqid() . '.' . $request->image->getClientOriginalExtension();
                 $request->image->move(public_path('images/materials'), $imageName);
                 $materialData['image'] = 'images/materials/' . $imageName;
             }
-    
+
             $material = DesignMaterial::create($materialData);
-    
+
             $colorCount = 0;
-    
+
             // إضافة الألوان فقط لو فيها بيانات
             if ($request->colors && is_array($request->colors)) {
                 foreach ($request->colors as $color) {
@@ -73,8 +73,8 @@ class DesignMaterialController extends Controller
                     $colorCount++;
                 }
             }
-    
-    
+
+
             DB::commit();
             return redirect()->route('design-materials.index')->with('success', 'تم إضافة الخامة بنجاح');
         } catch (\Exception $e) {
@@ -82,7 +82,7 @@ class DesignMaterialController extends Controller
             return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
         }
     }
-    
+
 
     // شاشة تعديل الخامة وكل ألوانها (نفس شاشة الإنشاء)
     public function edit($id)
@@ -115,7 +115,17 @@ class DesignMaterialController extends Controller
         $colorIdsInRequest = [];
 
         foreach ($inputColors as $colorData) {
-            // لو فيه id يبقى update
+            // لو كل الأعمدة فاضية أو مش متدخلة، كمل
+            if (
+                empty($colorData['name']) &&
+                empty($colorData['code']) &&
+                empty($colorData['required_quantity']) &&
+                empty($colorData['received_quantity']) &&
+                empty($colorData['delivery_date'])
+            ) {
+                continue;
+            }
+
             if (!empty($colorData['id'])) {
                 $color = $material->colors()->find($colorData['id']);
                 if ($color) {
@@ -140,6 +150,7 @@ class DesignMaterialController extends Controller
                 $colorIdsInRequest[] = $newColor->id;
             }
         }
+
 
         // حذف أي لون لم يتم إرساله في الفورم (تم حذفه من الواجهة)
         $material->colors()
