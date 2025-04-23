@@ -21,6 +21,7 @@
                             <th>المحررين</th>
                             <th>تاريخ التسليم</th>
                             <th>الحالة</th>
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,6 +59,19 @@
                                         <span class="badge bg-info">قيد التصوير</span>
                                     @elseif ($color->status == 'completed')
                                         <span class="badge bg-success">مكتمل</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($color->status != 'completed')
+                                    <form method="POST" action="{{ route('shooting-sessions.remove-color', $colorSession->id) }}" style="display:inline;" onsubmit="return confirm('هل أنت متأكد من حذف هذا اللون من الجلسة؟');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            حذف
+                                        </button>
+                                    </form>
+                                    @else
+                                        <span class="text-muted">---</span>
                                     @endif
                                 </td>
                             </tr>
