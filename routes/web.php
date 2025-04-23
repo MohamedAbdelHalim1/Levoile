@@ -174,16 +174,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('design-material', [DesignMaterialController::class, 'index'])->name('design-materials.index');
-    Route::get('design-material/{id}', [DesignMaterialController::class, 'show'])->name('design-materials.show');
-    Route::get('design-material/create', [DesignMaterialController::class, 'create'])->name('design-materials.create');
-    Route::post('design-material', [DesignMaterialController::class, 'store'])->name('design-materials.store');
-    Route::get('design-material/{id}/edit', [DesignMaterialController::class, 'edit'])->name('design-materials.edit');
-    Route::put('design-material/{id}', [DesignMaterialController::class, 'update'])->name('design-materials.update');
-    Route::delete('design-material/{id}', [DesignMaterialController::class, 'destroy'])->name('design-materials.destroy');
+    Route::get('design-materials', [DesignMaterialController::class, 'index'])->name('design-materials.index');
+    Route::get('design-materials/{id}', [DesignMaterialController::class, 'show'])->name('design-materials.show');
+    Route::get('design-materials/create', [DesignMaterialController::class, 'create'])->name('design-materials.create');
+    Route::post('design-materials', [DesignMaterialController::class, 'store'])->name('design-materials.store');
+    Route::get('design-materials/{id}/edit', [DesignMaterialController::class, 'edit'])->name('design-materials.edit');
+    Route::put('design-materials/{id}', [DesignMaterialController::class, 'update'])->name('design-materials.update');
+    Route::delete('design-materials/{id}', [DesignMaterialController::class, 'destroy'])->name('design-materials.destroy');
     
     // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
-    Route::delete('design-material/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
+    Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
 
 
     Route::resource('products', ProductController::class);
