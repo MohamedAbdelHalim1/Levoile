@@ -1,25 +1,70 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-2">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow sm:rounded-lg p-4">
-            <h4 class="mb-4">إضافة خامة جديدة</h4>
-            <form action="{{ route('design-materials.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label>اسم الخامة <span class="text-danger">*</span></label>
-                    <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
-                    @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
-                </div>
-                <div class="mb-3">
-                    <label>الصورة (اختياري)</label>
-                    <input type="file" name="image" class="form-control" accept="image/*">
-                </div>
-                <button class="btn btn-success">حفظ</button>
-                <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">رجوع</a>
-            </form>
+    <div class="p-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="bg-white shadow sm:rounded-lg p-4">
+                <h4 class="mb-4">إضافة خامة جديدة</h4>
+                <form action="{{ route('design-materials.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>اسم الخامة</label>
+                            <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label>الصورة</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+                    <hr>
+                    <h5>ألوان الخامة</h5>
+                    <div id="colors-area">
+                        <div class="row mb-2 color-row">
+                            <div class="col-md-5">
+                                <input type="text" name="colors[0][name]" class="form-control" placeholder="اسم اللون">
+                            </div>
+                            <div class="col-md-5">
+                                <input type="color" name="colors[0][code]" class="form-control" value="#000000">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-color">حذف</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ إضافة لون</button>
+                    <div>
+                        <button type="submit" class="btn btn-primary">حفظ الخامة</button>
+                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">إلغاء</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+@endsection
+
+@section('scripts')
+    <script>
+        let colorIndex = 1;
+        $('#add-color').click(function () {
+            let row = `
+                <div class="row mb-2 color-row">
+                    <div class="col-md-5">
+                        <input type="text" name="colors[${colorIndex}][name]" class="form-control" placeholder="اسم اللون">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="color" name="colors[${colorIndex}][code]" class="form-control" value="#000000">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-color">حذف</button>
+                    </div>
+                </div>
+            `;
+            $('#colors-area').append(row);
+            colorIndex++;
+        });
+        $(document).on('click', '.remove-color', function () {
+            $(this).closest('.color-row').remove();
+        });
+    </script>
 @endsection
