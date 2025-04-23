@@ -9,64 +9,61 @@
                     {{ session('success') }}
                 </div>
             @endif
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
-                <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="row mb-4">
-                        <div class="m-2">
-                            <a href="{{ route('design-materials.create') }}" class="btn btn-primary">
-                                {{ __('إضافة خامة') }}
-                            </a>
-                        </div>
+            <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="row mb-4">
+                    <div class="m-2">
+                        <a href="{{ route('design-materials.create') }}" class="btn btn-primary">
+                            {{ __('إضافة خامة') }}
+                        </a>
                     </div>
-                    <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>اسم الخامة</th>
-                                <th>عدد الألوان</th>
-                                <th>الصورة</th>
-                                <th>إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($materials as $index => $material)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $material->name }}</td>
-                                    <td>{{ $material->colors_count }}</td>
-                                    <td>
-                                        @if ($material->image)
-                                            <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('design-materials.show', $material->id) }}"
-                                            class="btn btn-info btn-sm">
-                                            عرض التفاصيل
-                                        </a>
-                                        <a href="{{ route('design-materials.edit', $material->id) }}"
-                                            class="btn btn-warning btn-sm">
-                                            تعديل
-                                        </a>
-                                        <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('هل أنت متأكد من حذف هذه الخامة وكل ألوانها؟');">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">حذف</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center text-muted">لا توجد خامات بعد</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
+                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم الخامة</th>
+                            <th>عدد الألوان</th>
+                            <th>الصورة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($materials as $index => $material)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $material->name }}</td>
+                                <td>{{ $material->colors_count }}</td>
+                                <td>
+                                    @if ($material->image)
+                                        <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('design-materials.show', $material->id) }}"
+                                        class="btn btn-info btn-sm">
+                                        عرض التفاصيل
+                                    </a>
+                                    <a href="{{ route('design-materials.edit', $material->id) }}"
+                                        class="btn btn-warning btn-sm">
+                                        تعديل
+                                    </a>
+                                    <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
+                                        class="d-inline"
+                                        onsubmit="return confirm('هل أنت متأكد من حذف هذه الخامة وكل ألوانها؟');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">لا توجد خامات بعد</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
