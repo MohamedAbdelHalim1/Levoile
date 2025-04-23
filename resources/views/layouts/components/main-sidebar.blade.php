@@ -207,93 +207,99 @@
                 @endif
 
 
-                <li class="sub-category">
-                    <h3>التصوير</h3>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="side-menu__icon fe fe-camera"></i><span class="side-menu__label">التصوير</span><i
-                            class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('shooting-deliveries.index') }}"
-                                                    class="slide-item">المنتجات الجديده</a>
-                                            </li>
-                                            <li><a href="{{ route('shooting-products.index') }}"
-                                                    class="slide-item">منتجات التصوير</a></li>
-                                            <li><a href="{{ route('shooting-sessions.index') }}"
-                                                    class="slide-item">جلسات التصوير</a></li>
+                @if (auth()->user()->role_id == 10 || auth()->user->role->name == 'Shooting')
+                    <li class="sub-category">
+                        <h3>التصوير</h3>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                class="side-menu__icon fe fe-camera"></i><span
+                                class="side-menu__label">التصوير</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('shooting-deliveries.index') }}"
+                                                        class="slide-item">المنتجات الجديده</a>
+                                                </li>
+                                                <li><a href="{{ route('shooting-products.index') }}"
+                                                        class="slide-item">منتجات التصوير</a></li>
+                                                <li><a href="{{ route('shooting-sessions.index') }}"
+                                                        class="slide-item">جلسات التصوير</a></li>
 
-                                        </ul>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
 
+                @if (auth()->user()->role_id == 1)
+                    <li class="sub-category">
+                        <h3>مسؤول الموقع</h3>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fe fe-globe"></i>
+                            <span class="side-menu__label">مسؤول الموقع</span>
+                            <i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="site-admin">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول
+                                                        الموقع</a>
+                                                </li>
+                                                <li><a href="{{ route('website-admin.index') }}"
+                                                        class="slide-item">مسؤول
+                                                        الموقع</a></li>
 
-                <li class="sub-category">
-                    <h3>مسؤول الموقع</h3>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
-                        <i class="side-menu__icon fe fe-globe"></i>
-                        <span class="side-menu__label">مسؤول الموقع</span>
-                        <i class="angle fe fe-chevron-right"></i>
-                    </a>
-                    <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="site-admin">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول الموقع</a>
-                                            </li>
-                                            <li><a href="{{ route('website-admin.index') }}" class="slide-item">مسؤول
-                                                    الموقع</a></li>
-
-                                        </ul>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+                            </li>
+                        </ul>
+                    </li>
 
-                <li class="sub-category">
-                    <h3>أخصائي السوشيال ميديا</h3>
-                </li>
-                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
-                        <i class="side-menu__icon fe fe-share-2"></i>
-                        <span class="side-menu__label">السوشيال ميديا</span>
-                        <i class="angle fe fe-chevron-right"></i>
-                    </a>
-                    <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="social-tab">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي السوشيال
-                                                    ميديا</a></li>
-                                            <li><a href="{{ route('social-media.index') }}"
-                                                    class="slide-item">السوشيال ميديا</a></li>
-                                        </ul>
+                    <li class="sub-category">
+                        <h3>أخصائي السوشيال ميديا</h3>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fe fe-share-2"></i>
+                            <span class="side-menu__label">السوشيال ميديا</span>
+                            <i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="social-tab">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي
+                                                        السوشيال
+                                                        ميديا</a></li>
+                                                <li><a href="{{ route('social-media.index') }}"
+                                                        class="slide-item">السوشيال ميديا</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
 
 
 
