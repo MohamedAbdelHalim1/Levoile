@@ -12,7 +12,7 @@
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="row mb-4">
                     <div class="m-2">
-                        <a href="{{ url('design/design-materials/create') }}" class="btn btn-primary">
+                        <a href="{{ route('design-materials.create') }}" class="btn btn-primary">
                             {{ __('إضافة خامة') }}
                         </a>
                     </div>
