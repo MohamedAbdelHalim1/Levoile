@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="colors[{{ $i }}][code]" class="form-control"
-                                        placeholder="كود اللون أو اختر لون"
+                                        placeholder="كود اللون"
                                         value="{{ old('colors.' . $i . '.code', $color->code) }}">
                                 </div>
                                 <div class="col-md-2">
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="colors[0][code]" class="form-control"
-                                        placeholder="كود اللون أو اختر لون">
+                                        placeholder="كود اللون">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][required_quantity]" class="form-control"
@@ -112,7 +112,7 @@
                 <input type="text" name="colors[${colorIndex}][name]" class="form-control" placeholder="اسم اللون">
             </div>
             <div class="col-md-2">
-                <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون أو اختر لون">
+                <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون ">
             </div>
             <div class="col-md-2">
                 <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">

@@ -91,7 +91,7 @@ class DesignMaterialController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/materials'), $imageName);
+            $image->move(public_path('images/materials'), $imageName);
             $material->image = $imageName;
             $material->save();
         }
@@ -132,7 +132,7 @@ class DesignMaterialController extends Controller
             ->whereNotIn('id', $colorIdsInRequest)
             ->delete();
     
-        return redirect()->route('design-materials.edit', $material->id)
+        return redirect()->route('design-materials.index')
             ->with('success', 'تم تحديث الخامة بنجاح');
     }
     
