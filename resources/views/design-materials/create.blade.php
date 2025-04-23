@@ -21,11 +21,21 @@
                     <h5>ألوان الخامة</h5>
                     <div id="colors-area">
                         <div class="row mb-2 color-row">
-                            <div class="col-md-5">
+                            <div class="col-md-2">
                                 <input type="text" name="colors[0][name]" class="form-control" placeholder="اسم اللون">
                             </div>
-                            <div class="col-md-5">
-                                <input type="color" name="colors[0][code]" class="form-control" value="#000000">
+                            <div class="col-md-2">
+                                <input type="text" name="colors[0][code]" class="form-control" placeholder="كود اللون أو اختر لون">
+                                <!-- أو استبدلها بـ <input type="color"... لو تحب -->
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="colors[0][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="colors[0][received_quantity]" class="form-control" placeholder="الكمية المستلمة">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" name="colors[0][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-danger remove-color">حذف</button>
@@ -49,11 +59,20 @@
         $('#add-color').click(function () {
             let row = `
                 <div class="row mb-2 color-row">
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <input type="text" name="colors[${colorIndex}][name]" class="form-control" placeholder="اسم اللون">
                     </div>
-                    <div class="col-md-5">
-                        <input type="color" name="colors[${colorIndex}][code]" class="form-control" value="#000000">
+                    <div class="col-md-2">
+                        <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون أو اختر لون">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-danger remove-color">حذف</button>

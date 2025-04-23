@@ -37,33 +37,30 @@ class DesignMaterialController extends Controller
             $materialData = [
                 'name' => $request->name,
             ];
-
+    
             if ($request->hasFile('image')) {
                 $imageName = time() . '_' . uniqid() . '.' . $request->image->getClientOriginalExtension();
                 $request->image->move(public_path('images/materials'), $imageName);
                 $materialData['image'] = 'images/materials/' . $imageName;
             }
-
+    
             $material = DesignMaterial::create($materialData);
-
-            // إضافة الألوان (ممكن تيجي فاضيه)
+    
+            // إضافة الألوان
             if ($request->colors) {
                 foreach ($request->colors as $color) {
                     $colorData = [
-                        'design_material_id' => $material->id,
-                        'name' => $color['name'] ?? null,
-                        'code' => $color['code'] ?? null,
+                        'design_material_id'   => $material->id,
+                        'name'                 => $color['name'] ?? null,
+                        'code'                 => $color['code'] ?? null,
+                        'required_quantity'    => $color['required_quantity'] ?? null,
+                        'received_quantity'    => $color['received_quantity'] ?? null,
+                        'delivery_date'        => $color['delivery_date'] ?? null,
                     ];
-
-                    if (isset($color['image']) && $color['image'] instanceof \Illuminate\Http\UploadedFile) {
-                        $colorImageName = time() . '_' . uniqid() . '.' . $color['image']->getClientOriginalExtension();
-                        $color['image']->move(public_path('images/material_colors'), $colorImageName);
-                        $colorData['image'] = 'images/material_colors/' . $colorImageName;
-                    }
-
                     DesignMaterialColor::create($colorData);
                 }
             }
+    
             DB::commit();
             return redirect()->route('design-materials.index')->with('success', 'تم إضافة الخامة بنجاح');
         } catch (\Exception $e) {
@@ -71,6 +68,7 @@ class DesignMaterialController extends Controller
             return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
         }
     }
+    
 
     // شاشة تعديل الخامة وكل ألوانها (نفس شاشة الإنشاء)
     public function edit($id)

@@ -10,7 +10,9 @@ class DesignMaterialColor extends Model
         'design_material_id',
         'name',
         'code',     
-        'image',   
+        'required_quantity',   
+        'received_quantity',
+        'delivery_date'
     ];
 
     public function material()
