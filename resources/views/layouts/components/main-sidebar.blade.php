@@ -49,7 +49,7 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon fe fe-camera"></i><span class="side-menu__label">التصميم</span><i
+                                class="side-menu__icon fe fe-feather"></i><span class="side-menu__label">التصميم</span><i
                                 class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
@@ -241,7 +241,7 @@
                 @endif
 
 
-                @if (auth()->user()->role_id == 10 || auth()->user()->role->name == 'Shooting')
+                @if (auth()->user()->role_id == 10 || auth()->user()->role->name == 'Shooting' || auth()->user()->role_id == 1)
                     <li class="sub-category">
                         <h3>التصوير</h3>
                     </li>
