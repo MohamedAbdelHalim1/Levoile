@@ -83,8 +83,7 @@
                                         placeholder="تاريخ التسليم">
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger btn-sm remove-color"
-                                        data-id="{{ $color->id }}">
+                                    <button type="button" class="btn btn-danger btn-sm remove-color">
                                         حذف اللون
                                     </button>
                                 </div>
