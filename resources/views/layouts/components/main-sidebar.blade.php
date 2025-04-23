@@ -207,7 +207,7 @@
                 @endif
 
 
-                @if (auth()->user()->role_id == 10 || auth()->user->role->name == 'Shooting')
+                @if (auth()->user()->role_id == 10 || auth()->user()->role->name == 'Shooting')
                     <li class="sub-category">
                         <h3>التصوير</h3>
                     </li>
