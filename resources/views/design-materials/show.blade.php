@@ -38,8 +38,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $color->name }}</td>
                                     <td>
-                                        <div class="mb-1" style="height: 25px; background: {{ $color->code ?? '#eee' }}; border-radius: 6px;"></div>
-                                        <span>{{ $color->code }}</span>
+                                        {{ $color->code ?? '-' }}
                                     </td>
                                     <td>{{ $color->required_quantity ?? '-' }}</td>
                                     <td>{{ $color->received_quantity ?? '-' }}</td>
