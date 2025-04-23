@@ -20,18 +20,38 @@
                 </div>
                 <hr>
                 <h5>ألوان الخامة</h5>
-                <div class="row">
-                    @forelse($material->colors as $color)
-                        <div class="col-md-3 mb-3">
-                            <div class="border rounded p-2 text-center">
-                                <div class="mb-1" style="height: 30px; background: {{ $color->code ?? '#eee' }}; border-radius: 6px;"></div>
-                                <strong>{{ $color->name }}</strong>
-                                <div class="text-muted">{{ $color->code }}</div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12 text-muted">لا توجد ألوان</div>
-                    @endforelse
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>اسم اللون</th>
+                                <th>كود اللون</th>
+                                <th>الكمية المطلوبة</th>
+                                <th>الكمية المستلمة</th>
+                                <th>تاريخ التسليم</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($material->colors as $index => $color)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $color->name }}</td>
+                                    <td>
+                                        <div class="mb-1" style="height: 25px; background: {{ $color->code ?? '#eee' }}; border-radius: 6px;"></div>
+                                        <span>{{ $color->code }}</span>
+                                    </td>
+                                    <td>{{ $color->required_quantity ?? '-' }}</td>
+                                    <td>{{ $color->received_quantity ?? '-' }}</td>
+                                    <td>{{ $color->delivery_date ?? '-' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-muted">لا توجد ألوان</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
                 <a href="{{ route('design-materials.index') }}" class="btn btn-secondary mt-4">رجوع</a>
             </div>
