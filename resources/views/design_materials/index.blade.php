@@ -1,67 +1,96 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container p-3">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">الخامات</h4>
-            <a href="{{ route('design-materials.create') }}" class="btn btn-success">إضافة خامة جديدة</a>
-        </div>
-        <div class="card-body">
+    <div class="p-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
+                <div class="alert alert-primary" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">x</button>
+                    {{ session('success') }}
+                </div>
             @endif
 
-            <div class="table-responsive">
-                <table class="table table-bordered text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>اسم الخامة</th>
-                            <th>عدد الألوان</th>
-                            <th>الصورة</th>
-                            <th>إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($materials as $index => $material)
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
+                <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="row mb-4">
+                        <div class="m-2">
+                            <a href="{{ route('design-materials.create') }}" class="btn btn-primary">
+                                {{ __('إضافة خامة') }}
+                            </a>
+                        </div>
+                    </div>
+                    <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                        <thead>
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $material->name }}</td>
-                                <td>{{ $material->colors_count }}</td>
-                                <td>
-                                    @if ($material->image)
-                                        <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('design-materials.show', $material->id) }}" class="btn btn-info btn-sm">
-                                        عرض التفاصيل
-                                    </a>
-                                    <a href="{{ route('design-materials.edit', $material->id) }}" class="btn btn-warning btn-sm">
-                                        تعديل
-                                    </a>
-                                    <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST" class="d-inline"
-                                          onsubmit="return confirm('هل أنت متأكد من حذف هذه الخامة وكل ألوانها؟');">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
-                                    </form>
-                                </td>
+                                <th>#</th>
+                                <th>اسم الخامة</th>
+                                <th>عدد الألوان</th>
+                                <th>الصورة</th>
+                                <th>إجراءات</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">لا توجد خامات بعد</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse ($materials as $index => $material)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $material->name }}</td>
+                                    <td>{{ $material->colors_count }}</td>
+                                    <td>
+                                        @if ($material->image)
+                                            <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('design-materials.show', $material->id) }}"
+                                            class="btn btn-info btn-sm">
+                                            عرض التفاصيل
+                                        </a>
+                                        <a href="{{ route('design-materials.edit', $material->id) }}"
+                                            class="btn btn-warning btn-sm">
+                                            تعديل
+                                        </a>
+                                        <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('هل أنت متأكد من حذف هذه الخامة وكل ألوانها؟');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">لا توجد خامات بعد</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
+
+
+
+@section('scripts')
+    <!-- SELECT2 JS -->
+    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
+    @vite('resources/assets/js/select2.js')
+
+    <!-- DATA TABLE JS -->
+    <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+    @vite('resources/assets/js/table-data.js')
 @endsection
