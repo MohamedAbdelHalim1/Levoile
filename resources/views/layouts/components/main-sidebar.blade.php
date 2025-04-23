@@ -60,7 +60,7 @@
                                                 <li class="side-menu-label1"><a href="javascript:void(0)">التصميم</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="slide-item">خامات العينه</a>
+                                                    <a href="{{ route('design-materials.index') }}" class="slide-item">خامات العينه</a>
                                                 </li>
 
                                             </ul>

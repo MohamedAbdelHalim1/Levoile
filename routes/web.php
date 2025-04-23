@@ -6,10 +6,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\DesignMaterialController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\ProductController;
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -148,6 +149,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -170,6 +172,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::get('design-materials', [DesignMaterialController::class, 'index'])->name('design-materials.index');
+    Route::get('design-materials/{id}', [DesignMaterialController::class, 'show'])->name('design-materials.show');
+    Route::get('design-materials/create', [DesignMaterialController::class, 'create'])->name('design-materials.create');
+    Route::post('design-materials', [DesignMaterialController::class, 'store'])->name('design-materials.store');
+    Route::get('design-materials/{id}/edit', [DesignMaterialController::class, 'edit'])->name('design-materials.edit');
+    Route::put('design-materials/{id}', [DesignMaterialController::class, 'update'])->name('design-materials.update');
+    Route::delete('design-materials/{id}', [DesignMaterialController::class, 'destroy'])->name('design-materials.destroy');
+    
+    // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
+    Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
+
+
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('seasons', SeasonController::class);
