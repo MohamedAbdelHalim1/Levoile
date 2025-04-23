@@ -166,7 +166,6 @@ class DesignMaterialController extends Controller
     public function destroy($id)
     {
         $material = DesignMaterial::findOrFail($id);
-        $material->colors()->delete();
         $material->delete();
         return redirect()->route('design-materials.index')->with('success', 'تم حذف الخامة بنجاح');
     }
