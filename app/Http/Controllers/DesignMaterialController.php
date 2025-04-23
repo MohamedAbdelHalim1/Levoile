@@ -81,25 +81,25 @@ class DesignMaterialController extends Controller
     public function update(Request $request, $id)
     {
         $material = DesignMaterial::findOrFail($id);
-    
+
         // تحديث بيانات الخامة الأساسية
         $material->update([
             'name' => $request->input('name'),
         ]);
-    
+
         // حفظ الصورة لو تم رفعها
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('images/materials'), $imageName);
-            $material->image = $imageName;
+            $material->image = 'images/materials/' . $imageName;
             $material->save();
         }
-    
+
         // تحديث أو إضافة الألوان
         $inputColors = $request->input('colors', []);
         $colorIdsInRequest = [];
-    
+
         foreach ($inputColors as $colorData) {
             // لو فيه id يبقى update
             if (!empty($colorData['id'])) {
@@ -126,16 +126,16 @@ class DesignMaterialController extends Controller
                 $colorIdsInRequest[] = $newColor->id;
             }
         }
-    
+
         // حذف أي لون لم يتم إرساله في الفورم (تم حذفه من الواجهة)
         $material->colors()
             ->whereNotIn('id', $colorIdsInRequest)
             ->delete();
-    
+
         return redirect()->route('design-materials.index')
             ->with('success', 'تم تحديث الخامة بنجاح');
     }
-    
+
 
     // حذف خامة (يحذف كل ألوانها برضه)
     public function destroy($id)
