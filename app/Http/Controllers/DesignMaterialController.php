@@ -12,7 +12,7 @@ class DesignMaterialController extends Controller
     // قائمة كل الخامات
     public function index()
     {
-        $materials = DesignMaterial::withCount('colors')->get();
+        $materials = DesignMaterial::with('colors')->get();
         return view('design-materials.index', compact('materials'));
     }
 

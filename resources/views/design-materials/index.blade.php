@@ -32,7 +32,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $material->name }}</td>
-                                <td>{{ $material->colors_count }}</td>
+                                <td>{{ $material->colors->count() }}</td>
                                 <td>
                                     @if ($material->image)
                                         <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
