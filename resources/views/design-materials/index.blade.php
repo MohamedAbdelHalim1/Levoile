@@ -32,37 +32,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $material->name }}</td>
-                                <td>
-                                    <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true"
-                                        title="
-                                        <table class='table table-sm table-bordered text-center mb-0'>
-                                            <thead class='table-light'>
-                                                <tr>
-                                                    <th>اللون</th>
-                                                    <th>كود</th>
-                                                    <th>مطلوب</th>
-                                                    <th>مستلم</th>
-                                                    <th>متبقي</th>
-                                                    <th>تسليم</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($material->colors as $c)
-                                                    <tr>
-                                                        <td>{{ $c->name }}</td>
-                                                        <td>{{ $c->code ?? '-' }}</td>
-                                                        <td>{{ $c->required_quantity ?? '-' }}</td>
-                                                        <td>{{ $c->received_quantity ?? '-' }}</td>
-                                                        <td>{{ $c->required_quantity - $c->received_quantity ?? '-' }}</td>
-                                                        <td>{{ $c->delivery_date ?? '-' }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        ">
-                                        {{ $material->colors->count() }}
-                                    </span>
-                                </td>
+                                <td>{{ $material->colors->count() }}</td>
                                 <td>
                                     @if ($material->image)
                                         <img src="{{ asset($material->image) }}" width="60" class="img-thumbnail">
@@ -120,14 +90,4 @@
     <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
-
-    <script>
-        $(function () {
-                $('[data-bs-toggle="tooltip"]').tooltip({
-                    container: 'body',
-                    html: true,
-                    boundary: 'window'
-                });
-            });
-    </script>
 @endsection
