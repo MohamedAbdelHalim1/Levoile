@@ -29,6 +29,7 @@
                                 <th>كود اللون</th>
                                 <th>الكمية المطلوبة</th>
                                 <th>الكمية المستلمة</th>
+                                <th>الكميه المتبقية</th>
                                 <th>تاريخ التسليم</th>
                             </tr>
                         </thead>
@@ -42,6 +43,7 @@
                                     </td>
                                     <td>{{ $color->required_quantity ?? '-' }}</td>
                                     <td>{{ $color->received_quantity ?? '-' }}</td>
+                                    <td>{{ $color->required_quantity - $color->received_quantity ?? '-' }}</td>
                                     <td>{{ $color->delivery_date ?? '-' }}</td>
                                 </tr>
                             @empty
