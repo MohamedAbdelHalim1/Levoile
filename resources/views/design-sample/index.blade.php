@@ -62,9 +62,10 @@
                                                                 @if ($m->material)
                                                                     <li>{{ $m->material->name }}</li>
                                                                 @else
-                                                                    <li class="text-danger">-</li>
+                                                                    <li class="text-danger">خامة غير موجودة (أو محذوفة)</li>
                                                                 @endif
                                                             @endforeach
+
                                                         </ul>
                                                     </div>
                                                 </div>

@@ -14,10 +14,11 @@ class DesignSampleController extends Controller
 
     public function index()
     {
-        $samples = DesignSample::all();
+        $samples = DesignSample::with(['season', 'category', 'materials.material'])->get();
         $materials = DesignMaterial::all();
-        return view('design-sample.index', compact('samples' , 'materials'));
+        return view('design-sample.index', compact('samples', 'materials'));
     }
+    
 
     public function create()
     {
