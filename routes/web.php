@@ -181,6 +181,7 @@ Route::middleware('auth')->group(function () {
     // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
     Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
     Route::resource('design-sample-products', DesignSampleController::class);
+    Route::post('design-sample-products/{id}/attach-materials', [DesignSampleController::class, 'attachMaterials'])->name('design-sample-products.attach-materials');
 
 
     Route::resource('products', ProductController::class);

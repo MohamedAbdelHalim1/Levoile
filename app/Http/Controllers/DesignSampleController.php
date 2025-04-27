@@ -15,7 +15,7 @@ class DesignSampleController extends Controller
     public function index()
     {
         $samples = DesignSample::all();
-        return view('design-sample.index' , compact('samples'));
+        return view('design-sample.index', compact('samples'));
     }
 
     public function create()
@@ -24,7 +24,7 @@ class DesignSampleController extends Controller
         $seasons = Season::all();
         return view('design-sample.create', compact('categories', 'seasons'));
     }
-    
+
 
 
 
@@ -114,5 +114,28 @@ class DesignSampleController extends Controller
         $sample->delete();
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم الحذف بنجاح');
+    }
+
+    public function attachMaterials(Request $request, $id)
+    {
+        $request->validate([
+            'materials' => 'required|array',
+            'materials.*' => 'exists:design_materials,id',
+        ]);
+
+        $sample = DesignSample::findOrFail($id);
+
+        // امسح الخامات القديمة
+        DesignSampleMaterial::where('design_sample_id', $sample->id)->delete();
+
+        // أضف الجديد
+        foreach ($request->materials as $materialId) {
+            DesignSampleMaterial::create([
+                'design_sample_id' => $sample->id,
+                'design_material_id' => $materialId,
+            ]);
+        }
+
+        return redirect()->route('design-sample-products.index')->with('success', 'تم تحديث الخامات بنجاح');
     }
 }
