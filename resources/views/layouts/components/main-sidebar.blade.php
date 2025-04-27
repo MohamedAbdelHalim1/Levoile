@@ -62,6 +62,9 @@
                                                 <li>
                                                     <a href="{{ route('design-materials.index') }}" class="slide-item">خامات العينه</a>
                                                 </li>
+                                                <li>
+                                                    <a href="{{ route('design-sample-products.index') }}" class="slide-item">عينات المنتج</a>
+                                                </li>
 
                                             </ul>
                                         </div>

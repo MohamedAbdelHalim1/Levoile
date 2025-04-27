@@ -7,9 +7,10 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\DesignMaterialController;
+use App\Http\Controllers\DesignSampleController;
 use App\Http\Controllers\FactoryController;
-use App\Http\Controllers\MaterialController;
 
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -150,6 +151,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -178,6 +180,7 @@ Route::middleware('auth')->group(function () {
 
     // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
     Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
+    Route::resource('design-sample-products', DesignSampleController::class);
 
 
     Route::resource('products', ProductController::class);
