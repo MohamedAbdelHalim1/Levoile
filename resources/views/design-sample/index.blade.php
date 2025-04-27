@@ -76,10 +76,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if($sample->status === 'new')
+                                        @if ($sample->status === 'new')
                                             <span class="badge bg-success">جديد</span>
                                         @elseif($sample->status === 'تم التوزيع')
                                             <span class="badge bg-primary">تم التوزيع</span>
+                                        @elseif($sample->status === 'قيد المراجعه')
+                                            <span class="badge bg-warning text-dark">قيد المراجعة</span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
@@ -191,6 +193,62 @@
                                                 </form>
                                             </div>
                                         </div>
+
+                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
+                                            <!-- زرار إضافة ماركر -->
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#addMarkerModal{{ $sample->id }}">
+                                                إضافة ماركر
+                                            </button>
+
+                                            <!-- Modal إضافة ماركر -->
+                                            <div class="modal fade" id="addMarkerModal{{ $sample->id }}"
+                                                tabindex="-1" aria-labelledby="addMarkerModalLabel{{ $sample->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form
+                                                        action="{{ route('design-sample-products.add-marker', $sample->id) }}"
+                                                        method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="addMarkerModalLabel{{ $sample->id }}">إضافة
+                                                                    ماركر</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label>اسم الماركر</label>
+                                                                    <input type="text" name="marker_number"
+                                                                        class="form-control" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label>رفع ملف الماركر</label>
+                                                                    <input type="file" name="marker_file"
+                                                                        class="form-control" accept=".pdf,.zip,.rar"
+                                                                        required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label>صورة الماركر</label>
+                                                                    <input type="file" name="marker_image"
+                                                                        class="form-control" accept="image/*" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">إغلاق</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">حفظ</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+
 
                                     </td>
                                 </tr>

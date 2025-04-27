@@ -183,6 +183,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('design-sample-products', DesignSampleController::class);
     Route::post('design-sample-products/{id}/attach-materials', [DesignSampleController::class, 'attachMaterials'])->name('design-sample-products.attach-materials');
     Route::post('design-sample-products/{id}/assign-patternest', [DesignSampleController::class, 'assignPatternest'])->name('design-sample-products.assign-patternest');
+    Route::post('design-sample-products/{id}/add-marker', [DesignSampleController::class, 'addMarker'])->name('design-sample-products.add-marker');
 
 
     Route::resource('products', ProductController::class);

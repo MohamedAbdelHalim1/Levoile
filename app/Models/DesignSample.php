@@ -12,6 +12,10 @@ class DesignSample extends Model
         'category_id',
         'image',
         'status',
+        'patternest_id',
+        'marker_file',
+        'marker_number',
+        'marker_image',
     ];
 
     public function season()

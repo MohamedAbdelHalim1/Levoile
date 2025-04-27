@@ -155,4 +155,35 @@ class DesignSampleController extends Controller
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم تعيين الباترنيست بنجاح.');
     }
+
+    public function addMarker(Request $request, $id)
+    {
+        $request->validate([
+            'marker_number' => 'required|string|max:100',
+            'marker_file' => 'required|file',
+            'marker_image' => 'required|image',
+        ]);
+
+        $sample = DesignSample::findOrFail($id);
+
+        // رفع الملف
+        $file = $request->file('marker_file');
+        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('files/marker'), $fileName);
+
+        // رفع الصورة
+        $image = $request->file('marker_image');
+        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/marker'), $imageName);
+
+        // حفظ البيانات
+        $sample->update([
+            'marker_number' => $request->marker_number,
+            'marker_file' => 'files/marker/' . $fileName,
+            'marker_image' => 'images/marker/' . $imageName,
+            'status' => 'قيد المراجعه'
+        ]);
+
+        return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة الماركر بنجاح.');
+    }
 }
