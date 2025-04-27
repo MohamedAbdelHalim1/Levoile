@@ -186,4 +186,14 @@ class DesignSampleController extends Controller
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة الماركر بنجاح.');
     }
+
+    public function reviewSample($id)
+    {
+        $sample = DesignSample::findOrFail($id);
+        $sample->update([
+            'status' => 'تم المراجعه',
+            'is_reviewed' => 1
+        ]);
+        return redirect()->route('design-sample-products.index')->with('success', 'تمت مراجعة العينة بنجاح.');
+    }
 }

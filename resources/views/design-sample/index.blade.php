@@ -85,10 +85,13 @@
                                             <span class="badge bg-primary">تم التوزيع</span>
                                         @elseif($sample->status === 'قيد المراجعه')
                                             <span class="badge bg-warning text-dark">قيد المراجعة</span>
+                                        @elseif($sample->status === 'تم المراجعه')
+                                            <span class="badge bg-info text-dark">تم المراجعة</span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
+                                    
 
 
                                     <td>
@@ -283,6 +286,43 @@
                                             </div>
                                         @endif
 
+
+                                        <!-- زر مراجعة -->
+                                        <button type="button" class="btn btn-outline-success btn-sm"
+                                            data-bs-toggle="modal" data-bs-target="#reviewModal{{ $sample->id }}">
+                                            مراجعة
+                                        </button>
+
+                                        <!-- Modal مراجعة -->
+                                        <div class="modal fade" id="reviewModal{{ $sample->id }}" tabindex="-1"
+                                            aria-labelledby="reviewModalLabel{{ $sample->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form action="{{ route('design-sample-products.review', $sample->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="reviewModalLabel{{ $sample->id }}">تأكيد المراجعة
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-warning">
+                                                                سوف يتم تغيير حالة العينة إلى <b>تم المراجعة</b>.<br>
+                                                                هل أنت متأكد من المراجعة؟
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">إلغاء</button>
+                                                            <button type="submit" class="btn btn-success">تأكيد</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
 
                                     </td>
                                 </tr>
