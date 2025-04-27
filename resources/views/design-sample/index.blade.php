@@ -12,7 +12,7 @@
                 @endif
 
                 <h1>{{ __('عينات المنتج') }}</h1>
-                <div class="mb-3">
+                <div class="mb-3 table-responsive">
                     @if (auth()->user()->hasPermission('إضافة منتج'))
                         <div class="flex justify-end mb-4">
                             <a href="{{ route('design-sample-products.create') }}" class="btn btn-success">
