@@ -59,9 +59,6 @@
                                                     <div class="modal-body">
                                                         <ul>
                                                             @foreach ($sample->materials as $m)
-                                                            @foreach ($m as $m)
-                                                                @dd($m)
-                                                            @endforeach
                                                                 @if ($m->material)
                                                                     <li>{{ $m->material->name }}</li>
                                                                 @else
