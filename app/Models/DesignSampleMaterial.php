@@ -18,6 +18,7 @@ class DesignSampleMaterial extends Model
 
     public function material()
     {
-        return $this->belongsTo(DesignMaterial::class);
+        return $this->belongsTo(DesignMaterial::class, 'design_material_id');
     }
+    
 }
