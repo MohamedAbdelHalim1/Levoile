@@ -30,6 +30,9 @@
                                 <th>عدد الخامات</th>
                                 <th>الحالة</th>
                                 <th>الصورة</th>
+                                <th>رقم الماركر</th>
+                                <th>صورة الماركر</th>
+                                <th>ملف الماركر</th>
                                 <th>العمليات</th>
                             </tr>
                         </thead>
@@ -86,13 +89,44 @@
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
-                                    
+
 
                                     <td>
                                         @if ($sample->image)
                                             <img src="{{ asset($sample->image) }}" alt="الصورة" width="50">
                                         @endif
                                     </td>
+                                    <td>
+                                        {{-- رقم الماركر --}}
+                                        @if ($sample->marker_number)
+                                            <span>{{ $sample->marker_number }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{-- صورة الماركر --}}
+                                        @if ($sample->marker_image)
+                                            <a href="{{ asset($sample->marker_image) }}" target="_blank">
+                                                <img src="{{ asset($sample->marker_image) }}" alt="صورة الماركر"
+                                                    width="40" height="40"
+                                                    style="object-fit:cover; border-radius:5px;">
+                                            </a>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{-- ملف الماركر --}}
+                                        @if ($sample->marker_file)
+                                            <a href="{{ asset($sample->marker_file) }}" download>
+                                                <i class="fa fa-download fa-lg"></i>
+                                            </a>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+
                                     <td>
                                         <a href="{{ route('design-sample-products.show', $sample->id) }}"
                                             class="btn btn-info btn-sm">عرض</a>
