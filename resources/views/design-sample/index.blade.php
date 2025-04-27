@@ -91,7 +91,7 @@
                                           </div>
                                           <div class="modal-body">
                                             <label>اختر الخامات</label>
-                                            <select class="form-control" name="materials[]" multiple required>
+                                            <select class="form-control" name="materials[]" id="material_id" multiple required>
                                                 @foreach($materials as $material)
                                                     <option value="{{ $material->id }}"
                                                         @if($sample->materials->pluck('design_material_id')->contains($material->id)) selected @endif>
@@ -138,4 +138,14 @@
     <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Tom Select
+            new TomSelect('#material_id', {
+                placeholder: "اختر الخامه"
+            });
+        });
+    </script>
 @endsection
