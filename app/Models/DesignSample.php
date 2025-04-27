@@ -17,6 +17,8 @@ class DesignSample extends Model
         'marker_number',
         'marker_image',
         'is_reviewed',
+        'marker_consumption',
+        'marker_unit',
     ];
 
     public function season()
