@@ -161,6 +161,8 @@ class DesignSampleController extends Controller
         $request->validate([
             'marker_number' => 'required|string|max:100',
             'marker_image' => 'required|image',
+            'marker_consumption' => 'nullable|string|max:255',
+            'marker_unit' => 'nullable|string|max:50',
         ]);
 
         $sample = DesignSample::findOrFail($id);
@@ -175,6 +177,8 @@ class DesignSampleController extends Controller
         $sample->update([
             'marker_number' => $request->marker_number,
             'marker_image' => 'images/marker/' . $imageName,
+            'marker_consumption' => $request->marker_consumption,
+            'marker_unit' => $request->marker_unit,
             'status' => 'قيد المراجعه'
         ]);
 

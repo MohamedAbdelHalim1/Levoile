@@ -32,7 +32,9 @@
                                 <th>الصورة</th>
                                 <th>رقم الماركر</th>
                                 <th>صورة الماركر</th>
-                                <th>ملف الماركر</th>
+                                <th>استهلاك القطعه</th>
+                                <th>الوحده</th>
+                                <th>ملف التكنيكال</th>
                                 <th>العمليات</th>
                             </tr>
                         </thead>
@@ -119,6 +121,9 @@
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
+                                    <td>{{ $sample->marker_consumption ?? '-' }}</td>
+                                    <td>{{ $sample->marker_unit ?? '-' }}</td>
+
                                     <td>
                                         {{-- ملف الماركر --}}
                                         @if ($sample->marker_file)
@@ -267,6 +272,22 @@
                                                                     <input type="file" name="marker_image"
                                                                         class="form-control" accept="image/*" required>
                                                                 </div>
+                                                                <div class="row">
+                                                                    <div class="col-9 mb-3">
+                                                                        <label>استهلاك القطعة</label>
+                                                                        <input type="text" name="marker_consumption"
+                                                                            class="form-control">
+                                                                    </div>
+                                                                    <div class="col-3 mb-3">
+                                                                        <label>الوحدة</label>
+                                                                        <select name="marker_unit" class="form-control">
+                                                                            <option value="">اختار الوحدة</option>
+                                                                            <option value="كيلوجرام">كيلوجرام</option>
+                                                                            <option value="متر">متر</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
