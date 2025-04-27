@@ -25,6 +25,6 @@ class DesignSample extends Model
 
     public function materials()
     {
-        return $this->hasMany(DesignSampleMaterial::class);
+        return $this->hasMany(DesignSampleMaterial::class , 'design_sample_id');
     }
 }

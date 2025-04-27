@@ -18,6 +18,6 @@ class DesignMaterial extends Model
 
     public function materials()
     {
-        return $this->hasMany(DesignSampleMaterial::class);
+        return $this->hasMany(DesignSampleMaterial::class , 'design_material_id');
     }
 }
