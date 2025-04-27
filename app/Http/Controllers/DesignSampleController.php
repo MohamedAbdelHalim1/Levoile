@@ -160,16 +160,11 @@ class DesignSampleController extends Controller
     {
         $request->validate([
             'marker_number' => 'required|string|max:100',
-            'marker_file' => 'required|file',
             'marker_image' => 'required|image',
         ]);
 
         $sample = DesignSample::findOrFail($id);
 
-        // رفع الملف
-        $file = $request->file('marker_file');
-        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('files/marker'), $fileName);
 
         // رفع الصورة
         $image = $request->file('marker_image');
@@ -179,7 +174,6 @@ class DesignSampleController extends Controller
         // حفظ البيانات
         $sample->update([
             'marker_number' => $request->marker_number,
-            'marker_file' => 'files/marker/' . $fileName,
             'marker_image' => 'images/marker/' . $imageName,
             'status' => 'قيد المراجعه'
         ]);
