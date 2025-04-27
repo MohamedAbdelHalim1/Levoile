@@ -48,30 +48,6 @@
                         {{ $sample->materials->count() }}
                     </div>
                 </div>
-                <div class="col-12">
-                    <div>
-                        <strong>الخامات:</strong>
-                        <ul>
-                            @forelse($sample->materials as $m)
-                                <li>
-                                    @if($m->material)
-                                        {{ $m->material->name }}
-                                        <a href="{{ route('design-materials.show', $m->material->id) }}">
-                                            ({{ $m->material->colors->count() }})
-                                        </a>
-                                    @else
-                                        <span class="text-danger">خامة غير موجودة (أو محذوفة)</span>
-                                    @endif
-                                </li>
-                            @empty
-                                <li>لا يوجد خامات</li>
-                            @endforelse
-                        </ul>
-                    </div>
-                </div>
-
-                <hr class="my-2" />
-
                 <div class="col-md-4">
                     <div><strong>رقم الماركر:</strong> {{ $sample->marker_number ?? '-' }}</div>
                 </div>
@@ -82,19 +58,6 @@
                             <a href="{{ asset($sample->marker_image) }}" target="_blank">
                                 <img src="{{ asset($sample->marker_image) }}" alt="صورة الماركر"
                                     width="60" height="60" style="object-fit:cover; border-radius:7px;">
-                            </a>
-                        @else
-                            <span class="text-muted">-</span>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <strong>ملف الماركر:</strong>
-                        @if ($sample->marker_file)
-                            <a href="{{ asset($sample->marker_file) }}" download>
-                                <i class="fa fa-download fa-lg"></i>
-                                تحميل
                             </a>
                         @else
                             <span class="text-muted">-</span>
@@ -119,6 +82,57 @@
                             <span class="text-muted">-</span>
                         @endif
                     </div>
+                </div>
+            </div>
+
+            {{-- جدول الخامات --}}
+            <div class="mt-5">
+                <h4 class="mb-2">الخامات</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>عدد الألوان</th>
+                                <th>رابط الخامة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($sample->materials as $i => $m)
+                                <tr>
+                                    <td>{{ $i+1 }}</td>
+                                    <td>
+                                        @if($m->material)
+                                            {{ $m->material->name }}
+                                        @else
+                                            <span class="text-danger">خامة غير موجودة (أو محذوفة)</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($m->material)
+                                            {{ $m->material->colors->count() }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($m->material)
+                                            <a href="{{ route('design-materials.show', $m->material->id) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                تفاصيل الخامة
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">لا يوجد خامات</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
