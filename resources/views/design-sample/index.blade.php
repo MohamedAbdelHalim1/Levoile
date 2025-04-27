@@ -60,7 +60,7 @@
                                                         <ul>
                                                             @foreach ($sample->materials as $m)
                                                                 @if ($m->material)
-                                                                    <li>{{ $m->material->name }}</li>
+                                                                    <li>{{ $m->material->name }} <a href="{{ route('design-materials.show' , $m->material->id) }}">( {{ $m->material->colors->count() }} )</a></li>
                                                                 @else
                                                                     <li class="text-danger">خامة غير موجودة (أو محذوفة)</li>
                                                                 @endif
