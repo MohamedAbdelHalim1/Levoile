@@ -185,6 +185,7 @@ Route::middleware('auth')->group(function () {
     Route::post('design-sample-products/{id}/assign-patternest', [DesignSampleController::class, 'assignPatternest'])->name('design-sample-products.assign-patternest');
     Route::post('design-sample-products/{id}/add-marker', [DesignSampleController::class, 'addMarker'])->name('design-sample-products.add-marker');
     Route::post('design-sample-products/{id}/review', [DesignSampleController::class, 'reviewSample'])->name('design-sample-products.review');
+    Route::post('design-sample-products/{id}/add-technical-sheet', [DesignSampleController::class, 'addTechnicalSheet'])->name('design-sample-products.add-technical-sheet');
 
 
     Route::resource('products', ProductController::class);

@@ -91,7 +91,7 @@
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
-                                    
+
 
 
                                     <td>
@@ -258,20 +258,59 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="mb-3">
-                                                                    <label>اسم الماركر</label>
+                                                                    <label>رقم الماركر</label>
                                                                     <input type="text" name="marker_number"
                                                                         class="form-control" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label>رفع ملف الماركر</label>
-                                                                    <input type="file" name="marker_file"
-                                                                        class="form-control" accept=".pdf,.zip,.rar"
-                                                                        required>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label>صورة الماركر</label>
                                                                     <input type="file" name="marker_image"
                                                                         class="form-control" accept="image/*" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">إغلاق</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">حفظ</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
+                                            <!-- زرار إضافة تيكنيكال شيت -->
+                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                data-bs-target="#addTechnicalSheetModal{{ $sample->id }}">
+                                                إضافة تيكنيكال شيت
+                                            </button>
+
+                                            <!-- Modal إضافة تيكنيكال شيت -->
+                                            <div class="modal fade" id="addTechnicalSheetModal{{ $sample->id }}"
+                                                tabindex="-1"
+                                                aria-labelledby="addTechnicalSheetLabel{{ $sample->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form
+                                                        action="{{ route('design-sample-products.add-technical-sheet', $sample->id) }}"
+                                                        method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="addTechnicalSheetLabel{{ $sample->id }}">إضافة
+                                                                    تيكنيكال شيت</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label>ملف التيكنيكال شيت</label>
+                                                                    <input type="file" name="marker_file"
+                                                                        class="form-control" accept=".pdf,.zip,.rar"
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">

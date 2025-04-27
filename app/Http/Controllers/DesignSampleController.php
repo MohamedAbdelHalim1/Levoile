@@ -196,4 +196,25 @@ class DesignSampleController extends Controller
         ]);
         return redirect()->route('design-sample-products.index')->with('success', 'تمت مراجعة العينة بنجاح.');
     }
+
+    public function addTechnicalSheet(Request $request, $id)
+    {
+        $request->validate([
+            'marker_file' => 'required|file',
+        ]);
+
+        $sample = DesignSample::findOrFail($id);
+
+        // رفع الملف
+        $file = $request->file('marker_file');
+        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('files/marker'), $fileName);
+
+        // حفظ البيانات
+        $sample->update([
+            'marker_file' => 'files/marker/' . $fileName,
+        ]);
+
+        return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة التيكنيكال شيت بنجاح.');
+    }
 }
