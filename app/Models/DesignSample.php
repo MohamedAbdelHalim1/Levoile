@@ -11,6 +11,7 @@ class DesignSample extends Model
         'season_id',
         'category_id',
         'image',
+        'status',
     ];
 
     public function season()

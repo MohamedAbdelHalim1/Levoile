@@ -28,6 +28,7 @@
                                 <th>القسم</th>
                                 <th>الموسم</th>
                                 <th>عدد الخامات</th>
+                                <th>الحالة</th>
                                 <th>الصورة</th>
                                 <th>العمليات</th>
                             </tr>
@@ -72,6 +73,14 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <td>
+                                        @if($sample->status === 'new')
+                                            <span class="badge bg-success">جديد</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ __($sample->status) }}</span>
+                                        @endif
+                                    </td>
+                                    
                                     <td>
                                         @if ($sample->image)
                                             <img src="{{ asset($sample->image) }}" alt="الصورة" width="50">
