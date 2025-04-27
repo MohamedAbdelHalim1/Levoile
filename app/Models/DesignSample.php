@@ -26,6 +26,11 @@ class DesignSample extends Model
 
     public function materials()
     {
-        return $this->hasMany(DesignSampleMaterial::class , 'design_sample_id');
+        return $this->hasMany(DesignSampleMaterial::class, 'design_sample_id');
+    }
+
+    public function patternest()
+    {
+        return $this->belongsTo(User::class, 'patternest_id');
     }
 }

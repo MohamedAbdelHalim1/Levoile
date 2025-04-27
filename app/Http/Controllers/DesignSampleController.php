@@ -16,9 +16,10 @@ class DesignSampleController extends Controller
     {
         $samples = DesignSample::with(['season', 'category', 'materials.material'])->get();
         $materials = DesignMaterial::all();
-        return view('design-sample.index', compact('samples', 'materials'));
+        $patternests = \App\Models\User::where('role_id', 11)->get();
+        return view('design-sample.index', compact('samples', 'materials', 'patternests'));
     }
-    
+
 
     public function create()
     {
@@ -139,5 +140,19 @@ class DesignSampleController extends Controller
         }
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم تحديث الخامات بنجاح');
+    }
+
+    public function assignPatternest(Request $request, $id)
+    {
+        $request->validate([
+            'patternest_id' => 'required|exists:users,id',
+        ]);
+
+        $sample = DesignSample::findOrFail($id);
+        $sample->patternest_id = $request->patternest_id;
+        $sample->status = 'تم التوزيع';
+        $sample->save();
+
+        return redirect()->route('design-sample-products.index')->with('success', 'تم تعيين الباترنيست بنجاح.');
     }
 }

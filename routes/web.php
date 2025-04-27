@@ -182,6 +182,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
     Route::resource('design-sample-products', DesignSampleController::class);
     Route::post('design-sample-products/{id}/attach-materials', [DesignSampleController::class, 'attachMaterials'])->name('design-sample-products.attach-materials');
+    Route::post('design-sample-products/{id}/assign-patternest', [DesignSampleController::class, 'assignPatternest'])->name('design-sample-products.assign-patternest');
 
 
     Route::resource('products', ProductController::class);

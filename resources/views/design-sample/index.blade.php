@@ -61,7 +61,9 @@
                                                         <ul>
                                                             @foreach ($sample->materials as $m)
                                                                 @if ($m->material)
-                                                                    <li>{{ $m->material->name }} <a href="{{ route('design-materials.show' , $m->material->id) }}">( {{ $m->material->colors->count() }} )</a></li>
+                                                                    <li>{{ $m->material->name }} <a
+                                                                            href="{{ route('design-materials.show', $m->material->id) }}">(
+                                                                            {{ $m->material->colors->count() }} )</a></li>
                                                                 @else
                                                                     <li class="text-danger">خامة غير موجودة (أو محذوفة)</li>
                                                                 @endif
@@ -76,11 +78,14 @@
                                     <td>
                                         @if($sample->status === 'new')
                                             <span class="badge bg-success">جديد</span>
+                                        @elseif($sample->status === 'تم التوزيع')
+                                            <span class="badge bg-primary">تم التوزيع</span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
                                     
+
                                     <td>
                                         @if ($sample->image)
                                             <img src="{{ asset($sample->image) }}" alt="الصورة" width="50">
@@ -140,6 +145,53 @@
                                                 </form>
                                             </div>
                                         </div>
+
+                                        <!-- زرار تعيين باترنيست -->
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#assignPatternestModal{{ $sample->id }}">
+                                            تعيين باترنيست
+                                        </button>
+
+                                        <!-- Modal تعيين باترنيست -->
+                                        <div class="modal fade" id="assignPatternestModal{{ $sample->id }}"
+                                            tabindex="-1" aria-labelledby="assignPatternestLabel{{ $sample->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form
+                                                    action="{{ route('design-sample-products.assign-patternest', $sample->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="assignPatternestLabel{{ $sample->id }}">تعيين
+                                                                باترنيست للعينة</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <label>اختر الباترنيست</label>
+                                                            <select class="form-control patternest-select"
+                                                                name="patternest_id" required>
+                                                                <option value="">اختر الباترنيست</option>
+                                                                @foreach ($patternests as $user)
+                                                                    <option value="{{ $user->id }}"
+                                                                        @if ($sample->patternest_id == $user->id) selected @endif>
+                                                                        {{ $user->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">إغلاق</button>
+                                                            <button type="submit" class="btn btn-primary">تعيين</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -177,6 +229,14 @@
             // Initialize Tom Select
             new TomSelect('#material_id', {
                 placeholder: "اختر الخامه"
+            });
+        });
+
+
+        // TomSelect لكل الباترنيست دروب داون
+        document.querySelectorAll('.patternest-select').forEach(function(select) {
+            new TomSelect(select, {
+                placeholder: "اختر الباترنيست"
             });
         });
     </script>
