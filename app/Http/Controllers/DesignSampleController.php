@@ -14,7 +14,8 @@ class DesignSampleController extends Controller
 
     public function index()
     {
-        return view('design-sample.index');
+        $samples = DesignSample::all();
+        return view('design-sample.index' , compact('samples'));
     }
 
     public function create()
