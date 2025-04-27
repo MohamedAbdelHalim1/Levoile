@@ -7,16 +7,16 @@
             <h1 class="mb-4 text-xl font-bold">{{ __('عرض عينة منتج') }}</h1>
             
             <div class="row g-3">
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div><strong>الاسم:</strong> {{ $sample->description }}</div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div><strong>القسم:</strong> {{ $sample->category?->name }}</div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div><strong>الموسم:</strong> {{ $sample->season?->name }}</div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div>
                         <strong>الحالة:</strong>
                         @if ($sample->status === 'new')
@@ -32,7 +32,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div>
                         <strong>الصورة:</strong>
                         @if($sample->image)
@@ -42,7 +42,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div>
                         <strong>عدد الخامات:</strong>
                         {{ $sample->materials->count() }}
