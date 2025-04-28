@@ -9,6 +9,8 @@ use App\Models\DesignSample;
 use App\Models\DesignSampleMaterial;
 use App\Models\Season;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class DesignSampleController extends Controller
 {
