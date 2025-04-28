@@ -143,7 +143,7 @@
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between">
                                         <strong><b>{{ $comment->user->name }}</b></strong>
-                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                        <small class="text-muted">{{ $comment->created_at }}</small>
                                     </div>
                                     <div class="mt-1"><i>"{{ $comment->content }}"</i></div>
                                     @if($comment->image)
