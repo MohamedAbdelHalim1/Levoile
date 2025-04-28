@@ -142,10 +142,10 @@
                             <div class="card-body d-flex align-items-start">
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between">
-                                        <strong>{{ $comment->user->name }}</strong>
+                                        <strong><b>{{ $comment->user->name }}</b></strong>
                                         <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <div class="mt-1">{{ $comment->content }}</div>
+                                    <div class="mt-1"><i>"{{ $comment->content }}"</i></div>
                                     @if($comment->image)
                                         <div class="mt-2">
                                             <img src="{{ asset($comment->image) }}" alt="comment image"
