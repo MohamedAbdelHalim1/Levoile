@@ -117,6 +117,54 @@
                 </div>
             </div>
 
+             {{-- نظام التعليقات --}}
+             <div class="mt-5">
+                <h4 class="mb-2">التعليقات</h4>
+
+                {{-- فورم إضافة تعليق --}}
+                @auth
+                    <form action="{{ route('design-sample-products.add-comment', $sample->id) }}" method="POST" enctype="multipart/form-data" class="mb-4">
+                        @csrf
+                        <div class="mb-2">
+                            <textarea name="content" class="form-control" rows="2" placeholder="اكتب تعليقك هنا..." required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <input type="file" name="image" accept="image/*" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">إضافة تعليق</button>
+                    </form>
+                @endauth
+
+                {{-- عرض التعليقات --}}
+                <div>
+                    @forelse($comments as $comment)
+                        <div class="card mb-3">
+                            <div class="card-body d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <img src="{{ $comment->user->profile_image ? asset($comment->user->profile_image) : asset('default-avatar.png') }}"
+                                         alt="User" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ $comment->user->name }}</strong>
+                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                    </div>
+                                    <div class="mt-1">{{ $comment->content }}</div>
+                                    @if($comment->image)
+                                        <div class="mt-2">
+                                            <img src="{{ asset($comment->image) }}" alt="comment image"
+                                                 style="max-width:120px;max-height:120px;border-radius:7px;">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-muted text-center">لا يوجد تعليقات بعد.</div>
+                    @endforelse
+                </div>
+            </div>
+
             <div class="mt-4">
                 <a href="{{ route('design-sample-products.index') }}" class="btn btn-secondary">الرجوع</a>
             </div>

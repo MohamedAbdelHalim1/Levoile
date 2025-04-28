@@ -187,6 +187,9 @@ Route::middleware('auth')->group(function () {
     Route::post('design-sample-products/{id}/review', [DesignSampleController::class, 'reviewSample'])->name('design-sample-products.review');
     Route::post('design-sample-products/{id}/add-technical-sheet', [DesignSampleController::class, 'addTechnicalSheet'])->name('design-sample-products.add-technical-sheet');
 
+    Route::post('/design-sample-products/{sample}/comments', [DesignSampleController::class, 'addComment'])
+        ->name('design-sample-products.add-comment');
+
 
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);

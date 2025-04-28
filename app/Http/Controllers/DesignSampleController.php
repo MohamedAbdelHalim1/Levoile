@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\DesignComment;
+use App\Models\DesignMaterial;
+use App\Models\DesignSample;
+use App\Models\DesignSampleMaterial;
 use App\Models\Season;
 use Illuminate\Http\Request;
-use App\Models\DesignSample;
-use App\Models\DesignMaterial;
-use App\Models\DesignSampleMaterial;
 
 class DesignSampleController extends Controller
 {
@@ -69,8 +70,36 @@ class DesignSampleController extends Controller
     public function show($id)
     {
         $sample = DesignSample::with('season', 'category', 'materials.material')->findOrFail($id);
-        return view('design-sample.show', compact('sample'));
+        $comments = DesignComment::where('design_sample_id', $sample->id)->with('user')->latest()->get();
+        return view('design-sample.show', compact('sample', 'comments'));
     }
+
+
+    public function addComment(Request $request, $id)
+    {
+        $request->validate([
+            'content' => 'required|string',
+            'image' => 'nullable|image|max:2048'
+        ]);
+
+        $data = [
+            'design_sample_id' => $id,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ];
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/comment'), $filename);
+            $data['image'] = 'images/comment/' . $filename;
+        }
+
+        DesignComment::create($data);
+
+        return back()->with('success', 'تم إضافة التعليق بنجاح');
+    }
+
 
     public function edit($id)
     {
