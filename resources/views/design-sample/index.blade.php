@@ -89,12 +89,17 @@
                                             <span class="badge bg-warning text-dark">قيد المراجعة</span>
                                         @elseif($sample->status === 'تم المراجعه')
                                             <span class="badge bg-info text-dark">تم المراجعة</span>
+                                        @elseif($sample->status === 'تأجيل')
+                                            <span class="badge bg-secondary text-dark">تأجيل</span>
+                                        @elseif($sample->status === 'الغاء')
+                                            <span class="badge bg-danger">الغاء</span>
+                                        @elseif($sample->status === 'تعديل')
+                                            <span class="badge bg-warning text-dark">تعديل</span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
-
-
+                                    
 
                                     <td>
                                         @if ($sample->image)
@@ -358,7 +363,7 @@
                                             aria-labelledby="reviewModalLabel{{ $sample->id }}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <form action="{{ route('design-sample-products.review', $sample->id) }}"
-                                                    method="POST">
+                                                    method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -369,20 +374,63 @@
                                                                 data-bs-dismiss="modal" aria-label="إغلاق"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="alert alert-warning">
-                                                                سوف يتم تغيير حالة العينة إلى <b>تم المراجعة</b>.<br>
-                                                                هل أنت متأكد من المراجعة؟
+                                                            <div class="mb-3">
+                                                                <label class="mb-2 d-block">حدد الحالة:</label>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="status" value="تم المراجعه"
+                                                                        id="status1-{{ $sample->id }}" checked>
+                                                                    <label class="form-check-label"
+                                                                        for="status1-{{ $sample->id }}">تم
+                                                                        المراجعه</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="status" value="تأجيل"
+                                                                        id="status2-{{ $sample->id }}">
+                                                                    <label class="form-check-label"
+                                                                        for="status2-{{ $sample->id }}">تأجيل</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="status" value="الغاء"
+                                                                        id="status3-{{ $sample->id }}">
+                                                                    <label class="form-check-label"
+                                                                        for="status3-{{ $sample->id }}">الغاء</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="status" value="تعديل"
+                                                                        id="status4-{{ $sample->id }}">
+                                                                    <label class="form-check-label"
+                                                                        for="status4-{{ $sample->id }}">تعديل</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label
+                                                                    for="comment_content_{{ $sample->id }}">ملاحظات/تعليق:</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="comment_content_{{ $sample->id }}"
+                                                                    name="content" placeholder="اكتب تعليقك">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="comment_image_{{ $sample->id }}">ارفق صورة
+                                                                    (اختياري):</label>
+                                                                <input type="file" class="form-control"
+                                                                    id="comment_image_{{ $sample->id }}" name="image"
+                                                                    accept="image/*">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">إلغاء</button>
+                                                                data-bs-dismiss="modal">إغلاق</button>
                                                             <button type="submit" class="btn btn-success">تأكيد</button>
                                                         </div>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
+
 
                                     </td>
                                 </tr>

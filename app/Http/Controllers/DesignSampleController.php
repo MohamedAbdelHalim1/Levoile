@@ -216,15 +216,41 @@ class DesignSampleController extends Controller
         return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة الماركر بنجاح.');
     }
 
-    public function reviewSample($id)
+    public function reviewSample(Request $request, $id)
     {
-        $sample = DesignSample::findOrFail($id);
-        $sample->update([
-            'status' => 'تم المراجعه',
-            'is_reviewed' => 1
+        $request->validate([
+            'status' => 'required',
+            'content' => 'nullable|string',
+            'image' => 'nullable|image|max:2048'
         ]);
-        return redirect()->route('design-sample-products.index')->with('success', 'تمت مراجعة العينة بنجاح.');
+    
+        $sample = DesignSample::findOrFail($id);
+        $sample->status = $request->status;
+        $sample->is_reviewed = 1;
+        $sample->save();
+    
+        // حفظ الكومنت
+        if ($request->content || $request->hasFile('image')) {
+            $commentData = [
+                'design_sample_id' => $sample->id,
+                'user_id' => auth()->id(),
+                'content' => $request->content,
+            ];
+    
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/comment'), $filename);
+                $commentData['image'] = 'images/comment/' . $filename;
+            }
+    
+            DesignComment::create($commentData);
+        }
+    
+        return redirect()->route('design-sample-products.index')
+            ->with('success', 'تم تحديث حالة العينة وحفظ الملاحظات.');
     }
+    
 
     public function addTechnicalSheet(Request $request, $id)
     {
