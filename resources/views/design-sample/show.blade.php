@@ -140,10 +140,6 @@
                     @forelse($comments as $comment)
                         <div class="card mb-3">
                             <div class="card-body d-flex align-items-start">
-                                <div class="flex-shrink-0 me-3">
-                                    <img src="{{ $comment->user->profile_image ? asset($comment->user->profile_image) : asset('default-avatar.png') }}"
-                                         alt="User" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-                                </div>
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between">
                                         <strong>{{ $comment->user->name }}</strong>
