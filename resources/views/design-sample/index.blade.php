@@ -81,7 +81,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @if ($sample->status === 'new')
+                                        @if ($sample->status === 'جديد')
                                             <span class="badge bg-success">جديد</span>
                                         @elseif($sample->status === 'تم التوزيع')
                                             <span class="badge bg-primary">تم التوزيع</span>
@@ -497,15 +497,16 @@
 
                 const allowedActionsByStatus = {
                     'جديد': ['addMaterials'],
-                    'تم إضافة الخامات': ['addMaterials', 'addTechnical'],
-                    'تم إضافة التيكنيكال': ['addMaterials', 'addTechnical', 'assignPatternest'],
+                    'تم اضافة الخامات': ['addMaterials', 'addTechnical'],
+                    'تم اضافة التيكنيكال': ['addMaterials', 'addTechnical', 'assignPatternest'],
                     'تم التوزيع': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker'],
-                    'قيد المراجعة': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                    'قيد المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
                         'review'
                     ],
-                    'تم المراجعة': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
-                        'review'
-                    ],
+                    'تم المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
+                    'تأجيل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
+                    'الغاء': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
+                    'تعديل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
                 };
 
                 const messages = {

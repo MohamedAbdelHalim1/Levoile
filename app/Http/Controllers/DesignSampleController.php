@@ -273,7 +273,7 @@ class DesignSampleController extends Controller
         // حفظ البيانات
         $sample->update([
             'marker_file' => 'files/marker/' . $fileName,
-            'status' => 'تم اضافة التيكنيكال '
+            'status' => 'تم اضافة التيكنيكال'
         ]);
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة التيكنيكال شيت بنجاح.');
