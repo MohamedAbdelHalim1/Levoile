@@ -16,7 +16,7 @@
                     @if (auth()->user()->hasPermission('إضافة منتج'))
                         <div class="flex justify-end mb-4">
                             <a href="{{ route('design-sample-products.create') }}" class="btn btn-success">
-                                {{ __('إضافة عينة منتج') }}
+                                {{ __('إضافة منتج') }}
                             </a>
                         </div>
                     @endif
