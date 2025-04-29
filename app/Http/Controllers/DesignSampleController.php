@@ -223,37 +223,41 @@ class DesignSampleController extends Controller
 
     public function reviewSample(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required',
-            'content' => 'nullable|string',
-            'image' => 'nullable|image|max:2048'
-        ]);
-    
-        $sample = DesignSample::findOrFail($id);
-        $sample->status = $request->status;
-        $sample->is_reviewed = 1;
-        $sample->save();
-    
-        // حفظ الكومنت
-        if ($request->content || $request->hasFile('image')) {
-            $commentData = [
-                'design_sample_id' => $sample->id,
-                'user_id' => auth()->id(),
-                'content' => $request->content,
-            ];
-    
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/comment'), $filename);
-                $commentData['image'] = 'images/comment/' . $filename;
+        try{
+            $request->validate([
+                'status' => 'required',
+                'content' => 'nullable|string',
+                'image' => 'nullable|image|max:2048'
+            ]);
+        
+            $sample = DesignSample::findOrFail($id);
+            $sample->status = $request->status;
+            $sample->is_reviewed = 1;
+            $sample->save();
+        
+            // حفظ الكومنت
+            if ($request->content || $request->hasFile('image')) {
+                $commentData = [
+                    'design_sample_id' => $sample->id,
+                    'user_id' => auth()->id(),
+                    'content' => $request->content,
+                ];
+        
+                if ($request->hasFile('image')) {
+                    $file = $request->file('image');
+                    $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('images/comment'), $filename);
+                    $commentData['image'] = 'images/comment/' . $filename;
+                }
+        
+                DesignComment::create($commentData);
             }
-    
-            DesignComment::create($commentData);
+        
+            return redirect()->route('design-sample-products.index')
+                ->with('success', 'تم تحديث حالة العينة وحفظ الملاحظات.');
+        } catch(\Exception $e){
+            dd($e);
         }
-    
-        return redirect()->route('design-sample-products.index')
-            ->with('success', 'تم تحديث حالة العينة وحفظ الملاحظات.');
     }
     
 
