@@ -31,7 +31,7 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" name="colors[0][code]" class="form-control"
-                                    placeholder="كود اللون أو اختر لون">
+                                    placeholder="كود اللون">
                                 <!-- أو استبدلها بـ <input type="color"... لو تحب -->
                             </div>
                             <div class="col-md-2">
