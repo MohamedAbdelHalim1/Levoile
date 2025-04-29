@@ -18,8 +18,8 @@
                         <div class="col-md-6">
                             <label>الصورة الحالية</label><br>
                             @if ($material->image)
-                                <img src="{{ asset($material->image) }}" alt="صورة الخامة"
-                                    width="100" class="mb-2 rounded">
+                                <img src="{{ asset($material->image) }}" alt="صورة الخامة" width="100"
+                                    class="mb-2 rounded">
                             @else
                                 <span class="text-muted">لا توجد صورة</span>
                             @endif
@@ -33,13 +33,20 @@
                             <div class="row mb-2 color-row">
                                 <input type="hidden" name="colors[{{ $i }}][id]" value="{{ $color->id }}">
                                 <div class="col-md-2">
-                                    <input type="text" name="colors[{{ $i }}][name]" class="form-control"
-                                        placeholder="اسم اللون" value="{{ old('colors.' . $i . '.name', $color->name) }}">
+                                    <select name="colors[{{ $i }}][name]" class="form-control color-name-select">
+                                        <option value="">اختر اللون</option>
+                                        @foreach ($colorsList as $colorOption)
+                                            <option value="{{ $colorOption->name }}"
+                                                @if (old('colors.' . $i . '.name', $color->name) == $colorOption->name) selected @endif>
+                                                {{ $colorOption->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="colors[{{ $i }}][code]" class="form-control"
-                                        placeholder="كود اللون"
-                                        value="{{ old('colors.' . $i . '.code', $color->code) }}">
+                                        placeholder="كود اللون" value="{{ old('colors.' . $i . '.code', $color->code) }}">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[{{ $i }}][required_quantity]"
@@ -102,69 +109,91 @@
 @endsection
 
 @section('scripts')
-    <script>
-        let colorIndex = {{ $material->colors->count() }};
-        $('#add-color').click(function() {
-            let row = `
-        <div class="row mb-2 color-row">
-            <div class="col-md-2">
-                <input type="text" name="colors[${colorIndex}][name]" class="form-control" placeholder="اسم اللون">
-            </div>
-            <div class="col-md-2">
-                <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون ">
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة">
-            </div>
-            <div class="col-md-2">
-                <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-danger btn-sm remove-color">حذف اللون</button>
-            </div>
-        </div>
-    `;
-            $('#colors-area').append(row);
-            colorIndex++;
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet" />
+
+<script>
+    let colorIndex = {{ $material->colors->count() }};
+    
+    function applyTomSelect() {
+        document.querySelectorAll('.color-name-select').forEach(el => {
+            if (!el.classList.contains('ts-hidden')) {
+                new TomSelect(el, {
+                    create: false,
+                    placeholder: 'اختر اللون',
+                });
+            }
         });
+    }
 
-        // مهم: استخدم on delegation عشان الحذف يشتغل للصفوف الجديدة والقديمة
-        $(document).on('click', '.remove-color', function() {
-            var btn = $(this);
-            var colorId = btn.closest('.color-row').find('input[name*="[id]"]').val();
+    applyTomSelect(); // أول تحميل
 
-            if (!confirm('هل أنت متأكد من حذف هذا اللون؟')) {
-                return;
-            }
+    $('#add-color').click(function() {
+        let row = `
+            <div class="row mb-2 color-row">
+                <div class="col-md-2">
+                    <select name="colors[${colorIndex}][name]" class="form-control color-name-select">
+                        <option value="">اختر اللون</option>
+                        @foreach ($colorsList as $colorOption)
+                            <option value="{{ $colorOption->name }}">{{ $colorOption->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger btn-sm remove-color">حذف اللون</button>
+                </div>
+            </div>
+        `;
+        $('#colors-area').append(row);
+        colorIndex++;
 
-            // لو اللون جديد لسه متسجلش في الداتابيز
-            if (!colorId) {
-                btn.closest('.color-row').remove();
-                return;
-            }
+        applyTomSelect(); // كل مرة تضيف لون جديد تطبقه
+    });
 
-            $.ajax({
-                url: '/design-materials/colors/' + colorId,
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    _method: 'DELETE'
-                },
-                success: function(response) {
-                    if (response.success) {
-                        btn.closest('.color-row').remove();
-                        alert('تم حذف اللون بنجاح');
-                    } else {
-                        alert('فشل في الحذف');
-                    }
-                },
-                error: function(xhr) {
-                    alert('حدث خطأ أثناء الحذف');
+    $(document).on('click', '.remove-color', function() {
+        var btn = $(this);
+        var colorId = btn.closest('.color-row').find('input[name*="[id]"]').val();
+
+        if (!confirm('هل أنت متأكد من حذف هذا اللون؟')) {
+            return;
+        }
+
+        if (!colorId) {
+            btn.closest('.color-row').remove();
+            return;
+        }
+
+        $.ajax({
+            url: '/design-materials/colors/' + colorId,
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                if (response.success) {
+                    btn.closest('.color-row').remove();
+                    alert('تم حذف اللون بنجاح');
+                } else {
+                    alert('فشل في الحذف');
                 }
-            });
+            },
+            error: function(xhr) {
+                alert('حدث خطأ أثناء الحذف');
+            }
         });
-    </script>
+    });
+</script>
 @endsection

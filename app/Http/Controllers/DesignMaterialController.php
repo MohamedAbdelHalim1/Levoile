@@ -26,7 +26,8 @@ class DesignMaterialController extends Controller
     // شاشة إنشاء خامة (وفيها إضافة ألوان فورية)
     public function create()
     {
-        return view('design-materials.create');
+        $colors = \App\Models\Color::all();
+        return view('design-materials.create' , compact('colors'));
     }
 
     // حفظ خامة جديدة وكل ألوانها
@@ -88,7 +89,8 @@ class DesignMaterialController extends Controller
     public function edit($id)
     {
         $material = DesignMaterial::with('colors')->findOrFail($id);
-        return view('design-materials.edit', compact('material'));
+        $colorsList = \App\Models\Color::all();
+        return view('design-materials.edit', compact('material' , 'colorsList'));
     }
 
     // تعديل خامة وكل ألوانها (إضافة، تحديث، حذف)

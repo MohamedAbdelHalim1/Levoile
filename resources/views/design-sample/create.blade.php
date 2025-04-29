@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
-                <h1>{{ __('إضافة عينه للمنتج') }}</h1>
+                <h1>{{ __('إضافة للمنتج') }}</h1>
                 <form action="{{ route('design-sample-products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
