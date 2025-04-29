@@ -159,14 +159,14 @@
                                         <!-- زر إضافة خامات -->
                                         <button type="button" class="btn btn-dark btn-sm"
                                             data-bs-target="#addMaterialsModal{{ $sample->id }}"
-                                            data-action="addMaterials">
+                                            data-action="addMaterials" data-status="{{ $sample->status }}">
                                             إضافة خامات
                                         </button>
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة تيكنيكال شيت -->
                                             <button type="button" class="btn btn-info btn-sm"
                                                 data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
-                                                data-action="addTechnical">
+                                                data-action="addTechnical" data-status="{{ $sample->status }}">
                                                 إضافة تيكنيكال شيت
                                             </button>
                                         @endif
@@ -174,20 +174,21 @@
                                         <!-- زر تعيين باترنيست -->
                                         <button type="button" class="btn btn-primary btn-sm"
                                             data-bs-target="#assignPatternestModal{{ $sample->id }}"
-                                            data-action="assignPatternest">
+                                            data-action="assignPatternest" data-status="{{ $sample->status }}">
                                             تعيين باترنيست
                                         </button>
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة ماركر -->
                                             <button type="button" class="btn btn-secondary btn-sm"
-                                                data-bs-target="#addMarkerModal{{ $sample->id }}"
-                                                data-action="addMarker">
+                                                data-bs-target="#addMarkerModal{{ $sample->id }}" data-action="addMarker"
+                                                data-status="{{ $sample->status }}">
                                                 إضافة ماركر
                                             </button>
                                         @endif
                                         <!-- زر مراجعة -->
                                         <button type="button" class="btn btn-outline-success btn-sm"
-                                            data-bs-target="#reviewModal{{ $sample->id }}" data-action="review">
+                                            data-bs-target="#reviewModal{{ $sample->id }}" data-action="review"
+                                            data-status="{{ $sample->status }}">
                                             مراجعة
                                         </button>
 
@@ -489,8 +490,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('tr').forEach(function(row) {
-                const status = row.querySelector('td:nth-child(6) .badge')?.innerText.trim();
+            document.querySelectorAll('[data-action]').forEach(function(btn) {
+                const action = btn.getAttribute('data-action');
+                const targetModal = btn.getAttribute('data-bs-target');
+                const status = btn.getAttribute('data-status')?.trim();
 
                 const allowedActionsByStatus = {
                     'جديد': ['addMaterials'],
@@ -514,23 +517,15 @@
 
                 const currentAllowed = allowedActionsByStatus[status] || [];
 
-                row.querySelectorAll('[data-action]').forEach(function(btn) {
-                    const action = btn.getAttribute('data-action');
-                    const targetModal = btn.getAttribute('data-bs-target');
-
-                    btn.addEventListener('click', function(e) {
-                        if (!currentAllowed.includes(action)) {
-                            e.preventDefault();
-                            const msg = messages[action] ||
-                                'الإجراء غير مسموح به في هذه المرحلة';
-                            alert(msg);
-                        } else {
-                            // افتح المودال يدويًا
-                            const modal = new bootstrap.Modal(document.querySelector(
-                                targetModal));
-                            modal.show();
-                        }
-                    });
+                btn.addEventListener('click', function(e) {
+                    if (!currentAllowed.includes(action)) {
+                        e.preventDefault();
+                        const msg = messages[action] || 'الإجراء غير مسموح به في هذه المرحلة';
+                        alert(msg);
+                    } else {
+                        const modal = new bootstrap.Modal(document.querySelector(targetModal));
+                        modal.show();
+                    }
                 });
             });
         });
