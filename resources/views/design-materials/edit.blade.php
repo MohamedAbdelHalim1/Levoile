@@ -79,11 +79,11 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][required_quantity]" class="form-control"
-                                        placeholder="الكمية المطلوبة">
+                                        placeholder="الكمية المطلوبة" step="any">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][received_quantity]" class="form-control"
-                                        placeholder="الكمية المستلمة">
+                                        placeholder="الكمية المستلمة" step="any">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" name="colors[0][delivery_date]" class="form-control"
@@ -143,10 +143,10 @@
                     <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة">
+                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة" step="any">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة">
+                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة" step="any">
                 </div>
                 <div class="col-md-2">
                     <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
