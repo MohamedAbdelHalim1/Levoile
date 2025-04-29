@@ -157,9 +157,40 @@
                                                 onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</button>
                                         </form>
                                         <!-- زر إضافة خامات -->
-                                        <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
+                                        <button type="button" class="btn btn-dark btn-sm"
                                             data-bs-target="#addMaterialsModal{{ $sample->id }}"
-                                            data-action="addMaterials">إضافة خامات</button>
+                                            data-action="addMaterials">
+                                            إضافة خامات
+                                        </button>
+                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
+                                            <!-- زر إضافة تيكنيكال شيت -->
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
+                                                data-action="addTechnical">
+                                                إضافة تيكنيكال شيت
+                                            </button>
+                                        @endif
+
+                                        <!-- زر تعيين باترنيست -->
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            data-bs-target="#assignPatternestModal{{ $sample->id }}"
+                                            data-action="assignPatternest">
+                                            تعيين باترنيست
+                                        </button>
+                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
+                                            <!-- زر إضافة ماركر -->
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                data-bs-target="#addMarkerModal{{ $sample->id }}"
+                                                data-action="addMarker">
+                                                إضافة ماركر
+                                            </button>
+                                        @endif
+                                        <!-- زر مراجعة -->
+                                        <button type="button" class="btn btn-outline-success btn-sm"
+                                            data-bs-target="#reviewModal{{ $sample->id }}" data-action="review">
+                                            مراجعة
+                                        </button>
+
                                         <!-- Modal إضافة الخامات -->
                                         <div class="modal fade" id="addMaterialsModal{{ $sample->id }}" tabindex="-1"
                                             aria-labelledby="addMaterialsLabel{{ $sample->id }}" aria-hidden="true">
@@ -173,13 +204,13 @@
                                                             <h5 class="modal-title"
                                                                 id="addMaterialsLabel{{ $sample->id }}">إضافة خامات
                                                                 للعينة</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <label>اختر الخامات</label>
-                                                            <select class="form-control" name="materials[]" id="material_id"
-                                                                multiple required>
+                                                            <select class="form-control" name="materials[]"
+                                                                id="material_id" multiple required>
                                                                 @foreach ($materials as $material)
                                                                     <option value="{{ $material->id }}"
                                                                         @if ($sample->materials->pluck('design_material_id')->contains($material->id)) selected @endif>
@@ -198,10 +229,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- زر تعيين باترنيست -->
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#assignPatternestModal{{ $sample->id }}"
-                                            data-action="assignPatternest">تعيين باترنيست</button>
 
                                         <!-- Modal تعيين باترنيست -->
                                         <div class="modal fade" id="assignPatternestModal{{ $sample->id }}"
@@ -243,124 +270,98 @@
                                             </div>
                                         </div>
 
-                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
-                                            <!-- زر إضافة ماركر -->
-                                            <button type="button" class="btn btn-secondary btn-sm"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#addMarkerModal{{ $sample->id }}"
-                                                data-action="addMarker">إضافة ماركر</button>
 
-                                            <!-- Modal إضافة ماركر -->
-                                            <div class="modal fade" id="addMarkerModal{{ $sample->id }}"
-                                                tabindex="-1" aria-labelledby="addMarkerModalLabel{{ $sample->id }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <form
-                                                        action="{{ route('design-sample-products.add-marker', $sample->id) }}"
-                                                        method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="addMarkerModalLabel{{ $sample->id }}">إضافة
-                                                                    ماركر</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                        <!-- Modal إضافة ماركر -->
+                                        <div class="modal fade" id="addMarkerModal{{ $sample->id }}" tabindex="-1"
+                                            aria-labelledby="addMarkerModalLabel{{ $sample->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form
+                                                    action="{{ route('design-sample-products.add-marker', $sample->id) }}"
+                                                    method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="addMarkerModalLabel{{ $sample->id }}">إضافة
+                                                                ماركر</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label>رقم الماركر</label>
+                                                                <input type="text" name="marker_number"
+                                                                    class="form-control" required>
                                                             </div>
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label>رقم الماركر</label>
-                                                                    <input type="text" name="marker_number"
-                                                                        class="form-control" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label>صورة الماركر</label>
-                                                                    <input type="file" name="marker_image"
-                                                                        class="form-control" accept="image/*" required>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-9 mb-3">
-                                                                        <label>استهلاك القطعة</label>
-                                                                        <input type="text" name="marker_consumption"
-                                                                            class="form-control">
-                                                                    </div>
-                                                                    <div class="col-3 mb-3">
-                                                                        <label>الوحدة</label>
-                                                                        <select name="marker_unit" class="form-control">
-                                                                            <option value="">اختار الوحدة</option>
-                                                                            <option value="كيلوجرام">كيلوجرام</option>
-                                                                            <option value="متر">متر</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label>تاريخ التسليم</label>
-                                                                    <input type="date" name="delivery_date"
+                                                            <div class="mb-3">
+                                                                <label>صورة الماركر</label>
+                                                                <input type="file" name="marker_image"
+                                                                    class="form-control" accept="image/*" required>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-9 mb-3">
+                                                                    <label>استهلاك القطعة</label>
+                                                                    <input type="text" name="marker_consumption"
                                                                         class="form-control">
                                                                 </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">إغلاق</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">حفظ</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
-                                            <!-- زر إضافة تيكنيكال -->
-                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
-                                                data-action="addTechnical">إضافة تيكنيكال شيت</button>
-
-                                            <!-- Modal إضافة تيكنيكال شيت -->
-                                            <div class="modal fade" id="addTechnicalSheetModal{{ $sample->id }}"
-                                                tabindex="-1"
-                                                aria-labelledby="addTechnicalSheetLabel{{ $sample->id }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <form
-                                                        action="{{ route('design-sample-products.add-technical-sheet', $sample->id) }}"
-                                                        method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="addTechnicalSheetLabel{{ $sample->id }}">إضافة
-                                                                    تيكنيكال شيت</h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="إغلاق"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="mb-3">
-                                                                    <label>ملف التيكنيكال شيت</label>
-                                                                    <input type="file" name="marker_file"
-                                                                        class="form-control" accept=".pdf,.zip,.rar"
-                                                                        required>
+                                                                <div class="col-3 mb-3">
+                                                                    <label>الوحدة</label>
+                                                                    <select name="marker_unit" class="form-control">
+                                                                        <option value="">اختار الوحدة</option>
+                                                                        <option value="كيلوجرام">كيلوجرام</option>
+                                                                        <option value="متر">متر</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">إغلاق</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">حفظ</button>
+                                                            <div class="mb-3">
+                                                                <label>تاريخ التسليم</label>
+                                                                <input type="date" name="delivery_date"
+                                                                    class="form-control">
                                                             </div>
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">إغلاق</button>
+                                                            <button type="submit" class="btn btn-primary">حفظ</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        @endif
+                                        </div>
 
-
-                                        <!-- زر مراجعة -->
-                                        <button type="button" class="btn btn-outline-success btn-sm"
-                                            data-bs-toggle="modal" data-bs-target="#reviewModal{{ $sample->id }}">
-                                            مراجعة
-                                        </button>
+                                        <!-- Modal إضافة تيكنيكال شيت -->
+                                        <div class="modal fade" id="addTechnicalSheetModal{{ $sample->id }}"
+                                            tabindex="-1" aria-labelledby="addTechnicalSheetLabel{{ $sample->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form
+                                                    action="{{ route('design-sample-products.add-technical-sheet', $sample->id) }}"
+                                                    method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="addTechnicalSheetLabel{{ $sample->id }}">إضافة
+                                                                تيكنيكال شيت</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label>ملف التيكنيكال شيت</label>
+                                                                <input type="file" name="marker_file"
+                                                                    class="form-control" accept=".pdf,.zip,.rar" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">إغلاق</button>
+                                                            <button type="submit" class="btn btn-primary">حفظ</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
 
                                         <!-- Modal مراجعة -->
                                         <div class="modal fade" id="reviewModal{{ $sample->id }}" tabindex="-1"
@@ -491,37 +492,45 @@
             document.querySelectorAll('tr').forEach(function(row) {
                 const status = row.querySelector('td:nth-child(6) .badge')?.innerText.trim();
 
-                const allowedActions = {
+                const allowedActionsByStatus = {
                     'جديد': ['addMaterials'],
-                    'تم إضافة الخامات': ['addTechnical'],
-                    'تم إضافة التيكنيكال': ['assignPatternest'],
-                    'تم التوزيع': ['addMarker'],
-                    'قيد المراجعة': [],
-                    'تم المراجعة': [],
-                    'تأجيل': [],
-                    'الغاء': [],
-                    'تعديل': [],
+                    'تم إضافة الخامات': ['addMaterials', 'addTechnical'],
+                    'تم إضافة التيكنيكال': ['addMaterials', 'addTechnical', 'assignPatternest'],
+                    'تم التوزيع': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker'],
+                    'قيد المراجعة': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
+                    'تم المراجعة': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
                 };
 
-                const statusMap = {
-                    'جديد': 'يجب إضافة الخامات أولًا',
-                    'تم إضافة الخامات': 'يجب إضافة التيكنيكال شيت أولًا',
-                    'تم إضافة التيكنيكال': 'يجب تعيين باترنيست أولًا',
-                    'تم التوزيع': 'يجب إضافة بيانات الماركر أولًا',
+                const messages = {
+                    'addTechnical': 'يجب إضافة الخامات أولًا',
+                    'assignPatternest': 'يجب إضافة التيكنيكال شيت أولًا',
+                    'addMarker': 'يجب تعيين باترنيست أولًا',
+                    'review': 'يجب إضافة بيانات الماركر أولًا',
                 };
 
-                const currentAllowed = allowedActions[status] || [];
+                const currentAllowed = allowedActionsByStatus[status] || [];
 
                 row.querySelectorAll('[data-action]').forEach(function(btn) {
                     const action = btn.getAttribute('data-action');
+                    const targetModal = btn.getAttribute('data-bs-target');
 
-                    if (!currentAllowed.includes(action)) {
-                        btn.addEventListener('click', function(e) {
+                    btn.addEventListener('click', function(e) {
+                        if (!currentAllowed.includes(action)) {
                             e.preventDefault();
-                            const msg = statusMap[status];
-                            if (msg) alert(msg);
-                        });
-                    }
+                            const msg = messages[action] ||
+                                'الإجراء غير مسموح به في هذه المرحلة';
+                            alert(msg);
+                        } else {
+                            // افتح المودال يدويًا
+                            const modal = new bootstrap.Modal(document.querySelector(
+                                targetModal));
+                            modal.show();
+                        }
+                    });
                 });
             });
         });
