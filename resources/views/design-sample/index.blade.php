@@ -95,11 +95,15 @@
                                             <span class="badge bg-danger">الغاء</span>
                                         @elseif($sample->status === 'تعديل')
                                             <span class="badge bg-warning text-dark">تعديل</span>
+                                        @elseif($sample->status === 'تم اضافة الخامات')
+                                            <span class="badge bg-secondary">تم إضافة الخامات</span>
+                                        @elseif($sample->status === 'تم اضافة التيكنيكال')
+                                            <span class="badge bg-dark text-white">تم إضافة التيكنيكال</span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
                                     </td>
-                                    
+
 
                                     <td>
                                         @if ($sample->image)
@@ -152,11 +156,10 @@
                                             <button type="submit" class="btn btn-danger btn-sm"
                                                 onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</button>
                                         </form>
-                                        <!-- زر إضافة الخامات -->
+                                        <!-- زر إضافة خامات -->
                                         <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#addMaterialsModal{{ $sample->id }}">
-                                            إضافة خامات
-                                        </button>
+                                            data-bs-target="#addMaterialsModal{{ $sample->id }}"
+                                            data-action="addMaterials">إضافة خامات</button>
                                         <!-- Modal إضافة الخامات -->
                                         <div class="modal fade" id="addMaterialsModal{{ $sample->id }}" tabindex="-1"
                                             aria-labelledby="addMaterialsLabel{{ $sample->id }}" aria-hidden="true">
@@ -195,11 +198,10 @@
                                             </div>
                                         </div>
 
-                                        <!-- زرار تعيين باترنيست -->
+                                        <!-- زر تعيين باترنيست -->
                                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#assignPatternestModal{{ $sample->id }}">
-                                            تعيين باترنيست
-                                        </button>
+                                            data-bs-target="#assignPatternestModal{{ $sample->id }}"
+                                            data-action="assignPatternest">تعيين باترنيست</button>
 
                                         <!-- Modal تعيين باترنيست -->
                                         <div class="modal fade" id="assignPatternestModal{{ $sample->id }}"
@@ -242,12 +244,11 @@
                                         </div>
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
-                                            <!-- زرار إضافة ماركر -->
+                                            <!-- زر إضافة ماركر -->
                                             <button type="button" class="btn btn-secondary btn-sm"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#addMarkerModal{{ $sample->id }}">
-                                                إضافة ماركر
-                                            </button>
+                                                data-bs-target="#addMarkerModal{{ $sample->id }}"
+                                                data-action="addMarker">إضافة ماركر</button>
 
                                             <!-- Modal إضافة ماركر -->
                                             <div class="modal fade" id="addMarkerModal{{ $sample->id }}"
@@ -292,7 +293,11 @@
                                                                         </select>
                                                                     </div>
                                                                 </div>
-
+                                                                <div class="mb-3">
+                                                                    <label>تاريخ التسليم</label>
+                                                                    <input type="date" name="delivery_date"
+                                                                        class="form-control">
+                                                                </div>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
@@ -307,11 +312,10 @@
                                         @endif
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
-                                            <!-- زرار إضافة تيكنيكال شيت -->
+                                            <!-- زر إضافة تيكنيكال -->
                                             <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#addTechnicalSheetModal{{ $sample->id }}">
-                                                إضافة تيكنيكال شيت
-                                            </button>
+                                                data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
+                                                data-action="addTechnical">إضافة تيكنيكال شيت</button>
 
                                             <!-- Modal إضافة تيكنيكال شيت -->
                                             <div class="modal fade" id="addTechnicalSheetModal{{ $sample->id }}"
@@ -415,7 +419,8 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="comment_image_{{ $sample->id }}">ارفق صورة
-                                                                    (اختياري):</label>
+                                                                    (اختياري)
+                                                                    :</label>
                                                                 <input type="file" class="form-control"
                                                                     id="comment_image_{{ $sample->id }}" name="image"
                                                                     accept="image/*">
@@ -477,6 +482,47 @@
         document.querySelectorAll('.patternest-select').forEach(function(select) {
             new TomSelect(select, {
                 placeholder: "اختر الباترنيست"
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('tr').forEach(function(row) {
+                const status = row.querySelector('td:nth-child(6) .badge')?.innerText.trim();
+
+                const allowedActions = {
+                    'جديد': ['addMaterials'],
+                    'تم إضافة الخامات': ['addTechnical'],
+                    'تم إضافة التيكنيكال': ['assignPatternest'],
+                    'تم التوزيع': ['addMarker'],
+                    'قيد المراجعة': [],
+                    'تم المراجعة': [],
+                    'تأجيل': [],
+                    'الغاء': [],
+                    'تعديل': [],
+                };
+
+                const statusMap = {
+                    'جديد': 'يجب إضافة الخامات أولًا',
+                    'تم إضافة الخامات': 'يجب إضافة التيكنيكال شيت أولًا',
+                    'تم إضافة التيكنيكال': 'يجب تعيين باترنيست أولًا',
+                    'تم التوزيع': 'يجب إضافة بيانات الماركر أولًا',
+                };
+
+                const currentAllowed = allowedActions[status] || [];
+
+                row.querySelectorAll('[data-action]').forEach(function(btn) {
+                    const action = btn.getAttribute('data-action');
+
+                    if (!currentAllowed.includes(action)) {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const msg = statusMap[status];
+                            if (msg) alert(msg);
+                        });
+                    }
+                });
             });
         });
     </script>

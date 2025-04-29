@@ -170,6 +170,9 @@ class DesignSampleController extends Controller
             ]);
         }
 
+        $sample->status = 'تم اضافة الخامات';
+        $sample->save();
+
         return redirect()->route('design-sample-products.index')->with('success', 'تم تحديث الخامات بنجاح');
     }
 
@@ -194,6 +197,7 @@ class DesignSampleController extends Controller
             'marker_image' => 'required|image',
             'marker_consumption' => 'nullable|string|max:255',
             'marker_unit' => 'nullable|string|max:50',
+            'delivery_date' => 'nullable|date',
         ]);
 
         $sample = DesignSample::findOrFail($id);
@@ -210,7 +214,8 @@ class DesignSampleController extends Controller
             'marker_image' => 'images/marker/' . $imageName,
             'marker_consumption' => $request->marker_consumption,
             'marker_unit' => $request->marker_unit,
-            'status' => 'قيد المراجعه'
+            'status' => 'قيد المراجعه',
+            'delivery_date' => $request->delivery_date,
         ]);
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة الماركر بنجاح.');
@@ -268,6 +273,7 @@ class DesignSampleController extends Controller
         // حفظ البيانات
         $sample->update([
             'marker_file' => 'files/marker/' . $fileName,
+            'status' => 'تم اضافة التيكنيكال '
         ]);
 
         return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة التيكنيكال شيت بنجاح.');

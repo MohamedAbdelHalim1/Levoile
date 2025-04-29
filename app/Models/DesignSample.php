@@ -19,6 +19,7 @@ class DesignSample extends Model
         'is_reviewed',
         'marker_consumption',
         'marker_unit',
+        'delivery_date',
     ];
 
     public function season()
