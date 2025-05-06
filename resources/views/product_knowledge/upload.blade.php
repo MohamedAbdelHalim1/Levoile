@@ -185,9 +185,8 @@
             progressBar.classList.add('bg-success');
             progressBar.innerText = 'اكتمل';
 
-            // رسالة نجاح بدل الريفريش العنيف
-            alert('تم رفع الشيت بنجاح');
-            window.location.href = "{{ route('product-knowledge.index') }}";
+            window.location.href = "{{ route('product-knowledge.upload') }}";
+
         });
     </script>
 @endsection
