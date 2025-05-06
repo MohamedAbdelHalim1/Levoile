@@ -127,7 +127,7 @@
                         <td>${row['Size'] || ''}</td>
                         <td>${row['Unit Price'] || ''}</td>
                         <td>${row['Column2'] || ''}</td>
-                        <td>${row['quantity'] || ''}</td>
+                        <td>${row['quantity'] ?? ''}</td>
                         <td>${row['Created At'] || ''}</td>
                     </tr>`;
                     previewTable.innerHTML += tr;
