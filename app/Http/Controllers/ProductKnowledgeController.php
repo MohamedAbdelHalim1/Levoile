@@ -12,7 +12,7 @@ class ProductKnowledgeController extends Controller
 {
     public function index()
     {
-        return view('product_knowledge.index'); 
+        return view('product_knowledge.index');
     }
 
     public function uploadForm()
@@ -20,10 +20,15 @@ class ProductKnowledgeController extends Controller
         return view('product_knowledge.upload');
     }
 
+
     public function uploadSave(Request $request)
     {
         try {
             $data = $request->get('chunk');
+
+            if (empty($data)) {
+                return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
+            }
 
             DB::transaction(function () use ($data) {
                 foreach ($data as $row) {
@@ -67,9 +72,9 @@ class ProductKnowledgeController extends Controller
                 }
             });
 
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success', 'message' => 'تم رفع الشيت بنجاح']);
         } catch (\Exception $e) {
-            dd($e);
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 }
