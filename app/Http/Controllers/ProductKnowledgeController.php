@@ -31,6 +31,8 @@ class ProductKnowledgeController extends Controller
 
     public function uploadForm()
     {
+        abort(500, 'Reached the controller method'); // هل دي بتظهر؟ لو آه المشكلة في البليد
+
         return view('product_knowledge.upload');
     }
 
