@@ -183,10 +183,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
     
 
-    Route::get('/product-knowledge/upload', [ProductKnowledgeController::class, 'uploadForm'])
+    Route::get('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadForm'])
         ->name('product-knowledge.upload');
 
-    Route::post('/product-knowledge/upload', [ProductKnowledgeController::class, 'uploadSave'])
+    Route::post('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadSave'])
         ->name('product-knowledge.upload.save');
 
 
