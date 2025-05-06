@@ -13,7 +13,20 @@ class ProductKnowledgeController extends Controller
 {
     public function index()
     {
-        return view('product_knowledge.index');
+        $categories = CategoryKnowledge::all();
+        return view('product_knowledge.index', compact('categories'));
+    }
+
+    public function subcategories($categoryId)
+    {
+        $category = CategoryKnowledge::with('subcategories')->findOrFail($categoryId);
+        return view('product_knowledge.subcategories', compact('category'));
+    }
+
+    public function products($subcategoryId)
+    {
+        $subcategory = SubcategoryKnowledge::with('products')->findOrFail($subcategoryId);
+        return view('product_knowledge.products', compact('subcategory'));
     }
 
     public function uploadForm()
