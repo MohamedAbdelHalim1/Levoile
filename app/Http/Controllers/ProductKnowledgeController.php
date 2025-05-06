@@ -26,7 +26,7 @@ class ProductKnowledgeController extends Controller
             $data = $request->get('chunk');
 
             if (empty($data)) {
-                return redirect()->back()->with('error', 'لم يتم استقبال أي بيانات');
+                return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
             }
 
             DB::transaction(function () use ($data) {
@@ -58,7 +58,7 @@ class ProductKnowledgeController extends Controller
                         'product_item_code'        => $product_item_code,
                         'color'                    => $row['Color'] ?? null,
                         'size'                     => $row['Size'] ?? null,
-                        'created_at_excel'         => $row['Created At'] ?? null, // تخزين كـ string مباشرة
+                        'created_at_excel'         => $row['Created At'] ?? null, // stored as string
                         'unit_price'               => isset($row['Unit Price']) ? (int) $row['Unit Price'] : null,
                         'image_url'                => $row['Column2'] ?? null,
                         'quantity'                 => isset($row['quantity']) ? (int) $row['quantity'] : null,
@@ -70,9 +70,9 @@ class ProductKnowledgeController extends Controller
                 }
             });
 
-            return redirect()->back()->with('success', 'تم رفع الشيت بنجاح');
+            return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ أثناء الرفع: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 }

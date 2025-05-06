@@ -167,7 +167,14 @@
                     })
                 });
 
-                const result = await response.json();
+                let result = {};
+                try {
+                    result = await response.json();
+                } catch (err) {
+                    progressBar.classList.add('bg-danger');
+                    progressBar.innerText = 'استجابة غير صالحة من السيرفر';
+                    return;
+                }
 
                 if (!response.ok || result.status !== 'success') {
                     progressBar.classList.add('bg-danger');
@@ -180,13 +187,13 @@
                 progressBar.innerText = progress + '%';
             }
 
-
             progressBar.classList.remove('bg-danger');
             progressBar.classList.add('bg-success');
             progressBar.innerText = 'اكتمل';
 
-            window.location.href = "{{ route('product-knowledge.upload') }}";
-
+            setTimeout(() => {
+                window.location.href = "{{ route('product-knowledge.upload') }}";
+            }, 1000);
         });
     </script>
 @endsection
