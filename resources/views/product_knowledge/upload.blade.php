@@ -17,6 +17,8 @@
                 <input type="file" id="file" class="form-control" accept=".xlsx,.xls" required>
             </div>
 
+            <div id="preview-loader" class="alert alert-info d-none">جاري قراءة الملف... برجاء الانتظار</div>
+
             <button id="submit-btn" class="btn btn-success">رفع</button>
 
             <form id="hidden-upload-form" method="POST" action="{{ route('product-knowledge.upload.save') }}" enctype="multipart/form-data" class="d-none">
@@ -84,6 +86,7 @@
     const submitBtn = document.getElementById('submit-btn');
     const progressBar = document.getElementById('uploadProgress');
     const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    const previewLoader = document.getElementById('preview-loader');
 
     let allRows = [];
 
@@ -91,6 +94,8 @@
         previewTable.innerHTML = '';
         const file = this.files[0];
         if (!file) return;
+
+        previewLoader.classList.remove('d-none');
 
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -116,6 +121,7 @@
             });
 
             previewDiv.classList.remove('d-none');
+            previewLoader.classList.add('d-none');
         };
 
         reader.readAsArrayBuffer(file);
