@@ -95,6 +95,15 @@
         const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
         const previewLoader = document.getElementById('preview-loader');
 
+        function formatExcelDate(excelDate) {
+            if (typeof excelDate === 'number') {
+                const date = new Date((excelDate - 25569) * 86400 * 1000);
+                return date.toISOString().replace('T', ' ').split('.')[0]; 
+            }
+            return excelDate || '';
+        }
+
+
         let allRows = [];
 
         fileInput.addEventListener('change', function() {
@@ -128,7 +137,7 @@
                         <td>${row['Unit Price'] || ''}</td>
                         <td>${row['Column2'] || ''}</td>
                         <td>${row['quantity'] ?? ''}</td>
-                        <td>${row['Created At'] || ''}</td>
+                        <td>${formatExcelDate(row['Created At'])}</td>
                     </tr>`;
                     previewTable.innerHTML += tr;
                 });

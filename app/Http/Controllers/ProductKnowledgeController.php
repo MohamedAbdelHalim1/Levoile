@@ -7,6 +7,7 @@ use App\Models\SubcategoryKnowledge;
 use App\Models\ProductKnowledge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProductKnowledgeController extends Controller
 {
@@ -49,6 +50,16 @@ class ProductKnowledgeController extends Controller
                     $color_code = substr($no, -5, 3);
                     $size_code = substr($no, -2);
 
+                    // تحويل تاريخ Excel
+                    $created_at_excel = null;
+                    if (!empty($row['Created At']) && is_numeric($row['Created At'])) {
+                        try {
+                            $created_at_excel = Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']));
+                        } catch (\Exception $e) {
+                            $created_at_excel = null;
+                        }
+                    }
+
                     ProductKnowledge::create([
                         'subcategory_knowledge_id' => $subcategory->id,
                         'description'              => $row['Description'] ?? null,
@@ -58,7 +69,7 @@ class ProductKnowledgeController extends Controller
                         'product_item_code'        => $product_item_code,
                         'color'                    => $row['Color'] ?? null,
                         'size'                     => $row['Size'] ?? null,
-                        'created_at_excel'         => $row['Created At'] ?? null, // stored as string
+                        'created_at_excel'         => $created_at_excel,
                         'unit_price'               => isset($row['Unit Price']) ? (int) $row['Unit Price'] : null,
                         'image_url'                => $row['Column2'] ?? null,
                         'quantity'                 => isset($row['quantity']) ? (int) $row['quantity'] : null,
