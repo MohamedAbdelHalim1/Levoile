@@ -178,16 +178,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])->name('product-knowledge.index');
-    Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
-    Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
-    
-
     Route::get('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadForm'])
         ->name('product-knowledge.upload');
 
     Route::post('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadSave'])
         ->name('product-knowledge.upload.save');
+
+
+    Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])->name('product-knowledge.index');
+    Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
+    Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
+
+
 
 
 
