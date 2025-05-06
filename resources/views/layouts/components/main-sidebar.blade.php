@@ -42,6 +42,41 @@
                 </li>
 
 
+                @if (auth()->user()->role_id == 1)
+                    <li class="sub-category">
+                        <h3>منتجات الماستر شيت</h3>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fe fe-database"></i>
+                            <span class="side-menu__label">منتجات الماستر شيت</span>
+                            <i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">منتجات الماستر
+                                                        شيت</a></li>
+                                                <li>
+                                                    <a href="{{ route('product-knowledge.index') }}"
+                                                        class="slide-item">عرض المنتجات</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('product-knowledge.upload') }}"
+                                                        class="slide-item">رفع ماستر شيت</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+
 
                 @if (auth()->user()->role_id == 1)
                     <li class="sub-category">
@@ -49,8 +84,8 @@
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon fe fe-feather"></i><span class="side-menu__label">التصميم</span><i
-                                class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__icon fe fe-feather"></i><span
+                                class="side-menu__label">التصميم</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
@@ -60,10 +95,12 @@
                                                 <li class="side-menu-label1"><a href="javascript:void(0)">التصميم</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('design-materials.index') }}" class="slide-item">خامات العينه</a>
+                                                    <a href="{{ route('design-materials.index') }}"
+                                                        class="slide-item">خامات العينه</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('design-sample-products.index') }}" class="slide-item">عينات المنتج</a>
+                                                    <a href="{{ route('design-sample-products.index') }}"
+                                                        class="slide-item">عينات المنتج</a>
                                                 </li>
 
                                             </ul>
@@ -144,7 +181,8 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">الاعدادات</a>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">الاعدادات</a>
                                                 </li>
                                                 <li><a href="{{ route('categories.index') }}" class="slide-item">
                                                         الاقسام</a></li>

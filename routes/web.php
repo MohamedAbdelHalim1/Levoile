@@ -12,6 +12,7 @@ use App\Http\Controllers\FactoryController;
 
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductKnowledgeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -152,6 +153,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -176,8 +178,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::resource('design-materials', DesignMaterialController::class);
+    Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])
+        ->name('product-knowledge.index');
 
+    Route::get('/product-knowledge/upload', [ProductKnowledgeController::class, 'uploadForm'])
+        ->name('product-knowledge.upload');
+
+    Route::post('/product-knowledge/upload', [ProductKnowledgeController::class, 'uploadSave'])
+        ->name('product-knowledge.upload.save');
+
+
+
+    Route::resource('design-materials', DesignMaterialController::class);
     // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
     Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
     Route::resource('design-sample-products', DesignSampleController::class);
