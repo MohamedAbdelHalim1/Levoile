@@ -15,25 +15,27 @@
 
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 border border-gray-200 shadow-sm">
-                                <div class="card-body text-center position-relative">
+                                <div class="card-body text-center">
 
-                                    {{-- الكود فوق الصورة - شمال --}}
-                                    <div class="position-absolute start-0 top-0 m-2">
-                                        <span class="badge bg-primary">Code: {{ $parent->product_code }}</span>
+                                    {{-- الصورة مع overlay --}}
+                                    <div class="position-relative mb-3" style="max-height: 250px; overflow: hidden;">
+                                        @if($mainImage)
+                                            <img src="{{ $mainImage }}" class="img-fluid w-100"
+                                                 style="object-fit: contain; max-height: 250px;">
+                                        @endif
+
+                                        {{-- Code: bottom-left on image --}}
+                                        <span class="badge bg-primary position-absolute bottom-0 start-0 m-2">
+                                            Code: {{ $parent->product_code }}
+                                        </span>
+
+                                        {{-- Price: bottom-right on image --}}
+                                        <span class="badge bg-dark position-absolute bottom-0 end-0 m-2">
+                                            Price: {{ $parent->unit_price }}
+                                        </span>
                                     </div>
 
-                                    {{-- الصورة --}}
-                                    @if($mainImage)
-                                        <img src="{{ $mainImage }}" class="img-fluid mb-3"
-                                             style="max-height: 250px; object-fit: contain;">
-                                    @endif
-
-                                    {{-- السعر تحت الصورة - يمين --}}
-                                    <div class="position-absolute end-0 bottom-0 me-2 mb-2">
-                                        <span class="badge bg-dark">Price: {{ $parent->unit_price }}</span>
-                                    </div>
-
-                                    <h5 class="mb-1 mt-2">{{ $parent->description }}</h5>
+                                    <h5 class="mb-1">{{ $parent->description }}</h5>
                                     <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
 
                                     {{-- الفاريانتس --}}
