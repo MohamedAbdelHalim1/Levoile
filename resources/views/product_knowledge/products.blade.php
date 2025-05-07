@@ -18,21 +18,13 @@
                                 <div class="card-body text-center">
 
                                     {{-- الصورة مع overlay --}}
-                                    <div class="position-relative mb-3" style="max-height: 250px; overflow: hidden;">
+                                    <div class="img-container mb-3">
                                         @if($mainImage)
-                                            <img src="{{ $mainImage }}" class="img-fluid w-100"
-                                                 style="object-fit: contain; max-height: 250px;">
+                                            <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
                                         @endif
 
-                                        {{-- Code: bottom-left on image --}}
-                                        <span class="badge bg-primary position-absolute bottom-0 start-0 m-2">
-                                            Code: {{ $parent->product_code }}
-                                        </span>
-
-                                        {{-- Price: bottom-right on image --}}
-                                        <span class="badge bg-dark position-absolute bottom-0 end-0 m-2">
-                                            Price: {{ $parent->unit_price }}
-                                        </span>
+                                        <span class="badge badge-overlay badge-code">Code: {{ $parent->product_code }}</span>
+                                        <span class="badge badge-overlay badge-price">Price: {{ $parent->unit_price }}</span>
                                     </div>
 
                                     <h5 class="mb-1">{{ $parent->description }}</h5>
@@ -69,4 +61,38 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .img-container {
+            position: relative;
+            max-height: 250px;
+            overflow: hidden;
+        }
+
+        .product-image {
+            object-fit: contain;
+            max-height: 250px;
+        }
+
+        .badge-overlay {
+            position: absolute;
+            z-index: 10;
+            padding: 0.4em 0.6em;
+            font-size: 0.8rem;
+        }
+
+        .badge-code {
+            top: 8px;
+            left: 8px;
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .badge-price {
+            bottom: 8px;
+            right: 8px;
+            background-color: #212529;
+            color: white;
+        }
+    </style>
 @endsection
