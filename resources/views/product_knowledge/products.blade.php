@@ -24,7 +24,7 @@
                                 <div class="card-body text-center">
                                     <div class="mb-2">
                                         @if ($mainImage)
-                                            <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
+                                            <img src="{{ $mainImage }}" class="img-fluid w-100 product-image" loading="lazy">
                                         @endif
                                     </div>
 
@@ -140,7 +140,7 @@
                     const box = document.createElement('div');
                     box.className = 'col-md-3 text-center mb-3';
                     box.innerHTML = `
-                    <img src="${variant.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;">
+                    <img src="${variant.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
                     <div><strong>No Code:</strong> ${variant.no_code}</div>
                     <div><strong>Color:</strong> ${variant.color}</div>
                     <div><strong>Size:</strong> ${variant.size}</div>
