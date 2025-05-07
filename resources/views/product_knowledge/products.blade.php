@@ -17,13 +17,14 @@
                             <div class="card h-100 border border-gray-200 shadow-sm">
                                 <div class="card-body text-center">
 
-                                    {{-- الصورة + overlay --}}
+                                    {{-- الصورة + overlay في الأسفل --}}
                                     <div class="position-relative rounded overflow-hidden product-wrapper mb-3">
                                         @if($mainImage)
                                             <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
                                         @endif
 
-                                        <div class="position-absolute top-0 w-100 d-flex justify-content-between p-2">
+                                        {{-- الكود والسعر فوق الصورة من تحت --}}
+                                        <div class="position-absolute bottom-0 w-100 d-flex justify-content-between p-2 px-3">
                                             <span class="badge badge-overlay">Code: {{ $parent->product_code }}</span>
                                             <span class="badge badge-overlay">Price: {{ $parent->unit_price }}</span>
                                         </div>
@@ -76,9 +77,10 @@
         .badge-overlay {
             background-color: #0d6efd;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             padding: 5px 10px;
             border-radius: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
     </style>
 @endsection
