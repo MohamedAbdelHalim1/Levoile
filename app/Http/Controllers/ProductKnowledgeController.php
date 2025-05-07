@@ -23,19 +23,30 @@ class ProductKnowledgeController extends Controller
         return view('product_knowledge.subcategories', compact('category'));
     }
 
-    public function products($subcategoryId)
+    public function products(Request $request, $subcategoryId)
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
     
-        // Get distinct product_codes for pagination
-        $paginatedProductCodes = DB::table('product_knowledge')
-            ->where('subcategory_knowledge_id', $subcategoryId)
+        $search = $request->input('search');
+    
+        $query = DB::table('product_knowledge')
+            ->where('subcategory_knowledge_id', $subcategoryId);
+    
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%$search%")
+                  ->orWhere('gomla', 'like', "%$search%")
+                  ->orWhere('product_code', 'like', "%$search%");
+            });
+        }
+    
+        $paginatedProductCodes = $query
             ->select('product_code')
             ->groupBy('product_code')
             ->orderBy('product_code')
-            ->paginate(6);
+            ->paginate(6)
+            ->appends(['search' => $search]); // مهم علشان يحتفظ بالكلمة
     
-        // Use those product_codes to get full variant details
         $productCodes = $paginatedProductCodes->pluck('product_code');
     
         $allVariants = DB::table('product_knowledge')
@@ -62,7 +73,8 @@ class ProductKnowledgeController extends Controller
         return view('product_knowledge.products', [
             'subcategory' => $subcategory,
             'products' => $allVariants,
-            'pagination' => $paginatedProductCodes
+            'pagination' => $paginatedProductCodes,
+            'search' => $search
         ]);
     }
     

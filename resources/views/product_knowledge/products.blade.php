@@ -6,6 +6,12 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
 
+                <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
+                    <button type="submit" class="btn btn-primary">ابحث</button>
+                    <a href="{{ route('product.knowledge.subcategory', $subcategory->id) }}" class="btn btn-secondary">العودة</a>
+                </form>
+                
                 <div class="row">
                     @forelse($products as $group)
                         @php
