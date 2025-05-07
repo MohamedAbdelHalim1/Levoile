@@ -17,19 +17,20 @@
                             <div class="card h-100 border border-gray-200 shadow-sm">
                                 <div class="card-body text-center">
 
-                                    {{-- الصورة + overlay في الأسفل --}}
-                                    <div class="position-relative rounded overflow-hidden product-wrapper mb-3">
+                                    {{-- الصورة --}}
+                                    <div class="mb-2">
                                         @if($mainImage)
                                             <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
                                         @endif
-
-                                        {{-- الكود والسعر فوق الصورة من تحت --}}
-                                        <div class="position-absolute bottom-0 w-100 d-flex justify-content-between p-2 px-3">
-                                            <span class="badge badge-overlay">Code: {{ $parent->product_code }}</span>
-                                            <span class="badge badge-overlay">Price: {{ $parent->unit_price }}</span>
-                                        </div>
                                     </div>
 
+                                    {{-- الكود والسعر تحت الصورة --}}
+                                    <div class="d-flex justify-content-center gap-2 mb-2">
+                                        <span class="custom-badge">Code: {{ $parent->product_code }}</span>
+                                        <span class="custom-badge">Price: {{ $parent->unit_price }}</span>
+                                    </div>
+
+                                    {{-- الاسم والجمله --}}
                                     <h5 class="mb-1">{{ $parent->description }}</h5>
                                     <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
 
@@ -65,22 +66,19 @@
     </div>
 
     <style>
-        .product-wrapper {
-            height: 250px;
-        }
-
         .product-image {
             object-fit: contain;
-            height: 100%;
+            max-height: 250px;
         }
 
-        .badge-overlay {
-            background-color: #0d6efd;
-            color: white;
-            font-size: 0.75rem;
+        .custom-badge {
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+            background-color: transparent;
             padding: 5px 10px;
             border-radius: 0.5rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            font-size: 0.75rem;
+            display: inline-block;
         }
     </style>
 @endsection
