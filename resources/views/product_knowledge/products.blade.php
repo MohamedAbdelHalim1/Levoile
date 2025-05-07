@@ -7,31 +7,43 @@
                 <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
 
                 @forelse($products as $group)
-                    @php $parent = $group->first(); @endphp
+                    @php
+                        $parent = $group->first();
+                        $mainImage = $group->firstWhere('image_url')?->image_url;
+                    @endphp
 
                     <div class="card mb-4 border border-gray-200 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="mb-3">اسم المنتج: {{ $parent->description }}</h5>
-                            <p><strong>الكود:</strong> {{ $parent->product_code }}</p>
+                        <div class="card-body text-center">
+                            {{-- الصورة الكبيرة --}}
+                            @if($mainImage)
+                                <img src="{{ $mainImage }}" class="img-fluid mb-3"
+                                     style="max-height: 350px; object-fit: contain;">
+                            @endif
 
-                            <div class="row">
+                            <h5 class="mb-2">Name: {{ $parent->description }}</h5>
+                            <span class="badge bg-primary mb-2">Code: {{ $parent->product_code }}</span>
+                            <br>
+                            <span class="badge bg-dark mb-4">Price: {{ $parent->unit_price }}</span>
+
+                            {{-- الفاريانتس --}}
+                            <div class="row justify-content-center">
                                 @foreach($group as $variant)
-                                    <div class="col-md-3 mb-3">
-                                        <div class="card text-center p-2">
+                                    <div class="col-md-2 mb-3">
+                                        <div class="card text-center p-2 shadow-sm">
                                             @if($variant->image_url)
                                                 <img src="{{ $variant->image_url }}" class="img-fluid mb-2"
-                                                    style="height: 150px; object-fit: contain;" />
+                                                     style="height: 100px; object-fit: contain;">
                                             @endif
-                                            <div class="small">
-                                                <p>اللون: {{ $variant->color }}</p>
-                                                <p>المقاس: {{ $variant->size }}</p>
-                                                <p>السعر: {{ $variant->unit_price }}</p>
-                                                <p>الكمية: {{ $variant->quantity }}</p>
-                                            </div>
+                                            <span class="badge {{ $variant->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
+                                                {{ $variant->quantity > 0 ? 'Active' : 'Not Active' }}
+                                            </span>
+                                            <p class="mb-0 mt-1 small">Color: {{ $variant->color }}</p>
+                                            <p class="mb-0 small">Size: {{ $variant->size }}</p>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
+
                         </div>
                     </div>
                 @empty
