@@ -61,6 +61,10 @@
                             <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
                         </div>
                     @endforelse
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $pagination->links() }}
+                    </div>
+                    
                 </div>
             </div>
         </div>

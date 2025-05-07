@@ -25,12 +25,36 @@ class ProductKnowledgeController extends Controller
 
     public function products($subcategoryId)
     {
-        $subcategory = SubcategoryKnowledge::with('products')->findOrFail($subcategoryId);
+        $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
     
-        // Group by product_code to get variants together
-        $products = $subcategory->products->groupBy('product_code');
+        // Paginate raw results
+        $rawProducts = DB::table('product_knowledge')
+            ->where('subcategory_knowledge_id', $subcategoryId)
+            ->select(
+                'product_code',
+                'unit_price',
+                'description',
+                'gomla',
+                'item_family_code',
+                'season_code',
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
+                'color',
+                'size',
+                'quantity',
+                'no_code',
+                'image_url'
+            )
+            ->orderBy('product_code')
+            ->paginate(12); // ← عدل الرقم حسب ما تحب
     
-        return view('product_knowledge.products', compact('subcategory', 'products'));
+        // Group results by product_code
+        $products = collect($rawProducts->items())->groupBy('product_code');
+    
+        return view('product_knowledge.products', [
+            'subcategory' => $subcategory,
+            'products' => $products,
+            'pagination' => $rawProducts
+        ]);
     }
     
 
