@@ -9,7 +9,7 @@
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
                     <button type="submit" class="btn btn-primary">ابحث</button>
-                    <a href="{{ route('product.knowledge.subcategory', $subcategory->id) }}" class="btn btn-secondary">العودة</a>
+                    <a href="{{ route('product-knowledge.products', $subcategory->id) }}" class="btn btn-secondary">العودة</a>
                 </form>
                 
                 <div class="row">
