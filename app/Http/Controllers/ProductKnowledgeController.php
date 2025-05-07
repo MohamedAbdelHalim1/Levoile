@@ -33,7 +33,7 @@ class ProductKnowledgeController extends Controller
             ->select('product_code')
             ->groupBy('product_code')
             ->orderBy('product_code')
-            ->paginate(12);
+            ->paginate(6);
     
         // Use those product_codes to get full variant details
         $productCodes = $paginatedProductCodes->pluck('product_code');
