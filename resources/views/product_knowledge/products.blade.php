@@ -114,7 +114,7 @@
         }
 
         .modal-xl {
-            max-width: 95% !important;
+            max-width: 75% !important;
         }
     </style>
 @endsection
@@ -145,6 +145,9 @@
                     <div><strong>Color:</strong> ${variant.color}</div>
                     <div><strong>Size:</strong> ${variant.size}</div>
                     <div><strong>Qty:</strong> ${variant.quantity}</div>
+                    <span class="badge ${variant.quantity > 0 ? 'bg-success' : 'bg-danger'}">
+                        ${variant.quantity > 0 ? 'Active' : 'Not Active'}
+                    </span>
                 `;
                     variantsContainer.appendChild(box);
                 });
