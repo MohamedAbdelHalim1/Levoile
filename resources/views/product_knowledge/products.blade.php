@@ -30,7 +30,7 @@
                                     {{-- الفاريانتس --}}
                                     <div class="row">
                                         @foreach($group as $variant)
-                                            <div class="col-6 mb-3">
+                                            <div class="col-3 mb-3">
                                                 <div class="card text-center p-2 shadow-sm h-100">
                                                     @if($variant->image_url)
                                                         <img src="{{ $variant->image_url }}"
