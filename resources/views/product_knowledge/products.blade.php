@@ -40,8 +40,8 @@
                                                     <span class="badge {{ $variant->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
                                                         {{ $variant->quantity > 0 ? 'Active' : 'Not Active' }}
                                                     </span>
-                                                    <p class="mb-0 mt-1 small">Color: {{ $variant->color }}</p>
-                                                    <p class="mb-0 small">Size: {{ $variant->size }}</p>
+                                                    {{-- <p class="mb-0 mt-1 small">Color: {{ $variant->color }}</p>
+                                                    <p class="mb-0 small">Size: {{ $variant->size }}</p> --}}
                                                 </div>
                                             </div>
                                         @endforeach
