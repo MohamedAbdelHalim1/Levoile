@@ -17,14 +17,17 @@
                             <div class="card h-100 border border-gray-200 shadow-sm">
                                 <div class="card-body text-center">
 
-                                    {{-- الصورة مع overlay --}}
-                                    <div class="img-container mb-3">
+                                    {{-- الصورة --}}
+                                    <div class="img-container mb-2">
                                         @if($mainImage)
                                             <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
                                         @endif
+                                    </div>
 
-                                        <span class="badge badge-overlay badge-code">Code: {{ $parent->product_code }}</span>
-                                        <span class="badge badge-overlay badge-price">Price: {{ $parent->unit_price }}</span>
+                                    {{-- الكود والسعر تحت الصورة --}}
+                                    <div class="d-flex justify-content-between align-items-center px-2 mb-2">
+                                        <span class="badge badge-info">Price: {{ $parent->unit_price }}</span>
+                                        <span class="badge badge-info">Code: {{ $parent->product_code }}</span>
                                     </div>
 
                                     <h5 class="mb-1">{{ $parent->description }}</h5>
@@ -64,7 +67,6 @@
 
     <style>
         .img-container {
-            position: relative;
             max-height: 250px;
             overflow: hidden;
         }
@@ -74,25 +76,12 @@
             max-height: 250px;
         }
 
-        .badge-overlay {
-            position: absolute;
-            z-index: 10;
-            padding: 0.4em 0.6em;
-            font-size: 0.8rem;
-        }
-
-        .badge-code {
-            top: 8px;
-            left: 8px;
+        .badge-info {
             background-color: #0d6efd;
             color: white;
-        }
-
-        .badge-price {
-            bottom: 8px;
-            right: 8px;
-            background-color: #212529;
-            color: white;
+            border-radius: 0.4rem;
+            padding: 6px 10px;
+            font-size: 0.8rem;
         }
     </style>
 @endsection
