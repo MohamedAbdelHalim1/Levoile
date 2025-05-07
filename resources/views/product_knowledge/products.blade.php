@@ -12,9 +12,9 @@
                         $mainImage = $group->firstWhere('image_url')?->image_url;
                     @endphp
 
-                    <div class="card mb-4 border border-gray-200 shadow-sm">
+                    <div class="card mb-5 border border-gray-200 shadow-sm">
                         <div class="card-body text-center">
-                            {{-- الصورة الكبيرة --}}
+                            {{-- الصورة الرئيسية --}}
                             @if($mainImage)
                                 <img src="{{ $mainImage }}" class="img-fluid mb-3"
                                      style="max-height: 350px; object-fit: contain;">
@@ -25,10 +25,10 @@
                             <br>
                             <span class="badge bg-dark mb-4">Price: {{ $parent->unit_price }}</span>
 
-                            {{-- الفاريانتس --}}
-                            <div class="row justify-content-center">
+                            {{-- فاريانتس --}}
+                            <div class="row">
                                 @foreach($group as $variant)
-                                    <div class="col-md-2 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="card text-center p-2 shadow-sm">
                                             @if($variant->image_url)
                                                 <img src="{{ $variant->image_url }}" class="img-fluid mb-2"
@@ -43,7 +43,6 @@
                                     </div>
                                 @endforeach
                             </div>
-
                         </div>
                     </div>
                 @empty
