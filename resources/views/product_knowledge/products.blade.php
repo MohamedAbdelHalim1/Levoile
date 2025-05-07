@@ -152,6 +152,8 @@
                     box.innerHTML = `
                     <img src="${variant.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
                     <div><strong>No Code:</strong> ${variant.no_code}</div>
+                    <div><strong>Description:</strong> ${variant.description}</div>
+                    <div><strong>Gomla:</strong> ${variant.gomla}</div>
                     <div><strong>Color:</strong> ${variant.color}</div>
                     <div><strong>Size:</strong> ${variant.size}</div>
                     <div><strong>Qty:</strong> ${variant.quantity}</div>
