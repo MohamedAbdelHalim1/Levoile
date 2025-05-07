@@ -15,17 +15,26 @@
 
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 border border-gray-200 shadow-sm">
-                                <div class="card-body text-center">
-                                    {{-- الصورة الرئيسية --}}
+                                <div class="card-body text-center position-relative">
+
+                                    {{-- الكود فوق الصورة - شمال --}}
+                                    <div class="position-absolute start-0 top-0 m-2">
+                                        <span class="badge bg-primary">Code: {{ $parent->product_code }}</span>
+                                    </div>
+
+                                    {{-- الصورة --}}
                                     @if($mainImage)
                                         <img src="{{ $mainImage }}" class="img-fluid mb-3"
                                              style="max-height: 250px; object-fit: contain;">
                                     @endif
 
-                                    <h5 class="mb-2">{{ $parent->description }}</h5>
-                                    <span class="badge bg-primary mb-2">Code: {{ $parent->product_code }}</span>
-                                    <br>
-                                    <span class="badge bg-dark mb-3">Price: {{ $parent->unit_price }}</span>
+                                    {{-- السعر تحت الصورة - يمين --}}
+                                    <div class="position-absolute end-0 bottom-0 me-2 mb-2">
+                                        <span class="badge bg-dark">Price: {{ $parent->unit_price }}</span>
+                                    </div>
+
+                                    <h5 class="mb-1 mt-2">{{ $parent->description }}</h5>
+                                    <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
 
                                     {{-- الفاريانتس --}}
                                     <div class="row">
@@ -40,12 +49,11 @@
                                                     <span class="badge {{ $variant->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
                                                         {{ $variant->quantity > 0 ? 'Active' : 'Not Active' }}
                                                     </span>
-                                                    {{-- <p class="mb-0 mt-1 small">Color: {{ $variant->color }}</p>
-                                                    <p class="mb-0 small">Size: {{ $variant->size }}</p> --}}
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
+
                                 </div>
                             </div>
                         </div>
