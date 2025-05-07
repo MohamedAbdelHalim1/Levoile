@@ -26,8 +26,13 @@ class ProductKnowledgeController extends Controller
     public function products($subcategoryId)
     {
         $subcategory = SubcategoryKnowledge::with('products')->findOrFail($subcategoryId);
-        return view('product_knowledge.products', compact('subcategory'));
+    
+        // Group by product_code to get variants together
+        $products = $subcategory->products->groupBy('product_code');
+    
+        return view('product_knowledge.products', compact('subcategory', 'products'));
     }
+    
 
     public function uploadForm()
     {
