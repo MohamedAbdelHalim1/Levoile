@@ -72,7 +72,7 @@
 
 {{-- مودال العرض --}}
 <div class="modal fade" id="productModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">تفاصيل المنتج</h5>
