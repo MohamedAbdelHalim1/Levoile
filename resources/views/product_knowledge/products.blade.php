@@ -14,27 +14,29 @@
                         @endphp
 
                         <div class="col-md-4 mb-4">
-                            <div class="card h-100 border border-gray-200 shadow-sm">
-                                <div class="card-body text-center">
+                            <div class="card h-100 border border-gray-200 shadow-sm cursor-pointer product-card"
+                                 data-description="{{ $parent->description }}"
+                                 data-gomla="{{ $parent->gomla }}"
+                                 data-code="{{ $parent->product_code }}"
+                                 data-price="{{ $parent->unit_price }}"
+                                 data-image="{{ $mainImage }}"
+                                 data-variants='@json($group)'>
 
-                                    {{-- الصورة --}}
+                                <div class="card-body text-center">
                                     <div class="mb-2">
                                         @if($mainImage)
                                             <img src="{{ $mainImage }}" class="img-fluid w-100 product-image">
                                         @endif
                                     </div>
 
-                                    {{-- الكود والسعر تحت الصورة --}}
                                     <div class="d-flex justify-content-center gap-2 mb-2">
                                         <span class="custom-badge">Code: {{ $parent->product_code }}</span>
                                         <span class="custom-badge">Price: {{ $parent->unit_price }}</span>
                                     </div>
 
-                                    {{-- الاسم والجمله --}}
                                     <h5 class="mb-1">{{ $parent->description }}</h5>
                                     <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
 
-                                    {{-- الفاريانتس --}}
                                     <div class="row">
                                         @foreach($group as $variant)
                                             <div class="col-3 mb-3">
@@ -65,6 +67,31 @@
         </div>
     </div>
 
+    {{-- مودال العرض --}}
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل المنتج</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img id="modalImage" src="" class="img-fluid" style="max-height: 300px;">
+                    </div>
+                    <h5 id="modalDescription"></h5>
+                    <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
+                    <p><strong>Code:</strong> <span id="modalCode"></span></p>
+                    <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+
+                    <hr>
+                    <h6>Variants:</h6>
+                    <div class="row" id="modalVariants"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
         .product-image {
             object-fit: contain;
@@ -78,7 +105,44 @@
             padding: 5px 10px;
             border-radius: 0.5rem;
             font-size: 0.75rem;
-            display: inline-block;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
         }
     </style>
+
+@endsection
+
+@section('scripts')
+<script>
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.getElementById('modalImage').src = card.dataset.image;
+            document.getElementById('modalDescription').innerText = card.dataset.description;
+            document.getElementById('modalGomla').innerText = card.dataset.gomla;
+            document.getElementById('modalCode').innerText = card.dataset.code;
+            document.getElementById('modalPrice').innerText = card.dataset.price;
+
+            const variants = JSON.parse(card.dataset.variants);
+            const variantsContainer = document.getElementById('modalVariants');
+            variantsContainer.innerHTML = '';
+
+            variants.forEach(variant => {
+                const box = document.createElement('div');
+                box.className = 'col-md-3 text-center mb-3';
+                box.innerHTML = `
+                    <img src="${variant.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;">
+                    <div><strong>Color:</strong> ${variant.color}</div>
+                    <div><strong>Size:</strong> ${variant.size}</div>
+                    <div><strong>Qty:</strong> ${variant.quantity}</div>
+                `;
+                variantsContainer.appendChild(box);
+            });
+
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        });
+    });
+</script>
 @endsection
