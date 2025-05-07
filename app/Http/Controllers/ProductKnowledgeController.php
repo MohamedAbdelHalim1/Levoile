@@ -27,9 +27,20 @@ class ProductKnowledgeController extends Controller
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
     
-        // Paginate raw results
-        $rawProducts = DB::table('product_knowledge')
+        // Get distinct product_codes for pagination
+        $paginatedProductCodes = DB::table('product_knowledge')
             ->where('subcategory_knowledge_id', $subcategoryId)
+            ->select('product_code')
+            ->groupBy('product_code')
+            ->orderBy('product_code')
+            ->paginate(12);
+    
+        // Use those product_codes to get full variant details
+        $productCodes = $paginatedProductCodes->pluck('product_code');
+    
+        $allVariants = DB::table('product_knowledge')
+            ->where('subcategory_knowledge_id', $subcategoryId)
+            ->whereIn('product_code', $productCodes)
             ->select(
                 'product_code',
                 'unit_price',
@@ -45,15 +56,13 @@ class ProductKnowledgeController extends Controller
                 'image_url'
             )
             ->orderBy('product_code')
-            ->paginate(12); // ← عدل الرقم حسب ما تحب
-    
-        // Group results by product_code
-        $products = collect($rawProducts->items())->groupBy('product_code');
+            ->get()
+            ->groupBy('product_code');
     
         return view('product_knowledge.products', [
             'subcategory' => $subcategory,
-            'products' => $products,
-            'pagination' => $rawProducts
+            'products' => $allVariants,
+            'pagination' => $paginatedProductCodes
         ]);
     }
     
