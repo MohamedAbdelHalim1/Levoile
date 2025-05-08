@@ -180,22 +180,15 @@
                 try {
                     result = await response.json();
                 } catch (err) {
-                    progressBar.classList.add('bg-danger');
-                    progressBar.innerText = 'استجابة غير صالحة من السيرفر';
-                    return;
-                }
-
-                try {
-                    result = await response.json();
-                } catch (err) {
+                    // إذا السيرفر رجع redirect أو HTML مش JSON
                     uploadModal.hide();
-                    window.location.reload(); // هيشغل السيشن ايرور
+                    window.location.reload();
                     return;
                 }
 
                 if (!response.ok || result.status !== 'success') {
                     uploadModal.hide();
-                    window.location.reload(); // نفس الكلام هنا
+                    window.location.reload();
                     return;
                 }
 
@@ -203,6 +196,7 @@
                 progressBar.style.width = progress + '%';
                 progressBar.innerText = progress + '%';
             }
+
 
             progressBar.classList.remove('bg-danger');
             progressBar.classList.add('bg-success');
