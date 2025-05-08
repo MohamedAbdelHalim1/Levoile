@@ -5,9 +5,6 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="bg-white shadow sm:rounded-lg p-4">
             <h4>قائمة المنتجات</h4>
-
-
-
             <div class="table-responsive">
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead class="table-light">
@@ -15,12 +12,12 @@
                             <th>صورة</th>
                             <th>كود المنتج</th>
                             <th>الاسم</th>
-                            <th>الجملة</th>
+                            <th>اسم الجمله</th>
+                            <th>الفئة</th>
+                            <th>الفئة الفرعية</th>
                             <th>السعر</th>
                             <th>الألوان</th>
-                            <th>المقاسات</th>
                             <th>الكمية</th>
-                            <th>التفاصيل</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,34 +26,24 @@
                                 $parent = $group->first();
                                 $mainImage = $group->firstWhere('image_url')?->image_url;
                                 $colors = $group->groupBy('color')->count();
-                                $sizes = $group->groupBy('size')->count();
-                                $totalQty = $group->sum('quantity');
                             @endphp
                             <tr>
                                 <td>
                                     @if ($mainImage)
-                                        <img src="{{ $mainImage }}" width="60" height="60"
-                                            style="object-fit: contain">
+                                        <img src="{{ $mainImage }}" width="60" height="60" style="object-fit: contain">
                                     @endif
                                 </td>
                                 <td>{{ $parent->product_code }}</td>
                                 <td>{{ $parent->description }}</td>
                                 <td>{{ $parent->gomla }}</td>
+                                <td>{{ $parent->category_name }}</td>
+                                <td>{{ $parent->subcategory_name }}</td>
                                 <td>{{ $parent->unit_price }}</td>
                                 <td>
                                     <a href="#" class="btn btn-sm btn-outline-info"
-                                        onclick="showColors(@json($group))">{{ $colors }}</a>
+                                        onclick="showFullProduct(@json($group), '{{ $mainImage }}')">{{ $colors }}</a>
                                 </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-info"
-                                        onclick="showSizes(@json($group))">{{ $sizes }}</a>
-                                </td>
-                                <td>{{ $totalQty }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" onclick="showDetails(@json($group))">
-                                        عرض
-                                    </button>
-                                </td>
+                                <td>{{ $group->sum('quantity') }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -66,78 +53,93 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<!-- Modal for full product -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">تفاصيل المنتج</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div id="modalContent" class="row"></div>
+                <div class="text-center mb-3">
+                    <img id="modalImage" src="" class="img-fluid" style="max-height: 300px;">
+                </div>
+                <h5 id="modalDescription"></h5>
+                <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
+                <p><strong>Code:</strong> <span id="modalCode"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
+                <p><strong>Season:</strong> <span id="modalSeason"></span></p>
+                <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <p><strong>Subcategory:</strong> <span id="modalSubcategory"></span></p>
+
+                <hr>
+                <h6>Variants:</h6>
+                <div class="row" id="modalVariants"></div>
             </div>
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('scripts')
-    <!-- SELECT2 JS -->
-    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
-    @vite('resources/assets/js/select2.js')
 
-    <!-- DATA TABLE JS -->
-    <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
-    @vite('resources/assets/js/table-data.js')
+<script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
+@vite('resources/assets/js/select2.js')
+
+<!-- DATA TABLE JS -->
+<script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+@vite('resources/assets/js/table-data.js')
 
 <script>
-    function showColors(group) {
-        const uniqueColors = [...new Set(group.map(item => item.color))];
-        const html = uniqueColors.map(color => `<div class='col-md-4 mb-2'><strong>${color}</strong></div>`).join('');
-        document.getElementById('modalContent').innerHTML = html;
-        new bootstrap.Modal(document.getElementById('detailModal')).show();
-    }
+    function showFullProduct(group, image) {
+        const parent = group[0];
+        document.getElementById('modalImage').src = image || '';
+        document.getElementById('modalDescription').innerText = parent.description;
+        document.getElementById('modalGomla').innerText = parent.gomla;
+        document.getElementById('modalCode').innerText = parent.product_code;
+        document.getElementById('modalPrice').innerText = parent.unit_price;
+        document.getElementById('modalFamily').innerText = parent.item_family_code;
+        document.getElementById('modalSeason').innerText = parent.season_code;
+        document.getElementById('modalCreated').innerText = parent.created_at_excel;
+        document.getElementById('modalCategory').innerText = parent.category_name;
+        document.getElementById('modalSubcategory').innerText = parent.subcategory_name;
 
-    function showSizes(group) {
-        const uniqueSizes = [...new Set(group.map(item => item.size))];
-        const html = uniqueSizes.map(size => `<div class='col-md-4 mb-2'><strong>${size}</strong></div>`).join('');
-        document.getElementById('modalContent').innerHTML = html;
-        new bootstrap.Modal(document.getElementById('detailModal')).show();
-    }
-
-    function showDetails(group) {
-        const html = group.map(item => `
-            <div class='col-md-6 mb-3'>
-                <div class='border p-2 rounded'>
-                    <img src="${item.image_url}" class="img-fluid mb-2" style="max-height:100px;object-fit:contain">
-                    <div><strong>No:</strong> ${item.no_code}</div>
+        const container = document.getElementById('modalVariants');
+        container.innerHTML = '';
+        group.forEach(item => {
+            container.innerHTML += `
+                <div class='col-md-3 text-center mb-3'>
+                    <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
+                    <div><strong>No Code:</strong> ${item.no_code}</div>
                     <div><strong>Color:</strong> ${item.color}</div>
                     <div><strong>Size:</strong> ${item.size}</div>
                     <div><strong>Qty:</strong> ${item.quantity}</div>
+                    <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'}">
+                        ${item.quantity > 0 ? 'Active' : 'Not Active'}
+                    </span>
                 </div>
-            </div>
-        `).join('');
+            `;
+        });
 
-        document.getElementById('modalContent').innerHTML = html;
-        new bootstrap.Modal(document.getElementById('detailModal')).show();
+        new bootstrap.Modal(document.getElementById('productModal')).show();
     }
 </script>
 @endsection

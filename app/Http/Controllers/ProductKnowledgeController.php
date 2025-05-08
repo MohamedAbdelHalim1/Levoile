@@ -82,9 +82,9 @@ class ProductKnowledgeController extends Controller
     public function productList(Request $request)
     {
         $search = $request->input('search');
-
+    
         $query = DB::table('product_knowledge');
-
+    
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', "%$search%")
@@ -92,17 +92,9 @@ class ProductKnowledgeController extends Controller
                     ->orWhere('product_code', 'like', "%$search%");
             });
         }
-
-        $paginated = $query->select('product_code')
-            ->groupBy('product_code')
-            ->orderBy('product_code')
-            ->paginate(10)
-            ->appends(['search' => $search]);
-
-        $productCodes = $paginated->pluck('product_code');
-
-        $allVariants = DB::table('product_knowledge')
-            ->whereIn('product_code', $productCodes)
+    
+        // Fetch all product records
+        $allVariants = $query
             ->select(
                 'product_code',
                 'unit_price',
@@ -115,18 +107,36 @@ class ProductKnowledgeController extends Controller
                 'size',
                 'quantity',
                 'no_code',
-                'image_url'
+                'image_url',
+                'subcategory_knowledge_id'
             )
             ->orderBy('product_code')
+            ->get();
+    
+        // Load all needed subcategories + categories in bulk
+        $subcategoryIds = $allVariants->pluck('subcategory_knowledge_id')->unique();
+        $subcategories = \App\Models\SubcategoryKnowledge::with('category')
+            ->whereIn('id', $subcategoryIds)
             ->get()
-            ->groupBy('product_code');
-
+            ->keyBy('id');
+    
+        // Attach subcategory + category to each item
+        $enrichedVariants = $allVariants->map(function ($item) use ($subcategories) {
+            $subcat = $subcategories[$item->subcategory_knowledge_id] ?? null;
+            $item->subcategory_name = $subcat->name ?? '-';
+            $item->category_name = $subcat->category->name ?? '-';
+            return $item;
+        });
+    
+        // Group by product_code
+        $grouped = $enrichedVariants->groupBy('product_code');
+    
         return view('product_knowledge.product-list', [
-            'products' => $allVariants,
-            'pagination' => $paginated,
+            'products' => $grouped,
             'search' => $search
         ]);
     }
+    
 
 
     public function uploadForm()
