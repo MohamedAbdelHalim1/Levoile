@@ -10,11 +10,11 @@ class SubcategoryKnowledge extends Model
 
     public function category()
     {
-        return $this->belongsTo(CategoryKnowledge::class);
+        return $this->belongsTo(CategoryKnowledge::class , 'category_knowledge_id');
     }
 
     public function products()
     {
-        return $this->hasMany(ProductKnowledge::class);
+        return $this->hasMany(ProductKnowledge::class , 'subcategory_knowledge_id');
     }
 }

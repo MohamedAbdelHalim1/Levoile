@@ -15,6 +15,6 @@ class ProductKnowledge extends Model
 
     public function subcategory()
     {
-        return $this->belongsTo(SubcategoryKnowledge::class);
+        return $this->belongsTo(SubcategoryKnowledge::class, 'subcategory_knowledge_id');
     }
 }

@@ -10,6 +10,6 @@ class CategoryKnowledge extends Model
 
     public function subcategories()
     {
-        return $this->hasMany(SubcategoryKnowledge::class);
+        return $this->hasMany(SubcategoryKnowledge::class , 'category_knowledge_id');
     }
 }
