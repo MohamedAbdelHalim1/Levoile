@@ -90,6 +90,12 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .modal-xl {
+            max-width: 75% !important;
+        }
+    </style>
 @endsection
 
 @section('scripts')
