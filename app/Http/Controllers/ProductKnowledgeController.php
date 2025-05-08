@@ -84,6 +84,7 @@ class ProductKnowledgeController extends Controller
     {
         // Eager load subcategory and category مباشرة من Eloquent
         $allVariants = ProductKnowledge::with(['subcategory.category'])
+            ->whereHas('subcategory.category')
             ->select(
                 'id',
                 'product_code',
@@ -100,24 +101,25 @@ class ProductKnowledgeController extends Controller
                 'image_url',
                 'subcategory_knowledge_id'
             )
+            ->groupBy('product_code')
             ->orderBy('product_code')
             ->get();
-    
+
         // Enrich كل منتج بالفئة والفرعية
         $enriched = $allVariants->map(function ($item) {
             $item->subcategory_name = $item->subcategory->name ?? '-';
             $item->category_name = $item->subcategory->category->name ?? '-';
             return $item;
         });
-    
+
         // Group by product_code
         $grouped = $enriched->groupBy('product_code');
-    
+
         return view('product_knowledge.product-list', [
             'products' => $grouped,
         ]);
     }
-    
+
 
 
     public function uploadForm()

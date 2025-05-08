@@ -37,8 +37,9 @@
                                     <td>{{ $parent->product_code }}</td>
                                     <td>{{ $parent->description }}</td>
                                     <td>{{ $parent->gomla }}</td>
-                                    <td>{{ $parent->subcategory->category->name }}</td>
-                                    <td>{{ $parent->subcategory->name }}</td>
+                                    <td>{{ optional($parent->subcategory?->category)->name ?? '-' }}</td>
+                                    <td>{{ optional($parent->subcategory)->name ?? '-' }}</td>
+                                    
                                     <td>{{ $parent->unit_price }}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-outline-info"
