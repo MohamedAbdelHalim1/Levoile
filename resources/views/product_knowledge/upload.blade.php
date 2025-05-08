@@ -165,48 +165,53 @@
             }
 
             for (let i = 0; i < chunks.length; i++) {
-                const response = await fetch("{{ route('product-knowledge.upload.save') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        chunk: chunks[i]
-                    })
-                });
-
-                let result = {};
                 try {
-                    result = await response.json();
+                    const response = await fetch("{{ route('product-knowledge.upload.save') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            chunk: chunks[i]
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status !== 'success') {
+                        uploadModal.hide();
+
+                        const alert = document.createElement('div');
+                        alert.className = 'alert alert-danger mt-3';
+                        alert.innerText = result.message || 'حدث خطأ أثناء رفع الشيت';
+
+                        const container = document.querySelector('.bg-white') || document.querySelector(
+                            '.max-w-7xl');
+                        container?.prepend(alert);
+                        return;
+                    }
+
+                    const progress = (i + 1) * 25;
+                    progressBar.style.width = progress + '%';
+                    progressBar.innerText = progress + '%';
+
                 } catch (err) {
-                    // إذا السيرفر رجع redirect أو HTML مش JSON
-                    uploadModal.hide();
-                    window.location.reload();
-                    return;
-                }
-
-                if (!response.ok || result.status !== 'success') {
                     uploadModal.hide();
 
-                    // اعرض رسالة الخطأ فوق الزرار
                     const alert = document.createElement('div');
                     alert.className = 'alert alert-danger mt-3';
-                    alert.innerText = result.message || 'حدث خطأ أثناء رفع الشيت';
+                    alert.innerText = 'حدث خطأ غير متوقع.';
 
-                    // ضيفها أول ما تلاقي مكان مناسب في الفورم
-                    document.querySelector('.card')?.prepend(alert);
+                    const container = document.querySelector('.bg-white') || document.querySelector(
+                        '.max-w-7xl');
+                    container?.prepend(alert);
+
+                    submitBtn.disabled = false;
 
                     return;
                 }
-
-
-                const progress = (i + 1) * 25;
-                progressBar.style.width = progress + '%';
-                progressBar.innerText = progress + '%';
             }
-
-
             progressBar.classList.remove('bg-danger');
             progressBar.classList.add('bg-success');
             progressBar.innerText = 'اكتمل';
