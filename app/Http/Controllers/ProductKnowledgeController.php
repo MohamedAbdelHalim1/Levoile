@@ -82,13 +82,14 @@ class ProductKnowledgeController extends Controller
 
     public function productList()
     {
-        // Eager load subcategory and category مباشرة من Eloquent
         $allVariants = ProductKnowledge::with(['subcategory.category'])
-            ->groupBy('product_code')
+            ->orderBy('product_code')
             ->get();
 
-  dd($allVariants);
+        // Laravel groupBy
+        $grouped = $allVariants->groupBy('product_code');
 
+        dd($grouped);
         return view('product_knowledge.product-list', [
             'products' => $grouped,
         ]);
