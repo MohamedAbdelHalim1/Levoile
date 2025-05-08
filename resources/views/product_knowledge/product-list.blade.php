@@ -39,11 +39,13 @@
                                     <td>{{ $parent->gomla }}</td>
                                     <td>{{ optional($parent->subcategory?->category)->name ?? '-' }}</td>
                                     <td>{{ optional($parent->subcategory)->name ?? '-' }}</td>
-                                    
+
                                     <td>{{ $parent->unit_price }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-info"
-                                            onclick="showFullProduct(@json($group), '{{ $mainImage }}')">{{ $colors }}</a>
+                                        <a href="#" class="btn btn-sm btn-outline-info open-product-modal"
+                                            data-group='@json($group)' data-image="{{ $mainImage }}">
+                                            {{ $colors }}
+                                        </a>
                                     </td>
                                     <td>{{ $group->sum('quantity') }}</td>
                                 </tr>
@@ -110,38 +112,46 @@
     @vite('resources/assets/js/table-data.js')
 
     <script>
-        function showFullProduct(group, image) {
-            const parent = group[0];
-            document.getElementById('modalImage').src = image || '';
-            document.getElementById('modalDescription').innerText = parent.description;
-            document.getElementById('modalGomla').innerText = parent.gomla;
-            document.getElementById('modalCode').innerText = parent.product_code;
-            document.getElementById('modalPrice').innerText = parent.unit_price;
-            document.getElementById('modalFamily').innerText = parent.item_family_code;
-            document.getElementById('modalSeason').innerText = parent.season_code;
-            document.getElementById('modalCreated').innerText = parent.created_at_excel;
-            document.getElementById('modalCategory').innerText = parent.category_name;
-            document.getElementById('modalSubcategory').innerText = parent.subcategory_name;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.open-product-modal').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-            const container = document.getElementById('modalVariants');
-            container.innerHTML = '';
-            group.forEach(item => {
-                container.innerHTML += `
-            <div class='col-md-3 text-center mb-3'>
-                <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
-                <div><strong>No Code:</strong> ${item.no_code}</div>
-                <div><strong>Color:</strong> ${item.color}</div>
-                <div><strong>Size:</strong> ${item.size}</div>
-                <div><strong>Qty:</strong> ${item.quantity}</div>
-                <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'}">
-                    ${item.quantity > 0 ? 'Active' : 'Not Active'}
-                </span>
-            </div>
-        `;
+                    const group = JSON.parse(this.dataset.group);
+                    const image = this.dataset.image;
+                    const parent = group[0];
+
+                    document.getElementById('modalImage').src = image || '';
+                    document.getElementById('modalDescription').innerText = parent.description;
+                    document.getElementById('modalGomla').innerText = parent.gomla;
+                    document.getElementById('modalCode').innerText = parent.product_code;
+                    document.getElementById('modalPrice').innerText = parent.unit_price;
+                    document.getElementById('modalFamily').innerText = parent.item_family_code;
+                    document.getElementById('modalSeason').innerText = parent.season_code;
+                    document.getElementById('modalCreated').innerText = parent.created_at_excel;
+                    document.getElementById('modalCategory').innerText = parent.category_name;
+                    document.getElementById('modalSubcategory').innerText = parent.subcategory_name;
+
+                    const container = document.getElementById('modalVariants');
+                    container.innerHTML = '';
+                    group.forEach(item => {
+                        container.innerHTML += `
+                <div class='col-md-3 text-center mb-3'>
+                    <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
+                    <div><strong>No Code:</strong> ${item.no_code}</div>
+                    <div><strong>Color:</strong> ${item.color}</div>
+                    <div><strong>Size:</strong> ${item.size}</div>
+                    <div><strong>Qty:</strong> ${item.quantity}</div>
+                    <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'}">
+                        ${item.quantity > 0 ? 'Active' : 'Not Active'}
+                    </span>
+                </div>`;
+                    });
+
+                    const modal = new bootstrap.Modal(document.getElementById('productModal'));
+                    modal.show();
+                });
             });
-
-            const modal = new bootstrap.Modal(document.getElementById('productModal'));
-            modal.show();
-        }
+        });
     </script>
 @endsection
