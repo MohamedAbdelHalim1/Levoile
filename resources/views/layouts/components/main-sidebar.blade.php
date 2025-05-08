@@ -65,7 +65,7 @@
                                                         class="slide-item">عرض تقديمي للمنتجات</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('product-knowledge.list') }}"
+                                                    <a href="{{ route('product-knowledge.lists') }}"
                                                         class="slide-item">عرض ليست للمنتجات</a>
                                                 </li>
                                                 <li>
