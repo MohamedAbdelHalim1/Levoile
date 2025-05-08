@@ -53,6 +53,7 @@ class ProductKnowledgeController extends Controller
             ->where('subcategory_knowledge_id', $subcategoryId)
             ->whereIn('product_code', $productCodes)
             ->select(
+                'id',
                 'product_code',
                 'unit_price',
                 'description',
