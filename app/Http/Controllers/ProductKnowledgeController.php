@@ -89,7 +89,6 @@ class ProductKnowledgeController extends Controller
         // Laravel groupBy
         $grouped = $allVariants->groupBy('product_code');
 
-        dd($grouped);
         return view('product_knowledge.product-list', [
             'products' => $grouped,
         ]);
