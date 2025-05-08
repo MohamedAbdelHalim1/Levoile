@@ -156,7 +156,15 @@
                     <div><strong>Gomla:</strong> ${variant.gomla}</div>
                     <div><strong>Color:</strong> ${variant.color}</div>
                     <div><strong>Size:</strong> ${variant.size}</div>
-                    <div><strong>Qty:</strong> ${variant.quantity}</div>
+                    <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
+                        <input type="number" class="form-control form-control-sm text-center qty-input" 
+                            value="${variant.quantity}" 
+                            data-id="${variant.id}" 
+                            disabled style="width: 60px;">
+                        <button class="btn btn-sm btn-outline-secondary toggle-edit">
+                            ✏️
+                        </button>
+                    </div>                   
                     <span class="badge ${variant.quantity > 0 ? 'bg-success' : 'bg-danger'}">
                         ${variant.quantity > 0 ? 'Active' : 'Not Active'}
                     </span>
@@ -168,5 +176,46 @@
                 modal.show();
             });
         });
+
+        document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('toggle-edit')) {
+            const btn = e.target;
+            const input = btn.previousElementSibling;
+            const isEditing = !input.disabled;
+
+            if (isEditing) {
+                // Save AJAX
+                const id = input.dataset.id;
+                const newQty = input.value;
+
+                btn.disabled = true;
+                btn.innerText = '...';
+
+                fetch(`/product-knowledge/update-quantity/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ quantity: newQty })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.innerText = '✏️';
+                    input.disabled = true;
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    alert('حصل خطأ');
+                    btn.innerText = '✏️';
+                    btn.disabled = false;
+                });
+            } else {
+                input.disabled = false;
+                input.focus();
+                btn.innerText = '✔️';
+            }
+        }
+    });
     </script>
 @endsection
