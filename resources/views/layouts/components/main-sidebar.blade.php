@@ -65,6 +65,10 @@
                                                         class="slide-item">عرض تقديمي للمنتجات</a>
                                                 </li>
                                                 <li>
+                                                    <a href="{{ route('product-knowledge.list') }}"
+                                                        class="slide-item">عرض ليست للمنتجات</a>
+                                                </li>
+                                                <li>
                                                     <a href="{{ route('product-knowledge.upload') }}"
                                                         class="slide-item">رفع ماستر شيت</a>
                                                 </li>

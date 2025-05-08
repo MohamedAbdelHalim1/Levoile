@@ -189,6 +189,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
     Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
 
+    Route::get('/product-knowledge/list', [ProductKnowledgeController::class, 'productList'])->name('product-knowledge.list');
+
 
 
 

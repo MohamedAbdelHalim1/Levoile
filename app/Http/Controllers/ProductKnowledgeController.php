@@ -79,6 +79,56 @@ class ProductKnowledgeController extends Controller
     }
 
 
+    public function productList(Request $request)
+    {
+        $search = $request->input('search');
+
+        $query = DB::table('product_knowledge');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%$search%")
+                    ->orWhere('gomla', 'like', "%$search%")
+                    ->orWhere('product_code', 'like', "%$search%");
+            });
+        }
+
+        $paginated = $query->select('product_code')
+            ->groupBy('product_code')
+            ->orderBy('product_code')
+            ->paginate(10)
+            ->appends(['search' => $search]);
+
+        $productCodes = $paginated->pluck('product_code');
+
+        $allVariants = DB::table('product_knowledge')
+            ->whereIn('product_code', $productCodes)
+            ->select(
+                'product_code',
+                'unit_price',
+                'description',
+                'gomla',
+                'item_family_code',
+                'season_code',
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
+                'color',
+                'size',
+                'quantity',
+                'no_code',
+                'image_url'
+            )
+            ->orderBy('product_code')
+            ->get()
+            ->groupBy('product_code');
+
+        return view('product_knowledge.product_list', [
+            'products' => $allVariants,
+            'pagination' => $paginated,
+            'search' => $search
+        ]);
+    }
+
+
     public function uploadForm()
     {
         return view('product_knowledge.upload');
