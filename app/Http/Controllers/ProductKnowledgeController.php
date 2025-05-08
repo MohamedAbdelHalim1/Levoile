@@ -121,7 +121,7 @@ class ProductKnowledgeController extends Controller
             ->get()
             ->groupBy('product_code');
 
-        return view('product_knowledge.product_list', [
+        return view('product_knowledge.product-list', [
             'products' => $allVariants,
             'pagination' => $paginated,
             'search' => $search
