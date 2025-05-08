@@ -188,9 +188,18 @@
 
                 if (!response.ok || result.status !== 'success') {
                     uploadModal.hide();
-                    window.location.reload();
+
+                    // اعرض رسالة الخطأ فوق الزرار
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-danger mt-3';
+                    alert.innerText = result.message || 'حدث خطأ أثناء رفع الشيت';
+
+                    // ضيفها أول ما تلاقي مكان مناسب في الفورم
+                    document.querySelector('.card')?.prepend(alert);
+
                     return;
                 }
+
 
                 const progress = (i + 1) * 25;
                 progressBar.style.width = progress + '%';
