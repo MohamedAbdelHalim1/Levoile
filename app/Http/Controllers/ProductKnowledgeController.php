@@ -79,23 +79,13 @@ class ProductKnowledgeController extends Controller
     }
 
 
-    public function productList(Request $request)
+
+    public function productList()
     {
-        $search = $request->input('search');
-    
-        $query = DB::table('product_knowledge');
-    
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('description', 'like', "%$search%")
-                    ->orWhere('gomla', 'like', "%$search%")
-                    ->orWhere('product_code', 'like', "%$search%");
-            });
-        }
-    
-        // Fetch all product records
-        $allVariants = $query
+        // Eager load subcategory and category مباشرة من Eloquent
+        $allVariants = ProductKnowledge::with(['subcategory.category'])
             ->select(
+                'id',
                 'product_code',
                 'unit_price',
                 'description',
@@ -113,27 +103,18 @@ class ProductKnowledgeController extends Controller
             ->orderBy('product_code')
             ->get();
     
-        // Load all needed subcategories + categories in bulk
-        $subcategoryIds = $allVariants->pluck('subcategory_knowledge_id')->unique();
-        $subcategories = \App\Models\SubcategoryKnowledge::with('category')
-            ->whereIn('id', $subcategoryIds)
-            ->get()
-            ->keyBy('id');
-    
-        // Attach subcategory + category to each item
-        $enrichedVariants = $allVariants->map(function ($item) use ($subcategories) {
-            $subcat = $subcategories[$item->subcategory_knowledge_id] ?? null;
-            $item->subcategory_name = $subcat->name ?? '-';
-            $item->category_name = $subcat->category->name ?? '-';
+        // Enrich كل منتج بالفئة والفرعية
+        $enriched = $allVariants->map(function ($item) {
+            $item->subcategory_name = $item->subcategory->name ?? '-';
+            $item->category_name = $item->subcategory->category->name ?? '-';
             return $item;
         });
     
         // Group by product_code
-        $grouped = $enrichedVariants->groupBy('product_code');
+        $grouped = $enriched->groupBy('product_code');
     
         return view('product_knowledge.product-list', [
             'products' => $grouped,
-            'search' => $search
         ]);
     }
     
