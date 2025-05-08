@@ -31,7 +31,7 @@
                                     <td>
                                         @if ($mainImage)
                                             <img src="{{ $mainImage }}" width="60" height="60"
-                                                style="object-fit: contain">
+                                                style="object-fit: contain" loading="lazy">
                                         @endif
                                     </td>
                                     <td>{{ $parent->product_code }}</td>
@@ -142,16 +142,27 @@
                     container.innerHTML = '';
                     group.forEach(item => {
                         container.innerHTML += `
-                <div class='col-md-3 text-center mb-3'>
-                    <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
-                    <div><strong>No Code:</strong> ${item.no_code}</div>
-                    <div><strong>Color:</strong> ${item.color}</div>
-                    <div><strong>Size:</strong> ${item.size}</div>
-                    <div><strong>Qty:</strong> ${item.quantity}</div>
-                    <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'}">
-                        ${item.quantity > 0 ? 'Active' : 'Not Active'}
-                    </span>
-                </div>`;
+                            <div class='col-md-3 text-center mb-3'>
+                                <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
+                                <div><strong>No Code:</strong> ${item.no_code}</div>
+                                <div><strong>Color:</strong> ${item.color}</div>
+                                <div><strong>Size:</strong> ${item.size}</div>
+                                
+                                <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
+                                    <input type="number" class="form-control form-control-sm text-center qty-input" 
+                                        value="${item.quantity}" 
+                                        data-id="${item.id}" 
+                                        disabled style="width: 60px;">
+                                    <button class="btn btn-sm btn-outline-secondary toggle-edit">
+                                        ✏️
+                                    </button>
+                                </div>
+
+                                <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'} mt-2">
+                                    ${item.quantity > 0 ? 'Active' : 'Not Active'}
+                                </span>
+                            </div>
+                            `;
                     });
 
                     const modal = new bootstrap.Modal(document.getElementById('productModal'));
@@ -159,5 +170,48 @@
                 });
             });
         });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('toggle-edit')) {
+                const btn = e.target;
+                const input = btn.previousElementSibling;
+                const isEditing = !input.disabled;
+
+                if (isEditing) {
+                    // Save via AJAX
+                    const id = input.dataset.id;
+                    const newQty = input.value;
+
+                    btn.disabled = true;
+                    btn.innerText = '...';
+
+                    fetch(`/product-knowledge/update-quantity/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ quantity: newQty })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        btn.innerText = '✏️';
+                        input.disabled = true;
+                        btn.disabled = false;
+                    })
+                    .catch(err => {
+                        alert('حصل خطأ');
+                        btn.innerText = '✏️';
+                        btn.disabled = false;
+                    });
+                } else {
+                    // Enable input
+                    input.disabled = false;
+                    input.focus();
+                    btn.innerText = '✔️';
+                }
+            }
+        });
+
     </script>
 @endsection

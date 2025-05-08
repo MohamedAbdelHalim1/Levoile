@@ -95,6 +95,19 @@ class ProductKnowledgeController extends Controller
     }
 
 
+    public function updateQuantity(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:0'
+        ]);
+
+        $product = ProductKnowledge::findOrFail($id);
+        $product->quantity = $validated['quantity'];
+        $product->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
 
     public function uploadForm()
     {

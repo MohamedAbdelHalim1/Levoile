@@ -184,7 +184,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadSave'])
         ->name('product-knowledge.upload.save');
 
-        Route::get('/product-knowledge/lists', [ProductKnowledgeController::class, 'productList'])->name('product-knowledge.lists');
+    Route::get('/product-knowledge/lists', [ProductKnowledgeController::class, 'productList'])->name('product-knowledge.lists');
+    Route::post('/product-knowledge/update-quantity/{id}', [ProductKnowledgeController::class, 'updateQuantity']);
 
 
     Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])->name('product-knowledge.index');
