@@ -224,7 +224,7 @@ class ProductKnowledgeController extends Controller
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

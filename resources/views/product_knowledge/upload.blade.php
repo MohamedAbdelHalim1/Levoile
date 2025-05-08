@@ -98,7 +98,7 @@
         function formatExcelDate(excelDate) {
             if (typeof excelDate === 'number') {
                 const date = new Date((excelDate - 25569) * 86400 * 1000);
-                return date.toISOString().replace('T', ' ').split('.')[0]; 
+                return date.toISOString().replace('T', ' ').split('.')[0];
             }
             return excelDate || '';
         }
@@ -185,9 +185,17 @@
                     return;
                 }
 
+                try {
+                    result = await response.json();
+                } catch (err) {
+                    uploadModal.hide();
+                    window.location.reload(); // هيشغل السيشن ايرور
+                    return;
+                }
+
                 if (!response.ok || result.status !== 'success') {
-                    progressBar.classList.add('bg-danger');
-                    progressBar.innerText = result.message || 'حدث خطأ أثناء الرفع';
+                    uploadModal.hide();
+                    window.location.reload(); // نفس الكلام هنا
                     return;
                 }
 
