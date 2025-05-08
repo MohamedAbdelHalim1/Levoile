@@ -62,7 +62,7 @@
                                                         شيت</a></li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.index') }}"
-                                                        class="slide-item">عرض المنتجات</a>
+                                                        class="slide-item">عرض تقديمي للمنتجات</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.upload') }}"
