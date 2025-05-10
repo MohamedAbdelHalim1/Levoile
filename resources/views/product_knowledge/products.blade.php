@@ -54,14 +54,13 @@
                                     <p class="text-center">Gomla: {{ $parent->gomla }}</p>
                                     <div class="row justify-content-center">
                                         @foreach ($group as $variant)
-                                            <div class="sub-color position-relative">
-                                                <img src="{{ $variant->image_url }}" class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'check' : 'cross') . '.png') }}" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
-                                                </div>
+                                            <div class="sub-color">
+                                                <img src="{{ $variant->image_url }}" alt="variant">
+                                                <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'check' : 'cross') . '.png') }}"
+                                                     class="icon-mark">
+                                                <small class="badge-color back-ground text-white rounded-1">{{ $variant->color }}</small>
+                                                <small class="badge-code back-ground text-white rounded-1">{{ $variant->no_code }}</small>
+                                                <small class="badge-qty back-ground text-white rounded-1">{{ $variant->quantity }}</small>
                                             </div>
                                         @endforeach
                                     </div>
@@ -85,7 +84,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </section>
             </div>
@@ -93,72 +91,58 @@
     </div>
 
     <style>
-        .main-image {
-            width: 100%;
-        }
-
+        .main-image { width: 100%; }
         .last-ui h4 {
             text-align: center;
             font-size: 20px;
             font-weight: 600;
-            margin: 10px 0px;
+            margin: 10px 0;
             color: black;
         }
-
         .last-ui p {
             text-align: center;
             font-size: 15px;
             color: rgb(113, 112, 112);
         }
-
-        .last-ui .sub-color {
+        .sub-color {
             width: 28%;
-            margin: 5px 3px;
-            padding: 0px;
+            margin: 6px;
+            position: relative;
         }
-
-        .last-ui .sub-color img {
+        .sub-color img {
             width: 100%;
+            display: block;
+            border-radius: 0.25rem;
         }
-
-        .last-ui .sub-color .icon-mark {
-            width: 20px;
-            height: 20px;
+        .icon-mark {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
         }
-
-        .modal-lg,
-        .modal-xl {
-            --bs-modal-width: 1200px;
+        .badge-color {
+            position: absolute;
+            top: 5px;
+            left: 5px;
         }
-
-        .last-ui .sub-img {
-            width: 20%;
-            margin: 10px 10px;
-            padding: 0px;
+        .badge-code {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
         }
-
-        .last-ui .sub-img img {
-            width: 100%;
+        .badge-qty {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
         }
-
-        .last-ui .sub-img .icon-mark {
-            width: 20px;
-            height: 20px;
-        }
-
-        .last-ui .back-ground {
-            background-color: rgb(58, 58, 58);
-        }
-
-        @media screen {
-            .last-ui .sub-img {
-                width: 40%;
-                margin: 10px 10px;
-                padding: 0px;
-            }
+        small {
+            font-size: 0.7rem;
+            padding: 3px 6px;
         }
     </style>
 @endsection
+
 
 @section('scripts')
     <script>
