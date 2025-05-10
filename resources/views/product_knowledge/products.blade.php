@@ -7,172 +7,215 @@
                 <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                        placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
                     <button type="submit" class="btn btn-primary">ابحث</button>
-                    <a href="{{ route('product-knowledge.products', $subcategory->id) }}"
-                        class="btn btn-secondary">العودة</a>
+                    <a href="{{ route('product-knowledge.products', $subcategory->id) }}" class="btn btn-secondary">العودة</a>
                 </form>
+                
+                <div class="row">
+                    @forelse($products as $group)
+                        @php
+                            $parent = $group->first();
+                            $mainImage = $group->firstWhere('image_url')?->image_url;
+                        @endphp
 
-                <section class="mt-5 last-ui">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            @forelse($products as $group)
-                                @php
-                                    $parent = $group->first();
-                                    $mainImage = $group->firstWhere('image_url')?->image_url;
-                                @endphp
-                                <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0 rounded-1 pb-3 product-card"
-                                    style="cursor: pointer;"
-                                    data-description="{{ $parent->description }}"
-                                    data-gomla="{{ $parent->gomla }}"
-                                    data-price="{{ $parent->unit_price }}"
-                                    data-code="{{ $parent->product_code }}"
-                                    data-family="{{ $parent->item_family_code }}"
-                                    data-season="{{ $parent->season_code }}"
-                                    data-created="{{ $parent->created_at_excel }}"
-                                    data-image="{{ $mainImage }}"
-                                    data-variants='@json($group)'
-                                    data-bs-toggle="modal" data-bs-target="#productModal">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border border-gray-200 shadow-sm cursor-pointer product-card"
+                                data-description="{{ $parent->description }}" data-gomla="{{ $parent->gomla }}"
+                                data-code="{{ $parent->product_code }}" data-price="{{ $parent->unit_price }}"
+                                data-image="{{ $mainImage }}" data-family="{{ $parent->item_family_code }}"
+                                data-season="{{ $parent->season_code }}" data-created="{{ $parent->created_at_excel }}"
+                                data-variants='@json($group)'>
 
-                                    <div class="position-relative">
-                                        <img src="{{ $mainImage }}" class="main-image rounded-top-1">
-                                        <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->unit_price }} L.E</small>
-                                        </div>
-                                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
-                                        </div>
-                                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->item_family_code }}</small>
-                                        </div>
-                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $group->count() }} colors</small>
-                                        </div>
+                                <div class="card-body text-center">
+                                    <div class="mb-2">
+                                        @if ($mainImage)
+                                            <img src="{{ $mainImage }}" class="img-fluid w-100 product-image" loading="lazy">
+                                        @endif
                                     </div>
-                                    <h4 class="text-center mt-2">{{ $parent->description }}</h4>
-                                    <p class="text-center">Gomla: {{ $parent->gomla }}</p>
-                                    <div class="row justify-content-center">
+
+                                    <div class="d-flex justify-content-center gap-2 mb-2">
+                                        <span class="custom-badge">Code: {{ $parent->product_code }}</span>
+                                        <span class="custom-badge">Price: {{ $parent->unit_price }}</span>
+                                    </div>
+
+                                    <h5 class="mb-1">{{ $parent->description }}</h5>
+                                    <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
+
+                                    <div class="row">
                                         @foreach ($group as $variant)
-                                            <div class="sub-color">
-                                                <img src="{{ $variant->image_url }}" alt="variant">
-                                                <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'check' : 'cross') . '.png') }}"
-                                                     class="icon-mark">
-                                                <small class="badge-color back-ground text-white rounded-1">{{ $variant->color }}</small>
-                                                <small class="badge-code back-ground text-white rounded-1">{{ $variant->no_code }}</small>
-                                                <small class="badge-qty back-ground text-white rounded-1">{{ $variant->quantity }}</small>
+                                            <div class="col-3 mb-3">
+                                                <div class="card text-center p-2 shadow-sm h-100">
+                                                    @if ($variant->image_url)
+                                                        <img src="{{ $variant->image_url }}" class="img-fluid mb-2"
+                                                            style="height: 80px; object-fit: contain;">
+                                                    @endif
+                                                    <span
+                                                        class="badge {{ $variant->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $variant->quantity > 0 ? 'Active' : 'Not Active' }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
-                            @empty
-                                <div class="col-12 text-center">
-                                    <div class="alert alert-info">لا يوجد منتجات</div>
-                                </div>
-                            @endforelse
-                        </div>
 
-                        <div class="modal fade" id="productModal" tabindex="-1">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header border-0">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row justify-content-center" id="modalVariants"></div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
+                        </div>
+                    @endforelse
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $pagination->links() }}
                     </div>
-                </section>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- مودال العرض --}}
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل المنتج</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img id="modalImage" src="" class="img-fluid" style="max-height: 300px;">
+                    </div>
+                    <h5 id="modalDescription"></h5>
+                    <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
+                    <p><strong>Code:</strong> <span id="modalCode"></span></p>
+                    <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                    <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
+                    <p><strong>Season:</strong> <span id="modalSeason"></span></p>
+                    <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
+
+                    <hr>
+                    <h6>Variants:</h6>
+                    <div class="row" id="modalVariants"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <style>
-        .main-image { width: 100%; }
-        .last-ui h4 {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 600;
-            margin: 10px 0;
-            color: black;
+        .product-image {
+            object-fit: contain;
+            max-height: 250px;
         }
-        .last-ui p {
-            text-align: center;
-            font-size: 15px;
-            color: rgb(113, 112, 112);
+
+        .custom-badge {
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+            background-color: transparent;
+            padding: 5px 10px;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
         }
-        .sub-color {
-            width: 28%;
-            margin: 6px;
-            position: relative;
+
+        .cursor-pointer {
+            cursor: pointer;
         }
-        .sub-color img {
-            width: 100%;
-            display: block;
-            border-radius: 0.25rem;
-        }
-        .icon-mark {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 18px;
-            height: 18px;
-        }
-        .badge-color {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-        }
-        .badge-code {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-        }
-        .badge-qty {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-        }
-        small {
-            font-size: 0.7rem;
-            padding: 3px 6px;
+
+        .modal-xl {
+            max-width: 75% !important;
         }
     </style>
 @endsection
-
 
 @section('scripts')
     <script>
         document.querySelectorAll('.product-card').forEach(card => {
             card.addEventListener('click', () => {
+                document.getElementById('modalImage').src = card.dataset.image;
+                document.getElementById('modalDescription').innerText = card.dataset.description;
+                document.getElementById('modalGomla').innerText = card.dataset.gomla;
+                document.getElementById('modalCode').innerText = card.dataset.code;
+                document.getElementById('modalPrice').innerText = card.dataset.price;
+                document.getElementById('modalFamily').innerText = card.dataset.family;
+                document.getElementById('modalSeason').innerText = card.dataset.season;
+                document.getElementById('modalCreated').innerText = card.dataset.created;
+
                 const variants = JSON.parse(card.dataset.variants);
-                const container = document.getElementById('modalVariants');
-                container.innerHTML = '';
+                const variantsContainer = document.getElementById('modalVariants');
+                variantsContainer.innerHTML = '';
 
                 variants.forEach(variant => {
                     const box = document.createElement('div');
-                    box.className = 'sub-img position-relative';
+                    box.className = 'col-md-3 text-center mb-3';
                     box.innerHTML = `
-                        <img src="${variant.image_url}" class="rounded-1">
-                        <div class="position-absolute top-0 end-0 me-1">
-                            <img src="/assets/images/${variant.quantity > 0 ? 'check' : 'cross'}.png" class="icon-mark">
-                        </div>
-                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.color}</small>
-                        </div>
-                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.no_code}</small>
-                        </div>
-                        <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
-                        </div>
-                    `;
-                    container.appendChild(box);
+                    <img src="${variant.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
+                    <div><strong>No Code:</strong> ${variant.no_code}</div>
+                    <div><strong>Description:</strong> ${variant.description}</div>
+                    <div><strong>Gomla:</strong> ${variant.gomla}</div>
+                    <div><strong>Color:</strong> ${variant.color}</div>
+                    <div><strong>Size:</strong> ${variant.size}</div>
+                    <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
+                        <input type="number" class="form-control form-control-sm text-center qty-input" 
+                            value="${variant.quantity}" 
+                            data-id="${variant.id}" 
+                            disabled style="width: 60px;">
+                        <button class="btn btn-sm btn-outline-secondary toggle-edit">
+                            ✏️
+                        </button>
+                    </div>                   
+                    <span class="badge ${variant.quantity > 0 ? 'bg-success' : 'bg-danger'}">
+                        ${variant.quantity > 0 ? 'Active' : 'Not Active'}
+                    </span>
+                `;
+                    variantsContainer.appendChild(box);
                 });
+
+                const modal = new bootstrap.Modal(document.getElementById('productModal'));
+                modal.show();
             });
         });
+
+        document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('toggle-edit')) {
+            const btn = e.target;
+            const input = btn.previousElementSibling;
+            const isEditing = !input.disabled;
+
+            if (isEditing) {
+                // Save AJAX
+                const id = input.dataset.id;
+                const newQty = input.value;
+
+                btn.disabled = true;
+                btn.innerText = '...';
+
+                fetch(`/product-knowledge/update-quantity/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ quantity: newQty })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.innerText = '✏️';
+                    input.disabled = true;
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    alert('حصل خطأ');
+                    btn.innerText = '✏️';
+                    btn.disabled = false;
+                });
+            } else {
+                input.disabled = false;
+                input.focus();
+                btn.innerText = '✔️';
+            }
+        }
+    });
     </script>
 @endsection
