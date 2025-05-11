@@ -5,10 +5,10 @@
 @endsection
 @section('content')
 
-    <section class="p-2">
-        <div class="row justify-content-center max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="col-xl-12 col-lg-12 col-md-12 last-ui bg-white shadow sm:rounded-lg p-4">
-                
+    <section class="bg-white shadow sm:rounded-lg p-4 last-ui">
+        <div class="row justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+
                 <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
@@ -19,128 +19,67 @@
                         class="btn btn-secondary">العودة</a>
                 </form>
 
-                {{-- <div class="row">
-                    @forelse($products as $group)
-                        @php
-                            $parent = $group->first();
-                            $mainImage = $group->firstWhere('image_url')?->image_url;
-                        @endphp
-
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 border border-gray-200 shadow-sm cursor-pointer product-card"
-                                data-description="{{ $parent->description }}" data-gomla="{{ $parent->gomla }}"
-                                data-code="{{ $parent->product_code }}" data-price="{{ $parent->unit_price }}"
-                                data-image="{{ $mainImage }}" data-family="{{ $parent->item_family_code }}"
-                                data-season="{{ $parent->season_code }}" data-created="{{ $parent->created_at_excel }}"
-                                data-variants='@json($group)'>
-
-                                <div class="card-body text-center">
-                                    <div class="mb-2">
-                                        @if ($mainImage)
-                                            <img src="{{ $mainImage }}" class="img-fluid w-100 product-image" loading="lazy">
-                                        @endif
-                                    </div>
-
-                                    <div class="d-flex justify-content-center gap-2 mb-2">
-                                        <span class="custom-badge">Code: {{ $parent->product_code }}</span>
-                                        <span class="custom-badge">Price: {{ $parent->unit_price }}</span>
-                                    </div>
-
-                                    <h5 class="mb-1">{{ $parent->description }}</h5>
-                                    <p class="text-muted mb-3">Gomla: {{ $parent->gomla }}</p>
-
-                                    <div class="row">
-                                        @foreach ($group as $variant)
-                                            <div class="col-3 mb-3">
-                                                <div class="card text-center p-2 shadow-sm h-100">
-                                                    @if ($variant->image_url)
-                                                        <img src="{{ $variant->image_url }}" class="img-fluid mb-2"
-                                                            style="height: 80px; object-fit: contain;">
-                                                    @endif
-                                                    <span
-                                                        class="badge {{ $variant->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
-                                                        {{ $variant->quantity > 0 ? 'Active' : 'Not Active' }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-
+            </div>
+            @forelse($products as $group)
+                @php
+                    $parent = $group->first();
+                    $mainImage = $group->firstWhere('image_url')?->image_url;
+                @endphp
+                <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0  rounded-1 pb-3" data-bs-toggle="modal"
+                    data-bs-target="#productModal" style="cursor: pointer;">
+                    <div class="position-relative">
+                        @if ($mainImage)
+                            <img src="{{ $mainImage }}" class="main-image rounded-top-1">
+                        @endif
+                        <div class="position-absolute top-0 end-0 me-1 mt-1">
+                            <small
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
+                        </div>
+                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                            <small
+                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                            <small
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $subcategory->name }}</small>
+                        </div>
+                        <div class="position-absolute bottom-0 end-0 me-1 mb-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
+                                colors</small>
+                        </div>
+                    </div>
+                    <h4>
+                        {{ $parent->description }}
+                    </h4>
+                    <p>
+                        اسم الجمله: {{ $parent->gomla }}
+                    </p>
+                    <div class="row justify-content-center">
+                        @foreach ($group as $variant)
+                            <div class="sub-color position-relative">
+                                @if ($variant->image_url)
+                                    <img src="{{ $variant->image_url }}" class="rounded-1">
+                                @endif
+                                <div class="position-absolute top-0 end-0 me-1">
+                                    <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
+                                        class="icon-mark">
+                                </div>
+                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
+                                    <small
+                                        class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
-                        </div>
-                    @endforelse
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $pagination->links() }}
+                        @endforeach
+
                     </div>
-                    
-                </div> --}}
-                @forelse($products as $group)
-                    @php
-                        $parent = $group->first();
-                        $mainImage = $group->firstWhere('image_url')?->image_url;
-                    @endphp
-                    <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0  rounded-1 pb-3" data-bs-toggle="modal"
-                        data-bs-target="#productModal" style="cursor: pointer;">
-                        <div class="position-relative">
-                            @if ($mainImage)
-                                <img src="{{ $mainImage }}" class="main-image rounded-top-1">
-                            @endif
-                            <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                <small
-                                    class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
-                            </div>
-                            <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                <small
-                                    class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
-                            </div>
-                            <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                <small
-                                    class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $subcategory->name }}</small>
-                            </div>
-                            <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                    colors</small>
-                            </div>
-                        </div>
-                        <h4>
-                            {{ $parent->description }}
-                        </h4>
-                        <p>
-                            اسم الجمله: {{ $parent->gomla }}
-                        </p>
-                        <div class="row justify-content-center">
-                            @foreach ($group as $variant)
-                                <div class="sub-color position-relative">
-                                    @if ($variant->image_url)
-                                        <img src="{{ $variant->image_url }}" class="rounded-1">
-                                    @endif
-                                    <div class="position-absolute top-0 end-0 me-1">
-                                        <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
-                                            class="icon-mark">
-                                    </div>
-                                    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                        <small
-                                            class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
-                                    </div>
-                                </div>
-                            @endforeach
-                           
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
-                    </div>
-                @endforelse
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $pagination->links() }}
                 </div>
-
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
+                </div>
+            @endforelse
+            <div class="d-flex justify-content-center mt-4">
+                {{ $pagination->links() }}
             </div>
         </div>
     </section>
@@ -175,26 +114,26 @@
 
     <style>
         /* .product-image {
-                            object-fit: contain;
-                            max-height: 250px;
-                        }
+                                object-fit: contain;
+                                max-height: 250px;
+                            }
 
-                        .custom-badge {
-                            border: 1px solid #0d6efd;
-                            color: #0d6efd;
-                            background-color: transparent;
-                            padding: 5px 10px;
-                            border-radius: 0.5rem;
-                            font-size: 0.75rem;
-                        }
+                            .custom-badge {
+                                border: 1px solid #0d6efd;
+                                color: #0d6efd;
+                                background-color: transparent;
+                                padding: 5px 10px;
+                                border-radius: 0.5rem;
+                                font-size: 0.75rem;
+                            }
 
-                        .cursor-pointer {
-                            cursor: pointer;
-                        }
+                            .cursor-pointer {
+                                cursor: pointer;
+                            }
 
-                        .modal-xl {
-                            max-width: 75% !important;
-                        } */
+                            .modal-xl {
+                                max-width: 75% !important;
+                            } */
 
         .main-image {
             width: 100%;
