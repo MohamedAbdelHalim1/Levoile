@@ -245,7 +245,7 @@ class ProductKnowledgeController extends Controller
                         'subcategory_knowledge_id' => $childSubcat?->id ?? $subcat->id,
                         'description'              => $row['Description'] ?? null,
                         'whole_description'        => $row['Whole Description'] ?? null,
-                        'website_description'      => $row['Website Description'] ?? null,
+                        'gomla'                    => $row['Website Description'] ?? null,
                         'item_family_code'         => $row['Item Family Code'] ?? null,
                         'season_code'              => $row['Season Code'] ?? null,
                         'product_item_code'        => $product_item_code,
