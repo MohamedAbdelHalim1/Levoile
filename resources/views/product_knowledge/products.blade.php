@@ -25,7 +25,7 @@
                     $parent = $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
                 @endphp
-                <div class="col-xl-4 col-lg-4 col-md-4 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3 m-2" data-variants='@json($group)'
+                <div class="col-xl-4 col-lg-4 col-md-4 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3" data-variants='@json($group)'
                     data-bs-toggle="modal" data-bs-target="#productModal" style="cursor: pointer;">
                     <div class="position-relative">
                         @if ($mainImage)
