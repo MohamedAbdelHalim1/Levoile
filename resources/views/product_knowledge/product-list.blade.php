@@ -32,6 +32,9 @@
                                         @if ($mainImage)
                                             <img src="{{ $mainImage }}" width="60" height="60"
                                                 style="object-fit: contain" loading="lazy">
+                                        @else
+                                            <img src="{{ asset('assets/images/comming.png') }}" width="60" height="60"
+                                                style="object-fit: contain" loading="lazy">
                                         @endif
                                     </td>
                                     <td>{{ $parent->product_code }}</td>
@@ -77,6 +80,7 @@
                     <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
                     <p><strong>Code:</strong> <span id="modalCode"></span></p>
                     <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                    <p><strong>material:</strong> <span id="modalMaterial"></span></p>
                     <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
                     <p><strong>Season:</strong> <span id="modalSeason"></span></p>
                     <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
@@ -132,6 +136,7 @@
                     document.getElementById('modalGomla').innerText = parent.gomla;
                     document.getElementById('modalCode').innerText = parent.product_code;
                     document.getElementById('modalPrice').innerText = parent.unit_price;
+                    document.getElementById('modalMaterial').innerText = parent.material;
                     document.getElementById('modalFamily').innerText = parent.item_family_code;
                     document.getElementById('modalSeason').innerText = parent.season_code;
                     document.getElementById('modalCreated').innerText = parent.created_at_excel;
@@ -144,7 +149,7 @@
                         container.innerHTML += `
                             <div class='col-md-3 text-center mb-3'>
                                 <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
-                                <div><strong>No Code:</strong> ${item.no_code}</div>
+                                <div><strong>Code:</strong> ${item.no_code}</div>
                                 <div><strong>Color:</strong> ${item.color}</div>
                                 <div><strong>Size:</strong> ${item.size}</div>
                                 
@@ -171,7 +176,7 @@
             });
         });
 
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (e.target.classList.contains('toggle-edit')) {
                 const btn = e.target;
                 const input = btn.previousElementSibling;
@@ -186,24 +191,26 @@
                     btn.innerText = '...';
 
                     fetch(`/product-knowledge/update-quantity/${id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ quantity: newQty })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        btn.innerText = '✏️';
-                        input.disabled = true;
-                        btn.disabled = false;
-                    })
-                    .catch(err => {
-                        alert('حصل خطأ');
-                        btn.innerText = '✏️';
-                        btn.disabled = false;
-                    });
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                quantity: newQty
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            btn.innerText = '✏️';
+                            input.disabled = true;
+                            btn.disabled = false;
+                        })
+                        .catch(err => {
+                            alert('حصل خطأ');
+                            btn.innerText = '✏️';
+                            btn.disabled = false;
+                        });
                 } else {
                     // Enable input
                     input.disabled = false;
@@ -212,6 +219,5 @@
                 }
             }
         });
-
     </script>
 @endsection
