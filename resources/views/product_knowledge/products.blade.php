@@ -203,7 +203,7 @@
             background-color: rgb(58, 58, 58);
         }
 
-        @media screen {
+        @media screen & (max-width: 1000px) {
             .last-ui .sub-img {
                 width: 40%;
                 margin: 10px 10px;
