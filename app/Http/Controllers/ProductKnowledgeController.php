@@ -19,7 +19,10 @@ class ProductKnowledgeController extends Controller
 
     public function subcategories($categoryId)
     {
-        $category = CategoryKnowledge::with('subcategories')->findOrFail($categoryId);
+        $category = CategoryKnowledge::with(['subcategories' => function ($q) {
+            $q->whereNull('parent_id');
+        }])->findOrFail($categoryId);
+    
         return view('product_knowledge.subcategories', compact('category'));
     }
     
@@ -229,7 +232,6 @@ class ProductKnowledgeController extends Controller
                     }
     
                     $childSubcat = DB::table('subcategory_knowledge')
-                        ->where('name', $retailName)
                         ->where('category_knowledge_id', $categoryId)
                         ->first();
     
