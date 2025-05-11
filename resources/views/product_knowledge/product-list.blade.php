@@ -11,8 +11,9 @@
                             <tr>
                                 <th>صورة</th>
                                 <th>كود المنتج</th>
-                                <th>الاسم</th>
+                                <th>اسم ديناميك</th>
                                 <th>اسم الجمله</th>
+                                <th>اسم الويبسايت</th>
                                 <th>الفئة</th>
                                 <th>الفئة الفرعية</th>
                                 <th>السعر</th>
@@ -23,7 +24,7 @@
                         <tbody>
                             @forelse($products as $group)
                                 @php
-                                    $parent = $group->first();
+                                    $parent = $group->firstWhere('image_url') ?? $group->first();
                                     $mainImage = $group->firstWhere('image_url')?->image_url;
                                     $colors = $group->groupBy('color')->count();
                                 @endphp
@@ -40,6 +41,7 @@
                                     <td>{{ $parent->product_code }}</td>
                                     <td>{{ $parent->description }}</td>
                                     <td>{{ $parent->gomla }}</td>
+                                    <td>{{ $parent->website_description }}</td>
                                     <td>{{ optional($parent->subcategory?->category)->name ?? '-' }}</td>
                                     <td>{{ optional($parent->subcategory)->name ?? '-' }}</td>
 
