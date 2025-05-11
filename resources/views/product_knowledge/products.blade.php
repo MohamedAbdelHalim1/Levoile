@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('styles')
+<link rel="stylesheet" href="assets/bootstrap.css">
+@endsection
 @section('content')
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -527,6 +530,8 @@
 
         }
     </style>
+
+
 @endsection
 
 @section('scripts')
