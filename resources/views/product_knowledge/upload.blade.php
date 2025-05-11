@@ -144,7 +144,7 @@
             progressBar.innerText = 'اكتمل';
 
             setTimeout(() => {
-                window.location.href = "{{ route('product-knowledge.upload') }}";
+                window.location.href = "{{ route('product-knowledge.lists') }}";
             }, 1000);
         });
     </script>
