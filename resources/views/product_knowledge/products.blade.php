@@ -30,6 +30,8 @@
                     <div class="position-relative">
                         @if ($mainImage)
                             <img src="{{ $mainImage }}" class="main-image rounded-top-1">
+                        @else
+                            <img src="assets/images/comming.png" class="main-image rounded-top-1">    
                         @endif
                         <div class="position-absolute top-0 end-0 me-1 mt-1">
                             <small
