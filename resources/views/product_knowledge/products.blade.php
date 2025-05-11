@@ -41,7 +41,7 @@
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material }}</small>
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه'}}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
