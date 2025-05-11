@@ -18,7 +18,7 @@
                                 <th>الفئة الفرعية</th>
                                 <th>السعر</th>
                                 <th>الألوان</th>
-                                <th>عدد الصور المتبقية</th>
+                                {{-- <th>عدد الصور المتبقية</th> --}}
                                 <th>الكمية</th>
                             </tr>
                         </thead>
@@ -55,7 +55,7 @@
                                             {{ $colors }}
                                         </a>
                                     </td>
-                                    <td>{{ $missingImages }}</td>
+                                    {{-- <td>{{ $missingImages }}</td> --}}
                                     <td>{{ $group->sum('quantity') }}</td>
                                 </tr>
                             @empty

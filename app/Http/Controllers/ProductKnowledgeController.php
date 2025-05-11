@@ -22,10 +22,10 @@ class ProductKnowledgeController extends Controller
         $category = CategoryKnowledge::with(['subcategories' => function ($q) {
             $q->whereNull('parent_id');
         }])->findOrFail($categoryId);
-    
+
         return view('product_knowledge.subcategories', compact('category'));
     }
-    
+
     public function products(Request $request, $subcategoryId)
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
@@ -85,19 +85,38 @@ class ProductKnowledgeController extends Controller
 
 
 
+    // public function productList()
+    // {
+    //     $allVariants = ProductKnowledge::with(['subcategory.category'])
+    //         ->orderBy('product_code')
+    //         ->get();
+
+    //     // Laravel groupBy
+    //     $grouped = $allVariants->groupBy('product_code');
+
+    //     return view('product_knowledge.product-list', [
+    //         'products' => $grouped,
+    //     ]);
+    // }
+
     public function productList()
     {
         $allVariants = ProductKnowledge::with(['subcategory.category'])
             ->orderBy('product_code')
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $item->category_name = $item->subcategory->category->name ?? '-';
+                $item->subcategory_name = $item->subcategory->name ?? '-';
+                return $item;
+            });
 
-        // Laravel groupBy
         $grouped = $allVariants->groupBy('product_code');
 
         return view('product_knowledge.product-list', [
             'products' => $grouped,
         ]);
     }
+
 
 
     public function updateQuantity(Request $request, $id)
@@ -189,37 +208,37 @@ class ProductKnowledgeController extends Controller
     {
         try {
             $data = $request->get('chunk');
-    
+
             if (empty($data)) {
                 return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
             }
-    
+
             $allCategories = DB::table('category_knowledge')->pluck('id', 'name');
             $allSubcategories = DB::table('subcategory_knowledge')
                 ->select('id', 'name', 'category_knowledge_id')
                 ->get()
                 ->groupBy('category_knowledge_id');
-    
+
             DB::transaction(function () use ($data, $allCategories, $allSubcategories) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
                     $retailName = trim($row['Retail Product Code'] ?? '');
-    
+
                     if (!$divisionName || !$subcategoryName || empty($row['No.'])) {
                         throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
                     }
-    
+
                     $categoryId = $allCategories[$divisionName] ?? null;
                     if (!$categoryId) {
                         throw new \Exception("يوجد خطأ: التصنيف '{$divisionName}' غير موجود في قاعدة البيانات.");
                     }
-    
+
                     $subcat = $allSubcategories[$categoryId]->firstWhere('name', $subcategoryName);
                     if (!$subcat) {
                         throw new \Exception("يوجد خطأ: الصب كاتيجوري '{$subcategoryName}' غير موجود للتصنيف '{$divisionName}'");
                     }
-    
+
                     // ✳️ Check if Retail Product Code (as subcategory) already exists
                     if ($retailName && !DB::table('subcategory_knowledge')->where('name', $retailName)->exists()) {
                         DB::table('subcategory_knowledge')->insert([
@@ -230,21 +249,21 @@ class ProductKnowledgeController extends Controller
                             'updated_at' => now()
                         ]);
                     }
-    
+
                     $childSubcat = DB::table('subcategory_knowledge')
                         ->where('name', $retailName)
                         ->where('category_knowledge_id', $categoryId)
                         ->first();
-    
+
                     $no = $row['No.'];
                     $product_item_code = $row['Vendor Item No.'] ?? substr($no, 2, 6);
                     $color_code = substr($no, -5, 3);
                     $size_code = substr($no, -2);
-    
+
                     $created_at_excel = !empty($row['Created At']) && is_numeric($row['Created At'])
                         ? Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']))
                         : $row['Created At'] ?? null;
-    
+
                     DB::table('product_knowledge')->insert([
                         'subcategory_knowledge_id' => $subcat->id,
                         'description'              => $row['Description'] ?? null,
@@ -269,11 +288,10 @@ class ProductKnowledgeController extends Controller
                     ]);
                 }
             });
-    
+
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
         }
     }
-    
 }
