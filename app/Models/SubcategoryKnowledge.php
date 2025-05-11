@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SubcategoryKnowledge extends Model
 {
-    protected $fillable = ['name', 'category_knowledge_id'];
+    protected $fillable = ['name', 'category_knowledge_id','parent_id'];
 
     public function category()
     {

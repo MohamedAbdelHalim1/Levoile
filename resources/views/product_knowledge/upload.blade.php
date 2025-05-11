@@ -17,41 +17,16 @@
                     <input type="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                 </div>
 
-                <div id="preview-loader" class="alert alert-info d-none">جاري قراءة الملف... برجاء الانتظار</div>
+                <div id="preview-loader" class="alert alert-info d-none">جاري تجهيز الملف... برجاء الانتظار</div>
 
-                <button id="submit-btn" class="btn btn-success">رفع</button>
+                <button id="submit-btn" class="btn btn-success" disabled>رفع</button>
 
+                <!-- Hidden Form (not used but kept for structure) -->
                 <form id="hidden-upload-form" method="POST" action="{{ route('product-knowledge.upload.save') }}"
-                    enctype="multipart/form-data" class="d-none">
+                      enctype="multipart/form-data" class="d-none">
                     @csrf
                     <input type="hidden" name="chunks" id="chunks-input">
                 </form>
-
-                <div id="sheet-preview" class="mt-4 d-none">
-                    <h5 class="mb-3"><b>معاينة البيانات:</b></h5>
-                    <div class="table-responsive" style="max-height: 400px; overflow-y: scroll;">
-                        <table class="table table-bordered text-center" id="preview-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Description</th>
-                                    <th>Gomla</th>
-                                    <th>Item Family</th>
-                                    <th>Division Code</th>
-                                    <th>Item Category</th>
-                                    <th>Season</th>
-                                    <th>Color</th>
-                                    <th>Size</th>
-                                    <th>Unit Price</th>
-                                    <th>Image</th>
-                                    <th>Quantity</th>
-                                    <th>Created At</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
 
                 <!-- Modal + Progress -->
                 <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
@@ -61,7 +36,7 @@
                             <h5 class="mb-3">جاري رفع الشيت، من فضلك لا تغلق الصفحة</h5>
                             <div class="progress w-100" style="height: 20px;">
                                 <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated"
-                                    role="progressbar" style="width: 0%">0%</div>
+                                     role="progressbar" style="width: 0%">0%</div>
                             </div>
                         </div>
                     </div>
@@ -76,11 +51,6 @@
             border: none;
             box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
         }
-
-        #preview-table td,
-        #preview-table th {
-            vertical-align: middle;
-        }
     </style>
 @endsection
 
@@ -88,12 +58,12 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         const fileInput = document.getElementById('file');
-        const previewDiv = document.getElementById('sheet-preview');
-        const previewTable = document.querySelector('#preview-table tbody');
         const submitBtn = document.getElementById('submit-btn');
         const progressBar = document.getElementById('uploadProgress');
         const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
         const previewLoader = document.getElementById('preview-loader');
+
+        let allRows = [];
 
         function formatExcelDate(excelDate) {
             if (typeof excelDate === 'number') {
@@ -103,53 +73,27 @@
             return excelDate || '';
         }
 
-
-        let allRows = [];
-
-        fileInput.addEventListener('change', function() {
-            previewTable.innerHTML = '';
+        fileInput.addEventListener('change', function () {
             const file = this.files[0];
             if (!file) return;
 
             previewLoader.classList.remove('d-none');
+            submitBtn.disabled = true;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {
-                    type: 'array'
-                });
+                const workbook = XLSX.read(data, { type: 'array' });
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
                 allRows = XLSX.utils.sheet_to_json(sheet);
-
-                allRows.forEach(row => {
-                    const tr = `
-                    <tr>
-                        <td>${row['No.'] || ''}</td>
-                        <td>${row['Description'] || ''}</td>
-                        <td>${row['Gomla'] || ''}</td>
-                        <td>${row['Item Family Code'] || ''}</td>
-                        <td>${row['Division Code'] || ''}</td>
-                        <td>${row['Item Category Code'] || ''}</td>
-                        <td>${row['Season Code'] || ''}</td>
-                        <td>${row['Color'] || ''}</td>
-                        <td>${row['Size'] || ''}</td>
-                        <td>${row['Unit Price'] || ''}</td>
-                        <td>${row['Column2'] || ''}</td>
-                        <td>${row['quantity'] ?? ''}</td>
-                        <td>${formatExcelDate(row['Created At'])}</td>
-                    </tr>`;
-                    previewTable.innerHTML += tr;
-                });
-
-                previewDiv.classList.remove('d-none');
                 previewLoader.classList.add('d-none');
+                submitBtn.disabled = false;
             };
 
             reader.readAsArrayBuffer(file);
         });
 
-        submitBtn.addEventListener('click', async function() {
+        submitBtn.addEventListener('click', async function () {
             if (!allRows.length) return alert('من فضلك اختر ملف أولاً');
 
             submitBtn.disabled = true;
@@ -172,23 +116,14 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({
-                            chunk: chunks[i]
-                        })
+                        body: JSON.stringify({ chunk: chunks[i] })
                     });
 
                     const result = await response.json();
 
                     if (result.status !== 'success') {
                         uploadModal.hide();
-
-                        const alert = document.createElement('div');
-                        alert.className = 'alert alert-danger mt-3';
-                        alert.innerText = result.message || 'حدث خطأ أثناء رفع الشيت';
-
-                        const container = document.querySelector('.bg-white') || document.querySelector(
-                            '.max-w-7xl');
-                        container?.prepend(alert);
+                        alert(result.message || 'حدث خطأ أثناء رفع الشيت');
                         return;
                     }
 
@@ -198,20 +133,12 @@
 
                 } catch (err) {
                     uploadModal.hide();
-
-                    const alert = document.createElement('div');
-                    alert.className = 'alert alert-danger mt-3';
-                    alert.innerText = 'حدث خطأ غير متوقع.';
-
-                    const container = document.querySelector('.bg-white') || document.querySelector(
-                        '.max-w-7xl');
-                    container?.prepend(alert);
-
+                    alert('حدث خطأ غير متوقع');
                     submitBtn.disabled = false;
-
                     return;
                 }
             }
+
             progressBar.classList.remove('bg-danger');
             progressBar.classList.add('bg-success');
             progressBar.innerText = 'اكتمل';

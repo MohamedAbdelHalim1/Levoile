@@ -185,77 +185,91 @@ class ProductKnowledgeController extends Controller
     {
         try {
             $data = $request->get('chunk');
-
+    
             if (empty($data)) {
                 return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
             }
-
-            $allCategories = DB::table('category_knowledge')->pluck('id', 'name'); // ['FASHION' => 25, ...]
+    
+            $allCategories = DB::table('category_knowledge')->pluck('id', 'name');
             $allSubcategories = DB::table('subcategory_knowledge')
                 ->select('id', 'name', 'category_knowledge_id')
                 ->get()
                 ->groupBy('category_knowledge_id');
-
+    
             DB::transaction(function () use ($data, $allCategories, $allSubcategories) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
-
+                    $retailName = trim($row['Retail Product Code'] ?? '');
+    
                     if (!$divisionName || !$subcategoryName || empty($row['No.'])) {
                         throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
                     }
-
+    
                     $categoryId = $allCategories[$divisionName] ?? null;
                     if (!$categoryId) {
                         throw new \Exception("يوجد خطأ: التصنيف '{$divisionName}' غير موجود في قاعدة البيانات.");
                     }
-
+    
                     $subcat = $allSubcategories[$categoryId]->firstWhere('name', $subcategoryName);
                     if (!$subcat) {
-                        throw new \Exception("يوجد خطأ: الصب كاتيجوري '{$subcategoryName}' غير موجود للتصنيف '{$divisionName}'.");
+                        throw new \Exception("يوجد خطأ: الصب كاتيجوري '{$subcategoryName}' غير موجود للتصنيف '{$divisionName}'");
                     }
-
+    
+                    // ✳️ Check if Retail Product Code (as subcategory) already exists
+                    if ($retailName && !DB::table('subcategory_knowledge')->where('name', $retailName)->exists()) {
+                        DB::table('subcategory_knowledge')->insert([
+                            'name' => $retailName,
+                            'category_knowledge_id' => $categoryId,
+                            'parent_id' => $subcat->id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+    
+                    $childSubcat = DB::table('subcategory_knowledge')
+                        ->where('name', $retailName)
+                        ->where('category_knowledge_id', $categoryId)
+                        ->first();
+    
                     $no = $row['No.'];
-                    $product_item_code = !empty($row['Product Item No.'])
-                        ? $row['Product Item No.']
-                        : substr($no, 2, 6);
-
+                    $product_item_code = $row['Vendor Item No.'] ?? substr($no, 2, 6);
                     $color_code = substr($no, -5, 3);
                     $size_code = substr($no, -2);
-
-                    $created_at_excel = null;
-                    if (!empty($row['Created At']) && is_numeric($row['Created At'])) {
-                        try {
-                            $created_at_excel = Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']));
-                        } catch (\Exception $e) {
-                            $created_at_excel = null;
-                        }
-                    }
-
-                    ProductKnowledge::create([
-                        'subcategory_knowledge_id' => $subcat->id,
+    
+                    $created_at_excel = !empty($row['Created At']) && is_numeric($row['Created At'])
+                        ? Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']))
+                        : $row['Created At'] ?? null;
+    
+                    DB::table('product_knowledge')->insert([
+                        'subcategory_knowledge_id' => $childSubcat?->id ?? $subcat->id,
                         'description'              => $row['Description'] ?? null,
-                        'gomla'                    => $row['Gomla'] ?? null,
+                        'whole_description'        => $row['Whole Description'] ?? null,
+                        'website_description'      => $row['Website Description'] ?? null,
                         'item_family_code'         => $row['Item Family Code'] ?? null,
                         'season_code'              => $row['Season Code'] ?? null,
                         'product_item_code'        => $product_item_code,
                         'color'                    => $row['Color'] ?? null,
+                        'material'                 => $row['Material'] ?? null,
                         'size'                     => $row['Size'] ?? null,
                         'created_at_excel'         => $created_at_excel,
-                        'unit_price'               => isset($row['Unit Price']) ? (int) $row['Unit Price'] : null,
-                        'image_url'                => $row['Column2'] ?? null,
-                        'quantity'                 => isset($row['quantity']) ? (int) $row['quantity'] : null,
+                        'unit_price'               => isset($row['Unit Price']) ? (float) $row['Unit Price'] : null,
+                        'image_url'                => $row['Image'] ?? null,
+                        'quantity'                 => isset($row['Quantity']) ? (int) $row['Quantity'] : null,
                         'no_code'                  => $no,
                         'product_code'             => $product_item_code,
                         'color_code'               => $color_code,
                         'size_code'                => $size_code,
+                        'created_at'               => now(),
+                        'updated_at'               => now(),
                     ]);
                 }
             });
-
+    
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
         }
     }
+    
 }

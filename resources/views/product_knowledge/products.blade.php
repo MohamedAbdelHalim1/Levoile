@@ -1,12 +1,14 @@
 @extends('layouts.app')
 
 @section('styles')
-<link rel="stylesheet" href="assets/bootstrap.css">
+    <link rel="stylesheet" href="assets/bootstrap.css">
 @endsection
 @section('content')
-    <div class="p-2">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="bg-white shadow sm:rounded-lg p-4">
+
+    <section class="p-2">
+        <div class="row justify-content-center max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="col-xl-12 col-lg-12 col-md-12 last-ui bg-white shadow sm:rounded-lg p-4">
+                
                 <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
@@ -77,315 +79,71 @@
                     </div>
                     
                 </div> --}}
-
-                <div class="mt-5 last-ui">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            @forelse($products as $group)
-                                @php
-                                    $parent = $group->first();
-                                    $mainImage = $group->firstWhere('image_url')?->image_url;
-                                @endphp
-                                <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0  rounded-1 pb-3"
-                                    data-bs-toggle="modal" data-bs-target="#productModal" style="cursor: pointer;">
-                                    <div class="position-relative">
-                                        @if ($mainImage)
-                                            <img src="{{ $mainImage }}" class="main-image rounded-top-1">
-                                        @endif
-                                        <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                            <small
-                                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
-                                        </div>
-                                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                            <small
-                                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
-                                        </div>
-                                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                            <small
-                                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $subcategory->name }}</small>
-                                        </div>
-                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                            <small
-                                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                                colors</small>
-                                        </div>
-                                    </div>
-                                    <h4>
-                                        {{ $parent->description }}
-                                    </h4>
-                                    <p>
-                                        اسم الجمله: {{ $parent->gomla }}
-                                    </p>
-                                    <div class="row justify-content-center">
-                                        @foreach ($group as $variant)
-                                            <div class="sub-color position-relative">
-                                                @if ($variant->image_url)
-                                                    <img src="{{ $variant->image_url }}" class="rounded-1">
-                                                @endif
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                        {{-- <div class="sub-color position-relative">
-                                            <img src="assets/images/11_27dbae41-9b4d-411d-868e-f99ed0695929.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_14034444.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/1_e820f924-a60c-48ae-be6a-4f60180a4493.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_14034444.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/2_11491a91-d0c8-41fe-9537-fad46e76da1a.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_14034444.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/3_1db01444-2a04-41af-98fb-5367921b68b3.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_15627569.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/5_bb649007-938c-4470-9630-503793e9da8c.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_14034444.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/6_43034580-6b19-4e8a-815c-193e79176a8c.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_15627569.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div>
-                                        <div class="sub-color position-relative">
-                                            <img src="assets/images/9_7c3e7104-13bd-4074-9708-50f89a6f81ab.webp"
-                                                class="rounded-1">
-                                            <div class="position-absolute top-0 end-0 me-1">
-                                                <img src="assets/images/square_14034444.png" class="icon-mark">
-                                            </div>
-                                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                                <small class="fw-semibold back-ground text-white rounded-1 p-1">blue</small>
-                                            </div>
-                                        </div> --}}
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="col-12">
-                                    <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
-                                </div>
-                            @endforelse
-                            <div class="d-flex justify-content-center mt-4">
-                                {{ $pagination->links() }}
+                @forelse($products as $group)
+                    @php
+                        $parent = $group->first();
+                        $mainImage = $group->firstWhere('image_url')?->image_url;
+                    @endphp
+                    <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0  rounded-1 pb-3" data-bs-toggle="modal"
+                        data-bs-target="#productModal" style="cursor: pointer;">
+                        <div class="position-relative">
+                            @if ($mainImage)
+                                <img src="{{ $mainImage }}" class="main-image rounded-top-1">
+                            @endif
+                            <div class="position-absolute top-0 end-0 me-1 mt-1">
+                                <small
+                                    class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
                             </div>
-
+                            <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                                <small
+                                    class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
+                            </div>
+                            <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                                <small
+                                    class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $subcategory->name }}</small>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 me-1 mb-1">
+                                <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
+                                    colors</small>
+                            </div>
                         </div>
-                        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header border-0">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                        <h4>
+                            {{ $parent->description }}
+                        </h4>
+                        <p>
+                            اسم الجمله: {{ $parent->gomla }}
+                        </p>
+                        <div class="row justify-content-center">
+                            @foreach ($group as $variant)
+                                <div class="sub-color position-relative">
+                                    @if ($variant->image_url)
+                                        <img src="{{ $variant->image_url }}" class="rounded-1">
+                                    @endif
+                                    <div class="position-absolute top-0 end-0 me-1">
+                                        <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
+                                            class="icon-mark">
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="row justify-content-center">
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/16_c06460f5-9f1a-470e-bf27-411c597e8ab9.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/11_27dbae41-9b4d-411d-868e-f99ed0695929.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/1_e820f924-a60c-48ae-be6a-4f60180a4493.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/2_11491a91-d0c8-41fe-9537-fad46e76da1a.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/3_1db01444-2a04-41af-98fb-5367921b68b3.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_15627569.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">0</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/5_bb649007-938c-4470-9630-503793e9da8c.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/6_43034580-6b19-4e8a-815c-193e79176a8c.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_15627569.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">0</small>
-                                                </div>
-                                            </div>
-                                            <div class="sub-img position-relative">
-                                                <img src="assets/images/9_7c3e7104-13bd-4074-9708-50f89a6f81ab.webp"
-                                                    class="rounded-1">
-                                                <div class="position-absolute top-0 end-0 me-1">
-                                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                                </div>
-                                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                                </div>
-                                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                                    <small
-                                                        class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
+                                        <small
+                                            class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
+                           
                         </div>
                     </div>
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
+                    </div>
+                @endforelse
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $pagination->links() }}
                 </div>
 
             </div>
         </div>
-    </div>
+    </section>
 
     {{-- مودال العرض --}}
     {{-- <div class="modal fade" id="productModal" tabindex="-1">
@@ -417,26 +175,26 @@
 
     <style>
         /* .product-image {
-                        object-fit: contain;
-                        max-height: 250px;
-                    }
+                            object-fit: contain;
+                            max-height: 250px;
+                        }
 
-                    .custom-badge {
-                        border: 1px solid #0d6efd;
-                        color: #0d6efd;
-                        background-color: transparent;
-                        padding: 5px 10px;
-                        border-radius: 0.5rem;
-                        font-size: 0.75rem;
-                    }
+                        .custom-badge {
+                            border: 1px solid #0d6efd;
+                            color: #0d6efd;
+                            background-color: transparent;
+                            padding: 5px 10px;
+                            border-radius: 0.5rem;
+                            font-size: 0.75rem;
+                        }
 
-                    .cursor-pointer {
-                        cursor: pointer;
-                    }
+                        .cursor-pointer {
+                            cursor: pointer;
+                        }
 
-                    .modal-xl {
-                        max-width: 75% !important;
-                    } */
+                        .modal-xl {
+                            max-width: 75% !important;
+                        } */
 
         .main-image {
             width: 100%;
@@ -455,6 +213,7 @@
             font-size: 15px;
             color: rgb(113, 112, 112);
         }
+
         .last-ui {
             width: 100%;
         }
