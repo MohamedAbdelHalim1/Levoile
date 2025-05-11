@@ -25,13 +25,14 @@
                     $parent = $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
                 @endphp
-                <div class="col-xl-4 col-lg-4 col-md-4 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3" data-variants='@json($group)'
-                    data-bs-toggle="modal" data-bs-target="#productModal" style="cursor: pointer;">
+                <div class="main-product border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3"
+                    data-variants='@json($group)' data-bs-toggle="modal" data-bs-target="#productModal"
+                    style="cursor: pointer;">
                     <div class="position-relative">
                         @if ($mainImage)
                             <img src="{{ $mainImage }}" class="main-image rounded-top-1">
                         @else
-                            <img src="{{ asset('assets/images/comming.png') }}" class="main-image rounded-top-1">    
+                            <img src="{{ asset('assets/images/comming.png') }}" class="main-image rounded-top-1">
                         @endif
                         <div class="position-absolute top-0 end-0 me-1 mt-1">
                             <small
@@ -59,7 +60,8 @@
                     <div class="row justify-content-center">
                         @foreach ($group as $variant)
                             <div class="sub-color position-relative">
-                                <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}" class="rounded-1">
+                                <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
+                                    class="rounded-1">
                                 <div class="position-absolute top-0 end-0 me-1">
                                     <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
                                         class="icon-mark">
@@ -201,6 +203,10 @@
             background-color: rgb(58, 58, 58);
         }
 
+        .main-product {
+            width: 28%;
+        }
+
         @media screen & (max-width: 1000px) {
             .last-ui .sub-img {
                 width: 40%;
@@ -208,6 +214,9 @@
                 padding: 0px;
             }
 
+            .main-product {
+                width: 100%;
+            }
         }
     </style>
 
