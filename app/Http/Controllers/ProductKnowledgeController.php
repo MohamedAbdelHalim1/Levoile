@@ -30,12 +30,17 @@ class ProductKnowledgeController extends Controller
     public function products(Request $request, $subcategoryId)
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
-
         $search = $request->input('search');
-
+    
+        // Get all subcategory IDs: the selected one + its children
+        $subcategoryIds = DB::table('subcategory_knowledge')
+            ->where('id', $subcategoryId)
+            ->orWhere('parent_id', $subcategoryId)
+            ->pluck('id');
+    
         $query = DB::table('product_knowledge')
-            ->where('subcategory_knowledge_id', $subcategoryId);
-
+            ->whereIn('subcategory_knowledge_id', $subcategoryIds);
+    
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', "%$search%")
@@ -43,18 +48,18 @@ class ProductKnowledgeController extends Controller
                     ->orWhere('product_code', 'like', "%$search%");
             });
         }
-
+    
         $paginatedProductCodes = $query
             ->select('product_code')
             ->groupBy('product_code')
             ->orderBy('product_code')
             ->paginate(6)
-            ->appends(['search' => $search]); // مهم علشان يحتفظ بالكلمة
-
+            ->appends(['search' => $search]);
+    
         $productCodes = $paginatedProductCodes->pluck('product_code');
-
+    
         $allVariants = DB::table('product_knowledge')
-            ->where('subcategory_knowledge_id', $subcategoryId)
+            ->whereIn('subcategory_knowledge_id', $subcategoryIds)
             ->whereIn('product_code', $productCodes)
             ->select(
                 'id',
@@ -75,7 +80,7 @@ class ProductKnowledgeController extends Controller
             ->orderBy('product_code')
             ->get()
             ->groupBy('product_code');
-
+    
         return view('product_knowledge.products', [
             'subcategory' => $subcategory,
             'products' => $allVariants,
@@ -83,6 +88,7 @@ class ProductKnowledgeController extends Controller
             'search' => $search
         ]);
     }
+    
 
 
 
