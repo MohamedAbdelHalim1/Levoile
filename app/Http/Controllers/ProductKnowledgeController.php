@@ -69,9 +69,11 @@ class ProductKnowledgeController extends Controller
                 'quantity',
                 'no_code',
                 'image_url',
-                'material'
+                'material',
+                'website_description'
             )
             ->orderBy('product_code')
+            ->groupBy('product_code')
             ->get()
             ->groupBy('product_code');
 
