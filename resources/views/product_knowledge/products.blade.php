@@ -59,9 +59,7 @@
                     <div class="row justify-content-center">
                         @foreach ($group as $variant)
                             <div class="sub-color position-relative">
-                                @if ($variant->image_url)
-                                    <img src="{{ $variant->image_url }}" class="rounded-1">
-                                @endif
+                                <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}" class="rounded-1">
                                 <div class="position-absolute top-0 end-0 me-1">
                                     <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
                                         class="icon-mark">
@@ -229,7 +227,7 @@
                     box.className = 'sub-img position-relative';
 
                     box.innerHTML = `
-                    <img src="${variant.image_url}" class="rounded-1">
+                    <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1">
                     <div class="position-absolute top-0 end-0 me-1">
                         <img src="/assets/images/${variant.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
                     </div>
