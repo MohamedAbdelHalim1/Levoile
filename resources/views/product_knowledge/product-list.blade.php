@@ -18,6 +18,7 @@
                                 <th>الفئة الفرعية</th>
                                 <th>السعر</th>
                                 <th>الألوان</th>
+                                <th>عدد الصور المتبقية</th>
                                 <th>الكمية</th>
                             </tr>
                         </thead>
@@ -27,6 +28,8 @@
                                     $parent = $group->firstWhere('image_url') ?? $group->first();
                                     $mainImage = $group->firstWhere('image_url')?->image_url;
                                     $colors = $group->groupBy('color')->count();
+                                    $missingImages = $group->whereNull('image_url')->count();
+
                                 @endphp
                                 <tr>
                                     <td>
@@ -52,6 +55,7 @@
                                             {{ $colors }}
                                         </a>
                                     </td>
+                                    <td>{{ $missingImages }}</td>
                                     <td>{{ $group->sum('quantity') }}</td>
                                 </tr>
                             @empty
