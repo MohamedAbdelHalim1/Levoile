@@ -22,7 +22,7 @@
             </div>
             @forelse($products as $group)
                 @php
-                    $parent = $group->first();
+                    $parent = $group->firstWhere('image_url') ?? $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
                 @endphp
                 <div class="main-product m-2 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3"
@@ -55,10 +55,13 @@
                         {{ $parent->description }}
                     </h4>
                     <p>
-                        اسم الجمله: {{ $parent->gomla }}
+                        {{ $parent->gomla }}
+                    </p>
+                    <p>
+                        {{ $parent->website_description }}
                     </p>
                     <div class="row justify-content-center">
-                        @foreach ($group as $variant)
+                        @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
                             <div class="sub-color position-relative">
                                 <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
                                     class="rounded-1">
