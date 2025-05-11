@@ -73,7 +73,6 @@ class ProductKnowledgeController extends Controller
                 'website_description'
             )
             ->orderBy('product_code')
-            ->groupBy('product_code')
             ->get()
             ->groupBy('product_code');
 
