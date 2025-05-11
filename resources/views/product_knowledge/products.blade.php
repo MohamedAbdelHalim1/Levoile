@@ -455,6 +455,9 @@
             font-size: 15px;
             color: rgb(113, 112, 112);
         }
+        .last-ui {
+            width: 100%;
+        }
 
         .last-ui .sub-color {
             width: 28%;
