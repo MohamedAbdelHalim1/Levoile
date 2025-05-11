@@ -25,7 +25,7 @@
                     $parent = $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
                 @endphp
-                <div class="col-xl-3 col-lg-3 col-md-4 border border-1 pe-0 ps-0  rounded-1 pb-3" data-bs-toggle="modal"
+                <div class="col-xl-4 col-lg-4 col-md-4 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3" data-bs-toggle="modal"
                     data-bs-target="#productModal" style="cursor: pointer;">
                     <div class="position-relative">
                         @if ($mainImage)
@@ -41,7 +41,7 @@
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $subcategory->name }}</small>
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material }}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
