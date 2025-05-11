@@ -232,6 +232,7 @@ class ProductKnowledgeController extends Controller
                     }
     
                     $childSubcat = DB::table('subcategory_knowledge')
+                        ->where('name', $retailName)
                         ->where('category_knowledge_id', $categoryId)
                         ->first();
     
@@ -245,7 +246,7 @@ class ProductKnowledgeController extends Controller
                         : $row['Created At'] ?? null;
     
                     DB::table('product_knowledge')->insert([
-                        'subcategory_knowledge_id' => $childSubcat?->id ?? $subcat->id,
+                        'subcategory_knowledge_id' => $subcat->id,
                         'description'              => $row['Description'] ?? null,
                         'gomla'                    => $row['Whole Description'] ?? null,
                         'website_description'      => $row['Website Description'] ?? null,
