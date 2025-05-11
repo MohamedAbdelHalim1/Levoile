@@ -113,10 +113,7 @@
         </div>
     </section>
 
-
-
     <style>
-
         .main-image {
             width: 100%;
         }
@@ -238,7 +235,7 @@
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.color}</small>
                     </div>
                     <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.no_code}</small>
+                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
                     </div>
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
