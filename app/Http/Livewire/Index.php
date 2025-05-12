@@ -16,6 +16,21 @@ class Index extends Component
 {
     public function render()
     {
+
+        $user = auth()->user();
+
+        if ($user && $user->role_id == 12) {
+            $hasOpenOrder = \DB::table('open_orders')
+                ->where('user_id', $user->id)
+                ->where('is_opened', 1)
+                ->exists();
+
+            if ($hasOpenOrder) {
+                // Redirect to the open order page
+                return redirect()->route('branch.orders.index');
+            }
+        }
+
         // Get request parameters for date filtering
         $startDate = request('startDate');
         $endDate = request('endDate');
@@ -47,8 +62,14 @@ class Index extends Component
             ->pluck("count", "status");
 
         return view('livewire.index', compact(
-            'seasons', 'colors', 'factories', 'categories', 'products', 'materials',
-            'productStatuses', 'variantStatuses'
+            'seasons',
+            'colors',
+            'factories',
+            'categories',
+            'products',
+            'materials',
+            'productStatuses',
+            'variantStatuses'
         ));
     }
 }

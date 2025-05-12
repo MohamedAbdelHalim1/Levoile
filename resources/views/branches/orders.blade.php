@@ -3,6 +3,11 @@
 @section('content')
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if (session('success'))
+                <div class="alert alert-success text-center">
+                    {{ session('success') }}
+                </div>
+            @endif
             <h4 class="mb-4">جميع الطلبات الخاصة بك</h4>
 
             @if ($orders->isEmpty())
