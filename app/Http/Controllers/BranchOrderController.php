@@ -123,4 +123,22 @@ class BranchOrderController extends Controller
             'search' => $search
         ]);
     }
+
+    public function saveItems(Request $request)
+    {
+        $userId = auth()->id();
+        $quantities = $request->input('quantities', []);
+
+        foreach ($quantities as $productId => $qty) {
+            if ($qty && $qty > 0) {
+                \App\Models\BranchOrderItem::create([
+                    'user_id' => $userId,
+                    'product_knowledge_id' => $productId,
+                    'requested_quantity' => $qty,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'تم حفظ الطلب بنجاح');
+    }
 }

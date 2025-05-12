@@ -107,6 +107,11 @@
                             
                         </div>
                     </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fe fe-save"></i> إرسال الطلب
+                    </button>
+                </div>
                 </div>
             </div>
         </div>

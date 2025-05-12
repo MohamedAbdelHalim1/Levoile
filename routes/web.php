@@ -201,7 +201,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/branch-orders/close', [BranchOrderController::class, 'close'])->name('branch.orders.close');
     Route::get('/branch-orders/categories', [BranchOrderController::class, 'categories'])->name('branch.order.categories');
     Route::get('/branch-orders/categories/{category}/subcategories', [BranchOrderController::class, 'subcategories'])->name('branch.order.subcategories');
-    Route::get('/branch-orders/subcategories/{subcategory}/products', [BranchOrderController::class, 'products'])->name('branch.order.products');
+    Route::get('/branch-orders/products/{subcategoryId}', [BranchOrderController::class, 'products'])->name('branch.order.products');
+    Route::post('/branch-orders/save-items', [BranchOrderController::class, 'saveItems'])->name('branch.orders.save.items');
 
 
     Route::resource('design-materials', DesignMaterialController::class);
