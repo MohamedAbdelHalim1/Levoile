@@ -20,7 +20,7 @@ class BranchOrderItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(ProductKnowledge::class);
+        return $this->belongsTo(ProductKnowledge::class , 'product_knowledge_id');
     }
 
 }
