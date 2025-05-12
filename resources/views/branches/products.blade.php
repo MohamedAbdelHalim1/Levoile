@@ -14,6 +14,18 @@
 @endsection
 @section('content')
     <section class="bg-white shadow sm:rounded-lg p-4 last-ui">
+        @if (session('success'))
+            <div class="alert alert-success text-center">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
 
