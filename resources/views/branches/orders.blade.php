@@ -18,13 +18,13 @@
                                 <th>كود المنتج</th>
                                 <th>الوصف</th>
                                 <th>الوصف للموقع</th>
+                                <th>اسم الجملة</th>
                                 <th>اللون</th>
                                 <th>المقاس</th>
                                 <th>الخامة</th>
                                 <th>الكود العائلي</th>
                                 <th>الكود الموسمي</th>
                                 <th>سعر الوحدة</th>
-                                <th>سعر الجملة</th>
                                 <th>الكمية المطلوبة</th>
                                 <th>تاريخ الطلب</th>
                             </tr>
@@ -39,13 +39,13 @@
                                     <td>{{ $order->product_code }}</td>
                                     <td>{{ $order->description }}</td>
                                     <td>{{ $order->website_description }}</td>
+                                    <td>{{ $order->gomla }}</td>
                                     <td>{{ $order->color }}</td>
                                     <td>{{ $order->size }}</td>
                                     <td>{{ $order->material ?? 'لا يوجد' }}</td>
                                     <td>{{ $order->item_family_code }}</td>
                                     <td>{{ $order->season_code }}</td>
                                     <td>{{ $order->unit_price }}</td>
-                                    <td>{{ $order->gomla }}</td>
                                     <td>{{ $order->requested_quantity }}</td>
                                     <td>{{ $order->created_at }}</td>
                                 </tr>
