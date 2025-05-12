@@ -92,6 +92,7 @@ class BranchOrderController extends Controller
 
         $productCodes = $paginatedProductCodes->pluck('product_code');
 
+        $userId = Auth::id();
         // ✅ كل الفاريانتس المطلوبة قبل كده
         $requestedItems = DB::table('branch_order_items')
             ->where('user_id', $userId)
