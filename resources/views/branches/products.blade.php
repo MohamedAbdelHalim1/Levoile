@@ -13,7 +13,6 @@
     </style>
 @endsection
 @section('content')
-
     <section class="bg-white shadow sm:rounded-lg p-4 last-ui">
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
@@ -105,21 +104,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-center">
-                            {{-- <div class="sub-img position-relative">
-                                <img src="assets/images/16_c06460f5-9f1a-470e-bf27-411c597e8ab9.webp" class="rounded-1">
-                                <div class="position-absolute top-0 end-0 me-1">
-                                    <img src="assets/images/square_14034444.png" class="icon-mark">
-                                </div>
-                                <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">Navy_215</small>
-                                </div>
-                                <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">10512002308298</small>
-                                </div>
-                                <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">25</small>
-                                </div>
-                            </div> --}}
+                            
                         </div>
                     </div>
                 </div>
@@ -231,8 +216,6 @@
             }
         }
     </style>
-
-
 @endsection
 
 @section('scripts')
@@ -245,10 +228,11 @@
 
                 variants.forEach(variant => {
                     const box = document.createElement('div');
-                    box.className = 'sub-img position-relative';
+                    box.className = 'sub-img text-center mb-4';
 
                     box.innerHTML = `
-                    <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1">
+                <div class="position-relative">
+                    <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1 mb-2">
                     <div class="position-absolute top-0 end-0 me-1">
                         <img src="/assets/images/${variant.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
                     </div>
@@ -261,10 +245,9 @@
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
                     </div>
-                    <div class="position-absolute bottom-0 end-0 me-1 mb-1 mt-2">
-                        <input type="number" min="0" name="quantities[${variant.id}]" class="form-control form-control-sm mt-2" placeholder="الكمية المطلوبة">
-                    </div>
-                `;
+                </div>
+                <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
+            `;
 
                     container.appendChild(box);
                 });
@@ -272,4 +255,4 @@
         });
     </script>
 @endsection
-)
+
