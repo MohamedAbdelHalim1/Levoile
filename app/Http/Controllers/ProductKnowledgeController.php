@@ -104,7 +104,6 @@ class ProductKnowledgeController extends Controller
     {
         $allVariants = ProductKnowledge::with(['subcategory.category'])
             ->orderBy('product_code')
-            ->groupBy('product_code')
             ->get()
             ->map(function ($item) {
                 $item->category_name = $item->subcategory->category->name ?? '-';
