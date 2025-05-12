@@ -42,6 +42,55 @@
                 </li>
 
 
+                @php
+                    use App\Models\Category;
+
+                    $user = auth()->user();
+                    $hasOpenOrder = \App\Models\OpenOrder::where('user_id', $user->id)->where('is_opened', 1)->exists();
+                    $categories = $hasOpenOrder ? Category::all() : collect(); // لو عنده open order نجيب الكاتيجوريز
+                @endphp
+
+                @if ($user->role_id == 12)
+
+                    @if ($hasOpenOrder)
+                        <li class="slide">
+                            <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                                <i class="side-menu__icon fe fe-package"></i>
+                                <span class="side-menu__label">المخزن</span>
+                                <i class="angle fe fe-chevron-right"></i>
+                            </a>
+                            <ul class="slide-menu">
+                                <li class="panel sidetab-menu">
+                                    <div class="panel-body tabs-menu-body p-0 border-0">
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="side">
+                                                <ul class="sidemenu-list">
+                                                    @foreach ($categories as $category)
+                                                        <li>
+                                                            <a href="{{ route('branch.order.subcategories', $category->id) }}"
+                                                                class="slide-item">{{ $category->name }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+
+                    <li class="slide">
+                        <a class="side-menu__item" href="{{ route('branch.orders.history') }}">
+                            <i class="side-menu__icon fe fe-file-text"></i>
+                            <span class="side-menu__label">الطلبات</span>
+                        </a>
+                    </li>
+
+                @endif
+
+
+
                 @if (auth()->user()->role_id == 1)
                     <li class="sub-category">
                         <h3>منتجات الماستر شيت</h3>
@@ -118,15 +167,16 @@
 
 
 
-                <li class="sub-category">
-                    <h3>العمليات</h3>
-                </li>
+
                 @if (auth()->user()->hasPermission('عرض منتج') ||
                         auth()->user()->hasPermission('تعديل منتج') ||
                         auth()->user()->hasPermission('استلام منتج') ||
                         auth()->user()->hasPermission('حذف منتج') ||
                         auth()->user()->hasPermission('إضافة منتج') ||
                         auth()->user()->hasPermission('إكمال بيانات المنتج'))
+                    <li class="sub-category">
+                        <h3>العمليات</h3>
+                    </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-bubble-chart-line"></i><span
