@@ -174,6 +174,7 @@
             width: 20%;
             margin: 10px 10px;
             padding: 0px;
+            height: 200px;
         }
 
         .last-ui .sub-img img {
