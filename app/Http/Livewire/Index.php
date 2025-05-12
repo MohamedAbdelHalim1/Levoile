@@ -14,9 +14,9 @@ use Carbon\Carbon;
 
 class Index extends Component
 {
-    public function render()
-    {
 
+    public function mount()
+    {
         $user = auth()->user();
 
         if ($user && $user->role_id == 12) {
@@ -26,11 +26,12 @@ class Index extends Component
                 ->exists();
 
             if ($hasOpenOrder) {
-                // Redirect to the open order page
                 return redirect()->route('branch.orders.index');
             }
         }
-
+    }
+    public function render()
+    {
         // Get request parameters for date filtering
         $startDate = request('startDate');
         $endDate = request('endDate');
