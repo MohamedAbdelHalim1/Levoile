@@ -160,6 +160,18 @@
         </div>
         <!-- END ROW -->
     @endif
+
+    @if (auth()->user()->role_id == 12)
+        <div class="p-4 text-center">
+            <h4 class="mb-3">مرحباً <span class="text-purple fw-bold text-uppercase">{{ auth()->user()->name }}</span>
+            </h4>
+            <h5 class="mb-4">قم بإنشاء طلب جديد إلى المخزن الرئيسي</h5>
+            <a href="#" class="btn btn-success btn-lg">
+                <i class="fe fe-plus"></i> إنشاء طلب جديد
+            </a>
+        </div>
+    @endif
+
 @endsection
 
 @section('scripts')
