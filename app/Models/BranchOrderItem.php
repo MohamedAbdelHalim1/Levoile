@@ -10,10 +10,17 @@ class BranchOrderItem extends Model
         'user_id',
         'product_knowledge_id',
         'requested_quantity',
+        'open_order_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function product()
+    {
+        return $this->belongsTo(ProductKnowledge::class);
+    }
+
 }

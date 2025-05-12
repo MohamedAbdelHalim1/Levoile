@@ -44,12 +44,38 @@ class BranchOrderController extends Controller
     {
         $userId = Auth::id();
 
-        OpenOrder::where('user_id', $userId)
+        // نجيب آخر أوردر مفتوح عشان نرجع له العناصر
+        $openOrder = OpenOrder::where('user_id', $userId)
             ->where('is_opened', 1)
-            ->update(['is_opened' => 0]);
+            ->latest()
+            ->first();
 
-        return redirect()->route('branch.orders.index');
+        if ($openOrder) {
+            $openOrder->update([
+                'is_opened' => 0,
+                'closed_at' => now(),
+            ]);
+
+            // بعد الإغلاق، رجعه لصفحة عرض العناصر اللي كانت في الأوردر ده
+            return redirect()->route('branch.orders.closed.summary', ['orderId' => $openOrder->id]);
+        }
+
+        return redirect()->route('branch.orders.index')->with('error', 'لا يوجد طلب مفتوح حالياً');
     }
+
+    public function closedSummary($orderId)
+    {
+        $userId = auth()->id();
+
+        $items = \App\Models\BranchOrderItem::where('user_id', $userId)
+            ->where('open_order_id', $orderId)
+            ->with('product') // لو في علاقة مع المنتج
+            ->get();
+
+        return view('branches.closed-summary', compact('items'));
+    }
+
+
 
     public function categories()
     {
@@ -138,12 +164,23 @@ class BranchOrderController extends Controller
             $userId = auth()->id();
             $quantities = $request->input('quantities', []);
 
+            // نجيب الأوردر المفتوح الحالي
+            $openOrder = \App\Models\OpenOrder::where('user_id', $userId)
+                ->where('is_opened', 1)
+                ->latest()
+                ->first();
+
+            if (!$openOrder) {
+                return back()->with('error', 'لا يوجد طلب مفتوح حاليًا.');
+            }
+
             foreach ($quantities as $productId => $qty) {
                 if ($qty && $qty > 0) {
                     \App\Models\BranchOrderItem::create([
                         'user_id' => $userId,
                         'product_knowledge_id' => $productId,
                         'requested_quantity' => $qty,
+                        'open_order_id' => $openOrder->id,
                     ]);
                 }
             }
@@ -162,7 +199,7 @@ class BranchOrderController extends Controller
             ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
             ->where('boi.user_id', $userId)
             ->select(
-                'pk.product_code', 
+                'pk.product_code',
                 'pk.description',
                 'pk.image_url',
                 'pk.website_description',
@@ -172,8 +209,9 @@ class BranchOrderController extends Controller
                 'pk.season_code',
                 'pk.color',
                 'pk.size',
-                'boi.requested_quantity', 
-                'boi.created_at')
+                'boi.requested_quantity',
+                'boi.created_at'
+            )
             ->orderByDesc('boi.created_at')
             ->get();
 
