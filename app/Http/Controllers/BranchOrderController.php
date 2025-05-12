@@ -153,4 +153,18 @@ class BranchOrderController extends Controller
             return back()->with('error', 'حدث خطأ أثناء حفظ الطلب: ' . $e->getMessage());
         }
     }
+
+    public function allUserOrders()
+    {
+        $userId = auth()->id();
+
+        $orders = DB::table('branch_order_items as boi')
+            ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
+            ->where('boi.user_id', $userId)
+            ->select('pk.product_code', 'boi.requested_quantity', 'boi.created_at')
+            ->orderByDesc('boi.created_at')
+            ->get();
+
+        return view('branches.orders', compact('orders'));
+    }
 }

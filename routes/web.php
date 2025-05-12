@@ -203,6 +203,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/branch-orders/categories', [BranchOrderController::class, 'categories'])->name('branch.order.categories');
     Route::get('/branch-orders/categories/{category}/subcategories', [BranchOrderController::class, 'subcategories'])->name('branch.order.subcategories');
     Route::post('/branch-orders/save-items', [BranchOrderController::class, 'saveItems'])->name('branch.orders.save.items');
+    Route::get('/branch-orders/history', [BranchOrderController::class, 'allUserOrders'])->name('branch.orders.history');
 
 
     Route::resource('design-materials', DesignMaterialController::class);

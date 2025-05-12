@@ -93,12 +93,6 @@
                                     <small
                                         class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                 </div>
-                                {{-- ✅ علامة الطلب --}}
-                                @if (in_array($variant->id, $requestedItems))
-                                    <div class="text-center mt-1">
-                                        <span class="badge bg-success">تم الطلب</span>
-                                    </div>
-                                @endif
                             </div>
 @endforeach
 
