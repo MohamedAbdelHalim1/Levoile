@@ -136,7 +136,7 @@ use App\Http\Livewire\Wishlist;
 use App\Models\ProductColorVariantMaterial;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\BranchOrderController;
 
 
 
@@ -178,6 +178,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
+
+
+
     Route::get('/product-knowledge/upload-master-sheet', [ProductKnowledgeController::class, 'uploadForm'])
         ->name('product-knowledge.upload');
 
@@ -192,6 +195,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
     Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
 
+
+    Route::get('/branch-orders', [BranchOrderController::class, 'index'])->name('branch.orders.index');
+    Route::post('/branch-orders/create', [BranchOrderController::class, 'create'])->name('branch.orders.create');
+    Route::post('/branch-orders/close', [BranchOrderController::class, 'close'])->name('branch.orders.close');
+    Route::get('/branch-orders/categories', [BranchOrderController::class, 'categories'])->name('branch.order.categories');
 
 
     Route::resource('design-materials', DesignMaterialController::class);
