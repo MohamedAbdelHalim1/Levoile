@@ -43,11 +43,11 @@
 
 
                 @php
-                    use App\Models\Category;
+                    use App\Models\CategoryKnowledge;
 
                     $user = auth()->user();
                     $hasOpenOrder = \App\Models\OpenOrder::where('user_id', $user->id)->where('is_opened', 1)->exists();
-                    $categories = $hasOpenOrder ? Category::all() : collect(); // لو عنده open order نجيب الكاتيجوريز
+                    $categories = $hasOpenOrder ? CategoryKnowledge::all() : collect(); // لو عنده open order نجيب الكاتيجوريز
                 @endphp
 
                 @if ($user->role_id == 12)
