@@ -1,34 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container p-4">
-        <h4 class="mb-4">جميع الطلبات الخاصة بك</h4>
+    <div class="p-2">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <h4 class="mb-4">جميع الطلبات الخاصة بك</h4>
 
-        @if($orders->isEmpty())
-            <div class="alert alert-info text-center">
-                لا توجد طلبات حتى الآن.
-            </div>
-        @else
-            <div class="table-responsive">
-                <table class="table table-bordered text-center">
-                    <thead class="table-light">
-                        <tr>
-                            <th>كود المنتج</th>
-                            <th>الكمية المطلوبة</th>
-                            <th>تاريخ الطلب</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($orders as $order)
+            @if ($orders->isEmpty())
+                <div class="alert alert-info text-center">
+                    لا توجد طلبات حتى الآن.
+                </div>
+            @else
+                <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                        <thead class="table-light">
                             <tr>
-                                <td>{{ $order->product_code }}</td>
-                                <td>{{ $order->requested_quantity }}</td>
-                                <td>{{ $order->created_at }}</td>
+                                <th>كود المنتج</th>
+                                <th>الكمية المطلوبة</th>
+                                <th>تاريخ الطلب</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
+                        </thead>
+                        <tbody>
+                            @foreach ($orders as $order)
+                                <tr>
+                                    <td>{{ $order->product_code }}</td>
+                                    <td>{{ $order->requested_quantity }}</td>
+                                    <td>{{ $order->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
     </div>
+@endsection
+
+@section('scripts')
+    <!-- SELECT2 JS -->
+    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
+    @vite('resources/assets/js/select2.js')
+
+    <!-- DATA TABLE JS -->
+    <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+    @vite('resources/assets/js/table-data.js')
 @endsection
