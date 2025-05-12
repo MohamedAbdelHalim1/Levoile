@@ -15,7 +15,7 @@
         <div class="row">
             @foreach($categories as $category)
                 <div class="col-md-3 mb-4">
-                    <a href="{{ route('subcategory.knowledge', $category->id) }}" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none">
                         <div class="card h-100 shadow text-center">
                             <img src="{{ $category->image_url ?? asset('assets/images/comming.png') }}"
                                  class="card-img-top p-2"
