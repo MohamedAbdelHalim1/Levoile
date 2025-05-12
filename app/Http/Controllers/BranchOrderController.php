@@ -161,7 +161,19 @@ class BranchOrderController extends Controller
         $orders = DB::table('branch_order_items as boi')
             ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
             ->where('boi.user_id', $userId)
-            ->select('pk.product_code', 'boi.requested_quantity', 'boi.created_at')
+            ->select(
+                'pk.product_code', 
+                'pk.description',
+                'pk.image_url',
+                'pk.website_description',
+                'pk.unit_price',
+                'pk.gomla',
+                'pk.item_family_code',
+                'pk.season_code',
+                'pk.color',
+                'pk.size',
+                'boi.requested_quantity', 
+                'boi.created_at')
             ->orderByDesc('boi.created_at')
             ->get();
 

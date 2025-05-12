@@ -10,13 +10,22 @@
                     لا توجد طلبات حتى الآن.
                 </div>
             @else
-
-            @dd($orders)
+                @dd($orders)
                 <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
                             <tr>
+                                <th>الصورة</th>
                                 <th>كود المنتج</th>
+                                <th>الوصف</th>
+                                <th>الوصف للموقع</th>
+                                <th>اللون</th>
+                                <th>المقاس</th>
+                                <th>الخامة</th>
+                                <th>الكود العائلي</th>
+                                <th>الكود الموسمي</th>
+                                <th>سعر الوحدة</th>
+                                <th>سعر الجملة</th>
                                 <th>الكمية المطلوبة</th>
                                 <th>تاريخ الطلب</th>
                             </tr>
@@ -24,13 +33,27 @@
                         <tbody>
                             @foreach ($orders as $order)
                                 <tr>
+                                    <td>
+                                        <img src="{{ $order->image_url ?? asset('assets/images/comming.png') }}"
+                                            alt="صورة المنتج" style="width: 70px; height: 70px; object-fit: contain;">
+                                    </td>
                                     <td>{{ $order->product_code }}</td>
+                                    <td>{{ $order->description }}</td>
+                                    <td>{{ $order->website_description }}</td>
+                                    <td>{{ $order->color }}</td>
+                                    <td>{{ $order->size }}</td>
+                                    <td>{{ $order->material ?? 'لا يوجد' }}</td>
+                                    <td>{{ $order->item_family_code }}</td>
+                                    <td>{{ $order->season_code }}</td>
+                                    <td>{{ $order->unit_price }}</td>
+                                    <td>{{ $order->gomla }}</td>
                                     <td>{{ $order->requested_quantity }}</td>
                                     <td>{{ $order->created_at }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+
                 </div>
             @endif
         </div>
