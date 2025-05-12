@@ -92,6 +92,12 @@ class BranchOrderController extends Controller
 
         $productCodes = $paginatedProductCodes->pluck('product_code');
 
+        // ✅ كل الفاريانتس المطلوبة قبل كده
+        $requestedItems = DB::table('branch_order_items')
+            ->where('user_id', $userId)
+            ->pluck('product_knowledge_id')
+            ->toArray();
+
         $allVariants = DB::table('product_knowledge')
             ->where('subcategory_knowledge_id', $subcategoryId)
             ->whereIn('product_code', $productCodes)
@@ -120,7 +126,8 @@ class BranchOrderController extends Controller
             'subcategory' => $subcategory,
             'products' => $allVariants,
             'pagination' => $paginatedProductCodes,
-            'search' => $search
+            'search' => $search,
+            'requestedItems' => $requestedItems,
         ]);
     }
 

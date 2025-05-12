@@ -93,6 +93,12 @@
                                     <small
                                         class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                 </div>
+                                {{-- ✅ علامة الطلب --}}
+                                @if (in_array($variant->id, $requestedItems))
+                                    <div class="text-center mt-1">
+                                        <span class="badge bg-success">تم الطلب</span>
+                                    </div>
+                                @endif
                             </div>
 @endforeach
 
@@ -246,6 +252,8 @@
 
 @section('scripts')
     <script>
+        const requestedItems = @json($requestedItems);
+
         document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
             card.addEventListener('click', () => {
                 const variants = JSON.parse(card.dataset.variants);
@@ -273,6 +281,8 @@
                     </div>
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
+                ${requestedItems.includes(variant.id) ? '<span class="badge bg-success mt-2">✅ تم الطلب</span>' : ''}
+
             `;
 
                     container.appendChild(box);
