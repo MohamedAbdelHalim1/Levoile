@@ -10,7 +10,6 @@
                     لا توجد طلبات حتى الآن.
                 </div>
             @else
-                @dd($orders)
                 <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
