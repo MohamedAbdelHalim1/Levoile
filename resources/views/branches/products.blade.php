@@ -95,26 +95,29 @@
                 {{ $pagination->links() }}
             </div>
         </div>
-
-        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row justify-content-center">
-                            
+        <form method="POST" action="{{ route('branch.orders.save.items') }}">
+            @csrf
+            <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fe fe-save"></i> إرسال الطلب
+                        </button>
                     </div>
-                    <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fe fe-save"></i> إرسال الطلب
-                    </button>
-                </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
+
     </section>
 
     <style>
@@ -261,3 +264,4 @@
     </script>
 @endsection
 
+)
