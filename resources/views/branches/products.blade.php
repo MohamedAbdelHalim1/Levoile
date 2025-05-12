@@ -224,6 +224,12 @@
             width: 28%;
         }
 
+        .alert.fade {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+
         @media screen & (max-width: 1000px) {
             .last-ui .sub-img {
                 width: 40%;
@@ -274,6 +280,16 @@
             });
         });
     </script>
-@endsection
 
-)
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const alerts = document.querySelectorAll('.alert');
+                    alerts.forEach(alert => {
+                        setTimeout(() => {
+                            alert.classList.add('fade');
+                            setTimeout(() => alert.remove(), 500); // Remove from DOM
+                        }, 3000); // بعد 3 ثواني
+                    });
+                });
+            </script>
+@endsection
