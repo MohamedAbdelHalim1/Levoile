@@ -2,6 +2,14 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/bootstrap.css') }}">
+    <style>
+        .ms-auto{
+            margin-left: 0px !important;
+        }
+        .slide .side-menu__item{
+            text-decoration-line: none !important;
+        }
+    </style>
 @endsection
 @section('content')
 
