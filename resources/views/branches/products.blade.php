@@ -261,7 +261,7 @@
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
                     </div>
-                    <div class="position-absolute bottom-0 end-0 me-1 mb-1">
+                    <div class="position-absolute bottom-0 end-0 me-1 mb-1 mt-2">
                         <input type="number" min="0" name="quantities[${variant.id}]" class="form-control form-control-sm mt-2" placeholder="الكمية المطلوبة">
                     </div>
                 `;
