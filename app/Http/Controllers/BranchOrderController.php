@@ -194,47 +194,36 @@ class BranchOrderController extends Controller
     {
         $user = auth()->user();
 
+        // إذا كان أدمن
         if ($user->role_id == 1) {
-            $orders = DB::table('branch_order_items as boi')
-                ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
-                ->join('users as u', 'boi.user_id', '=', 'u.id')
-                ->select(
-                    'pk.product_code',
-                    'pk.description',
-                    'pk.image_url',
-                    'pk.website_description',
-                    'pk.unit_price',
-                    'pk.gomla',
-                    'pk.item_family_code',
-                    'pk.season_code',
-                    'pk.color',
-                    'pk.size',
-                    'boi.requested_quantity',
-                    'boi.created_at',
-                    'u.name as user_name'
-                )
-                ->orderByDesc('boi.created_at')
+            $orders = \App\Models\BranchOrderItem::with(['product', 'user'])
+                ->orderByDesc('created_at')
                 ->get();
 
-            return view('branches.orders', compact('orders'));
+            return view('branches.orders', [
+                'orders' => $orders,
+                'groupedOrders' => [],
+                'detailedOrders' => [],
+            ]);
         }
 
-        // For role_id == 12
-        $orders = \App\Models\BranchOrderItem::where('user_id', $user->id)
-            ->with('product')
+        // إذا كان يوزر role_id = 12
+        $items = \App\Models\BranchOrderItem::with('product')
+            ->where('user_id', $user->id)
             ->orderByDesc('created_at')
-            ->get()
-            ->groupBy(function ($item) {
-                return $item->created_at->format('Y-m-d');
-            });
+            ->get();
+
+        $grouped = $items->groupBy(function ($item) {
+            return $item->created_at->format('Y-m-d');
+        });
 
         $groupedOrders = [];
         $detailedOrders = [];
 
-        foreach ($orders as $date => $items) {
-            $orderId = $items->first()->open_order_id ?? rand(1000, 9999); // temporary fallback
+        foreach ($grouped as $date => $items) {
+            $orderId = $items->first()->open_order_id ?? rand(1000, 9999); // fallback
 
-            $groupedOrders[] = (object) [
+            $groupedOrders[] = (object)[
                 'date' => $date,
                 'product_count' => $items->count(),
                 'total_quantity' => $items->sum('requested_quantity'),
@@ -251,9 +240,9 @@ class BranchOrderController extends Controller
         }
 
         return view('branches.orders', [
-            'orders' => $user->role_id == 1 ? $orders : collect(), // دا علشان ما يضربش الـ if في الـ blade
-            'groupedOrders' => $user->role_id != 1 ? $groupedOrders : [],
-            'detailedOrders' => $user->role_id != 1 ? $detailedOrders : [],
+            'orders' => collect(), // عشان الـ if في الـ blade
+            'groupedOrders' => $groupedOrders,
+            'detailedOrders' => $detailedOrders,
         ]);
     }
 }
