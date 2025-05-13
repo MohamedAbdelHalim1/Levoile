@@ -1,24 +1,22 @@
-
-			<div class="app-header header sticky">
-					<div class="container-fluid main-container">
-						<div class="d-flex">
-							<a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar"
-								href="javascript:void(0)"></a>
-							<!-- sidebar-toggle-->
-							<a class="logo-horizontal" href="{{route('dashboard')}}">
-								<img src="{{asset('build/assets/images/brand/logo.png')}}" class="header-brand-img main-logo"
-									alt="Sparic logo">
-								<img src="{{asset('build/assets/images/brand/logo-light.png')}}" class="header-brand-img darklogo"
-									alt="Sparic logo">
-							</a>
-							<!-- LOGO -->
-							{{-- <div class="main-header-center ms-3 d-none d-lg-block">
+<div class="app-header header sticky">
+    <div class="container-fluid main-container">
+        <div class="d-flex">
+            <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0)"></a>
+            <!-- sidebar-toggle-->
+            <a class="logo-horizontal" href="{{ route('dashboard') }}">
+                <img src="{{ asset('build/assets/images/brand/logo.png') }}" class="header-brand-img main-logo"
+                    alt="Sparic logo">
+                <img src="{{ asset('build/assets/images/brand/logo-light.png') }}" class="header-brand-img darklogo"
+                    alt="Sparic logo">
+            </a>
+            <!-- LOGO -->
+            {{-- <div class="main-header-center ms-3 d-none d-lg-block">
 								<input type="text" class="form-control" id="typehead" placeholder="Search for results..."
 									autocomplete="off">
 								<button class="btn px-2"><i class="fe fe-search" aria-hidden="true"></i></button>
 							</div> --}}
-							<div class="d-flex order-lg-2 ms-auto header-right-icons">
-								{{-- <div class="dropdown d-none">
+            <div class="d-flex order-lg-2 ms-auto header-right-icons">
+                {{-- <div class="dropdown d-none">
 									<a href="javascript:void(0)" class="nav-link icon" data-bs-toggle="dropdown">
 										<i class="fe fe-search"></i>
 									</a>
@@ -31,17 +29,16 @@
 										</div>
 									</div>
 								</div> --}}
-								<!-- SEARCH -->
-								<button class="navbar-toggler navresponsive-toggler d-lg-none ms-auto" type="button"
-									data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
-									aria-controls="navbarSupportedContent-4" aria-expanded="false"
-									aria-label="Toggle navigation">
-									<span class="navbar-toggler-icon fe fe-more-vertical"></span>
-								</button>
-								<div class="navbar navbar-collapse responsive-navbar p-0">
-									<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-										<div class="d-flex order-lg-2">
-											{{-- <div class="dropdown d-lg-none d-flex">
+                <!-- SEARCH -->
+                <button class="navbar-toggler navresponsive-toggler d-lg-none ms-auto" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
+                    aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon fe fe-more-vertical"></span>
+                </button>
+                <div class="navbar navbar-collapse responsive-navbar p-0">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+                        <div class="d-flex order-lg-2">
+                            {{-- <div class="dropdown d-lg-none d-flex">
 												<a href="javascript:void(0)" class="nav-link icon"
 													data-bs-toggle="dropdown">
 													<i class="fe fe-search"></i>
@@ -69,26 +66,42 @@
 													<a class="dropdown-item d-flex align-items-center" href="javascript:void(0);"> <img src="{{asset('build/assets/images/flag-images/2.png')}}" alt="img" class=" me-2 country language-img"> <span class="fs-13 text-wrap text-dark fw-semibold"> Canada</span> </a>
 												</div>
 											</div> --}}
-											<!-- COUNTRY -->
+                            <!-- COUNTRY -->
 
-											<!-- SIDE-MENU -->
-											<div class="dropdown d-flex profile-1">
-												<a href="javascript:void(0)" data-bs-toggle="dropdown"
-													class="nav-link leading-none d-flex">
-													<img src="{{asset('images/products/logo.png')}}" alt="profile-user"
-														class="avatar  profile-user brround cover-image">
-												</a>
-												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" style="left:auto !important;right: 0px !important;"
-													data-bs-popper="none">
-													<div class="drop-heading">
-														<div class="text-center">
-															<h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
-														</div>
-													</div>
-													<a class="dropdown-item text-dark fw-semibold border-top" href="{{url('profile')}}">
-														<i class="dropdown-icon fe fe-user"></i> الحساب
-													</a>
-													{{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
+
+                            @php
+                                $openOrder = \App\Models\OpenOrder::where('user_id', auth()->id())
+                                    ->where('is_opened', 1)
+                                    ->first();
+                            @endphp
+
+                            @if ($openOrder)
+                                <button type="button" class="btn btn-danger ms-3" data-bs-toggle="modal"
+                                    data-bs-target="#closeOrderModal">
+                                    <i class="fe fe-x-circle"></i> غلق الطلب
+                                </button>
+                            @endif
+
+
+                            <!-- SIDE-MENU -->
+                            <div class="dropdown d-flex profile-1">
+                                <a href="javascript:void(0)" data-bs-toggle="dropdown"
+                                    class="nav-link leading-none d-flex">
+                                    <img src="{{ asset('images/products/logo.png') }}" alt="profile-user"
+                                        class="avatar  profile-user brround cover-image">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+                                    style="left:auto !important;right: 0px !important;" data-bs-popper="none">
+                                    <div class="drop-heading">
+                                        <div class="text-center">
+                                            <h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
+                                        </div>
+                                    </div>
+                                    <a class="dropdown-item text-dark fw-semibold border-top"
+                                        href="{{ url('profile') }}">
+                                        <i class="dropdown-icon fe fe-user"></i> الحساب
+                                    </a>
+                                    {{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
 														<i class="dropdown-icon fe fe-mail"></i> Inbox
 														<span class="badge bg-success float-end">3</span>
 													</a>
@@ -99,24 +112,26 @@
 														<i class="dropdown-icon fe fe-alert-triangle"></i>
 														Support ?
 													</a> --}}
-													<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-														@csrf
-													</form>
-													
-													<a class="dropdown-item text-dark fw-semibold" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-														<i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
-													</a>
-												</div>
-											</div>
-											<!-- SIDE-MENU -->
-											<div class="d-flex country">
-												<a class="nav-link icon theme-layout nav-link-bg layout-setting">
-													<span class="dark-layout mt-1"><i class="ri-moon-clear-line"></i></span>
-													<span class="light-layout mt-1"><i class="ri-sun-line"></i></span>
-												</a>
-											</div>
-											<!-- Theme-Layout -->
-											{{-- <div class="dropdown d-flex shopping-cart">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                    </form>
+
+                                    <a class="dropdown-item text-dark fw-semibold" href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- SIDE-MENU -->
+                            <div class="d-flex country">
+                                <a class="nav-link icon theme-layout nav-link-bg layout-setting">
+                                    <span class="dark-layout mt-1"><i class="ri-moon-clear-line"></i></span>
+                                    <span class="light-layout mt-1"><i class="ri-sun-line"></i></span>
+                                </a>
+                            </div>
+                            <!-- Theme-Layout -->
+                            {{-- <div class="dropdown d-flex shopping-cart">
 												<a class="nav-link icon text-center" data-bs-toggle="dropdown">
 													<i class="ri-shopping-bag-line"></i><span
 														class="badge bg-secondary header-badge">4</span>
@@ -226,14 +241,14 @@
 													</div>
 												</div>
 											</div> --}}
-											<!-- CART -->
-											<div class="dropdown d-flex">
-												<a class="nav-link icon full-screen-link" id="fullscreen-button">
-													<i class="ri-fullscreen-exit-line fullscreen-button"></i>
-												</a>
-											</div>
-											<!-- FULL-SCREEN -->
-											{{-- <div class="dropdown d-flex notifications nav-link-notify">
+                            <!-- CART -->
+                            <div class="dropdown d-flex">
+                                <a class="nav-link icon full-screen-link" id="fullscreen-button">
+                                    <i class="ri-fullscreen-exit-line fullscreen-button"></i>
+                                </a>
+                            </div>
+                            <!-- FULL-SCREEN -->
+                            {{-- <div class="dropdown d-flex notifications nav-link-notify">
 												<a class="nav-link icon" data-bs-toggle="dropdown"><i
 														class="ri-notification-line"></i><span class=" pulse"></span>
 												</a>
@@ -307,8 +322,8 @@
 													</div>
 												</div>
 											</div> --}}
-											<!-- NOTIFICATIONS -->
-											{{-- <div class="dropdown d-flex message">
+                            <!-- NOTIFICATIONS -->
+                            {{-- <div class="dropdown d-flex message">
 												<a class="nav-link icon text-center" data-bs-toggle="dropdown">
 													<i class="ri-chat-1-line"></i><span class="pulse-danger"></span>
 												</a>
@@ -393,18 +408,74 @@
 													</div>
 												</div>
 											</div> --}}
-											<!-- MESSAGE-BOX -->
-											{{-- <div class="dropdown d-flex header-settings">
+                            <!-- MESSAGE-BOX -->
+                            {{-- <div class="dropdown d-flex header-settings">
 												<a class="nav-link icon siderbar-link" data-bs-toggle="sidebar-right"
 													data-bs-target=".sidebar-right">
 													<i class="ri-menu-fold-fill"></i>
 												</a>
 											</div> --}}
-											
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if ($openOrder)
+    <div class="modal fade" id="closeOrderModal" tabindex="-1" aria-labelledby="closeOrderModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <form method="POST" action="{{ route('branch.orders.close.with.note') }}">
+                @csrf
+                <input type="hidden" name="order_id" value="{{ $openOrder->id }}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="closeOrderModalLabel">ملخص الطلب الحالي</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>صورة المنتج</th>
+                                    <th>كود المنتج</th>
+                                    <th>الوصف</th>
+                                    <th>الكمية المطلوبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse (\App\Models\BranchOrderItem::where('open_order_id', $openOrder->id)->with('product')->get() as $item)
+                                    <tr>
+                                        <td><img src="{{ $item->product->image_url ?? asset('assets/images/comming.png') }}"
+                                                width="60"></td>
+                                        <td>{{ $item->product->product_code ?? '-' }}</td>
+                                        <td>{{ $item->product->description ?? '-' }}</td>
+                                        <td>{{ $item->requested_quantity }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">لا توجد منتجات مضافة في هذا
+                                            الطلب</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
+
+                        <div class="mb-3 mt-4">
+                            <label for="notes" class="form-label">ملاحظات</label>
+                            <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">تأكيد وإغلاق الطلب</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endif

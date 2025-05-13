@@ -40,28 +40,27 @@ class BranchOrderController extends Controller
         return redirect()->route('branch.order.categories');
     }
 
-    public function close()
+    public function closeWithNote(Request $request)
     {
-        $userId = Auth::id();
+        $request->validate([
+            'order_id' => 'required|exists:open_orders,id',
+            'notes' => 'nullable|string',
+        ]);
 
-        // نجيب آخر أوردر مفتوح عشان نرجع له العناصر
-        $openOrder = OpenOrder::where('user_id', $userId)
+        $order = OpenOrder::where('id', $request->order_id)
+            ->where('user_id', auth()->id())
             ->where('is_opened', 1)
-            ->latest()
-            ->first();
+            ->firstOrFail();
 
-        if ($openOrder) {
-            $openOrder->update([
-                'is_opened' => 0,
-                'closed_at' => now(),
-            ]);
+        $order->update([
+            'is_opened' => 0,
+            'closed_at' => now(),
+            'notes' => $request->notes,
+        ]);
 
-            // بعد الإغلاق، رجعه لصفحة عرض العناصر اللي كانت في الأوردر ده
-            return redirect()->route('branch.orders.closed.summary', ['orderId' => $openOrder->id]);
-        }
-
-        return redirect()->route('branch.orders.index')->with('error', 'لا يوجد طلب مفتوح حالياً');
+        return redirect()->route('branch.orders.index')->with('success', 'تم غلق الطلب بنجاح');
     }
+
 
     public function closedSummary($orderId)
     {

@@ -4,12 +4,7 @@
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4>الاقسام الفرعية - {{ $category->name }}</h4>
-            <form method="POST" action="{{ route('branch.orders.close') }}">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger">
-                    <i class="fe fe-x"></i> غلق الطلب
-                </button>
-            </form>
+            
         </div>
 
         <div class="row">
