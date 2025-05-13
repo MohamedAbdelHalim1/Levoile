@@ -250,6 +250,10 @@ class BranchOrderController extends Controller
             });
         }
 
-        return view('branches.orders', compact('groupedOrders', 'detailedOrders'));
+        return view('branches.orders', [
+            'orders' => $user->role_id == 1 ? $orders : collect(), // دا علشان ما يضربش الـ if في الـ blade
+            'groupedOrders' => $user->role_id != 1 ? $groupedOrders : [],
+            'detailedOrders' => $user->role_id != 1 ? $detailedOrders : [],
+        ]);
     }
 }
