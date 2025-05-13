@@ -192,28 +192,64 @@ class BranchOrderController extends Controller
 
     public function allUserOrders()
     {
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        $orders = DB::table('branch_order_items as boi')
-            ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
-            ->where('boi.user_id', $userId)
-            ->select(
-                'pk.product_code',
-                'pk.description',
-                'pk.image_url',
-                'pk.website_description',
-                'pk.unit_price',
-                'pk.gomla',
-                'pk.item_family_code',
-                'pk.season_code',
-                'pk.color',
-                'pk.size',
-                'boi.requested_quantity',
-                'boi.created_at'
-            )
-            ->orderByDesc('boi.created_at')
-            ->get();
+        if ($user->role_id == 1) {
+            $orders = DB::table('branch_order_items as boi')
+                ->join('product_knowledge as pk', 'boi.product_knowledge_id', '=', 'pk.id')
+                ->join('users as u', 'boi.user_id', '=', 'u.id')
+                ->select(
+                    'pk.product_code',
+                    'pk.description',
+                    'pk.image_url',
+                    'pk.website_description',
+                    'pk.unit_price',
+                    'pk.gomla',
+                    'pk.item_family_code',
+                    'pk.season_code',
+                    'pk.color',
+                    'pk.size',
+                    'boi.requested_quantity',
+                    'boi.created_at',
+                    'u.name as user_name'
+                )
+                ->orderByDesc('boi.created_at')
+                ->get();
 
-        return view('branches.orders', compact('orders'));
+            return view('branches.orders', compact('orders'));
+        }
+
+        // For role_id == 12
+        $orders = \App\Models\BranchOrderItem::where('user_id', $user->id)
+            ->with('product')
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->created_at->format('Y-m-d');
+            });
+
+        $groupedOrders = [];
+        $detailedOrders = [];
+
+        foreach ($orders as $date => $items) {
+            $orderId = $items->first()->open_order_id ?? rand(1000, 9999); // temporary fallback
+
+            $groupedOrders[] = (object) [
+                'date' => $date,
+                'product_count' => $items->count(),
+                'total_quantity' => $items->sum('requested_quantity'),
+                'order_id' => $orderId,
+            ];
+
+            $detailedOrders[$orderId] = $items->map(function ($item) {
+                return (object)[
+                    'product_code' => $item->product->product_code ?? '-',
+                    'description' => $item->product->description ?? '-',
+                    'requested_quantity' => $item->requested_quantity,
+                ];
+            });
+        }
+
+        return view('branches.orders', compact('groupedOrders', 'detailedOrders'));
     }
 }

@@ -10,7 +10,7 @@ class OpenOrder extends Model
     protected $fillable = [
         'user_id',
         'is_opened',
-        'is_closed',
+        'closed_at',
         'notes',
     ];
 
