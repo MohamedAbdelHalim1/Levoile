@@ -194,7 +194,7 @@ class BranchOrderController extends Controller
     {
         $user = auth()->user();
 
-        // إذا كان أدمن
+        // الأدمن يشوف كل حاجه
         if ($user->role_id == 1) {
             $orders = \App\Models\BranchOrderItem::with(['product', 'user'])
                 ->orderByDesc('created_at')
@@ -202,35 +202,31 @@ class BranchOrderController extends Controller
 
             return view('branches.orders', [
                 'orders' => $orders,
-                'groupedOrders' => [],
+                'groupedOrders' => collect(),
                 'detailedOrders' => [],
             ]);
         }
 
-        // إذا كان يوزر role_id = 12
+        // اليوزر العادي يشوف أوردراته المجموعة حسب الـ open_order_id
         $items = \App\Models\BranchOrderItem::with('product')
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->get();
 
-        $grouped = $items->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
-        });
+        $grouped = $items->groupBy('open_order_id');
 
-        $groupedOrders = [];
+        $groupedOrders = collect();
         $detailedOrders = [];
 
-        foreach ($grouped as $date => $items) {
-            $orderId = $items->first()->open_order_id ?? rand(1000, 9999); // fallback
-
-            $groupedOrders[] = (object)[
-                'date' => $date,
+        foreach ($grouped as $openOrderId => $items) {
+            $groupedOrders->push((object)[
+                'open_order_id' => $openOrderId,
+                'date' => $items->first()->created_at->format('Y-m-d'),
                 'product_count' => $items->count(),
                 'total_quantity' => $items->sum('requested_quantity'),
-                'order_id' => $orderId,
-            ];
+            ]);
 
-            $detailedOrders[$orderId] = $items->map(function ($item) {
+            $detailedOrders[$openOrderId] = $items->map(function ($item) {
                 return (object)[
                     'product_code' => $item->product->product_code ?? '-',
                     'description' => $item->product->description ?? '-',
@@ -240,7 +236,7 @@ class BranchOrderController extends Controller
         }
 
         return view('branches.orders', [
-            'orders' => collect(), // عشان الـ if في الـ blade
+            'orders' => collect(), // الأدمن بس اللي يستخدمه
             'groupedOrders' => $groupedOrders,
             'detailedOrders' => $detailedOrders,
         ]);

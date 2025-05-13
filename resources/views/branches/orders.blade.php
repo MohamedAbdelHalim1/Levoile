@@ -88,53 +88,52 @@
                             </thead>
                             <tbody>
                                 @foreach ($groupedOrders as $order)
-                                    <tr>
-                                        <td>{{ $order->date }}</td>
-                                        <td>{{ $order->product_count }}</td>
-                                        <td>{{ $order->total_quantity }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                data-bs-target="#detailsModal{{ $order->order_id }}">
-                                                عرض
-                                            </button>
+                                    <td>{{ $order->date }}</td>
+                                    <td>{{ $order->product_count }}</td>
+                                    <td>{{ $order->total_quantity }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#detailsModal{{ $order->open_order_id }}">
+                                            عرض
+                                        </button>
 
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="detailsModal{{ $order->order_id }}" tabindex="-1"
-                                                aria-labelledby="modalLabel{{ $order->order_id }}" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalLabel{{ $order->order_id }}">
-                                                                تفاصيل الطلب بتاريخ {{ $order->date }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <table class="table table-bordered text-center">
-                                                                <thead>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="detailsModal{{ $order->open_order_id }}" tabindex="-1"
+                                            aria-labelledby="modalLabel{{ $order->open_order_id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">تفاصيل الطلب رقم
+                                                            #{{ $order->open_order_id }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table class="table table-bordered text-center">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>كود المنتج</th>
+                                                                    <th>الوصف</th>
+                                                                    <th>الكمية</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($detailedOrders[$order->open_order_id] as $item)
                                                                     <tr>
-                                                                        <th>كود المنتج</th>
-                                                                        <th>الوصف</th>
-                                                                        <th>الكمية</th>
+                                                                        <td>{{ $item->product_code }}</td>
+                                                                        <td>{{ $item->description }}</td>
+                                                                        <td>{{ $item->requested_quantity }}</td>
                                                                     </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($detailedOrders[$order->order_id] as $item)
-                                                                        <tr>
-                                                                            <td>{{ $item->product_code }}</td>
-                                                                            <td>{{ $item->description }}</td>
-                                                                            <td>{{ $item->requested_quantity }}</td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
                                 @endforeach
+
                             </tbody>
                         </table>
 
