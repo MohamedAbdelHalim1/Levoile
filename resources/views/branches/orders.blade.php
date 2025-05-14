@@ -49,7 +49,6 @@
                                         <td>{{ $order->product->size }}</td>
                                         <td>{{ $order->product->unit_price }}</td>
                                         <td>{{ $order->requested_quantity }}</td>
-                                        <td>{{ $order->created_at }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
