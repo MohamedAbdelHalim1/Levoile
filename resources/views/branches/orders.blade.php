@@ -112,8 +112,6 @@
                                                     <div class="modal-body">
                                                         <input type="file" name="excel_file" accept=".xlsx,.xls"
                                                             class="form-control" required>
-                                                        <p class="mt-2 text-muted">الملف يجب أن يحتوي على عمودين: no_code و
-                                                            الكمية</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">رفع وتحضير</button>
