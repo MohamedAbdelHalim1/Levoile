@@ -59,6 +59,9 @@
                                                                     <th>كود المنتج</th>
                                                                     <th>الوصف</th>
                                                                     <th>الكمية</th>
+                                                                    <th>الكمية المستلمة</th>
+                                                                    <th>الكمية المتبقية</th>
+
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -72,6 +75,8 @@
                                                                         <td>{{ $item->product->product_code ?? '-' }}</td>
                                                                         <td>{{ $item->product->description ?? '-' }}</td>
                                                                         <td>{{ $item->requested_quantity }}</td>
+                                                                        <td>{{ $item->delivered_quantity }}</td>
+                                                                        <td>{{ $item->requested_quantity - $item->delivered_quantity }}</td>
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
@@ -79,6 +84,36 @@
                                                     </div>
 
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- زرار التحضير الجديد -->
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#prepareModal{{ $order->id }}">تحضير</button>
+
+                                        <!-- مودال التحضير -->
+                                        <div class="modal fade" id="prepareModal{{ $order->id }}" tabindex="-1"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-md">
+                                                <form action="{{ route('branch.orders.prepare', $order->id) }}"
+                                                    method="POST" enctype="multipart/form-data" class="modal-content">
+                                                    @csrf
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">رفع ملف التحضير للطلب رقم
+                                                            #{{ $order->id }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="إغلاق"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="file" name="excel_file" accept=".xlsx,.xls"
+                                                            class="form-control" required>
+                                                        <p class="mt-2 text-muted">الملف يجب أن يحتوي على عمودين: no_code و
+                                                            الكمية</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary">رفع وتحضير</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </td>
@@ -92,5 +127,3 @@
         </div>
     </div>
 @endsection
-
-

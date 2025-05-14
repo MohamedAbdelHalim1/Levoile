@@ -217,4 +217,46 @@ class BranchOrderController extends Controller
 
         return view('branches.my-orders', compact('orders'));
     }
+
+
+    public function prepareOrder(Request $request, OpenOrder $order)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
+
+        // تجاهل أول صف (العناوين)
+        array_shift($rows);
+
+        $updates = 0;
+
+        foreach ($rows as $row) {
+            $noCode = $row[0] ?? null;
+            $qty = (int) ($row[1] ?? 0);
+
+            if (!$noCode || $qty <= 0) continue;
+
+            $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
+
+            if ($product) {
+                $item = $order->items()->where('product_knowledge_id', $product->id)->first();
+
+                if ($item) {
+                    $item->update(['delivered_quantity' => $qty]);
+                    $updates++;
+                }
+            }
+        }
+
+        // لو فيه أي حاجه اتحضرت نغيّر الحالة
+        if ($updates > 0) {
+            $order->update(['status' => 'تم التحضير']);
+        }
+
+        return back()->with('success', 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.');
+    }
 }
