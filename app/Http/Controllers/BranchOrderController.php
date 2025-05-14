@@ -203,32 +203,11 @@ class BranchOrderController extends Controller
     {
         $user = auth()->user();
 
-        $openOrders = \App\Models\OpenOrder::with(['items.product'])
+        $orders = \App\Models\OpenOrder::with(['items.product'])
             ->where('user_id', $user->id)
-            ->whereHas('items') // تأكد إن فيه بيانات
             ->orderByDesc('created_at')
             ->get();
 
-        $groupedOrders = collect();
-        $detailedOrders = [];
-
-        foreach ($openOrders as $order) {
-            $groupedOrders->push((object)[
-                'open_order_id' => $order->id,
-                'date' => $order->created_at->format('Y-m-d'),
-                'product_count' => $order->items->count(),
-                'total_quantity' => $order->items->sum('requested_quantity'),
-            ]);
-
-            $detailedOrders[$order->id] = $order->items->map(function ($item) {
-                return (object)[
-                    'product_code' => $item->product->product_code ?? '-',
-                    'description' => $item->product->description ?? '-',
-                    'requested_quantity' => $item->requested_quantity,
-                ];
-            });
-        }
-
-        return view('branches.my-orders', compact('groupedOrders', 'detailedOrders'));
+        return view('branches.my-orders', compact('orders'));
     }
 }

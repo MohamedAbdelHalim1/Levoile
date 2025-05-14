@@ -19,6 +19,7 @@
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
                             <tr>
+                                <th>#</th>
                                 <th>تاريخ الأوردر</th>
                                 <th>عدد المنتجات</th>
                                 <th>الكمية</th>
@@ -26,26 +27,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($groupedOrders as $order)
+                            @foreach ($orders as $order)
                                 <tr>
-                                    <td>{{ $order->date }}</td>
-                                    <td>{{ $order->product_count }}</td>
-                                    <td>{{ $order->total_quantity }}</td>
+                                    <td>{{ $order->id }}</td>
+                                    <td>{{ $order->created_at->format('Y-m-d') }}</td>
+                                    <td>{{ $order->items->count() }}</td>
+                                    <td>{{ $order->items->sum('requested_quantity') }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#detailsModal{{ $order->open_order_id }}">
-                                            عرض
-                                        </button>
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#detailsModal{{ $order->id }}">عرض</button>
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="detailsModal{{ $order->open_order_id }}" tabindex="-1"
-                                            aria-labelledby="modalLabel{{ $order->open_order_id }}" aria-hidden="true">
+                                        <div class="modal fade" id="detailsModal{{ $order->id }}" tabindex="-1"
+                                            aria-labelledby="modalLabel{{ $order->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">
-                                                            تفاصيل الطلب رقم #{{ $order->open_order_id }}
-                                                        </h5>
+                                                        <h5 class="modal-title">تفاصيل الطلب رقم #{{ $order->id }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
@@ -59,10 +57,10 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                @foreach ($detailedOrders[$order->open_order_id] as $item)
+                                                                @foreach ($order->items as $item)
                                                                     <tr>
-                                                                        <td>{{ $item->product_code }}</td>
-                                                                        <td>{{ $item->description }}</td>
+                                                                        <td>{{ $item->product->product_code ?? '-' }}</td>
+                                                                        <td>{{ $item->product->description ?? '-' }}</td>
                                                                         <td>{{ $item->requested_quantity }}</td>
                                                                     </tr>
                                                                 @endforeach
@@ -77,6 +75,7 @@
                             @endforeach
                         </tbody>
                     </table>
+
                 </div>
             @endif
         </div>

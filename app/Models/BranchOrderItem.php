@@ -23,4 +23,9 @@ class BranchOrderItem extends Model
         return $this->belongsTo(ProductKnowledge::class , 'product_knowledge_id');
     }
 
+       public function order()
+    {
+        return $this->belongsTo(OpenOrder::class, 'open_order_id');
+    }
+
 }
