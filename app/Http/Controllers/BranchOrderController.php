@@ -205,7 +205,7 @@ class BranchOrderController extends Controller
 
         $orders = \App\Models\OpenOrder::with(['items.product'])
             ->where('user_id', $user->id)
-            ->orderByDesc('id')
+            ->orderByAsc('created_at')
             ->get();
 
         return view('branches.my-orders', compact('orders'));
