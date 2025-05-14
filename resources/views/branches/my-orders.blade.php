@@ -51,6 +51,7 @@
                                                         <table class="table table-bordered text-center">
                                                             <thead>
                                                                 <tr>
+                                                                    <th>الصورة</th>
                                                                     <th>كود المنتج</th>
                                                                     <th>الوصف</th>
                                                                     <th>الكمية</th>
@@ -59,6 +60,11 @@
                                                             <tbody>
                                                                 @foreach ($order->items as $item)
                                                                     <tr>
+                                                                        <td>
+                                                                            <img src="{{ $item->product->image_url ?? asset('assets/images/comming.png') }}"
+                                                                                alt="صورة المنتج"
+                                                                                style="width: 60px; height: 60px; object-fit: contain;">
+                                                                        </td>
                                                                         <td>{{ $item->product->product_code ?? '-' }}</td>
                                                                         <td>{{ $item->product->description ?? '-' }}</td>
                                                                         <td>{{ $item->requested_quantity }}</td>
@@ -67,6 +73,7 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
