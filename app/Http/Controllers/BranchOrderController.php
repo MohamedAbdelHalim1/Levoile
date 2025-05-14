@@ -188,7 +188,7 @@ class BranchOrderController extends Controller
                 }
             }
 
-            return redirect()->route('branch.orders.history')->with('success', 'تم حفظ الطلب بنجاح');
+            return redirect()->back()->with('success', 'تم حفظ الطلب بنجاح');
         } catch (\Throwable $e) {
             return back()->with('error', 'حدث خطأ أثناء حفظ الطلب: ' . $e->getMessage());
         }
