@@ -17,7 +17,7 @@
             @else
                 <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
-                        <thead class="table-light">
+                        <thead class="table-dark">
                             <tr>
                                 <th>#</th>
                                 <th>المستخدم</th>
@@ -93,34 +93,4 @@
     </div>
 @endsection
 
-@section('scripts')
-    <!-- SELECT2 JS -->
-    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
-    @vite('resources/assets/js/select2.js')
 
-    <!-- DATA TABLE JS -->
-    <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
-    @vite('resources/assets/js/table-data.js')
-
-
-    <script>
-        $(document).ready(function() {
-            $('#file-datatable').DataTable({
-                order: [
-                    [0, 'desc']
-                ] // ← الترتيب حسب عمود رقم 0 (id)
-            });
-        });
-    </script>
-@endsection
