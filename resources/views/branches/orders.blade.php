@@ -25,6 +25,7 @@
                                 <th>تاريخ الأوردر</th>
                                 <th>عدد المنتجات</th>
                                 <th>الكمية</th>
+                                <th>ألملاحظات</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                     <td>{{ $order->created_at->format('Y-m-d') }}</td>
                                     <td>{{ $order->items->count() }}</td>
                                     <td>{{ $order->items->sum('requested_quantity') }}</td>
+                                    <td>{{ $order->notes ?? '-' }}</td>
                                     <td>
                                         <button class="btn btn-info btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#detailsModal{{ $order->id }}">عرض</button>
