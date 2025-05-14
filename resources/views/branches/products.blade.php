@@ -72,6 +72,9 @@
                         </div>
                     </div>
                     <h4>
+                        {{ $parent->no_code }}
+                    </h4>
+                    <h4>
                         {{ $parent->description }}
                     </h4>
                     <p>
