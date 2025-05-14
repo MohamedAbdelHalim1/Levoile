@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="position-absolute top-0 end-0 me-1 mt-1">
                                     <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                        الكمية: {{ $requestedItems[$variant->id]['requested_quantity'] ?? 0 }}
+                                        الكمية: {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
                                     </small>
                                 </div>
                                 <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
