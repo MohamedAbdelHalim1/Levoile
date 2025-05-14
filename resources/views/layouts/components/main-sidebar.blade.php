@@ -81,7 +81,7 @@
                     @endif
 
                     <li class="slide">
-                        <a class="side-menu__item" href="{{ route('branch.orders.history') }}">
+                        <a class="side-menu__item" href="{{ route('branch.orders.my') }}">
                             <i class="side-menu__icon fe fe-file-text"></i>
                             <span class="side-menu__label">الطلبات</span>
                         </a>

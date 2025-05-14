@@ -190,24 +190,19 @@ class BranchOrderController extends Controller
         }
     }
 
-    public function allUserOrders()
+    public function adminOrders()
+    {
+        $orders = \App\Models\BranchOrderItem::with(['product', 'user'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('branches.orders', compact('orders'));
+    }
+
+    public function myOrders()
     {
         $user = auth()->user();
 
-        // الأدمن يشوف كل حاجه
-        if ($user->role_id == 1) {
-            $orders = \App\Models\BranchOrderItem::with(['product', 'user'])
-                ->orderByDesc('created_at')
-                ->get();
-
-            return view('branches.orders', [
-                'orders' => $orders,
-                'groupedOrders' => collect(),
-                'detailedOrders' => [],
-            ]);
-        }
-
-        // اليوزر العادي يشوف أوردراته المجموعة حسب الـ open_order_id
         $items = \App\Models\BranchOrderItem::with('product')
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')
@@ -235,10 +230,6 @@ class BranchOrderController extends Controller
             });
         }
 
-        return view('branches.orders', [
-            'orders' => collect(), // الأدمن بس اللي يستخدمه
-            'groupedOrders' => $groupedOrders,
-            'detailedOrders' => $detailedOrders,
-        ]);
+        return view('branches.my-orders', compact('groupedOrders', 'detailedOrders'));
     }
 }
