@@ -84,8 +84,8 @@
                         {{ $parent->website_description }}
                     </p>
                     <div class="row justify-content-center">
-                        @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
-<div class="sub-color position-relative">
+                        @foreach ($group->whereIn('id', array_keys($requestedItems)) as $variant)
+                            <div class="sub-color position-relative">
                                 <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
                                     class="rounded-1">
                                 <div class="position-absolute top-0 end-0 me-1">
@@ -97,7 +97,7 @@
                                         class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                 </div>
                             </div>
-@endforeach
+                        @endforeach
 
                     </div>
                 </div>
