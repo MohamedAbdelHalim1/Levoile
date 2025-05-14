@@ -10,7 +10,7 @@
             @endif
             <h4 class="mb-4">جميع الطلبات الخاصة بك</h4>
 
-            @if ($groupedOrders->isEmpty())
+            @if (isset($orders) && $orders->isEmpty())
                 <div class="alert alert-info text-center">
                     لا توجد طلبات حتى الآن.
                 </div>
