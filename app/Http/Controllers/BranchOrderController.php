@@ -196,8 +196,11 @@ class BranchOrderController extends Controller
 
     public function adminOrders()
     {
-        $orders = \App\Models\BranchOrderItem::with(['product', 'user', 'order'])
-            ->orderByDesc('created_at')
+        $orders = \App\Models\OpenOrder::with(['items.product', 'items.user'])
+            ->whereHas('user', function ($q) {
+                $q->where('role_id', 12);
+            })
+            ->orderByDesc('id')
             ->get();
 
         return view('branches.orders', compact('orders'));

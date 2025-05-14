@@ -1,65 +1,96 @@
 @extends('layouts.app')
 
 @section('content')
-        <div class="p-2">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                @if (session('success'))
-                    <div class="alert alert-success text-center">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                <h4 class="mb-4">جميع الطلبات </h4>
-
-                @if (isset($orders) && $orders->isEmpty())
-                    <div class="alert alert-info text-center">
-                        لا توجد طلبات حتى الآن.
-                    </div>
-                @else
-                    <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>الصورة</th>
-                                    <th>المستخدم</th>
-                                    <th>الحاله</th>
-                                    <th>كود المنتج</th>
-                                    <th>الوصف</th>
-                                    <th>الوصف للموقع</th>
-                                    <th>اسم الجملة</th>
-                                    <th>اللون</th>
-                                    <th>المقاس</th>
-                                    <th>سعر الوحدة</th>
-                                    <th>الكمية المطلوبة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($orders as $order)
-                                    <tr>
-                                        <td>
-                                            <img src="{{ $order->image_url ?? asset('assets/images/comming.png') }}"
-                                                alt="صورة المنتج" style="width: 100px; height: 100px; object-fit: contain;">
-                                        </td>
-                                        <td>{{ $order->user->name }}</td>
-                                        <td><span class="badge bg-success">{{ $order->order->status }}</span></td>
-                                        <td>{{ $order->product->product_code }}</td>
-                                        <td>{{ $order->product->description }}</td>
-                                        <td>{{ $order->product->website_description }}</td>
-                                        <td>{{ $order->product->gomla }}</td>
-                                        <td>{{ $order->product->color }}</td>
-                                        <td>{{ $order->product->size }}</td>
-                                        <td>{{ $order->product->unit_price }}</td>
-                                        <td>{{ $order->requested_quantity }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
-                @endif
+<div class="p-2">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        @if (session('success'))
+            <div class="alert alert-success text-center">
+                {{ session('success') }}
             </div>
-        </div>
-  
+        @endif
+        <h4 class="mb-4">جميع الطلبات للمستخدمين</h4>
 
+        @if ($orders->isEmpty())
+            <div class="alert alert-info text-center">
+                لا توجد طلبات حتى الآن.
+            </div>
+        @else
+            <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>المستخدم</th>
+                            <th>الحالة</th>
+                            <th>تاريخ الأوردر</th>
+                            <th>عدد المنتجات</th>
+                            <th>الكمية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                            <tr>
+                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->user->name ?? '-' }}</td>
+                                <td><span class="badge bg-success">{{ $order->status }}</span></td>
+                                <td>{{ $order->created_at->format('Y-m-d') }}</td>
+                                <td>{{ $order->items->count() }}</td>
+                                <td>{{ $order->items->sum('requested_quantity') }}</td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#detailsModal{{ $order->id }}">عرض</button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="detailsModal{{ $order->id }}" tabindex="-1"
+                                        aria-labelledby="modalLabel{{ $order->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">تفاصيل الطلب رقم #{{ $order->id }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-bordered text-center">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>الصورة</th>
+                                                                <th>كود المنتج</th>
+                                                                <th>الوصف</th>
+                                                                <th>الكمية</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($order->items as $item)
+                                                                <tr>
+                                                                    <td>
+                                                                        <img src="{{ $item->product->image_url ?? asset('assets/images/comming.png') }}"
+                                                                            alt="صورة المنتج"
+                                                                            style="width: 60px; height: 60px; object-fit: contain;">
+                                                                    </td>
+                                                                    <td>{{ $item->product->product_code ?? '-' }}</td>
+                                                                    <td>{{ $item->product->description ?? '-' }}</td>
+                                                                    <td>{{ $item->requested_quantity }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        @endif
+    </div>
+</div>
 @endsection
 
 @section('scripts')
