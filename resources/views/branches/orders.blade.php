@@ -76,7 +76,12 @@
                                                                         <td>{{ $item->product->description ?? '-' }}</td>
                                                                         <td>{{ $item->requested_quantity }}</td>
                                                                         <td>{{ $item->delivered_quantity }}</td>
-                                                                        <td>{{ $item->requested_quantity - $item->delivered_quantity }}</td>
+                                                                        @if ($item->delivered_quantity != 0)
+                                                                            <td>{{ $item->requested_quantity - $item->delivered_quantity }}
+                                                                            </td>
+                                                                        @else
+                                                                            <td>-</td>
+                                                                        @endif
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>
