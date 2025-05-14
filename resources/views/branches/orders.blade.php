@@ -36,16 +36,16 @@
                                     <tr>
                                         <td>
                                             <img src="{{ $order->image_url ?? asset('assets/images/comming.png') }}"
-                                                alt="صورة المنتج" style="width: 70px; height: 70px; object-fit: contain;">
+                                                alt="صورة المنتج" style="width: 100px; height: 100px; object-fit: contain;">
                                         </td>
                                         <td>{{ $order->user->name }}</td>
-                                        <td>{{ $order->product_code }}</td>
-                                        <td>{{ $order->description }}</td>
-                                        <td>{{ $order->website_description }}</td>
-                                        <td>{{ $order->gomla }}</td>
-                                        <td>{{ $order->color }}</td>
-                                        <td>{{ $order->size }}</td>
-                                        <td>{{ $order->unit_price }}</td>
+                                        <td>{{ $order->product->product_code }}</td>
+                                        <td>{{ $order->product->description }}</td>
+                                        <td>{{ $order->product->website_description }}</td>
+                                        <td>{{ $order->product->gomla }}</td>
+                                        <td>{{ $order->product->color }}</td>
+                                        <td>{{ $order->product->size }}</td>
+                                        <td>{{ $order->product->unit_price }}</td>
                                         <td>{{ $order->requested_quantity }}</td>
                                         <td>{{ $order->created_at }}</td>
                                     </tr>
