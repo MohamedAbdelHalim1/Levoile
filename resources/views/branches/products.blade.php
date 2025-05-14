@@ -59,8 +59,7 @@
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small
-                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
                                 colors</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
@@ -68,7 +67,8 @@
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه' }}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
+                            <small
+                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
                         </div>
                     </div>
                     <h4>
@@ -92,6 +92,11 @@
                                     <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
                                         class="icon-mark">
                                 </div>
+                                <div class="position-absolute top-0 end-0 me-1 mt-1">
+                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                        الكمية: {{ $requestedItems[$variant->id]['requested_quantity'] ?? 0 }}
+                                    </small>
+                                </div>
                                 <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
                                     <small
                                         class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
@@ -105,7 +110,7 @@
                 <div class="col-12">
                     <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
                 </div>
-@endforelse
+            @endforelse
             <div class="d-flex justify-content-center mt-4">
                 {{ $pagination->links() }}
             </div>
@@ -120,14 +125,14 @@
                         </div>
                         <div class="modal-body">
                             <div class="row justify-content-center">
-                                
+
                             </div>
                         </div>
                         <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fe fe-save"></i> إرسال الطلب
-                        </button>
-                    </div>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fe fe-save"></i> إرسال الطلب
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -279,10 +284,10 @@
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                 ${requestedItems[variant.id] ? `
-                    <span class="badge bg-success mt-2">
-                        ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
-                    </span>
-                ` : ''}
+                            <span class="badge bg-success mt-2">
+                                ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
+                            </span>
+                        ` : ''}
 
             `;
 
@@ -292,15 +297,15 @@
         });
     </script>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const alerts = document.querySelectorAll('.alert');
-                    alerts.forEach(alert => {
-                        setTimeout(() => {
-                            alert.classList.add('fade');
-                            setTimeout(() => alert.remove(), 500); // Remove from DOM
-                        }, 3000); // بعد 3 ثواني
-                    });
-                });
-            </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 500); // Remove from DOM
+                }, 3000); // بعد 3 ثواني
+            });
+        });
+    </script>
 @endsection
