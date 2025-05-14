@@ -40,7 +40,7 @@
                                                 alt="صورة المنتج" style="width: 100px; height: 100px; object-fit: contain;">
                                         </td>
                                         <td>{{ $order->user->name }}</td>
-                                        <td><span class="badge bg-success">{{ $order->status }}</span></td>
+                                        <td><span class="badge bg-success">{{ $order->order->status }}</span></td>
                                         <td>{{ $order->product->product_code }}</td>
                                         <td>{{ $order->product->description }}</td>
                                         <td>{{ $order->product->website_description }}</td>

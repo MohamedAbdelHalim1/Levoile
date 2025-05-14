@@ -13,6 +13,7 @@ class OpenOrder extends Model
         'is_opened',
         'closed_at',
         'notes',
+        'status',
     ];
 
     public function user()
