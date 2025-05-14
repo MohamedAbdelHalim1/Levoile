@@ -48,17 +48,20 @@
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
                             <small
-                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
+                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
+                                colors</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه' }}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                colors</small>
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
                         </div>
                     </div>
+                    <h4>
+                        {{ $parent->no_code }}
+                    </h4>
                     <h4>
                         {{ $parent->description }}
                     </h4>
