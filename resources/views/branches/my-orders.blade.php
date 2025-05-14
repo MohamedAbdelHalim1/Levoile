@@ -20,6 +20,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
+                                <th>الحالة</th>
                                 <th>تاريخ الأوردر</th>
                                 <th>عدد المنتجات</th>
                                 <th>الكمية</th>
@@ -30,6 +31,7 @@
                             @foreach ($orders as $order)
                                 <tr>
                                     <td>{{ $order->id }}</td>
+                                    <td><span class="badge bg-success">{{ $order->status }}</span></td>
                                     <td>{{ $order->created_at->format('Y-m-d') }}</td>
                                     <td>{{ $order->items->count() }}</td>
                                     <td>{{ $order->items->sum('requested_quantity') }}</td>

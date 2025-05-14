@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>الصورة</th>
                                     <th>المستخدم</th>
+                                    <th>الحاله</th>
                                     <th>كود المنتج</th>
                                     <th>الوصف</th>
                                     <th>الوصف للموقع</th>
@@ -39,6 +40,7 @@
                                                 alt="صورة المنتج" style="width: 100px; height: 100px; object-fit: contain;">
                                         </td>
                                         <td>{{ $order->user->name }}</td>
+                                        <td><span class="badge bg-success">{{ $order->status }}</span></td>
                                         <td>{{ $order->product->product_code }}</td>
                                         <td>{{ $order->product->description }}</td>
                                         <td>{{ $order->product->website_description }}</td>
