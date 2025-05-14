@@ -278,7 +278,11 @@
                     </div>
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
-                ${requestedItems.includes(variant.id) ? '<span class="badge bg-success mt-2">✅ تم الطلب</span>' : ''}
+                ${requestedItems[variant.id] ? `
+                    <span class="badge bg-success mt-2">
+                        ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
+                    </span>
+                ` : ''}
 
             `;
 

@@ -119,10 +119,14 @@ class BranchOrderController extends Controller
 
         $userId = Auth::id();
         // ✅ كل الفاريانتس المطلوبة قبل كده
-        $requestedItems = DB::table('branch_order_items')
-            ->where('user_id', $userId)
-            ->pluck('product_knowledge_id')
-            ->toArray();
+        $requestedItems = DB::table('branch_order_items as boi')
+            ->join('open_orders as oo', 'boi.open_order_id', '=', 'oo.id')
+            ->where('boi.user_id', $userId)
+            ->whereNull('oo.closed_at') // ✅ بس المفتوحين
+            ->select('boi.product_knowledge_id', 'boi.requested_quantity')
+            ->get()
+            ->keyBy('product_knowledge_id');
+
 
         $allVariants = DB::table('product_knowledge')
             ->where('subcategory_knowledge_id', $subcategoryId)
@@ -153,7 +157,7 @@ class BranchOrderController extends Controller
             'products' => $allVariants,
             'pagination' => $paginatedProductCodes,
             'search' => $search,
-            'requestedItems' => $requestedItems,
+            'requestedItems' => $requestedItems->toArray(),
         ]);
     }
 
