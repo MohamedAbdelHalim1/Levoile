@@ -139,29 +139,31 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
     document.querySelectorAll('.download-sheet').forEach(button => {
         button.addEventListener('click', () => {
             const orderId = button.dataset.order;
             const rows = Array.from(document.querySelectorAll(`#detailsModal${orderId} table tbody tr`));
-            let csvContent = "data:text/csv;charset=utf-8,No Code,Quantity\n";
+            const data = [["No Code", "Quantity"]];
 
             rows.forEach(row => {
-                const noCode = row.cells[2]?.textContent.trim(); // العمود الثالث
-                const quantity = row.cells[4]?.textContent.trim(); // العمود الخامس
-                csvContent += `${noCode},${quantity}\n`;
+                const noCode = row.cells[2]?.textContent.trim(); // الكود الرئيسي
+                const quantity = row.cells[4]?.textContent.trim(); // الكمية
+                if (noCode && quantity) {
+                    data.push([noCode, quantity]);
+                }
             });
 
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `order_${orderId}_prepare_sheet.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "PreparationSheet");
+
+            XLSX.writeFile(workbook, `order_${orderId}_prepare_sheet.xlsx`);
         });
     });
 </script>
+
 
 @endsection
