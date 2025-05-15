@@ -22,6 +22,7 @@
                         <tr>
                             <th>صورة المنتج</th>
                             <th>كود المنتج</th>
+                            <th>الكود الرئيسي</th>
                             <th>الوصف</th>
                             <th>الكمية المطلوبة</th>
                         </tr>
@@ -32,6 +33,7 @@
                                 <td><img src="{{ $item->product->image_url ?? asset('assets/images/comming.png') }}"
                                         style="width: 100px; height: 100px; object-fit: contain;"></td>
                                 <td>{{ $item->product->product_code ?? '-' }}</td>
+                                <td>{{ $item->product->no_code ?? '-' }}</td>
                                 <td>{{ $item->product->description ?? '-' }}</td>
                                 <td>{{ $item->requested_quantity }}</td>
                             </tr>
