@@ -118,14 +118,15 @@ class BranchOrderController extends Controller
         $productCodes = $paginatedProductCodes->pluck('product_code');
 
         $userId = Auth::id();
-        // ✅ كل الفاريانتس المطلوبة قبل كده
         $requestedItems = DB::table('branch_order_items as boi')
             ->join('open_orders as oo', 'boi.open_order_id', '=', 'oo.id')
             ->where('boi.user_id', $userId)
             ->whereNull('oo.closed_at') // ✅ بس المفتوحين
-            ->select('boi.product_knowledge_id', 'boi.requested_quantity')
+            ->select('boi.product_knowledge_id', DB::raw('SUM(boi.requested_quantity) as requested_quantity'))
+            ->groupBy('boi.product_knowledge_id')
             ->get()
             ->keyBy('product_knowledge_id');
+
 
 
         $allVariants = DB::table('product_knowledge')
@@ -202,6 +203,21 @@ class BranchOrderController extends Controller
             })
             ->orderByDesc('id')
             ->get();
+
+        // 🧠 نجمع المنتجات المتكررة داخل نفس الأوردر
+        foreach ($orders as $order) {
+            $grouped = $order->items
+                ->groupBy('product_knowledge_id')
+                ->map(function ($items) {
+                    $first = $items->first();
+                    $first->requested_quantity = $items->sum('requested_quantity');
+                    $first->delivered_quantity = $items->sum('delivered_quantity');
+                    return $first;
+                });
+
+            $order->items = $grouped->values(); // رجعه Collection مرتبة
+        }
+
 
         return view('branches.orders', compact('orders'));
     }
