@@ -12,6 +12,8 @@
                 <div class="col-md-3 mb-4">
                     <a href="{{ route('branch.order.products', $subcategory->id) }}" class="text-decoration-none">
                         <div class="card h-100 shadow text-center">
+                            <img src="{{ $subcategory->image ?? asset('assets/images/comming.png') }}"
+                                class="card-img-top p-2" style="height: 200px; object-fit: contain;">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $subcategory->name }}</h5>
                             </div>
