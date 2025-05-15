@@ -54,11 +54,15 @@
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <button class="btn btn-primary mb-3 download-sheet"
+                                                            data-order="{{ $order->id }}">تحميل شيت التحضير</button>
+
                                                         <table class="table table-bordered text-center">
                                                             <thead>
                                                                 <tr>
                                                                     <th>الصورة</th>
                                                                     <th>كود المنتج</th>
+                                                                    <th>الكود الرئيسي</th>
                                                                     <th>الوصف</th>
                                                                     <th>الكمية</th>
                                                                     <th>الكمية المستلمة</th>
@@ -75,6 +79,7 @@
                                                                                 style="width: 60px; height: 60px; object-fit: contain;">
                                                                         </td>
                                                                         <td>{{ $item->product->product_code ?? '-' }}</td>
+                                                                        <td>{{ $item->product->no_code ?? '-' }}</td>
                                                                         <td>{{ $item->product->description ?? '-' }}</td>
                                                                         <td>{{ $item->requested_quantity }}</td>
                                                                         <td>{{ $item->delivered_quantity }}</td>
@@ -131,4 +136,32 @@
             @endif
         </div>
     </div>
+@endsection
+
+@section('scripts')
+
+<script>
+    document.querySelectorAll('.download-sheet').forEach(button => {
+        button.addEventListener('click', () => {
+            const orderId = button.dataset.order;
+            const rows = Array.from(document.querySelectorAll(`#detailsModal${orderId} table tbody tr`));
+            let csvContent = "data:text/csv;charset=utf-8,No Code,Quantity\n";
+
+            rows.forEach(row => {
+                const noCode = row.cells[2]?.textContent.trim(); // العمود الثالث
+                const quantity = row.cells[4]?.textContent.trim(); // العمود الخامس
+                csvContent += `${noCode},${quantity}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `order_${orderId}_prepare_sheet.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+
 @endsection
