@@ -40,26 +40,26 @@ class BranchOrderController extends Controller
         return redirect()->route('branch.order.categories');
     }
 
+    public function closePage($orderId)
+    {
+        $order = \App\Models\OpenOrder::with(['items.product'])->findOrFail($orderId);
+
+        return view('branches.close-order', compact('order'));
+    }
+
     public function closeWithNote(Request $request)
     {
-        $request->validate([
-            'order_id' => 'required|exists:open_orders,id',
-            'notes' => 'nullable|string',
-        ]);
-
-        $order = OpenOrder::where('id', $request->order_id)
-            ->where('user_id', auth()->id())
-            ->where('is_opened', 1)
-            ->firstOrFail();
-
+        $order = \App\Models\OpenOrder::findOrFail($request->order_id);
         $order->update([
-            'is_opened' => 0,
-            'closed_at' => now(),
             'notes' => $request->notes,
+            'is_opened' => 0,
+            'status' => 'تم الإغلاق',
+            'closed_at' => now(),
         ]);
 
-        return redirect()->route('branch.orders.index')->with('success', 'تم غلق الطلب بنجاح');
+        return redirect()->route('branch.orders.admin')->with('success', 'تم غلق الطلب بنجاح');
     }
+
 
 
     public function closedSummary($orderId)

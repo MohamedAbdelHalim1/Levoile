@@ -206,7 +206,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/branch-orders/admin', [BranchOrderController::class, 'adminOrders'])->name('branch.orders.admin');
     Route::get('/branch-orders/my', [BranchOrderController::class, 'myOrders'])->name('branch.orders.my');
     Route::post('/branch-orders/prepare/{order}', [BranchOrderController::class, 'prepareOrder'])->name('branch.orders.prepare');
-    Route::post('/branch-orders/close-with-note', [BranchOrderController::class, 'closeWithNote'])->name('branch.orders.close.with.note');
+    Route::get('/orders/close/{order}', [BranchOrderController::class, 'closePage'])->name('branch.orders.close.page');
+    Route::post('/orders/close/submit', [BranchOrderController::class, 'closeWithNote'])->name('branch.orders.close.with.note');
 
 
     Route::resource('design-materials', DesignMaterialController::class);

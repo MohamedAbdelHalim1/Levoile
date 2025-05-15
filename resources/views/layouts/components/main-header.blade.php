@@ -76,10 +76,10 @@
                             @endphp
 
                             @if ($openOrder)
-                                <button type="button" class="btn btn-danger ms-3" data-bs-toggle="modal"
-                                    data-bs-target="#closeOrderModal">
+                                <a href="{{ route('branch.orders.close.page', $openOrder->id) }}"
+                                    class="btn btn-danger ms-3">
                                     <i class="fe fe-x-circle"></i> غلق الطلب
-                                </button>
+                                </a>
                             @endif
 
 
@@ -424,7 +424,7 @@
     </div>
 </div>
 
-@if ($openOrder)
+{{-- @if ($openOrder)
     <div class="modal fade" id="closeOrderModal" tabindex="-1" aria-labelledby="closeOrderModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -478,4 +478,4 @@
             </form>
         </div>
     </div>
-@endif
+@endif --}}
