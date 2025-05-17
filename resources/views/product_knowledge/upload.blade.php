@@ -16,6 +16,14 @@
                     <label for="file" class="form-label">اختر ملف Excel (xlsx أو xls فقط)</label>
                     <input type="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                 </div>
+                <div class="mb-3">
+                    <label for="stockSelect" class="form-label">اختر نوع المخزن</label>
+                    <select id="stockSelect" class="form-select" required>
+                        <option value="1">المخازن</option>
+                        <option value="2">الجملة</option>
+                    </select>
+                </div>
+
 
                 <div id="preview-loader" class="alert alert-info d-none">جاري تجهيز الملف... برجاء الانتظار</div>
 
@@ -23,7 +31,7 @@
 
                 <!-- Hidden Form (not used but kept for structure) -->
                 <form id="hidden-upload-form" method="POST" action="{{ route('product-knowledge.upload.save') }}"
-                      enctype="multipart/form-data" class="d-none">
+                    enctype="multipart/form-data" class="d-none">
                     @csrf
                     <input type="hidden" name="chunks" id="chunks-input">
                 </form>
@@ -36,7 +44,7 @@
                             <h5 class="mb-3">جاري رفع الشيت، من فضلك لا تغلق الصفحة</h5>
                             <div class="progress w-100" style="height: 20px;">
                                 <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated"
-                                     role="progressbar" style="width: 0%">0%</div>
+                                    role="progressbar" style="width: 0%">0%</div>
                             </div>
                         </div>
                     </div>
@@ -62,6 +70,8 @@
         const progressBar = document.getElementById('uploadProgress');
         const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
         const previewLoader = document.getElementById('preview-loader');
+        const stockSelect = document.getElementById('stockSelect');
+
 
         let allRows = [];
 
@@ -73,7 +83,7 @@
             return excelDate || '';
         }
 
-        fileInput.addEventListener('change', function () {
+        fileInput.addEventListener('change', function() {
             const file = this.files[0];
             if (!file) return;
 
@@ -81,9 +91,11 @@
             submitBtn.disabled = true;
 
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
+                const workbook = XLSX.read(data, {
+                    type: 'array'
+                });
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
                 allRows = XLSX.utils.sheet_to_json(sheet);
                 previewLoader.classList.add('d-none');
@@ -93,7 +105,7 @@
             reader.readAsArrayBuffer(file);
         });
 
-        submitBtn.addEventListener('click', async function () {
+        submitBtn.addEventListener('click', async function() {
             if (!allRows.length) return alert('من فضلك اختر ملف أولاً');
 
             submitBtn.disabled = true;
@@ -116,7 +128,10 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ chunk: chunks[i] })
+                        body: JSON.stringify({
+                            chunk: chunks[i]
+                            stock_id: stockSelect.value
+                        })
                     });
 
                     const result = await response.json();

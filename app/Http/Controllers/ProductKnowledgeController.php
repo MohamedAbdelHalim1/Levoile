@@ -209,6 +209,8 @@ class ProductKnowledgeController extends Controller
     {
         try {
             $data = $request->get('chunk');
+            $stockId = $request->input('stock_id', 1); // default = 1
+
 
             if (empty($data)) {
                 return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
@@ -267,6 +269,7 @@ class ProductKnowledgeController extends Controller
 
                     DB::table('product_knowledge')->insert([
                         'subcategory_knowledge_id' => $subcat->id,
+                        'stock_id'                 => $stockId,
                         'description'              => $row['Description'] ?? null,
                         'gomla'                    => $row['Whole Description'] ?? null,
                         'website_description'      => $row['Website Description'] ?? null,
