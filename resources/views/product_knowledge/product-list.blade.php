@@ -60,11 +60,18 @@
                                         </a>
                                     </td>
                                     <td>
+                                        @php $missingKey = 'missing_' . $loop->index; @endphp
                                         <a href="#" class="btn btn-sm btn-outline-warning show-missing-images"
-                                            data-images='@json($missing)'>
+                                            data-missing-key="{{ $missingKey }}">
                                             {{ $missing->count() }}
                                         </a>
+
+                                        <script>
+                                            window.missingImagesData = window.missingImagesData || {};
+                                            window.missingImagesData["{{ $missingKey }}"] = {!! json_encode($missing) !!};
+                                        </script>
                                     </td>
+
                                     <td>{{ $group->sum('quantity') }}</td>
                                 </tr>
                             @empty
@@ -264,7 +271,10 @@
             document.querySelectorAll('.show-missing-images').forEach(button => {
                 button.addEventListener('click', function (e) {
                     e.preventDefault();
-                    const data = JSON.parse(this.dataset.images);
+                    
+                    const key = this.dataset.missingKey;
+                    const data = window.missingImagesData?.[key] || [];
+
                     const tbody = document.getElementById('missingImagesTableBody');
                     tbody.innerHTML = '';
 
@@ -278,10 +288,9 @@
                         `;
                     });
 
-                   const modalElement = document.getElementById('missingImagesModal');
+                    const modalElement = document.getElementById('missingImagesModal');
                     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
                     modal.show();
-
                 });
             });
         });
