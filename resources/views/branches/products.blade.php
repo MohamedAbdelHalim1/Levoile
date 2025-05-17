@@ -71,9 +71,9 @@
                                 class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
                         </div>
                     </div>
-                    <h4>
+                    {{-- <h4>
                         {{ $parent->no_code }}
-                    </h4>
+                    </h4> --}}
                     <h4>
                         {{ $parent->description }}
                     </h4>
@@ -287,7 +287,7 @@
                             ${isAdmin === true && variant.stock_id ? (variant.stock_id == 1 ? 'مخزن' : 'جملة') + ' - ' : ''}${variant.quantity}
                         </small>
                     </div>
-
+                    <h4 class="text-center mt-2">${variant.no_code}</h4>
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                 ${requestedItems[variant.id] ? `
