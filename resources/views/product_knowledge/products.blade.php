@@ -250,21 +250,26 @@
                     box.className = 'sub-img position-relative';
 
                     box.innerHTML = `
-                    <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1">
-                    <div class="position-absolute top-0 end-0 me-1">
-                        <img src="/assets/images/${variant.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-                    </div>
-                    <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.color}</small>
-                    </div>
-                    <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
-                    </div>
-                    <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}</small>
-                    </div>
-                    <h4>${variant.no_code}</h4>
-                `;
+                        <div class="position-relative">
+                            <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1">
+                            <div class="position-absolute top-0 end-0 me-1">
+                                <img src="/assets/images/${variant.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                            </div>
+                            <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                                <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.color}</small>
+                            </div>
+                            <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                                <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 me-1 mb-1">
+                                <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                    ${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}
+                                </small>
+                            </div>
+                        </div>
+                        <h4 class="text-center mt-2">${variant.no_code}</h4>
+                    `;
+
 
                     container.appendChild(box);
                 });
