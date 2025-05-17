@@ -93,16 +93,9 @@
                                         class="icon-mark">
                                 </div>
                                 <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                    @if (auth()->user()->role_id == 1)
-                                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                            {{ $variant->stock_id == 1 ? 'مخزن' : 'جملة' }} - الكمية:
-                                            {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
-                                        </small>
-                                    @else
-                                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                            الكمية: {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
-                                        </small>
-                                    @endif
+                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                        الكمية: {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
+                                    </small>
                                 </div>
                                 <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
                                     <small
@@ -286,15 +279,18 @@
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
                     </div>
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
+                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                            ${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}
+                        </small>
                     </div>
+
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                 ${requestedItems[variant.id] ? `
-                                    <span class="badge bg-success mt-2">
-                                        ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
-                                    </span>
-                                ` : ''}
+                                            <span class="badge bg-success mt-2">
+                                                ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
+                                            </span>
+                                        ` : ''}
 
             `;
 
