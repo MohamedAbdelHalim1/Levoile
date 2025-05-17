@@ -266,41 +266,53 @@
                 const container = document.querySelector('#productModal .modal-body .row');
                 container.innerHTML = '';
 
-                variants.forEach(variant => {
-                    const box = document.createElement('div');
-                    box.className = 'sub-img text-center mb-4';
+                const groupedByNoCode = variants.reduce((acc, variant) => {
+                if (!acc[variant.no_code]) acc[variant.no_code] = [];
+                acc[variant.no_code].push(variant);
+                return acc;
+            }, {});
 
-                    box.innerHTML = `
-                <div class="position-relative">
-                    <img src="${variant.image_url || '/assets/images/comming.png'}" class="rounded-1 mb-2">
-                    <div class="position-absolute top-0 end-0 me-1">
-                        <img src="/assets/images/${variant.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-                    </div>
-                    <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.color}</small>
-                    </div>
-                    <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
-                    </div>
-                    <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                            ${isAdmin === true && variant.stock_id ? (variant.stock_id == 1 ? 'مخزن' : 'جملة') + ' - ' : ''}${variant.quantity}
-                        </small>
-                    </div>
-                </div>
-                <h4 class="text-center mt-2">${variant.no_code}</h4>
+            Object.values(groupedByNoCode).forEach(group => {
+                // sort to show مخزن فوق
+                group.sort((a, b) => a.stock_id - b.stock_id);
 
-                <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
-                ${requestedItems[variant.id] ? `
-                                                <span class="badge bg-success mt-2">
-                                                    ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
-                                                </span>
-                                            ` : ''}
+                const first = group[0];
+                const box = document.createElement('div');
+                box.className = 'sub-img text-center mb-4';
 
-            `;
+                let lines = group.map(v => {
+                    const label = v.stock_id == 1 ? 'مخزن' : 'جملة';
+                    const quantity = v.quantity;
+                    return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                }).join('');
 
-                    container.appendChild(box);
-                });
+                box.innerHTML = `
+                    <div class="position-relative">
+                        <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1 mb-2">
+                        <div class="position-absolute top-0 end-0 me-1">
+                            <img src="/assets/images/${first.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                        </div>
+                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
+                        </div>
+                    </div>
+                    <h4 class="text-center mt-2">${first.no_code}</h4>
+
+                    ${isAdmin && lines}
+
+                    <input type="number" min="0" name="quantities[${first.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
+                    ${requestedItems[first.id] ? `
+                        <span class="badge bg-success mt-2">
+                            ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
+                        </span>` : ''}
+                `;
+
+                container.appendChild(box);
+            });
+
             });
         });
     </script>
