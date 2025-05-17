@@ -278,8 +278,10 @@
                         `;
                     });
 
-                    const modal = new bootstrap.Modal(document.getElementById('missingImagesModal'));
+                   const modalElement = document.getElementById('missingImagesModal');
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
                     modal.show();
+
                 });
             });
         });
