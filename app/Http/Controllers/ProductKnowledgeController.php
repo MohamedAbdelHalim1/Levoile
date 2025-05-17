@@ -111,7 +111,7 @@ class ProductKnowledgeController extends Controller
                 return $item;
             });
 
-        $grouped = $allVariants->groupBy('product_code');
+        $grouped = $allVariants;   //->groupBy('product_code');
 
         return view('product_knowledge.product-list', [
             'products' => $grouped,
