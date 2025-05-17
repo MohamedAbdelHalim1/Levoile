@@ -237,7 +237,67 @@
 
 @endsection
 
+
 @section('scripts')
+<script>
+    const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
+
+    document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+        card.addEventListener('click', () => {
+            const variants = JSON.parse(card.dataset.variants);
+            const container = document.querySelector('#productModal .modal-body .row');
+            container.innerHTML = '';
+
+            // Group by no_code
+            const grouped = variants.reduce((acc, item) => {
+                if (!acc[item.no_code]) acc[item.no_code] = [];
+                acc[item.no_code].push(item);
+                return acc;
+            }, {});
+
+            Object.values(grouped).forEach(group => {
+                // sort to show المخزن فوق
+                group.sort((a, b) => a.stock_id - b.stock_id);
+
+                const first = group[0]; // use one for image/color display
+
+                const box = document.createElement('div');
+                box.className = 'sub-img position-relative';
+
+                let lines = group.map(v => {
+                    const label = v.stock_id == 1 ? 'مخزن' : 'جملة';
+                    const quantity = v.quantity;
+                    return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                }).join('');
+
+                box.innerHTML = `
+                    <div class="position-relative">
+                        <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
+                        <div class="position-absolute top-0 end-0 me-1">
+                            <img src="/assets/images/${first.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                        </div>
+                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
+                        </div>
+                        ${isAdmin ? `
+                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                            ${lines}
+                        </div>` : ''}
+                    </div>
+                    <h4 class="text-center mt-2">${first.no_code}</h4>
+                `;
+
+                container.appendChild(box);
+            });
+        });
+    });
+</script>
+@endsection
+
+{{-- @section('scripts')
     <script>
         document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
             card.addEventListener('click', () => {
@@ -276,4 +336,4 @@
             });
         });
     </script>
-@endsection
+@endsection --}}
