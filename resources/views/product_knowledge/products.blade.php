@@ -261,7 +261,7 @@
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.product_code}</small>
                     </div>
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.quantity}</small>
+                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}</small>
                     </div>
                 `;
 
