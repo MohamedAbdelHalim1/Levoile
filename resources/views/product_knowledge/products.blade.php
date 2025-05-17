@@ -59,9 +59,9 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
                         </div>
                     </div>
-                    <h4>
+                    {{-- <h4>
                         {{ $parent->no_code }}
-                    </h4>
+                    </h4> --}}
                     <h4>
                         {{ $parent->description }}
                     </h4>
@@ -263,6 +263,7 @@
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}</small>
                     </div>
+                    <h4>${variant.no_code}</h4>
                 `;
 
                     container.appendChild(box);
