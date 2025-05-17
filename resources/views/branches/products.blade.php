@@ -254,6 +254,10 @@
 
 @section('scripts')
     <script>
+        const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
+    </script>
+
+    <script>
         const requestedItems = @json($requestedItems);
 
         document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
@@ -280,17 +284,17 @@
                     </div>
                     <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                         <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                            ${variant.stock_id == 1 ? 'مخزن' : 'جملة'} - ${variant.quantity}
+                            ${isAdmin === true && variant.stock_id ? (variant.stock_id == 1 ? 'مخزن' : 'جملة') + ' - ' : ''}${variant.quantity}
                         </small>
                     </div>
 
                 </div>
                 <input type="number" min="0" name="quantities[${variant.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                 ${requestedItems[variant.id] ? `
-                                            <span class="badge bg-success mt-2">
-                                                ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
-                                            </span>
-                                        ` : ''}
+                                                <span class="badge bg-success mt-2">
+                                                    ✅ تم الطلب (${requestedItems[variant.id].requested_quantity})
+                                                </span>
+                                            ` : ''}
 
             `;
 
