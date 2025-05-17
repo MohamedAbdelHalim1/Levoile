@@ -51,7 +51,7 @@
                                     <td>{{ $parent->unit_price }}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-outline-info open-product-modal"
-                                            data-group='@json($group)' data-image="{{ $mainImage }}">
+                                            data-group='@json($group->values())' data-image="{{ $mainImage }}">
                                             {{ $colors }}
                                         </a>
                                     </td>
