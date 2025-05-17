@@ -283,10 +283,9 @@
                 let lines = group.map(v => {
                     const label = v.stock_id == 1 ? 'مخزن' : 'جملة';
                     const quantity = v.quantity;
-                    return `<div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                        <small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small>
-                    </div>`;
+                    return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
                 }).join('');
+
 
 
                 box.innerHTML = `
@@ -301,8 +300,11 @@
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
-                        ${isAdmin && lines}
-
+                        ${isAdmin ? `
+                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                ${lines}
+                            </div>` : ''
+                        }
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
 
