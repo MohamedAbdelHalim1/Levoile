@@ -222,7 +222,7 @@ class ProductKnowledgeController extends Controller
                 ->get()
                 ->groupBy('category_knowledge_id');
 
-            DB::transaction(function () use ($data, $allCategories, $allSubcategories) {
+            DB::transaction(function () use ($data, $allCategories, $allSubcategories, $stockId) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
