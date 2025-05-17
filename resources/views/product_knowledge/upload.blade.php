@@ -64,104 +64,117 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script>
-        const fileInput = document.getElementById('file');
-        const submitBtn = document.getElementById('submit-btn');
-        const progressBar = document.getElementById('uploadProgress');
-        const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
-        const previewLoader = document.getElementById('preview-loader');
-        const stockSelect = document.getElementById('stockSelect');
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+    const fileInput = document.getElementById('file');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressBar = document.getElementById('uploadProgress');
+    const uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    const previewLoader = document.getElementById('preview-loader');
+    const stockSelect = document.getElementById('stockSelect');
 
+    let allRows = [];
 
-        let allRows = [];
+    // ✅ دالة لتشييك إن كل حاجة جاهزة
+    function checkReadyToSubmit() {
+        if (allRows.length > 0 && stockSelect.value !== '') {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
 
-        function formatExcelDate(excelDate) {
-            if (typeof excelDate === 'number') {
-                const date = new Date((excelDate - 25569) * 86400 * 1000);
-                return date.toISOString().replace('T', ' ').split('.')[0];
-            }
-            return excelDate || '';
+    function formatExcelDate(excelDate) {
+        if (typeof excelDate === 'number') {
+            const date = new Date((excelDate - 25569) * 86400 * 1000);
+            return date.toISOString().replace('T', ' ').split('.')[0];
+        }
+        return excelDate || '';
+    }
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        previewLoader.classList.remove('d-none');
+        submitBtn.disabled = true;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            allRows = XLSX.utils.sheet_to_json(sheet);
+            previewLoader.classList.add('d-none');
+
+            checkReadyToSubmit();
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
+
+    // ✅ كل ما تختار من الدروب داون
+    stockSelect.addEventListener('change', checkReadyToSubmit);
+
+    submitBtn.addEventListener('click', async function () {
+        if (!allRows.length || stockSelect.value === '') {
+            return alert('من فضلك اختر ملف وحدد نوع المخزن');
         }
 
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (!file) return;
+        submitBtn.disabled = true;
+        uploadModal.show();
 
-            previewLoader.classList.remove('d-none');
-            submitBtn.disabled = true;
+        const chunkSize = Math.ceil(allRows.length / 4);
+        const chunks = [];
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, {
-                    type: 'array'
+        for (let i = 0; i < 4; i++) {
+            const start = i * chunkSize;
+            const end = start + chunkSize;
+            chunks.push(allRows.slice(start, end));
+        }
+
+        for (let i = 0; i < chunks.length; i++) {
+            try {
+                const response = await fetch("{{ route('product-knowledge.upload.save') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        chunk: chunks[i],
+                        stock_id: stockSelect.value
+                    })
                 });
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                allRows = XLSX.utils.sheet_to_json(sheet);
-                previewLoader.classList.add('d-none');
-                submitBtn.disabled = false;
-            };
 
-            reader.readAsArrayBuffer(file);
-        });
+                const result = await response.json();
 
-        submitBtn.addEventListener('click', async function() {
-            if (!allRows.length) return alert('من فضلك اختر ملف أولاً');
-
-            submitBtn.disabled = true;
-            uploadModal.show();
-
-            const chunkSize = Math.ceil(allRows.length / 4);
-            const chunks = [];
-
-            for (let i = 0; i < 4; i++) {
-                const start = i * chunkSize;
-                const end = start + chunkSize;
-                chunks.push(allRows.slice(start, end));
-            }
-
-            for (let i = 0; i < chunks.length; i++) {
-                try {
-                    const response = await fetch("{{ route('product-knowledge.upload.save') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            chunk: chunks[i]
-                            stock_id: stockSelect.value
-                        })
-                    });
-
-                    const result = await response.json();
-
-                    if (result.status !== 'success') {
-                        uploadModal.hide();
-                        alert(result.message || 'حدث خطأ أثناء رفع الشيت');
-                        return;
-                    }
-
-                    const progress = (i + 1) * 25;
-                    progressBar.style.width = progress + '%';
-                    progressBar.innerText = progress + '%';
-
-                } catch (err) {
+                if (result.status !== 'success') {
                     uploadModal.hide();
-                    alert('حدث خطأ غير متوقع');
-                    submitBtn.disabled = false;
+                    alert(result.message || 'حدث خطأ أثناء رفع الشيت');
                     return;
                 }
+
+                const progress = ((i + 1) / chunks.length) * 100;
+                progressBar.style.width = progress + '%';
+                progressBar.innerText = Math.round(progress) + '%';
+
+            } catch (err) {
+                uploadModal.hide();
+                alert('حدث خطأ غير متوقع');
+                submitBtn.disabled = false;
+                return;
             }
+        }
 
-            progressBar.classList.remove('bg-danger');
-            progressBar.classList.add('bg-success');
-            progressBar.innerText = 'اكتمل';
+        progressBar.classList.remove('bg-danger');
+        progressBar.classList.add('bg-success');
+        progressBar.innerText = 'اكتمل';
 
-            setTimeout(() => {
-                window.location.href = "{{ route('product-knowledge.lists') }}";
-            }, 1000);
-        });
-    </script>
+        setTimeout(() => {
+            window.location.href = "{{ route('product-knowledge.lists') }}";
+        }, 1000);
+    });
+</script>
+
 @endsection
