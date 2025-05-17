@@ -59,8 +59,7 @@
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                colors</small>
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->stock_id == 1 ? 'مخزن' : 'جملة' }}: {{ count($group) }}</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
