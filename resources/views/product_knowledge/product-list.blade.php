@@ -18,7 +18,7 @@
                                 <th>الفئة الفرعية</th>
                                 <th>السعر</th>
                                 <th>الألوان</th>
-                                {{-- <th>عدد الصور المتبقية</th> --}}
+                                <th>عدد الصور المتبقية</th>
                                 <th>الكمية</th>
                             </tr>
                         </thead>
@@ -28,8 +28,7 @@
                                     $parent = $group->firstWhere('image_url') ?? $group->first();
                                     $mainImage = $group->firstWhere('image_url')?->image_url;
                                     $colors = $group->groupBy('color')->count();
-                                    $missingImages = $group->whereNull('image_url')->count();
-
+                                    $missing = $group->whereNull('image_url');
                                 @endphp
                                 <tr>
                                     <td>
@@ -53,14 +52,19 @@
                                         <a href="#" class="btn btn-sm btn-outline-info open-product-modal"
                                             @php
                                                 $latestGroup = $group->groupBy('color')->map(function ($items) {
-                                                        return $items->sortByDesc('created_at_excel')->first();
-                                                    })->values(); 
+                                                    return $items->sortByDesc('created_at_excel')->first();
+                                                })->values(); 
                                             @endphp
                                             data-group='@json($latestGroup)' data-image="{{ $mainImage }}">
                                             {{ $colors }}
                                         </a>
                                     </td>
-                                    {{-- <td>{{ $missingImages }}</td> --}}
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-outline-warning show-missing-images"
+                                            data-images='@json($missing)'>
+                                            {{ $missing->count() }}
+                                        </a>
+                                    </td>
                                     <td>{{ $group->sum('quantity') }}</td>
                                 </tr>
                             @empty
@@ -74,6 +78,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="missingImagesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تفاصيل المنتجات بدون صور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>كود المنتج</th>
+                            <th>الوصف</th>
+                            <th>اللون</th>
+                        </tr>
+                    </thead>
+                    <tbody id="missingImagesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <!-- Modal for full product -->
     <div class="modal fade" id="productModal" tabindex="-1">
@@ -230,5 +258,31 @@
                 }
             }
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.show-missing-images').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const data = JSON.parse(this.dataset.images);
+                    const tbody = document.getElementById('missingImagesTableBody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(item => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${item.no_code}</td>
+                                <td>${item.description || '-'}</td>
+                                <td>${item.color || '-'}</td>
+                            </tr>
+                        `;
+                    });
+
+                    const modal = new bootstrap.Modal(document.getElementById('missingImagesModal'));
+                    modal.show();
+                });
+            });
+        });
+
     </script>
 @endsection
