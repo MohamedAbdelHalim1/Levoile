@@ -273,7 +273,8 @@
                     e.preventDefault();
                     
                     const key = this.dataset.missingKey;
-                    const data = window.missingImagesData?.[key] || [];
+                    const raw = window.missingImagesData?.[key] || [];
+                    const data = Array.isArray(raw) ? raw : Object.values(raw);
 
                     const tbody = document.getElementById('missingImagesTableBody');
                     tbody.innerHTML = '';
