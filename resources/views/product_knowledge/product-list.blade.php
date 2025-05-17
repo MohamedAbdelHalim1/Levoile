@@ -37,8 +37,8 @@
                                             <img src="{{ $mainImage }}" width="60" height="60"
                                                 style="object-fit: contain" loading="lazy">
                                         @else
-                                            <img src="{{ asset('assets/images/comming.png') }}" width="60" height="60"
-                                                style="object-fit: contain" loading="lazy">
+                                            <img src="{{ asset('assets/images/comming.png') }}" width="60"
+                                                height="60" style="object-fit: contain" loading="lazy">
                                         @endif
                                     </td>
                                     <td>{{ $parent->product_code }}</td>
@@ -51,7 +51,12 @@
                                     <td>{{ $parent->unit_price }}</td>
                                     <td>
                                         <a href="#" class="btn btn-sm btn-outline-info open-product-modal"
-                                            data-group='@json($group->values())' data-image="{{ $mainImage }}">
+                                            @php
+                                                $latestGroup = $group->groupBy('color')->map(function ($items) {
+                                                        return $items->sortByDesc('created_at_excel')->first();
+                                                    })->values(); 
+                                            @endphp
+                                            data-group='@json($latestGroup)' data-image="{{ $mainImage }}">
                                             {{ $colors }}
                                         </a>
                                     </td>
