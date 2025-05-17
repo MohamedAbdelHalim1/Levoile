@@ -147,7 +147,8 @@ class BranchOrderController extends Controller
                 'no_code',
                 'image_url',
                 'material',
-                'website_description'
+                'website_description',
+                'stock_id'
             )
             ->orderBy('product_code')
             ->get()
