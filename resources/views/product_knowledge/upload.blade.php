@@ -19,6 +19,7 @@
                 <div class="mb-3">
                     <label for="stockSelect" class="form-label">اختر نوع المخزن</label>
                     <select id="stockSelect" class="form-select" required>
+                        <option value="">اختر نوع المخزن</option>
                         <option value="1">المخازن</option>
                         <option value="2">الجملة</option>
                     </select>
