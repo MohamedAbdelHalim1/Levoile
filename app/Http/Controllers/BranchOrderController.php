@@ -293,8 +293,6 @@ class BranchOrderController extends Controller
         array_shift($rows); // تجاهل العناوين
 
         $updates = 0;
-        $exactMatches = 0;
-        $seasonMatches = 0;
         $mismatchedCodes = [];
 
         foreach ($rows as $row) {
@@ -326,7 +324,6 @@ class BranchOrderController extends Controller
                     'delivered_quantity' => $qty,
                     'receiving_status' => 'مطابق',
                 ]);
-                $exactMatches++;
                 $updates++;
                 continue;
             }
@@ -341,7 +338,6 @@ class BranchOrderController extends Controller
                     'delivered_quantity' => $qty,
                     'receiving_status' => 'مطابق مع اختلاف الموسم',
                 ]);
-                $seasonMatches++;
                 $updates++;
                 continue;
             }
@@ -362,21 +358,10 @@ class BranchOrderController extends Controller
             ]);
         }
 
-        // تحديث حالة الأوردر
+        // تحديث حالة الأوردر فقط لو فيه أي تعديل
         if ($updates > 0) {
-            $receivingStatus = 'مطابق';
-
-            if ($seasonMatches > 0 && $exactMatches == 0) {
-                $receivingStatus = 'مطابق مع اختلاف الموسم';
-            }
-
-            if (count($mismatchedCodes) > 0) {
-                $receivingStatus = 'غير مطابق';
-            }
-
             $order->update([
                 'status' => 'تم التحضير',
-                'receiving_status' => $receivingStatus,
             ]);
         }
 
