@@ -314,7 +314,6 @@ class BranchOrderController extends Controller
 
 
             // 🔎 اختبر بعد التحميل
-            dd($item);
 
             if ($item && $product->no_code == $noCode) {
                 $item->update([
