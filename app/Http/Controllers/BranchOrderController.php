@@ -53,7 +53,7 @@ class BranchOrderController extends Controller
         $order->update([
             'notes' => $request->notes,
             'is_opened' => 0,
-            'status' => 'تم الإغلاق',
+            'status' => 'جديد',
             'closed_at' => now(),
         ]);
 
@@ -236,6 +236,47 @@ class BranchOrderController extends Controller
     }
 
 
+    // public function prepareOrder(Request $request, OpenOrder $order)
+    // {
+    //     $request->validate([
+    //         'excel_file' => 'required|file|mimes:xlsx,xls',
+    //     ]);
+
+    //     $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
+    //     $sheet = $spreadsheet->getActiveSheet();
+    //     $rows = $sheet->toArray();
+
+    //     // تجاهل أول صف (العناوين)
+    //     array_shift($rows);
+
+    //     $updates = 0;
+
+    //     foreach ($rows as $row) {
+    //         $noCode = $row[0] ?? null;
+    //         $qty = (int) ($row[1] ?? 0);
+
+    //         if (!$noCode || $qty <= 0) continue;
+
+    //         $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
+
+    //         if ($product) {
+    //             $item = $order->items()->where('product_knowledge_id', $product->id)->first();
+
+    //             if ($item) {
+    //                 $item->update(['delivered_quantity' => $qty]);
+    //                 $updates++;
+    //             }
+    //         }
+    //     }
+
+    //     // لو فيه أي حاجه اتحضرت نغيّر الحالة
+    //     if ($updates > 0) {
+    //         $order->update(['status' => 'تم التحضير']);
+    //     }
+
+    //     return back()->with('success', 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.');
+    // }
+
     public function prepareOrder(Request $request, OpenOrder $order)
     {
         $request->validate([
@@ -250,30 +291,106 @@ class BranchOrderController extends Controller
         array_shift($rows);
 
         $updates = 0;
+        $exactMatches = 0;
+        $seasonMatches = 0;
+        $mismatchedCodes = [];
 
         foreach ($rows as $row) {
-            $noCode = $row[0] ?? null;
+            $noCode = trim($row[0] ?? '');
             $qty = (int) ($row[1] ?? 0);
 
             if (!$noCode || $qty <= 0) continue;
 
+            // استخرج الـ product_code من no_code
+            $derivedProductCode = substr($noCode, 2, 6);
+
+            // ابحث عن المنتج بناءً على no_code
             $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
 
-            if ($product) {
-                $item = $order->items()->where('product_knowledge_id', $product->id)->first();
+            // حاول تجيب الايتم
+            $item = $product ? $order->items()->where('product_knowledge_id', $product->id)->first() : null;
+
+            // الحالة الأولى: مطابق تمامًا
+            if ($item && $product->no_code === $noCode) {
+                $item->update(['delivered_quantity' => $qty]);
+                $exactMatches++;
+                $updates++;
+
+                // الحالة التانية: مطابق مع اختلاف الموسم (نقارن بالـ product_code)
+            } elseif (!$item && $derivedProductCode) {
+                $item = $order->items->firstWhere(function ($i) use ($derivedProductCode) {
+                    return $i->product && $i->product->product_code === $derivedProductCode;
+                });
 
                 if ($item) {
                     $item->update(['delivered_quantity' => $qty]);
+                    $seasonMatches++;
                     $updates++;
                 }
+
+                // الحالة التالتة: غير مطابق
+            } else {
+                $mismatchedCodes[] = [
+                    'no_code' => $noCode,
+                    'quantity' => $qty,
+                ];
             }
         }
 
-        // لو فيه أي حاجه اتحضرت نغيّر الحالة
+        // خزّن الأكواد غير المطابقة
+        foreach ($mismatchedCodes as $mismatch) {
+            \App\Models\MismatchedProduct::create([
+                'open_order_id' => $order->id,
+                'no_code' => $mismatch['no_code'],
+                'quantity' => $mismatch['quantity'],
+            ]);
+        }
+
+        // لو فيه تحديثات، حدّث الحالة
         if ($updates > 0) {
-            $order->update(['status' => 'تم التحضير']);
+            $status = 'تم التحضير';
+            $receivingStatus = 'مطابق';
+
+            if ($seasonMatches > 0 && $exactMatches > 0) {
+                $receivingStatus = 'مطابق مع اختلاف الموسم';
+            } elseif ($seasonMatches > 0 && $exactMatches == 0) {
+                $receivingStatus = 'مطابق مع اختلاف الموسم';
+            }
+
+            if (count($mismatchedCodes)) {
+                $receivingStatus = 'غير مطابق';
+            }
+
+            $order->update([
+                'status' => $status,
+                'receiving_status' => $receivingStatus,
+            ]);
         }
 
         return back()->with('success', 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.');
+    }
+
+    public function showOrder(OpenOrder $order)
+    {
+        $order->load(['items.product', 'items.user']);
+
+        // تجميع المنتجات المتكررة داخل نفس الأوردر
+        $grouped = $order->items
+            ->groupBy('product_knowledge_id')
+            ->map(function ($items) {
+                $first = $items->first();
+                $first->requested_quantity = $items->sum('requested_quantity');
+                $first->delivered_quantity = $items->sum('delivered_quantity');
+                return $first;
+            });
+
+        $order->items = $grouped->values();
+
+        // جلب الأكواد غير المطابقة
+        $unmatchedItems = \DB::table('unmatched_order_items')
+            ->where('open_order_id', $order->id)
+            ->get();
+
+        return view('branches.order-details', compact('order', 'unmatchedItems'));
     }
 }

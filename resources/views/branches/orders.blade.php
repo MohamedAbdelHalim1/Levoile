@@ -40,11 +40,11 @@
                                     <td>{{ $order->items->sum('requested_quantity') }}</td>
                                     <td>{{ $order->notes ?? '-' }}</td>
                                     <td>
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#detailsModal{{ $order->id }}">عرض</button>
+                                        <a href="{{ route('branch.orders.show', $order->id) }}" class="btn btn-info btn-sm">عرض</a>
+
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="detailsModal{{ $order->id }}" tabindex="-1"
+                                        {{-- <div class="modal fade" id="detailsModal{{ $order->id }}" tabindex="-1"
                                             aria-labelledby="modalLabel{{ $order->id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                                 <div class="modal-content">
@@ -97,7 +97,7 @@
 
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- زرار التحضير الجديد -->
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal"
