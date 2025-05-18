@@ -283,6 +283,7 @@ class BranchOrderController extends Controller
             'excel_file' => 'required|file|mimes:xlsx,xls',
         ]);
 
+        $order->load('items.product');
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
