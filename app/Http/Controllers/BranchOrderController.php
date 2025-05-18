@@ -308,8 +308,7 @@ class BranchOrderController extends Controller
 
             // حاول تجيب المنتج بالكود الأساسي
             $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
-            dd($product);
-            $item = $product ? $order->items()->where('product_knowledge_id', $product->id)->first() : null;
+            $item = $product ? $order->items()->where('product_knowledge_id', $product->id)->where('open_order_id', $order->id)->first() : null;
 
             dd($item);
             // مطابق تمامًا
