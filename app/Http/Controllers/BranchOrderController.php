@@ -284,6 +284,7 @@ class BranchOrderController extends Controller
         ]);
 
         $order->load('items.product');
+
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
@@ -301,18 +302,16 @@ class BranchOrderController extends Controller
 
             if (empty($rawCode) || $qty <= 0) continue;
 
-            // تصليح الكود لو جاي بصيغة scientific
             $noCode = is_numeric($rawCode) ? number_format($rawCode, 0, '', '') : trim($rawCode);
-
-            // استخرج كود الموسم من no_code
             $derivedProductCode = substr($noCode, 2, 6);
 
-            // حاول تجيب المنتج بالكود الأساسي
             $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
             $item = $product ? $order->items->firstWhere('product_knowledge_id', $product->id) : null;
 
-            dd($item);
-            // مطابق تمامًا
+
+            // 🔎 اختبر بعد التحميل
+             dd($product, $order->items, $item);
+
             if ($item && $product->no_code == $noCode) {
                 $item->update([
                     'delivered_quantity' => $qty,
@@ -323,7 +322,6 @@ class BranchOrderController extends Controller
                 continue;
             }
 
-            // مطابق مع اختلاف الموسم (product_code فقط)
             $item = $order->items->firstWhere(function ($i) use ($derivedProductCode) {
                 return $i->product && $i->product->product_code === $derivedProductCode;
             });
@@ -338,14 +336,12 @@ class BranchOrderController extends Controller
                 continue;
             }
 
-            // غير مطابق
             $mismatchedCodes[] = [
                 'no_code' => $noCode,
                 'quantity' => $qty,
             ];
         }
 
-        // تخزين الأكواد غير المطابقة
         foreach ($mismatchedCodes as $mismatch) {
             \App\Models\MismatchedProduct::create([
                 'open_order_id' => $order->id,
@@ -354,7 +350,6 @@ class BranchOrderController extends Controller
             ]);
         }
 
-        // لو فيه أي تحديث حصل نحدث الحالة
         if ($updates > 0) {
             $receivingStatus = 'مطابق';
 
