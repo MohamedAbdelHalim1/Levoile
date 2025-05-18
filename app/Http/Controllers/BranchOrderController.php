@@ -298,12 +298,12 @@ class BranchOrderController extends Controller
             $rawCode = $row[0] ?? '';
             $qty = (int) ($row[1] ?? 0);
 
-            dd($rawCode , $qty);
-            if (!$rawCode || $qty <= 0) continue;
+            if (empty($rawCode) || $qty <= 0) continue;
 
             // تصليح الكود لو جاي بصيغة scientific
             $noCode = is_numeric($rawCode) ? number_format($rawCode, 0, '', '') : trim($rawCode);
 
+            dd($noCode);
             // استخرج كود الموسم من no_code
             $derivedProductCode = substr($noCode, 2, 6);
 
