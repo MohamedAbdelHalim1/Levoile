@@ -294,6 +294,7 @@ class BranchOrderController extends Controller
         $seasonMatches = 0;
         $mismatchedCodes = [];
 
+        dd($rows);
         foreach ($rows as $row) {
             $rawCode = $row[0] ?? '';
             $qty = (int) ($row[1] ?? 0);
