@@ -306,16 +306,22 @@ class BranchOrderController extends Controller
             $noCode = is_numeric($rawCode) ? number_format($rawCode, 0, '', '') : trim($rawCode);
             $derivedProductCode = substr($noCode, 2, 6);
 
-            $products = ProductKnowledge::where('no_code', $noCode)->get();
+            $products = \App\Models\ProductKnowledge::where('no_code', $noCode)->get();
 
-            $item = $products->map(function ($product) use ($order) {
-                return $order->items->firstWhere('product_knowledge_id', $product->id);
-            })->filter()->first(); // أول item موجود فعلاً في الأوردر
+            $matchedProduct = null;
+            $item = null;
 
+            foreach ($products as $product) {
+                $foundItem = $order->items->firstWhere('product_knowledge_id', $product->id);
+                if ($foundItem) {
+                    $item = $foundItem;
+                    $matchedProduct = $product;
+                    break;
+                }
+            }
 
-            // 🔎 اختبر بعد التحميل
-
-            if ($item && $product->no_code == $noCode) {
+            // مطابق تمامًا
+            if ($item && $matchedProduct && $matchedProduct->no_code == $noCode) {
                 $item->update([
                     'delivered_quantity' => $qty,
                     'receiving_status' => 'مطابق',
@@ -325,6 +331,7 @@ class BranchOrderController extends Controller
                 continue;
             }
 
+            // مطابق مع اختلاف الموسم
             $item = $order->items->firstWhere(function ($i) use ($derivedProductCode) {
                 return $i->product && $i->product->product_code === $derivedProductCode;
             });
@@ -339,12 +346,14 @@ class BranchOrderController extends Controller
                 continue;
             }
 
+            // غير مطابق
             $mismatchedCodes[] = [
                 'no_code' => $noCode,
                 'quantity' => $qty,
             ];
         }
 
+        // حفظ الأكواد غير المطابقة
         foreach ($mismatchedCodes as $mismatch) {
             \App\Models\MismatchedProduct::create([
                 'open_order_id' => $order->id,
@@ -353,6 +362,7 @@ class BranchOrderController extends Controller
             ]);
         }
 
+        // تحديث حالة الأوردر
         if ($updates > 0) {
             $receivingStatus = 'مطابق';
 
@@ -372,6 +382,7 @@ class BranchOrderController extends Controller
 
         return back()->with('success', 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.');
     }
+
 
 
 
