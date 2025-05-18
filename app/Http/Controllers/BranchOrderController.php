@@ -303,7 +303,6 @@ class BranchOrderController extends Controller
             // تصليح الكود لو جاي بصيغة scientific
             $noCode = is_numeric($rawCode) ? number_format($rawCode, 0, '', '') : trim($rawCode);
 
-            dd($noCode);
             // استخرج كود الموسم من no_code
             $derivedProductCode = substr($noCode, 2, 6);
 
@@ -311,8 +310,9 @@ class BranchOrderController extends Controller
             $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
             $item = $product ? $order->items()->where('product_knowledge_id', $product->id)->first() : null;
 
+            dd($item);
             // مطابق تمامًا
-            if ($item && $product->no_code === $noCode) {
+            if ($item && $product->no_code == $noCode) {
                 $item->update([
                     'delivered_quantity' => $qty,
                     'receiving_status' => 'مطابق',
