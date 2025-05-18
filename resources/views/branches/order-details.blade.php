@@ -67,7 +67,7 @@
                         <tbody>
                             @foreach ($unmatchedItems as $unmatched)
                                 <tr>
-                                    <td>{{ $unmatched->code }}</td>
+                                    <td>{{ $unmatched->no_code }}</td>
                                     <td>{{ $unmatched->quantity }}</td>
                                 </tr>
                             @endforeach
