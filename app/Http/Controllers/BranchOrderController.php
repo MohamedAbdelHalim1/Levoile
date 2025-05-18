@@ -387,7 +387,7 @@ class BranchOrderController extends Controller
         $order->items = $grouped->values();
 
         // جلب الأكواد غير المطابقة
-        $unmatchedItems = \DB::table('unmatched_order_items')
+        $unmatchedItems = DB::table('mismatched_products')
             ->where('open_order_id', $order->id)
             ->get();
 
