@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OpenOrder;
+use App\Models\ProductKnowledge;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\OpenOrder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class BranchOrderController extends Controller
 {
@@ -305,12 +306,15 @@ class BranchOrderController extends Controller
             $noCode = is_numeric($rawCode) ? number_format($rawCode, 0, '', '') : trim($rawCode);
             $derivedProductCode = substr($noCode, 2, 6);
 
-            $product = \App\Models\ProductKnowledge::where('no_code', $noCode)->first();
-            $item = $product ? $order->items->firstWhere('product_knowledge_id', $product->id) : null;
+            $products = ProductKnowledge::where('no_code', $noCode)->get();
+
+            $item = $products->map(function ($product) use ($order) {
+                return $order->items->firstWhere('product_knowledge_id', $product->id);
+            })->filter()->first(); // أول item موجود فعلاً في الأوردر
 
 
             // 🔎 اختبر بعد التحميل
-             dd($product, $order->items, $item);
+            dd($product, $order->items, $item);
 
             if ($item && $product->no_code == $noCode) {
                 $item->update([
