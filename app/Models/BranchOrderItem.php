@@ -12,6 +12,7 @@ class BranchOrderItem extends Model
         'requested_quantity',
         'open_order_id',
         'delivered_quantity',
+        'receiving_status',
     ];
 
     public function user()
