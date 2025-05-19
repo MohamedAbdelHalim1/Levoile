@@ -13,7 +13,6 @@
     </style>
 @endsection
 @section('content')
-
     <section class="bg-white shadow sm:rounded-lg p-4 last-ui">
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
@@ -33,6 +32,7 @@
                 @php
                     $parent = $group->firstWhere('image_url') ?? $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
+
                 @endphp
                 <div class="main-product m-2 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3"
                     data-variants='@json($group)' data-bs-toggle="modal" data-bs-target="#productModal"
@@ -78,7 +78,10 @@
                                 <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
                                     class="rounded-1">
                                 <div class="position-absolute top-0 end-0 me-1">
-                                    <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
+                                    @php
+                                        $variantQty = $variant->stockEntries->sum('quantity');
+                                    @endphp
+                                    <img src="{{ asset('assets/images/' . ($variantQty > 0 ? 'right.png' : 'wrong.png')) }}"
                                         class="icon-mark">
                                 </div>
                                 <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
@@ -234,8 +237,6 @@
             }
         }
     </style>
-
-
 @endsection
 
 
@@ -258,28 +259,31 @@
 
                 Object.values(grouped).forEach(group => {
                     // sort to show المخزن فوق
-                    group.sort((a, b) => a.stock_id - b.stock_id);
+                    // group.sort((a, b) => a.stock_id - b.stock_id);
 
                     const first = group[0]; // use one for image/color display
 
                     const box = document.createElement('div');
                     box.className = 'sub-img position-relative';
 
-                    let lines = group.map(v => {
+                    let lines = (first.stockEntries || []).map(q => {
                         let label = 'غير محدد';
-                        if (v.stock_id == 1) label = 'مخزن';
-                        else if (v.stock_id == 2) label = 'جملة';
+                        if (q.stock_id == 1) label = 'مخزن';
+                        else if (q.stock_id == 2) label = 'جملة';
 
-                        const quantity = (v.quantity ?? 0);
-                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${q.quantity}</small></div>`;
                     }).join('');
+
+
+                    const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
+                        0);
 
 
                     box.innerHTML = `
                     <div class="position-relative">
                         <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
                         <div class="position-absolute top-0 end-0 me-1">
-                            <img src="/assets/images/${first.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
@@ -288,9 +292,9 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                         ${isAdmin ? `
-                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                                ${lines}
-                            </div>` : ''}
+                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                                            ${lines}
+                                        </div>` : ''}
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
                 `;

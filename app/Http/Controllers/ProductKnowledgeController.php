@@ -26,13 +26,76 @@ class ProductKnowledgeController extends Controller
         return view('product_knowledge.subcategories', compact('category'));
     }
 
+    // public function products(Request $request, $subcategoryId)
+    // {
+    //     $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
+
+    //     $search = $request->input('search');
+
+    //     $query = DB::table('product_knowledge')
+    //         ->where('subcategory_knowledge_id', $subcategoryId);
+
+    //     if ($search) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('description', 'like', "%$search%")
+    //                 ->orWhere('gomla', 'like', "%$search%")
+    //                 ->orWhere('no_code', 'like', "%$search%")
+    //                 ->orWhere('product_code', 'like', "%$search%");
+    //         });
+    //     }
+
+    //     $paginatedProductCodes = $query
+    //         ->select('product_code')
+    //         ->groupBy('product_code')
+    //         ->orderBy('product_code')
+    //         ->paginate(6)
+    //         ->appends(['search' => $search]); // مهم علشان يحتفظ بالكلمة
+
+    //     $productCodes = $paginatedProductCodes->pluck('product_code');
+
+    //     $allVariants = DB::table('product_knowledge')
+    //         ->where('subcategory_knowledge_id', $subcategoryId)
+    //         ->whereIn('product_code', $productCodes)
+    //         ->select(
+    //             'id',
+    //             'product_code',
+    //             'unit_price',
+    //             'description',
+    //             'gomla',
+    //             'item_family_code',
+    //             'season_code',
+    //             DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
+    //             'color',
+    //             'size',
+    //             'quantity',
+    //             'no_code',
+    //             'image_url',
+    //             'material',
+    //             'website_description',
+
+    //         )
+    //         ->orderBy('product_code')
+    //         ->get()
+    //         ->groupBy('product_code');
+
+    //     return view('product_knowledge.products', [
+    //         'subcategory' => $subcategory,
+    //         'products' => $allVariants,
+    //         'pagination' => $paginatedProductCodes,
+    //         'search' => $search
+    //     ]);
+    // }
+
+
+
     public function products(Request $request, $subcategoryId)
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
 
         $search = $request->input('search');
 
-        $query = DB::table('product_knowledge')
+        // 1. نجيب المنتجات بناءً على الكلمة المفتاحية
+        $query = ProductKnowledge::query()
             ->where('subcategory_knowledge_id', $subcategoryId);
 
         if ($search) {
@@ -44,39 +107,27 @@ class ProductKnowledgeController extends Controller
             });
         }
 
+        // 2. نجيب الأكواد فقط عشان نعمل paginate
         $paginatedProductCodes = $query
             ->select('product_code')
             ->groupBy('product_code')
             ->orderBy('product_code')
             ->paginate(6)
-            ->appends(['search' => $search]); // مهم علشان يحتفظ بالكلمة
+            ->appends(['search' => $search]);
 
         $productCodes = $paginatedProductCodes->pluck('product_code');
 
-        $allVariants = DB::table('product_knowledge')
+        // 3. نجيب كل المنتجات الي ليها الكود ده
+        $allVariants = ProductKnowledge::with(['stockEntries.stock', 'subcategory.category'])
             ->where('subcategory_knowledge_id', $subcategoryId)
             ->whereIn('product_code', $productCodes)
-            ->select(
-                'id',
-                'product_code',
-                'unit_price',
-                'description',
-                'gomla',
-                'item_family_code',
-                'season_code',
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
-                'color',
-                'size',
-                'quantity',
-                'no_code',
-                'image_url',
-                'material',
-                'website_description',
-                
-            )
             ->orderBy('product_code')
             ->get()
+            ->each(function ($variant) {
+                $variant->total_quantity = $variant->stockEntries->sum('quantity');
+            })
             ->groupBy('product_code');
+
 
         return view('product_knowledge.products', [
             'subcategory' => $subcategory,
@@ -85,6 +136,7 @@ class ProductKnowledgeController extends Controller
             'search' => $search
         ]);
     }
+
 
 
 
@@ -380,7 +432,6 @@ class ProductKnowledgeController extends Controller
                         'created_at_excel'         => $created_at_excel,
                         'unit_price'               => isset($row['Unit Price']) ? (float) $row['Unit Price'] : null,
                         'image_url'                => $row['Image'] ?? null,
-                        'quantity'                 => isset($row['Quantity']) ? (int) $row['Quantity'] : null,
                         'no_code'                  => $no,
                         'product_code'             => $product_item_code,
                         'color_code'               => $color_code,
@@ -442,7 +493,8 @@ class ProductKnowledgeController extends Controller
                         [
                             'quantity' => $qty,
                             'stock_id' => $request->stock_id
-                        ]);
+                        ]
+                    );
                     $updated++;
                 }
             }
