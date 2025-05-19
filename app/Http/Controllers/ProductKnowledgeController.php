@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\CategoryKnowledge;
-use App\Models\SubcategoryKnowledge;
 use App\Models\ProductKnowledge;
+use App\Models\ProductStockEntry;
+use App\Models\SubcategoryKnowledge;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class ProductKnowledgeController extends Controller
 {
@@ -464,6 +465,8 @@ class ProductKnowledgeController extends Controller
         return view('product_knowledge.stock-upload');
     }
 
+
+
     public function handleStockUpload(Request $request)
     {
         $request->validate([
@@ -475,7 +478,7 @@ class ProductKnowledgeController extends Controller
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
             $sheet = $spreadsheet->getActiveSheet();
             $rows = $sheet->toArray();
-            array_shift($rows); // تجاهل العناوين
+            array_shift($rows); // تخطي أول صف (العناوين)
 
             $updated = 0;
 
@@ -485,21 +488,31 @@ class ProductKnowledgeController extends Controller
 
                 if (!$code || $qty < 0) continue;
 
-                $product = \App\Models\ProductKnowledge::where('no_code', $code)
-                    ->first();
+                $product = ProductKnowledge::where('no_code', $code)->first();
 
                 if ($product) {
-                    $product->update(
-                        [
+                    $entry = ProductStockEntry::where('product_knowledge_id', $product->id)
+                        ->where('stock_id', $request->stock_id)
+                        ->first();
+
+                    if ($entry) {
+                        // تحديث الكمية
+                        $entry->quantity = $qty;
+                        $entry->save();
+                    } else {
+                        // إنشاء إدخال جديد
+                        ProductStockEntry::create([
+                            'product_knowledge_id' => $product->id,
+                            'stock_id' => $request->stock_id,
                             'quantity' => $qty,
-                            'stock_id' => $request->stock_id
-                        ]
-                    );
+                        ]);
+                    }
+
                     $updated++;
                 }
             }
 
-            return redirect()->back()->with('success', "تم تحديث $updated منتج بنجاح.");
+            return redirect()->back()->with('success', "تم تحديث الكمية لـ $updated منتج بنجاح.");
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage());
         }
