@@ -233,6 +233,11 @@ class ProductKnowledgeController extends Controller
                         throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
                     }
 
+                    $no = trim($no);
+                    if (DB::table('product_knowledge')->where('no_code', $no)->exists()) {
+                        continue; // موجود بالفعل، تجاهله
+                    }
+
                     $categoryId = $allCategories[$divisionName] ?? null;
                     if (!$categoryId) {
                         throw new \Exception("يوجد خطأ: التصنيف '{$divisionName}' غير موجود في قاعدة البيانات.");
@@ -259,7 +264,6 @@ class ProductKnowledgeController extends Controller
                         ->where('category_knowledge_id', $categoryId)
                         ->first();
 
-                    $no = $row['No.'];
                     $product_item_code = $row['Vendor Item No.'] ?? substr($no, 2, 6);
                     $color_code = substr($no, -5, 3);
                     $size_code = substr($no, -2);
