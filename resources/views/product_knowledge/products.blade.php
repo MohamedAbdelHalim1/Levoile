@@ -266,12 +266,22 @@
                     const box = document.createElement('div');
                     box.className = 'sub-img position-relative';
 
-                    let lines = (first.stockEntries || []).map(q => {
-                        let label = 'غير محدد';
-                        if (q.stock_id == 1) label = 'مخزن';
-                        else if (q.stock_id == 2) label = 'جملة';
+                    let stockMap = {
+                        1: 'مخزن',
+                        2: 'جملة'
+                    };
 
-                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${q.quantity}</small></div>`;
+                    // خريطة فيها الكميات حسب stock_id
+                    let entryMap = {};
+                    (first.stock_entries || []).forEach(q => {
+                        entryMap[q.stock_id] = q.quantity;
+                    });
+
+                    // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
+                    let lines = [1, 2].map(id => {
+                        let label = stockMap[id] || 'غير محدد';
+                        let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
+                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
                     }).join('');
 
 
@@ -292,9 +302,9 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                         ${isAdmin ? `
-                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                                            ${lines}
-                                        </div>` : ''}
+                                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                                                ${lines}
+                                            </div>` : ''}
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
                 `;
