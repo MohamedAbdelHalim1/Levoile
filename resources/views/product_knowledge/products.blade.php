@@ -3,10 +3,11 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('assets/bootstrap.css') }}">
     <style>
-        .ms-auto{
+        .ms-auto {
             margin-left: 0px !important;
         }
-        .slide .side-menu__item{
+
+        .slide .side-menu__item {
             text-decoration-line: none !important;
         }
     </style>
@@ -47,8 +48,7 @@
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small
-                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
                                 colors</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
@@ -56,7 +56,8 @@
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه' }}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
+                            <small
+                                class="fw-semibold back-ground text-white rounded-1 p-1">{{ $parent->product_code }}</small>
                         </div>
                     </div>
                     {{-- <h4>
@@ -73,7 +74,7 @@
                     </p>
                     <div class="row justify-content-center">
                         @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
-                            <div class="sub-color position-relative">
+<div class="sub-color position-relative">
                                 <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
                                     class="rounded-1">
                                 <div class="position-absolute top-0 end-0 me-1">
@@ -85,7 +86,7 @@
                                         class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                 </div>
                             </div>
-                        @endforeach
+@endforeach
 
                     </div>
                 </div>
@@ -93,7 +94,7 @@
                 <div class="col-12">
                     <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
                 </div>
-            @endforelse
+@endforelse
             <div class="d-flex justify-content-center mt-4">
                 {{ $pagination->links() }}
             </div>
@@ -239,38 +240,42 @@
 
 
 @section('scripts')
-<script>
-    const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
+    <script>
+        const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
 
-    document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
-        card.addEventListener('click', () => {
-            const variants = JSON.parse(card.dataset.variants);
-            const container = document.querySelector('#productModal .modal-body .row');
-            container.innerHTML = '';
+        document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+            card.addEventListener('click', () => {
+                const variants = JSON.parse(card.dataset.variants);
+                const container = document.querySelector('#productModal .modal-body .row');
+                container.innerHTML = '';
 
-            // Group by no_code
-            const grouped = variants.reduce((acc, item) => {
-                if (!acc[item.no_code]) acc[item.no_code] = [];
-                acc[item.no_code].push(item);
-                return acc;
-            }, {});
+                // Group by no_code
+                const grouped = variants.reduce((acc, item) => {
+                    if (!acc[item.no_code]) acc[item.no_code] = [];
+                    acc[item.no_code].push(item);
+                    return acc;
+                }, {});
 
-            Object.values(grouped).forEach(group => {
-                // sort to show المخزن فوق
-                group.sort((a, b) => a.stock_id - b.stock_id);
+                Object.values(grouped).forEach(group => {
+                    // sort to show المخزن فوق
+                    group.sort((a, b) => a.stock_id - b.stock_id);
 
-                const first = group[0]; // use one for image/color display
+                    const first = group[0]; // use one for image/color display
 
-                const box = document.createElement('div');
-                box.className = 'sub-img position-relative';
+                    const box = document.createElement('div');
+                    box.className = 'sub-img position-relative';
 
-                let lines = group.map(v => {
-                    const label = if (v.stock_id == 1) 'مخزن' elseif (v.stock_id == 2) 'جملة' else 'غير محدد';
-                    const quantity = (v.quantity ?? 0);
-                    return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                }).join('');
+                    let lines = group.map(v => {
+                        let label = 'غير محدد';
+                        if (v.stock_id == 1) label = 'مخزن';
+                        else if (v.stock_id == 2) label = 'جملة';
 
-                box.innerHTML = `
+                        const quantity = (v.quantity ?? 0);
+                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                    }).join('');
+
+
+                    box.innerHTML = `
                     <div class="position-relative">
                         <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
                         <div class="position-absolute top-0 end-0 me-1">
@@ -283,18 +288,18 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                         ${isAdmin ? `
-                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                            ${lines}
-                        </div>` : ''}
+                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                                ${lines}
+                            </div>` : ''}
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
                 `;
 
-                container.appendChild(box);
+                    container.appendChild(box);
+                });
             });
         });
-    });
-</script>
+    </script>
 @endsection
 
 {{-- @section('scripts')
@@ -337,3 +342,4 @@
         });
     </script>
 @endsection --}}
+)

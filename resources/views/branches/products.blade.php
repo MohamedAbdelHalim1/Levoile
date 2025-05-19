@@ -267,28 +267,32 @@
                 container.innerHTML = '';
 
                 const groupedByNoCode = variants.reduce((acc, variant) => {
-                if (!acc[variant.no_code]) acc[variant.no_code] = [];
-                acc[variant.no_code].push(variant);
-                return acc;
-            }, {});
+                    if (!acc[variant.no_code]) acc[variant.no_code] = [];
+                    acc[variant.no_code].push(variant);
+                    return acc;
+                }, {});
 
-            Object.values(groupedByNoCode).forEach(group => {
-                // sort to show مخزن فوق
-                group.sort((a, b) => a.stock_id - b.stock_id);
+                Object.values(groupedByNoCode).forEach(group => {
+                    // sort to show مخزن فوق
+                    group.sort((a, b) => a.stock_id - b.stock_id);
 
-                const first = group[0];
-                const box = document.createElement('div');
-                box.className = 'sub-img text-center mb-4';
+                    const first = group[0];
+                    const box = document.createElement('div');
+                    box.className = 'sub-img text-center mb-4';
 
-                let lines = group.map(v => {
-                    const label = if (v.stock_id == 1) 'مخزن' elseif (v.stock_id == 2) 'جملة' else 'غير محدد';
-                    const quantity = (v.quantity ?? 0);
-                    return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                }).join('');
+                    let lines = group.map(v => {
+                        let label = 'غير محدد';
+                        if (v.stock_id == 1) label = 'مخزن';
+                        else if (v.stock_id == 2) label = 'جملة';
+
+                        const quantity = (v.quantity ?? 0);
+                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                    }).join('');
 
 
 
-                box.innerHTML = `
+
+                    box.innerHTML = `
                     <div class="position-relative">
                         <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1 mb-2">
                         <div class="position-absolute top-0 end-0 me-1">
@@ -301,15 +305,15 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                        ${isAdmin ? `
-                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                ${lines}
-                            </div>` 
+                                <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                    ${lines}
+                                </div>` 
                             : `
-                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                    ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
-                                </small>
-                            </div>`
+                                <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                        ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
+                                    </small>
+                                </div>`
                         }
 
                     </div>
@@ -318,13 +322,13 @@
 
                     <input type="number" min="0" name="quantities[${first.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                     ${requestedItems[first.id] ? `
-                        <span class="badge bg-success mt-2">
-                            ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
-                        </span>` : ''}
+                            <span class="badge bg-success mt-2">
+                                ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
+                            </span>` : ''}
                 `;
 
-                container.appendChild(box);
-            });
+                    container.appendChild(box);
+                });
 
             });
         });
