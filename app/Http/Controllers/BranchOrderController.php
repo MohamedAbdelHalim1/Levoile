@@ -202,7 +202,7 @@ class BranchOrderController extends Controller
             ->keyBy('product_knowledge_id');
 
         $allVariants = DB::table('product_knowledge as pk')
-            ->leftJoin('product_quantities as pq', 'pk.id', '=', 'pq.product_knowledge_id')
+            ->leftJoin('product_stock_entries as pq', 'pk.id', '=', 'pq.product_knowledge_id')
             ->where('pk.subcategory_knowledge_id', $subcategoryId)
             ->whereIn('pk.product_code', $productCodes)
             ->select(
