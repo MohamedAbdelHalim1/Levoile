@@ -228,10 +228,12 @@ class ProductKnowledgeController extends Controller
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
                     $retailName = trim($row['Retail Product Code'] ?? '');
+                    $no = $row['No.'] ?? null;
 
-                    if (!$divisionName || !$subcategoryName || empty($row['No.'])) {
+                    if (!$divisionName || !$subcategoryName || empty($no)) {
                         throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
                     }
+
 
                     $no = trim($no);
                     if (DB::table('product_knowledge')->where('no_code', $no)->where('stock_id', $stockId)->exists()) {
