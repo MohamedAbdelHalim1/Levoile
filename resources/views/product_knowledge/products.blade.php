@@ -265,7 +265,7 @@
                 box.className = 'sub-img position-relative';
 
                 let lines = group.map(v => {
-                    const label = v.stock_id == 1 ? 'مخزن' : 'جملة';
+                    const label = if (v.stock_id == 1) 'مخزن' elseif (v.stock_id == 2) 'جملة' else 'غير محدد';
                     const quantity = (v.quantity ?? 0);
                     return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
                 }).join('');
