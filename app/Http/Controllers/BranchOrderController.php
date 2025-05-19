@@ -92,6 +92,78 @@ class BranchOrderController extends Controller
         return view('branches.subcategories', compact('category'));
     }
 
+    // public function products(Request $request, $subcategoryId)
+    // {
+    //     $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
+
+    //     $search = $request->input('search');
+
+    //     $query = DB::table('product_knowledge')
+    //         ->where('subcategory_knowledge_id', $subcategoryId);
+
+    //     if ($search) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('description', 'like', "%$search%")
+    //                 ->orWhere('gomla', 'like', "%$search%")
+    //                 ->orWhere('no_code', 'like', "%$search%")
+    //                 ->orWhere('product_code', 'like', "%$search%");
+    //         });
+    //     }
+
+    //     $paginatedProductCodes = $query
+    //         ->select('product_code')
+    //         ->groupBy('product_code')
+    //         ->orderBy('product_code')
+    //         ->paginate(6)
+    //         ->appends(['search' => $search]);
+
+    //     $productCodes = $paginatedProductCodes->pluck('product_code');
+
+    //     $userId = Auth::id();
+    //     $requestedItems = DB::table('branch_order_items as boi')
+    //         ->join('open_orders as oo', 'boi.open_order_id', '=', 'oo.id')
+    //         ->where('boi.user_id', $userId)
+    //         ->whereNull('oo.closed_at') // ✅ بس المفتوحين
+    //         ->select('boi.product_knowledge_id', DB::raw('SUM(boi.requested_quantity) as requested_quantity'))
+    //         ->groupBy('boi.product_knowledge_id')
+    //         ->get()
+    //         ->keyBy('product_knowledge_id');
+
+
+
+    //     $allVariants = DB::table('product_knowledge')
+    //         ->where('subcategory_knowledge_id', $subcategoryId)
+    //         ->whereIn('product_code', $productCodes)
+    //         ->select(
+    //             'id',
+    //             'product_code',
+    //             'unit_price',
+    //             'description',
+    //             'gomla',
+    //             'item_family_code',
+    //             'season_code',
+    //             DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
+    //             'color',
+    //             'size',
+    //             'no_code',
+    //             'image_url',
+    //             'material',
+    //             'website_description',
+
+    //         )
+    //         ->orderBy('product_code')
+    //         ->get()
+    //         ->groupBy('product_code');
+
+    //     return view('branches.products', [
+    //         'subcategory' => $subcategory,
+    //         'products' => $allVariants,
+    //         'pagination' => $paginatedProductCodes,
+    //         'search' => $search,
+    //         'requestedItems' => $requestedItems->toArray(),
+    //     ]);
+    // }
+
     public function products(Request $request, $subcategoryId)
     {
         $subcategory = DB::table('subcategory_knowledge')->where('id', $subcategoryId)->first();
@@ -123,37 +195,40 @@ class BranchOrderController extends Controller
         $requestedItems = DB::table('branch_order_items as boi')
             ->join('open_orders as oo', 'boi.open_order_id', '=', 'oo.id')
             ->where('boi.user_id', $userId)
-            ->whereNull('oo.closed_at') // ✅ بس المفتوحين
+            ->whereNull('oo.closed_at')
             ->select('boi.product_knowledge_id', DB::raw('SUM(boi.requested_quantity) as requested_quantity'))
             ->groupBy('boi.product_knowledge_id')
             ->get()
             ->keyBy('product_knowledge_id');
 
-
-
-        $allVariants = DB::table('product_knowledge')
-            ->where('subcategory_knowledge_id', $subcategoryId)
-            ->whereIn('product_code', $productCodes)
+        $allVariants = DB::table('product_knowledge as pk')
+            ->leftJoin('product_quantities as pq', 'pk.id', '=', 'pq.product_knowledge_id')
+            ->where('pk.subcategory_knowledge_id', $subcategoryId)
+            ->whereIn('pk.product_code', $productCodes)
             ->select(
-                'id',
-                'product_code',
-                'unit_price',
-                'description',
-                'gomla',
-                'item_family_code',
-                'season_code',
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at_excel"),
-                'color',
-                'size',
-                'quantity',
-                'no_code',
-                'image_url',
-                'material',
-                'website_description',
-                
+                'pk.*',
+                DB::raw('GROUP_CONCAT(CONCAT(pq.stock_id, ":", pq.quantity)) as stock_data')
             )
-            ->orderBy('product_code')
+            ->groupBy('pk.id')
+            ->orderBy('pk.product_code')
             ->get()
+            ->map(function ($item) {
+                $item->stock_entries = collect();
+
+                if ($item->stock_data) {
+                    $entries = explode(',', $item->stock_data);
+                    foreach ($entries as $entry) {
+                        [$stock_id, $quantity] = explode(':', $entry);
+                        $item->stock_entries->push([
+                            'stock_id' => (int) $stock_id,
+                            'quantity' => (int) $quantity,
+                        ]);
+                    }
+                }
+
+                unset($item->stock_data);
+                return $item;
+            })
             ->groupBy('product_code');
 
         return view('branches.products', [
@@ -164,6 +239,7 @@ class BranchOrderController extends Controller
             'requestedItems' => $requestedItems->toArray(),
         ]);
     }
+
 
     public function saveItems(Request $request)
     {

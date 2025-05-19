@@ -84,25 +84,27 @@
                         {{ $parent->website_description }}
                     </p>
                     <div class="row justify-content-center">
-                        @foreach ($group->whereIn('id', array_keys($requestedItems)) as $variant)
-                            <div class="sub-color position-relative">
-                                <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
-                                    class="rounded-1">
-                                <div class="position-absolute top-0 end-0 me-1">
-                                    <img src="{{ asset('assets/images/' . ($variant->quantity > 0 ? 'right.png' : 'wrong.png')) }}"
-                                        class="icon-mark">
+                        
+                        @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
+                            @php
+                                $totalQty = $variant->stock_entries->sum('quantity');
+                            @endphp
+                                <div class="sub-color position-relative">
+                                    <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}" class="rounded-1">
+                                    <div class="position-absolute top-0 end-0 me-1">
+                                        <img src="{{ asset('assets/images/' . ($totalQty > 0 ? 'right.png' : 'wrong.png')) }}" class="icon-mark">
+                                    </div>
+                                    <div class="position-absolute top-0 end-0 me-1 mt-1">
+                                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                            الكمية: {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
+                                        </small>
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
+                                        <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
+                                    </div>
                                 </div>
-                                <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                        الكمية: {{ $requestedItems[$variant->id]->requested_quantity ?? 0 }}
-                                    </small>
-                                </div>
-                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                    <small
-                                        class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
-                                </div>
-                            </div>
                         @endforeach
+
 
                     </div>
                 </div>
@@ -110,7 +112,7 @@
                 <div class="col-12">
                     <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
                 </div>
-            @endforelse
+@endforelse
             <div class="d-flex justify-content-center mt-4">
                 {{ $pagination->links() }}
             </div>
@@ -257,46 +259,47 @@
         const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
     </script>
 
-    <script>
-        const requestedItems = @json($requestedItems);
+        <script>
+            const requestedItems = @json($requestedItems);
 
-        document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
-            card.addEventListener('click', () => {
-                const variants = JSON.parse(card.dataset.variants);
-                const container = document.querySelector('#productModal .modal-body .row');
-                container.innerHTML = '';
+            document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const variants = JSON.parse(card.dataset.variants);
+                    const container = document.querySelector('#productModal .modal-body .row');
+                    container.innerHTML = '';
 
-                const groupedByNoCode = variants.reduce((acc, variant) => {
-                    if (!acc[variant.no_code]) acc[variant.no_code] = [];
-                    acc[variant.no_code].push(variant);
-                    return acc;
-                }, {});
+                    const groupedByNoCode = variants.reduce((acc, variant) => {
+                        if (!acc[variant.no_code]) acc[variant.no_code] = [];
+                        acc[variant.no_code].push(variant);
+                        return acc;
+                    }, {});
 
-                Object.values(groupedByNoCode).forEach(group => {
-                    // sort to show مخزن فوق
-                    group.sort((a, b) => a.stock_id - b.stock_id);
+                    Object.values(groupedByNoCode).forEach(group => {
+                        // sort to show مخزن فوق
+                        // group.sort((a, b) => a.stock_id - b.stock_id);
 
-                    const first = group[0];
-                    const box = document.createElement('div');
-                    box.className = 'sub-img text-center mb-4';
+                        const first = group[0];
+                        const box = document.createElement('div');
+                        box.className = 'sub-img text-center mb-4';
 
-                    let lines = group.map(v => {
-                        let label = 'غير محدد';
-                        if (v.stock_id == 1) label = 'مخزن';
-                        else if (v.stock_id == 2) label = 'جملة';
+                        let lines = (first.stock_entries || []).map(q => {
+                            let label = 'غير محدد';
+                            if (q.stock_id == 1) label = 'مخزن';
+                            else if (q.stock_id == 2) label = 'جملة';
 
-                        const quantity = (v.quantity ?? 0);
-                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                    }).join('');
+                            return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${q.quantity}</small></div>`;
+                        }).join('');
+
+                        const totalQty = (first.stock_entries || []).reduce((sum, q) => sum + q.quantity, 0);
 
 
 
 
-                    box.innerHTML = `
+                        box.innerHTML = `
                     <div class="position-relative">
                         <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1 mb-2">
                         <div class="position-absolute top-0 end-0 me-1">
-                            <img src="/assets/images/${first.quantity > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
@@ -305,15 +308,15 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                        ${isAdmin ? `
-                                <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                    ${lines}
-                                </div>` 
+                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                            ${lines}
+                                        </div>` 
                             : `
-                                <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                        ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
-                                    </small>
-                                </div>`
+                                        <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                                ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
+                                            </small>
+                                        </div>`
                         }
 
                     </div>
@@ -322,27 +325,28 @@
 
                     <input type="number" min="0" name="quantities[${first.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
                     ${requestedItems[first.id] ? `
-                            <span class="badge bg-success mt-2">
-                                ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
-                            </span>` : ''}
+                                    <span class="badge bg-success mt-2">
+                                        ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
+                                    </span>` : ''}
                 `;
 
-                    container.appendChild(box);
+                        container.appendChild(box);
+                    });
+
                 });
-
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.classList.add('fade');
-                    setTimeout(() => alert.remove(), 500); // Remove from DOM
-                }, 3000); // بعد 3 ثواني
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        alert.classList.add('fade');
+                        setTimeout(() => alert.remove(), 500); // Remove from DOM
+                    }, 3000); // بعد 3 ثواني
+                });
             });
-        });
-    </script>
+        </script>
 @endsection
+)
