@@ -116,10 +116,10 @@
         });
 
         // ✅ كل ما تختار من الدروب داون
-        stockSelect.addEventListener('change', checkReadyToSubmit);
+        // stockSelect.addEventListener('change', checkReadyToSubmit);
 
         submitBtn.addEventListener('click', async function() {
-            if (!allRows.length || stockSelect.value === '') {
+            if (!allRows.length) {
                 return alert('من فضلك اختر ملف وحدد نوع المخزن');
             }
 
