@@ -5,6 +5,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4>قائمة المنتجات</h4>
+                <a href="{{ route('product-knowledge.stock.upload') }}" class="btn btn-success mb-3">
+                    + إضافة ستوك
+                </a>
+
                 <div class="table-responsive">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
@@ -51,10 +55,9 @@
                                     <td>
                                         <a href="#" class="btn btn-sm btn-outline-info open-product-modal"
                                             @php
-                                                $latestGroup = $group->groupBy('color')->map(function ($items) {
+$latestGroup = $group->groupBy('color')->map(function ($items) {
                                                     return $items->sortByDesc('created_at_excel')->first();
-                                                })->values(); 
-                                            @endphp
+                                                })->values(); @endphp
                                             data-group='@json($latestGroup)' data-image="{{ $mainImage }}">
                                             {{ $colors }}
                                         </a>
@@ -87,27 +90,27 @@
     </div>
 
     <div class="modal fade" id="missingImagesModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">تفاصيل المنتجات بدون صور</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered text-center">
-                    <thead>
-                        <tr>
-                            <th>كود المنتج</th>
-                            <th>الوصف</th>
-                            <th>اللون</th>
-                        </tr>
-                    </thead>
-                    <tbody id="missingImagesTableBody"></tbody>
-                </table>
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل المنتجات بدون صور</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>كود المنتج</th>
+                                <th>الوصف</th>
+                                <th>اللون</th>
+                            </tr>
+                        </thead>
+                        <tbody id="missingImagesTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- Modal for full product -->
@@ -269,11 +272,11 @@
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.show-missing-images').forEach(button => {
-                button.addEventListener('click', function (e) {
+                button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
+
                     const key = this.dataset.missingKey;
                     const raw = window.missingImagesData?.[key] || [];
                     const data = Array.isArray(raw) ? raw : Object.values(raw);
@@ -297,6 +300,5 @@
                 });
             });
         });
-
     </script>
 @endsection

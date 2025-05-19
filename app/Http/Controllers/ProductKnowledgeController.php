@@ -404,4 +404,52 @@ class ProductKnowledgeController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
         }
     }
+
+
+
+
+    public function showStockUpload()
+    {
+        return view('product_knowledge.stock-upload');
+    }
+
+    public function handleStockUpload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls',
+            'stock_id' => 'required|in:1,2',
+        ]);
+
+        try {
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($request->file('excel_file'));
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
+            array_shift($rows); // تجاهل العناوين
+
+            $updated = 0;
+
+            foreach ($rows as $row) {
+                $code = trim($row[0] ?? '');
+                $qty = (int) ($row[1] ?? 0);
+
+                if (!$code || $qty < 0) continue;
+
+                $product = \App\Models\ProductKnowledge::where('no_code', $code)
+                    ->first();
+
+                if ($product) {
+                    $product->update(
+                        [
+                            'quantity' => $qty,
+                            'stock_id' => $request->stock_id
+                        ]);
+                    $updated++;
+                }
+            }
+
+            return redirect()->back()->with('success', "تم تحديث $updated منتج بنجاح.");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage());
+        }
+    }
 }

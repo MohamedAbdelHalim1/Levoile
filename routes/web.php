@@ -195,6 +195,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-knowledge/lists', [ProductKnowledgeController::class, 'productList'])->name('product-knowledge.lists');
     Route::post('/product-knowledge/update-quantity/{id}', [ProductKnowledgeController::class, 'updateQuantity']);
 
+    Route::get('product-knowledge/stock/upload', [ProductKnowledgeController::class, 'showStockUpload'])->name('product-knowledge.stock.upload');
+    Route::post('product-knowledge/stock/upload', [ProductKnowledgeController::class, 'handleStockUpload'])->name('product-knowledge.stock.upload.save');
+
 
     Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])->name('product-knowledge.index');
     Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
