@@ -76,6 +76,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                     </td>
 
                                     <td>{{ $group->sum('quantity') }}</td>
+                                    
                                 </tr>
                             @empty
                                 <tr>
@@ -203,6 +204,12 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                         loading="lazy">                                <div><strong>Code:</strong> ${item.no_code}</div>
                                 <div><strong>Color:</strong> ${item.color}</div>
                                 <div><strong>Size:</strong> ${item.size}</div>
+                                    <div><strong>Stock:</strong> ${
+                                        item.stock_id === 1 ? 'مخزن' :
+                                        item.stock_id === 2 ? 'جملة' :
+                                        'ستوك غير محدد'
+                                    }</div>
+                            
                                 
                                 <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
                                     <input type="number" class="form-control form-control-sm text-center qty-input" 
