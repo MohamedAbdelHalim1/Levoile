@@ -39,6 +39,7 @@ class ProductKnowledgeController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('description', 'like', "%$search%")
                     ->orWhere('gomla', 'like', "%$search%")
+                    ->orWhere('no_code', 'like', "%$search%")
                     ->orWhere('product_code', 'like', "%$search%");
             });
         }
