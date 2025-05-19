@@ -18,7 +18,7 @@
         </table>
     </div>
 
-    <a href="{{ route('product-knowledge.products', 1) }}" class="btn btn-primary mt-4">العودة إلى المنتجات</a>
+    <a href="{{ route('product-knowledge.lists') }}" class="btn btn-primary mt-4">العودة إلى المنتجات</a>
 </div>
 
 <script>

@@ -325,7 +325,7 @@ class ProductKnowledgeController extends Controller
             $duplicateCount = 0;
             $duplicateCodes = [];
 
-            DB::transaction(function () use ($data, $allCategories, $allSubcategories, $newCount, $duplicateCount, $duplicateCodes) {
+            DB::transaction(function () use ($data, $allCategories, $allSubcategories, &$newCount, &$duplicateCount, &$duplicateCodes) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
