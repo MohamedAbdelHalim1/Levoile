@@ -72,7 +72,7 @@ class ProductKnowledgeController extends Controller
                 'image_url',
                 'material',
                 'website_description',
-                'stock_id'
+                
             )
             ->orderBy('product_code')
             ->get()
