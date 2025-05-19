@@ -234,7 +234,7 @@ class ProductKnowledgeController extends Controller
                     }
 
                     $no = trim($no);
-                    if (DB::table('product_knowledge')->where('no_code', $no)->exists()) {
+                    if (DB::table('product_knowledge')->where('no_code', $no)->where('stock_id', $stockId)->exists()) {
                         continue; // موجود بالفعل، تجاهله
                     }
 
