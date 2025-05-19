@@ -23,7 +23,6 @@
                                 <th>السعر</th>
                                 <th>الألوان</th>
                                 <th>عدد الصور المتبقية</th>
-                                <th>الكمية</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,8 +74,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                         </script>
                                     </td>
 
-                                    <td>{{ $group->sum('quantity') }}</td>
-                                    
+
                                 </tr>
                             @empty
                                 <tr>
@@ -196,37 +194,90 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     const container = document.getElementById('modalVariants');
                     container.innerHTML = '';
                     group.forEach(item => {
+                        let stocks = item.stock_entries || [];
+
+                        // جهز الإنبوكس بتاع الكمية (editable فقط لو في جملة أو مخزن)
+                        let stockHtml = '';
+                        let editableQty = 0;
+
+                        if (stocks.length) {
+                            stocks.forEach(stock => {
+                                let label = stock.stock_id === 1 ? 'مخزن' : (stock
+                                    .stock_id === 2 ? 'جملة' : 'غير محدد');
+                                stockHtml += `
+                                    <div class="mt-1">
+                                        <strong>${label}:</strong>
+                                        <div class="d-flex justify-content-center gap-1 align-items-center mt-1">
+                                            <input type="number"
+                                                class="form-control form-control-sm text-center qty-input"
+                                                value="${stock.quantity}"
+                                                data-id="${item.id}"
+                                                data-stock="${stock.stock_id}"
+                                                style="width: 60px;">
+                                            <button class="btn btn-sm btn-outline-secondary toggle-edit">✏️</button>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            stockHtml =
+                                `<div class="mt-2 text-muted"><strong>غير محدد - 0</strong></div>`;
+                        }
+
                         container.innerHTML += `
                             <div class='col-md-3 text-center mb-3'>
-                            <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}" 
-                                        class="img-fluid mb-1" 
-                                        style="height: 80px; object-fit: contain;" 
-                                        loading="lazy">                                <div><strong>Code:</strong> ${item.no_code}</div>
+                                <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}"
+                                    class="img-fluid mb-1"
+                                    style="height: 80px; object-fit: contain;" loading="lazy">
+                                <div><strong>Code:</strong> ${item.no_code}</div>
                                 <div><strong>Color:</strong> ${item.color}</div>
                                 <div><strong>Size:</strong> ${item.size}</div>
-                                    <div><strong>Stock:</strong> ${
-                                        item.stock_id === 1 ? 'مخزن' :
-                                        item.stock_id === 2 ? 'جملة' :
-                                        'ستوك غير محدد'
-                                    }</div>
-                            
-                                
-                                <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
-                                    <input type="number" class="form-control form-control-sm text-center qty-input" 
-                                        value="${item.quantity}" 
-                                        data-id="${item.id}" 
-                                        disabled style="width: 60px;">
-                                    <button class="btn btn-sm btn-outline-secondary toggle-edit">
-                                        ✏️
-                                    </button>
-                                </div>
-
-                                <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'} mt-2">
-                                    ${item.quantity > 0 ? 'Active' : 'Not Active'}
-                                </span>
+                                ${stockHtml}
                             </div>
-                            `;
+                        `;
                     });
+
+                    // group.forEach(item => {
+                    //     container.innerHTML += `
+                //         <div class='col-md-3 text-center mb-3'>
+                //         <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}" 
+                //                     class="img-fluid mb-1" 
+                //                     style="height: 80px; object-fit: contain;" 
+                //                     loading="lazy">                                <div><strong>Code:</strong> ${item.no_code}</div>
+                //             <div><strong>Color:</strong> ${item.color}</div>
+                //             <div><strong>Size:</strong> ${item.size}</div>
+                //                 <div>
+                //                     <strong>Stock:</strong>
+                //                     ${
+                //                         (item.stock_entries || []).length > 0
+                //                         ? item.stock_entries.map(e => {
+                //                             let label = 'غير محدد';
+                //                             if (e.stock_id === 1) label = 'مخزن';
+                //                             else if (e.stock_id === 2) label = 'جملة';
+                //                             return `${label} - ${e.quantity}`;
+                //                         }).join('<br>')
+                //                         : 'غير محدد - 0'
+                //                     }
+                //                 </div>
+
+
+
+                //             <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
+                //                 <input type="number" class="form-control form-control-sm text-center qty-input" 
+                //                     value="${item.quantity}" 
+                //                     data-id="${item.id}" 
+                //                     disabled style="width: 60px;">
+                //                 <button class="btn btn-sm btn-outline-secondary toggle-edit">
+                //                     ✏️
+                //                 </button>
+                //             </div>
+
+                //             <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'} mt-2">
+                //                 ${item.quantity > 0 ? 'Active' : 'Not Active'}
+                //             </span>
+                //         </div>
+                //         `;
+                    // });
 
                     const modal = new bootstrap.Modal(document.getElementById('productModal'));
                     modal.show();
@@ -237,7 +288,11 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('toggle-edit')) {
                 const btn = e.target;
-                const input = btn.previousElementSibling;
+                const wrapper = btn.closest('.d-flex');
+                const input = wrapper.querySelector('.qty-input');
+                const stockId = input.dataset.stock;
+                const id = input.dataset.id;
+                const newQty = input.value;
                 const isEditing = !input.disabled;
 
                 if (isEditing) {
@@ -255,7 +310,8 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
-                                quantity: newQty
+                                quantity: newQty,
+                                stock_id: stockId
                             })
                         })
                         .then(res => res.json())

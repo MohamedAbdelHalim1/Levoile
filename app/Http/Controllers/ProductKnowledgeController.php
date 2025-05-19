@@ -157,7 +157,7 @@ class ProductKnowledgeController extends Controller
 
     public function productList()
     {
-        $allVariants = ProductKnowledge::with(['subcategory.category'])
+        $allVariants = ProductKnowledge::with(['subcategory.category', 'stockEntries.stock'])
             ->orderBy('product_code')
             ->get()
             ->map(function ($item) {
@@ -175,18 +175,37 @@ class ProductKnowledgeController extends Controller
 
 
 
+    // public function updateQuantity(Request $request, $id)
+    // {
+    //     $validated = $request->validate([
+    //         'quantity' => 'required|integer|min:0'
+    //     ]);
+
+    //     $product = ProductKnowledge::findOrFail($id);
+    //     $product->quantity = $validated['quantity'];
+    //     $product->save();
+
+    //     return response()->json(['status' => 'success']);
+    // }
+
     public function updateQuantity(Request $request, $id)
     {
         $validated = $request->validate([
-            'quantity' => 'required|integer|min:0'
+            'quantity' => 'required|integer|min:0',
+            'stock_id' => 'required|in:1,2',
         ]);
 
-        $product = ProductKnowledge::findOrFail($id);
-        $product->quantity = $validated['quantity'];
-        $product->save();
+        $entry = \App\Models\ProductStockEntry::firstOrNew([
+            'product_knowledge_id' => $id,
+            'stock_id' => $validated['stock_id'],
+        ]);
+
+        $entry->quantity = $validated['quantity'];
+        $entry->save();
 
         return response()->json(['status' => 'success']);
     }
+
 
 
     public function uploadForm()
