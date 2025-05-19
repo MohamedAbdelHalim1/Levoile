@@ -201,6 +201,9 @@ class BranchOrderController extends Controller
             ->get()
             ->keyBy('product_knowledge_id');
 
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+
+
         $allVariants = DB::table('product_knowledge as pk')
             ->leftJoin('product_stock_entries as pq', 'pk.id', '=', 'pq.product_knowledge_id')
             ->where('pk.subcategory_knowledge_id', $subcategoryId)
