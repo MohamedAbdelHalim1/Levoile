@@ -207,12 +207,109 @@ class ProductKnowledgeController extends Controller
     //     }
     // }
 
+    // public function uploadSave(Request $request)
+    // {
+    //     try {
+    //         $data = $request->get('chunk');
+    //         //$stockId = $request->input('stock_id', 1); // default = 1
+
+
+    //         if (empty($data)) {
+    //             return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
+    //         }
+
+    //         $allCategories = DB::table('category_knowledge')->pluck('id', 'name');
+    //         $allSubcategories = DB::table('subcategory_knowledge')
+    //             ->select('id', 'name', 'category_knowledge_id')
+    //             ->get()
+    //             ->groupBy('category_knowledge_id');
+
+    //         DB::transaction(function () use ($data, $allCategories, $allSubcategories) {
+    //             foreach ($data as $row) {
+    //                 $divisionName = trim($row['Division Code'] ?? '');
+    //                 $subcategoryName = trim($row['Item Category Code'] ?? '');
+    //                 $retailName = trim($row['Retail Product Code'] ?? '');
+    //                 $no = $row['No.'] ?? null;
+
+    //                 if (!$divisionName || !$subcategoryName || empty($no)) {
+    //                     throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
+    //                 }
+
+
+    //                 $no = trim($no);
+    //                 if (DB::table('product_knowledge')->where('no_code', $no)->exists()) {
+    //                     continue; // موجود بالفعل، تجاهله
+    //                 }
+
+    //                 $categoryId = $allCategories[$divisionName] ?? null;
+    //                 if (!$categoryId) {
+    //                     throw new \Exception("يوجد خطأ: التصنيف '{$divisionName}' غير موجود في قاعدة البيانات.");
+    //                 }
+
+    //                 $subcat = $allSubcategories[$categoryId]->firstWhere('name', $subcategoryName);
+    //                 if (!$subcat) {
+    //                     throw new \Exception("يوجد خطأ: الصب كاتيجوري '{$subcategoryName}' غير موجود للتصنيف '{$divisionName}'");
+    //                 }
+
+    //                 // ✳️ Check if Retail Product Code (as subcategory) already exists
+    //                 if ($retailName && !DB::table('subcategory_knowledge')->where('name', $retailName)->exists()) {
+    //                     DB::table('subcategory_knowledge')->insert([
+    //                         'name' => $retailName,
+    //                         'category_knowledge_id' => $categoryId,
+    //                         'parent_id' => $subcat->id,
+    //                         'created_at' => now(),
+    //                         'updated_at' => now()
+    //                     ]);
+    //                 }
+
+    //                 $childSubcat = DB::table('subcategory_knowledge')
+    //                     ->where('name', $retailName)
+    //                     ->where('category_knowledge_id', $categoryId)
+    //                     ->first();
+
+    //                 $product_item_code = $row['Vendor Item No.'] ?? substr($no, 2, 6);
+    //                 $color_code = substr($no, -5, 3);
+    //                 $size_code = substr($no, -2);
+
+    //                 $created_at_excel = !empty($row['Created At']) && is_numeric($row['Created At'])
+    //                     ? Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']))
+    //                     : $row['Created At'] ?? null;
+
+    //                 DB::table('product_knowledge')->insert([
+    //                     'subcategory_knowledge_id' => $subcat->id,
+    //                     'description'              => $row['Description'] ?? null,
+    //                     'gomla'                    => $row['Whole Description'] ?? null,
+    //                     'website_description'      => $row['Website Description'] ?? null,
+    //                     'item_family_code'         => $row['Item Family Code'] ?? null,
+    //                     'season_code'              => $row['Season Code'] ?? null,
+    //                     'product_item_code'        => $product_item_code,
+    //                     'color'                    => $row['Color'] ?? null,
+    //                     'material'                 => $row['Material'] ?? null,
+    //                     'size'                     => $row['Size'] ?? null,
+    //                     'created_at_excel'         => $created_at_excel,
+    //                     'unit_price'               => isset($row['Unit Price']) ? (float) $row['Unit Price'] : null,
+    //                     'image_url'                => $row['Image'] ?? null,
+    //                     'quantity'                 => isset($row['Quantity']) ? (int) $row['Quantity'] : null,
+    //                     'no_code'                  => $no,
+    //                     'product_code'             => $product_item_code,
+    //                     'color_code'               => $color_code,
+    //                     'size_code'                => $size_code,
+    //                     'created_at'               => now(),
+    //                     'updated_at'               => now(),
+    //                 ]);
+    //             }
+    //         });
+
+    //         return response()->json(['status' => 'success']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
+    //     }
+    // }
+
     public function uploadSave(Request $request)
     {
         try {
             $data = $request->get('chunk');
-            $stockId = $request->input('stock_id', 1); // default = 1
-
 
             if (empty($data)) {
                 return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
@@ -224,7 +321,11 @@ class ProductKnowledgeController extends Controller
                 ->get()
                 ->groupBy('category_knowledge_id');
 
-            DB::transaction(function () use ($data, $allCategories, $allSubcategories, $stockId) {
+            $newCount = 0;
+            $duplicateCount = 0;
+            $duplicateCodes = [];
+
+            DB::transaction(function () use ($data, $allCategories, $allSubcategories, $newCount, $duplicateCount, $duplicateCodes) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
@@ -235,23 +336,19 @@ class ProductKnowledgeController extends Controller
                         throw new \Exception('يوجد خطأ في بيانات الشيت: قيم ناقصة');
                     }
 
-
                     $no = trim($no);
-                    if (DB::table('product_knowledge')->where('no_code', $no)->where('stock_id', $stockId)->exists()) {
-                        continue; // موجود بالفعل، تجاهله
+                    if (DB::table('product_knowledge')->where('no_code', $no)->exists()) {
+                        $duplicateCount++;
+                        $duplicateCodes[] = $no;
+                        continue;
                     }
 
                     $categoryId = $allCategories[$divisionName] ?? null;
-                    if (!$categoryId) {
-                        throw new \Exception("يوجد خطأ: التصنيف '{$divisionName}' غير موجود في قاعدة البيانات.");
-                    }
+                    if (!$categoryId) continue;
 
                     $subcat = $allSubcategories[$categoryId]->firstWhere('name', $subcategoryName);
-                    if (!$subcat) {
-                        throw new \Exception("يوجد خطأ: الصب كاتيجوري '{$subcategoryName}' غير موجود للتصنيف '{$divisionName}'");
-                    }
+                    if (!$subcat) continue;
 
-                    // ✳️ Check if Retail Product Code (as subcategory) already exists
                     if ($retailName && !DB::table('subcategory_knowledge')->where('name', $retailName)->exists()) {
                         DB::table('subcategory_knowledge')->insert([
                             'name' => $retailName,
@@ -262,22 +359,15 @@ class ProductKnowledgeController extends Controller
                         ]);
                     }
 
-                    $childSubcat = DB::table('subcategory_knowledge')
-                        ->where('name', $retailName)
-                        ->where('category_knowledge_id', $categoryId)
-                        ->first();
-
                     $product_item_code = $row['Vendor Item No.'] ?? substr($no, 2, 6);
                     $color_code = substr($no, -5, 3);
                     $size_code = substr($no, -2);
-
                     $created_at_excel = !empty($row['Created At']) && is_numeric($row['Created At'])
                         ? Carbon::create(1899, 12, 30)->addDays(floatval($row['Created At']))
                         : $row['Created At'] ?? null;
 
                     DB::table('product_knowledge')->insert([
                         'subcategory_knowledge_id' => $subcat->id,
-                        'stock_id'                 => $stockId,
                         'description'              => $row['Description'] ?? null,
                         'gomla'                    => $row['Whole Description'] ?? null,
                         'website_description'      => $row['Website Description'] ?? null,
@@ -298,10 +388,18 @@ class ProductKnowledgeController extends Controller
                         'created_at'               => now(),
                         'updated_at'               => now(),
                     ]);
+
+                    $newCount++;
                 }
             });
 
-            return response()->json(['status' => 'success']);
+            // ✅ رجّع البيانات علشان نستخدمها في التقرير
+            return response()->json([
+                'status' => 'success',
+                'new_count' => $newCount,
+                'duplicate_count' => $duplicateCount,
+                'duplicates' => $duplicateCodes,
+            ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
         }
