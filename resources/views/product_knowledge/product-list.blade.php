@@ -194,8 +194,10 @@
                     group.forEach(item => {
                         container.innerHTML += `
                             <div class='col-md-3 text-center mb-3'>
-                                <img src="${item.image_url}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
-                                <div><strong>Code:</strong> ${item.no_code}</div>
+                            <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}" 
+                                        class="img-fluid mb-1" 
+                                        style="height: 80px; object-fit: contain;" 
+                                        loading="lazy">                                <div><strong>Code:</strong> ${item.no_code}</div>
                                 <div><strong>Color:</strong> ${item.color}</div>
                                 <div><strong>Size:</strong> ${item.size}</div>
                                 
