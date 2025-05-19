@@ -300,11 +300,18 @@
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
-                        ${isAdmin ? `
+                       ${isAdmin ? `
                             <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
                                 ${lines}
-                            </div>` : ''
+                            </div>` 
+                            : `
+                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
+                                <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                    ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
+                                </small>
+                            </div>`
                         }
+
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
 
