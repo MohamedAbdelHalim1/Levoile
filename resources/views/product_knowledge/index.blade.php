@@ -12,7 +12,7 @@
                                 class="text-center shadow-sm p-3 d-block">
                                 <div class="card h-100 shadow text-center">
                                     <img src="{{ asset($category->image ? 'images/category/' . $category->image : 'assets/images/comming.png') }}"
-                                        class="card-img-top p-2" style="height: 200px; object-fit: contain;">
+                                        class="card-img-top p-2">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $category->name }}</h5>
                                     </div>
