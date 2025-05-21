@@ -27,6 +27,7 @@
                                     <th>اختيار</th>
                                     <th>اسم المنتج</th>
                                     <th>عدد الألوان</th>
+                                    <th>الحالة</th>
                                     <th>نوع التصوير</th>
                                     <th>الإجراء</th>
                                 </tr>
@@ -64,6 +65,7 @@
                                                 {{ $colorCodes->count() }}
                                             </span>
                                         </td>
+                                        <td><span class="badge bg-success">{{ $status ?? '-' }}</span></td>
                                         <td>{{ $type ?? '-' }}</td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-success assign-type"
