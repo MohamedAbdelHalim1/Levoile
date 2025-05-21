@@ -42,7 +42,7 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="selected_ready_ids[]" value="{{ $productId }}"
+                                            <input type="checkbox" name="selected_products[]" value="{{ $productId }}"
                                                 data-type="{{ $type ?? '' }}" onclick="return handleCheckboxClick(this)">
                                         </td>
                                         <td>{{ $product->name }}</td>
@@ -50,10 +50,10 @@
                                             <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
-@foreach ($colorCodes as $code)
-<li>{{ $code }}</li>
-@endforeach
-</ul>">
+                                                @foreach ($colorCodes as $code)
+                                                <li>{{ $code }}</li>
+                                                @endforeach
+                                                </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
                                         </td>
