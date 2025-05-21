@@ -35,6 +35,7 @@
                                 <th>الوقت المتبقي</th>
                                 <th>الدرايف</th>
                                 <th>لينك طريقه التصوير</th>
+                                <th>طرق التصوير</th>
                                 <th>التحكم</th>
                             </tr>
                         </thead>
@@ -43,6 +44,9 @@
                                 @php
                                     $colors = \App\Models\ShootingSession::where('reference', $session->reference)
                                         ->with('color.shootingProduct')
+                                        ->get();
+                                    $ways = \App\Models\ShootingSessionWay::where('reference', $session->reference)
+                                        ->with('way')
                                         ->get();
                                 @endphp
                                 <tr>
@@ -158,12 +162,6 @@
                                         @endif
                                     </td>
 
-
-
-
-
-
-
                                     <td>
                                         @if ($firstLink)
                                             <a href="{{ $firstLink }}" class="btn btn-success btn-sm">
@@ -189,6 +187,16 @@
                                         @endif
                                     </td>
 
+
+                                    <td>
+                                        @if ($ways->count())
+                                            @foreach ($ways as $way)
+                                                <span class="badge bg-info me-1">{{ $way->way->name }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
 
 
                                     <td>
