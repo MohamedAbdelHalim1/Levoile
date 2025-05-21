@@ -116,7 +116,7 @@ class ShootingProductController extends Controller
 
     public function multiStartPage(Request $request)
     {
-        $ids = explode(',', $request->selected_products);
+        $ids = $request->input('selected_products', []);
         $products = ShootingProduct::whereIn('id', $ids)
             ->with(['readyToShoot', 'shootingProductColors']) // أضف العلاقة دي
             ->get();
