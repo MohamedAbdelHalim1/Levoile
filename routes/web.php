@@ -300,6 +300,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/ready-to-shoot', [ShootingProductController::class, 'readyToShootIndex'])->name('ready-to-shoot.index');
     Route::post('/ready-to-shoot/assign-type', [ShootingProductController::class, 'assignType'])->name('ready-to-shoot.assign-type');
+    Route::post('/ready-to-shoot/bulk-assign-type', [ShootingProductController::class, 'bulkAssignType'])->name('ready-to-shoot.bulk-assign-type');
 
 
 

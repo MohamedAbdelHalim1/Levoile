@@ -48,6 +48,7 @@
                                 <option value="">اختر</option>
                                 <option value="تصوير منتج">تصوير منتج</option>
                                 <option value="تصوير موديل">تصوير موديل</option>
+                                <option value="تصوير انفلونسر">تصوير انفلونسر</option>
                                 <option value="تعديل لون">تعديل لون</option>
                             </select>
                         </div>

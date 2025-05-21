@@ -74,7 +74,7 @@
                         </div>
                         {{-- طريقة التصوير --}}
                         <div class="col-md-4 mt-3 d-none" id="shootingMethodSection">
-                            <label>طريقة التصوير </label>
+                            <label>لينك التصوير </label>
                             <input type="text" name="shooting_method" class="form-control"
                                 placeholder="ادخل طريقة التصوير او لينك">
                         </div>

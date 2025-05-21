@@ -175,7 +175,7 @@ class ShootingProductController extends Controller
                     $color->date_of_delivery  = $request->date_of_delivery;
                     $color->shooting_method   = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $color->location         = $request->location;
                         $color->date_of_shooting = $request->date_of_shooting;
                         $color->photographer     = json_encode($request->photographer);
@@ -199,7 +199,7 @@ class ShootingProductController extends Controller
                     $newColor->date_of_delivery = $request->date_of_delivery;
                     $newColor->shooting_method  = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $newColor->location         = $request->location;
                         $newColor->date_of_shooting = $request->date_of_shooting;
                         $newColor->photographer     = json_encode($request->photographer);
@@ -249,7 +249,7 @@ class ShootingProductController extends Controller
                 $product->date_of_delivery = $request->date_of_delivery;
                 $product->shooting_method  = $request->shooting_method;
 
-                if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                     $product->location         = $request->location;
                     $product->date_of_shooting = $request->date_of_shooting;
                     $product->photographer     = json_encode($request->photographer);
@@ -406,7 +406,7 @@ class ShootingProductController extends Controller
                     $color->date_of_delivery = $request->date_of_delivery;
                     $color->shooting_method = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $color->location = $request->location;
                         $color->date_of_shooting = $request->date_of_shooting;
                         $color->photographer = json_encode($request->photographer);
@@ -424,7 +424,7 @@ class ShootingProductController extends Controller
                     $newColor->date_of_delivery = $request->date_of_delivery;
                     $newColor->shooting_method = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $newColor->location = $request->location;
                         $newColor->date_of_shooting = $request->date_of_shooting;
                         $newColor->photographer = json_encode($request->photographer);
@@ -1372,5 +1372,23 @@ class ShootingProductController extends Controller
             ]);
 
         return redirect()->back()->with('success', 'تم تعيين نوع التصوير بنجاح');
+    }
+
+    public function bulkAssignType(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|string',
+            'type_of_shooting' => 'required|string',
+        ]);
+
+        $ids = explode(',', $request->product_ids);
+
+        ReadyToShoot::whereIn('shooting_product_id', $ids)
+            ->update([
+                'type_of_shooting' => $request->type_of_shooting,
+                'updated_at' => now(),
+            ]);
+
+        return redirect()->back()->with('success', 'تم تعيين نوع التصوير بنجاح للمنتجات المحددة');
     }
 }

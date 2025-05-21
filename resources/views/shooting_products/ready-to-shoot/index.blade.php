@@ -30,6 +30,9 @@
                                     <th>الحالة</th>
                                     <th>نوع التصوير</th>
                                     <th>الإجراء</th>
+                                    <th>
+                                        تعيين نوع التصوير <input type="checkbox" id="bulkCheckAll">
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +78,13 @@
                                             @endif
 
                                         </td>
+                                        <td>
+                                            @if ($status !== 'قيد التصوير')
+                                                <input type="checkbox" name="bulk_selected_products[]" class="bulk-product"
+                                                    value="{{ $productId }}">
+                                            @endif
+                                        </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -95,6 +105,34 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="typeModalLabel">تعيين نوع التصوير</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select name="type_of_shooting" class="form-control" required>
+                            <option value="">اختر نوع التصوير</option>
+                            <option value="تصوير منتج">تصوير منتج</option>
+                            <option value="تصوير موديل">تصوير موديل</option>
+                            <option value="تصوير انفلونسر">تصوير انفلونسر</option>
+                            <option value="تعديل لون">تعديل لون</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bulk Assign Modal -->
+    <div class="modal fade" id="bulkAssignModal" tabindex="-1" aria-labelledby="bulkAssignModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('ready-to-shoot.bulk-assign-type') }}">
+                @csrf
+                <input type="hidden" name="product_ids" id="bulk_product_ids">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">تعيين نوع التصوير (جماعي)</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -178,7 +216,6 @@
             });
 
             document.querySelectorAll('.assign-type').forEach(btn => {
-                console.log('assign-type found');
                 btn.addEventListener('click', function() {
                     const id = this.dataset.id;
                     document.getElementById('modal_product_id').value = id;
@@ -197,5 +234,38 @@
             }
             return true;
         }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const bulkCheckboxes = document.querySelectorAll('.bulk-product');
+            const bulkAssignBtn = document.getElementById('bulkAssignBtn');
+            const bulkCheckAll = document.getElementById('bulkCheckAll');
+
+            function toggleBulkButton() {
+                const selected = [...bulkCheckboxes].filter(cb => cb.checked);
+                bulkAssignBtn.style.display = selected.length > 0 ? 'inline-block' : 'none';
+            }
+
+            bulkCheckboxes.forEach(cb => {
+                cb.addEventListener('change', toggleBulkButton);
+            });
+
+            if (bulkCheckAll) {
+                bulkCheckAll.addEventListener('change', function() {
+                    bulkCheckboxes.forEach(cb => {
+                        if (!cb.disabled) cb.checked = this.checked;
+                    });
+                    toggleBulkButton();
+                });
+            }
+
+            bulkAssignBtn.addEventListener('click', function() {
+                const selectedIds = [...bulkCheckboxes]
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                document.getElementById('bulk_product_ids').value = selectedIds.join(',');
+                new bootstrap.Modal(document.getElementById('bulkAssignModal')).show();
+            });
+        });
     </script>
 @endsection
