@@ -42,9 +42,16 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="selected_products[]" value="{{ $productId }}"
-                                                data-type="{{ $type ?? '' }}" onclick="return handleCheckboxClick(this)">
+                                            @php
+                                                $status = $items->first()->status;
+                                            @endphp
+
+                                            @if($status !== 'قيد التصوير')
+                                                <input type="checkbox" name="selected_products[]" value="{{ $productId }}"
+                                                    data-type="{{ $type ?? '' }}" onclick="return handleCheckboxClick(this)">
+                                            @endif
                                         </td>
+
                                         <td>{{ $product->name }}</td>
                                         <td>
                                             <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"

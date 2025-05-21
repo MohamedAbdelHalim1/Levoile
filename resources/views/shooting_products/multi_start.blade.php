@@ -107,7 +107,7 @@
                                     <th>#</th>
                                     <th>اسم المنتج</th>
                                     <th>كود اللون</th>
-                                    <th>الحاله</th>
+                                    {{-- <th>الحاله</th> --}}
 
                                 </tr>
                             </thead>
@@ -125,7 +125,7 @@
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->code }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 @if ($color->status == 'new')
                                                     <span class="badge bg-warning">جديد</span>
                                                 @elseif ($color->status == 'partial' || $color->status == 'in_progress')
@@ -133,7 +133,7 @@
                                                 @elseif ($color->status == 'completed')
                                                     <span class="badge bg-success">مكتمل</span>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 @endforeach

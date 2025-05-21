@@ -215,6 +215,9 @@ class ShootingProductController extends Controller
 
                     $newColor->save();
                     $finalColorIds[] = $newColor->id;
+                    // تحديث حالة الريدي تو شووت
+                    \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
+                        ->update(['status' => 'قيد التصوير']);
                 }
             }
 
