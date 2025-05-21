@@ -11,8 +11,8 @@
                             <a href="{{ route('product-knowledge.products', $subcategory->id) }}"
                                 class="text-center shadow-sm p-3 d-block">
                                 <div class="card h-100 shadow text-center">
-                                    <img src="{{ asset('images/category/') . $subcategory->image }}" class="card-img-top"
-                                        style="height: 200px; object-fit: contain;">
+                                    <img src="{{ asset($subcategory->image ? 'images/category/' . $subcategory->image : 'assets/images/comming.png') }}"
+                                        class="card-img-top p-2" style="height: 200px; object-fit: contain;">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $subcategory->name }}</h5>
                                     </div>
