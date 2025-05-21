@@ -117,13 +117,13 @@
 
 @section('scripts')
     <script>
-        document.getElementById('checkAll').addEventListener('change', function() {
-            const checked = this.checked;
-            document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
-                if (!cb.disabled) cb.checked = checked;
-            });
-            toggleStartButton();
-        });
+        // document.getElementById('checkAll').addEventListener('change', function() {
+        //     const checked = this.checked;
+        //     document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
+        //         if (!cb.disabled) cb.checked = checked;
+        //     });
+        //     toggleStartButton();
+        // });
 
         document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
             cb.addEventListener('change', toggleStartButton);
@@ -169,15 +169,6 @@
             return true;
         }
 
-        document.querySelectorAll('.assign-type').forEach(btn => {
-            console.log('assign-type found');
-            btn.addEventListener('click', function() {
-                const id = this.dataset.id;
-                document.getElementById('modal_product_id').value = id;
-                const modal = new bootstrap.Modal(document.getElementById('typeModal'));
-                modal.show();
-            });
-        });
 
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -185,6 +176,17 @@
             popoverTriggerList.forEach(function(popoverTriggerEl) {
                 new bootstrap.Popover(popoverTriggerEl);
             });
+
+            document.querySelectorAll('.assign-type').forEach(btn => {
+                console.log('assign-type found');
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    document.getElementById('modal_product_id').value = id;
+                    const modal = new bootstrap.Modal(document.getElementById('typeModal'));
+                    modal.show();
+                });
+            });
+
         });
 
         function validateBeforeSubmit() {
