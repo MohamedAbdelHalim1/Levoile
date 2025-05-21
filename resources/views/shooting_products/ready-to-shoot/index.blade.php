@@ -106,18 +106,18 @@
     <script>
         document.getElementById('checkAll').addEventListener('change', function() {
             const checked = this.checked;
-            document.querySelectorAll('input[name="selected_ready_ids[]"]').forEach(cb => {
+            document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
                 if (!cb.disabled) cb.checked = checked;
             });
             toggleStartButton();
         });
 
-        document.querySelectorAll('input[name="selected_ready_ids[]"]').forEach(cb => {
+        document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
             cb.addEventListener('change', toggleStartButton);
         });
 
         function toggleStartButton() {
-            const selected = [...document.querySelectorAll('input[name="selected_ready_ids[]"]:checked')];
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
             const types = new Set(selected.map(cb => cb.dataset.type));
 
             if (selected.length > 0) {
@@ -143,7 +143,7 @@
                 return false;
             }
 
-            const selected = [...document.querySelectorAll('input[name="selected_ready_ids[]"]:checked')];
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
             const types = new Set(selected.map(el => el.dataset.type));
 
             if (types.size > 1) {
@@ -173,7 +173,7 @@
         });
 
         function validateBeforeSubmit() {
-            const selected = [...document.querySelectorAll('input[name="selected_ready_ids[]"]:checked')];
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
             if (selected.length === 0) {
                 alert('يجب اختيار منتج واحد على الأقل لبدء التصوير');
                 return false;
