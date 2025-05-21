@@ -1345,28 +1345,7 @@ class ShootingProductController extends Controller
         return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
     }
 
-    public function startFromReady(Request $request)
-    {
-        $ids = $request->input('selected_ready_ids', []);
-
-        if (empty($ids)) {
-            return back()->with('error', 'يجب اختيار عناصر لبدء التصوير');
-        }
-
-        $items = \App\Models\ReadyToShoot::whereIn('id', $ids)->get();
-
-        $types = $items->pluck('type_of_shooting')->unique();
-
-        if ($types->count() > 1) {
-            return back()->with('error', 'الرجاء اختيار عناصر من نفس نوع التصوير فقط');
-        }
-
-        $productIds = $items->pluck('shooting_product_id')->unique()->toArray();
-
-        return redirect()->route('shooting-products.multi.start.page', [
-            'selected' => implode(',', $productIds)
-        ]);
-    }
+ 
     public function assignType(Request $request)
     {
         $request->validate([
