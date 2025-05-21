@@ -223,7 +223,7 @@ class ShootingProductController extends Controller
                 ->pluck('shooting_product_id')
                 ->unique()
                 ->toArray();
-                
+
             \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
                 ->update(['status' => 'قيد التصوير']);
 
@@ -335,6 +335,12 @@ class ShootingProductController extends Controller
                 }
 
                 $product->save();
+                
+                \App\Models\ReadyToShoot::where('shooting_product_id', $productId)
+                    ->update([
+                        'status' => 'تم التصوير',
+                        'deleted_at' => now()
+                    ]);
             }
 
 
