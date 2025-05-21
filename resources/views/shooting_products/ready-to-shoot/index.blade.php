@@ -14,7 +14,7 @@
                 <h4 class="mb-4">المنتجات الجاهزة للتصوير</h4>
 
                 <div class="table-responsive">
-                    <form method="POST" action="{{ route('ready-to-shoot.start') }}">
+                    <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                         @csrf
                         {{-- <div class="mb-3">
                         <input type="checkbox" id="checkAll"> <label for="checkAll">تحديد الكل</label>

@@ -299,7 +299,6 @@ Route::middleware('auth')->group(function () {
         ->name('shooting-products.multi.start.save');
 
     Route::get('/ready-to-shoot', [ShootingProductController::class, 'readyToShootIndex'])->name('ready-to-shoot.index');
-    Route::post('/ready-to-shoot/start', [ShootingProductController::class, 'startFromReady'])->name('ready-to-shoot.start');
     Route::post('/ready-to-shoot/assign-type', [ShootingProductController::class, 'assignType'])->name('ready-to-shoot.assign-type');
 
 
