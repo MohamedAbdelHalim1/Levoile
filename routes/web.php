@@ -305,6 +305,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/ready-to-shoot/bulk-assign-type', [ShootingProductController::class, 'bulkAssignType'])->name('ready-to-shoot.bulk-assign-type');
     Route::get('/ways-of-shooting', [WayOfShootingController::class, 'index'])->name('ways-of-shooting.index');
     Route::post('/ways-of-shooting', [WayOfShootingController::class, 'store'])->name('ways-of-shooting.store');
+    Route::put('/ways-of-shooting/{id}', [WayOfShootingController::class, 'update'])->name('ways-of-shooting.update');
+    Route::delete('/ways-of-shooting/{id}', [WayOfShootingController::class, 'destroy'])->name('ways-of-shooting.destroy');
 
 
 

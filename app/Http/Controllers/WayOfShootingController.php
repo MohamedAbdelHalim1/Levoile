@@ -41,4 +41,17 @@ class WayOfShootingController extends Controller
 
         return redirect()->route('ways-of-shooting.index')->with('success', 'تمت إضافة طريقة التصوير بنجاح');
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+        WayOfShooting::findOrFail($id)->update(['name' => $request->name]);
+        return redirect()->back()->with('success', 'تم تحديث طريقة التصوير بنجاح');
+    }
+
+    public function destroy($id)
+    {
+        WayOfShooting::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'تم حذف طريقة التصوير');
+    }
 }
