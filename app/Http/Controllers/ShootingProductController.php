@@ -21,10 +21,6 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-
-
-
-
 class ShootingProductController extends Controller
 {
     public function index(Request $request)
@@ -1343,5 +1339,19 @@ class ShootingProductController extends Controller
         return redirect()->route('shooting-products.multi.start.page', [
             'selected' => implode(',', $productIds)
         ]);
+    }
+    public function assignType(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|integer',
+            'type_of_shooting' => 'required|string'
+        ]);
+
+        \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
+            ->update([
+                'type_of_shooting' => $request->type_of_shooting
+            ]);
+
+        return redirect()->back()->with('success', 'تم تعيين نوع التصوير بنجاح');
     }
 }
