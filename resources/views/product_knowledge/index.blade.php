@@ -14,7 +14,7 @@
                         @endphp
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('product-knowledge.subcategories', $category->id) }}"
-                                class="text-center shadow-sm p-3 d-block">
+                                class="text-decoration-none">
                                 <div class="card h-100 shadow text-center">
                                     <img src="{{ asset($imagePath) }}"
                                         class="card-img-top p-2">
