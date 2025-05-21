@@ -479,7 +479,6 @@ class ProductKnowledgeController extends Controller
 
             $newUniqueProducts = count(array_unique($addedProductCodes)); // ✅ عدد المنتجات الفريدة فعلاً
 
-            dd($newUniqueProducts);
             // ✅ رجّع البيانات علشان نستخدمها في التقرير
             return response()->json([
                 'status' => 'success',
