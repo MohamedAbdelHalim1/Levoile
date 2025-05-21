@@ -27,12 +27,10 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <label>نوع التصوير</label>
-                            <select name="type_of_shooting" id="shootingType" class="form-control" required>
-                                <option value="">اختر</option>
-                                <option value="تصوير منتج">تصوير منتج</option>
-                                <option value="تصوير موديل">تصوير موديل</option>
-                                <option value="تعديل لون">تعديل لون</option>
+                            <select name="type_of_shooting" id="shootingType" class="form-control" required disabled>
+                                <option value="{{ $type }}">{{ $type }}</option>
                             </select>
+                            <input type="hidden" name="type_of_shooting" value="{{ $type }}">
                         </div>
 
                         <div class="col-md-4" style="display: none;">
@@ -103,14 +101,14 @@
 
                                     <th>
                                         {{-- @if ($allColorsAreNew) --}}
-                                            <input type="checkbox" id="checkAll">
+                                        <input type="checkbox" id="checkAll">
                                         {{-- @endif --}}
                                     </th>
                                     <th>#</th>
                                     <th>اسم المنتج</th>
                                     <th>كود اللون</th>
                                     <th>الحاله</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,8 +118,8 @@
                                         <tr>
                                             <td>
                                                 {{-- @if ($color->status == 'new') --}}
-                                                    <input type="checkbox" name="selected_colors[]"
-                                                        value="{{ $color->id }}">
+                                                <input type="checkbox" name="selected_colors[]"
+                                                    value="{{ $color->id }}">
                                                 {{-- @endif --}}
                                             </td>
                                             <td>{{ $variantIndex++ }}</td>
@@ -156,29 +154,25 @@
     <script>
         $(document).ready(function() {
 
-            $('#shootingType').on('change', function() {
-                let type = $(this).val();
+            const selectedType = "{{ $type }}";
 
-                if (type == 'تصوير منتج' || type == 'تصوير موديل') {
-                    $('#shootingLocation').parent().show();
-                    $('#photographerSection').removeClass('d-none');
-                    $('#editorSection').addClass('d-none');
-                    $('#shootingMethodSection').removeClass('d-none');
-
-                } else if (type == 'تعديل لون') {
-                    $('#shootingLocation').parent().hide();
-                    $('#editorSection').removeClass('d-none');
-                    $('#photographerSection').addClass('d-none');
-                    $('#shootingMethodSection').removeClass('d-none');
-
-                } else {
-                    $('#shootingLocation').parent().hide();
-                    $('#photographerSection').addClass('d-none');
-                    $('#editorSection').addClass('d-none');
-                    $('#shootingMethodSection').addClass('d-none');
-
-                }
-            });
+            if (selectedType === 'تصوير منتج' || selectedType === 'تصوير موديل' || selectedType ===
+                'تصوير انفلونسر') {
+                $('#shootingLocation').parent().show();
+                $('#photographerSection').removeClass('d-none');
+                $('#editorSection').addClass('d-none');
+                $('#shootingMethodSection').removeClass('d-none');
+            } else if (selectedType === 'تعديل لون') {
+                $('#shootingLocation').parent().hide();
+                $('#editorSection').removeClass('d-none');
+                $('#photographerSection').addClass('d-none');
+                $('#shootingMethodSection').removeClass('d-none');
+            } else {
+                $('#shootingLocation').parent().hide();
+                $('#photographerSection').addClass('d-none');
+                $('#editorSection').addClass('d-none');
+                $('#shootingMethodSection').addClass('d-none');
+            }
 
 
             $('.tom-select').each(function() {

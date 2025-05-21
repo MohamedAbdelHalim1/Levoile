@@ -98,10 +98,37 @@ class ShootingProductController extends Controller
     }
 
 
+    // public function multiStartPage(Request $request)
+    // {
+    //     $ids = explode(',', $request->selected_products);
+    //     $products = ShootingProduct::whereIn('id', $ids)->get();
+
+    //     $photographers = User::whereHas('role', function ($q) {
+    //         $q->where('name', 'photographer');
+    //     })->get();
+
+    //     $editors = User::whereHas('role', function ($q) {
+    //         $q->where('name', 'editor');
+    //     })->get();
+
+    //     return view('shooting_products.multi_start', compact('products', 'photographers', 'editors'));
+    // }
+
     public function multiStartPage(Request $request)
     {
         $ids = explode(',', $request->selected_products);
-        $products = ShootingProduct::whereIn('id', $ids)->get();
+        $products = ShootingProduct::whereIn('id', $ids)->with('readyToShoot')->get();
+
+        // جلب نوع التصوير من جدول ready_to_shoot
+        $type = null;
+        foreach ($products as $product) {
+            $readyType = $product->readyToShoot->first()?->type_of_shooting;
+            if ($type === null) {
+                $type = $readyType;
+            } elseif ($readyType !== $type) {
+                return redirect()->back()->with('error', 'يجب أن يكون لكل المنتجات نفس نوع التصوير');
+            }
+        }
 
         $photographers = User::whereHas('role', function ($q) {
             $q->where('name', 'photographer');
@@ -111,8 +138,9 @@ class ShootingProductController extends Controller
             $q->where('name', 'editor');
         })->get();
 
-        return view('shooting_products.multi_start', compact('products', 'photographers', 'editors'));
+        return view('shooting_products.multi_start', compact('products', 'photographers', 'editors', 'type'));
     }
+
 
     public function multiStartSave(Request $request)
     {
