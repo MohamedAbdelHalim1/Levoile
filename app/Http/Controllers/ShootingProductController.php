@@ -117,7 +117,9 @@ class ShootingProductController extends Controller
     public function multiStartPage(Request $request)
     {
         $ids = explode(',', $request->selected_products);
-        $products = ShootingProduct::whereIn('id', $ids)->with('readyToShoot')->get();
+        $products = ShootingProduct::whereIn('id', $ids)
+            ->with(['readyToShoot', 'shootingProductColors']) // أضف العلاقة دي
+            ->get();
 
         // جلب نوع التصوير من جدول ready_to_shoot
         $type = null;
@@ -1345,7 +1347,7 @@ class ShootingProductController extends Controller
         return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
     }
 
- 
+
     public function assignType(Request $request)
     {
         $request->validate([
