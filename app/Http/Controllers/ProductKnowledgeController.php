@@ -485,7 +485,7 @@ class ProductKnowledgeController extends Controller
                 'new_count' => $newCount,
                 'duplicate_count' => $duplicateCount,
                 'duplicates' => $duplicateCodes,
-                'new_products' => $newUniqueProducts, // عدد المنتجات الفريدة
+                'new_products' => $newUniqueProducts, 
 
             ]);
         } catch (\Exception $e) {
