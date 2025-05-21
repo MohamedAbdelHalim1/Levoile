@@ -55,4 +55,9 @@ class ShootingProduct extends Model
 
         $this->save();
     }
+
+    public function readyToShoot()
+    {
+        return $this->hasMany(ReadyToShoot::class, 'shooting_product_id');
+    }
 }
