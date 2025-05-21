@@ -335,7 +335,7 @@ class ShootingProductController extends Controller
                 }
 
                 $product->save();
-                
+
                 \App\Models\ReadyToShoot::where('shooting_product_id', $productId)
                     ->update([
                         'status' => 'تم التصوير',
@@ -1352,6 +1352,7 @@ class ShootingProductController extends Controller
     {
         $readyItems = ReadyToShoot::with('shootingProduct')
             ->whereNull('deleted_at')
+            ->latest()
             ->get();
 
         return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
