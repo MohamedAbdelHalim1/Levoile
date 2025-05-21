@@ -33,7 +33,7 @@
                                     $mainImage = $group->firstWhere('image_url')?->image_url;
                                     $colors = $group->groupBy('color')->count();
                                     $missing = $group->whereNull('image_url');
-                                    $totalQty = $group->flatMap(fn($v) => $v->stock_entries)->sum('quantity');
+                                    $totalQty = $group->flatMap(fn($v) => $v->stockEntries)->sum('quantity');
 
                                 @endphp
                                 <tr>
