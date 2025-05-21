@@ -18,9 +18,23 @@
         </table>
     </div> --}}
         <div id="duplicatesTable" style="display: none;">
-            <h5 class="mt-4">الأكواد المكررة:</h5>
-            <div class="row" id="duplicatesBody"></div>
+            <h5 class="mt-4">تفاصيل المنتجات المكررة:</h5>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>الكود</th>
+                        <th>الاسم</th>
+                        <th>اللون</th>
+                        <th>المقاس</th>
+                        <th>تاريخ الإضافة</th>
+                        <th>القسم</th>
+                        <th>الفئة</th>
+                    </tr>
+                </thead>
+                <tbody id="duplicatesBody"></tbody>
+            </table>
         </div>
+
 
 
         <a href="{{ route('product-knowledge.lists') }}" class="btn btn-primary mt-4">العودة إلى المنتجات</a>
@@ -33,22 +47,25 @@
             if (data) {
                 document.getElementById('reportBox').style.display = 'block';
                 document.getElementById('reportBox').innerHTML = `
-            ✅ تم إضافة <strong>${data.new_count}</strong> منتج جديد<br>
+            ✅ تم إضافة <strong>${data.new_products}</strong> منتج بـ <strong>${data.new_count}</strong> لون<br>
             ⛔ تم تجاهل <strong>${data.duplicate_count}</strong> منتج مكرر
         `;
 
                 if (data.duplicates.length > 0) {
                     document.getElementById('duplicatesTable').style.display = 'block';
-                    document.getElementById('duplicatesBody').innerHTML = data.duplicates.map(code => `
-                <div class="col-md-3 mb-3">
-                    <div class="card shadow-sm border-1">
-                        <div class="card-body text-center">
-                            <h6 class="mb-0">${code}</h6>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-                }
+                    document.getElementById('duplicatesBody').innerHTML = data.duplicates.map(item => `
+                    <tr>
+                        <td>${item.no_code}</td>
+                        <td>${item.description}</td>
+                        <td>${item.color}</td>
+                        <td>${item.size}</td>
+                        <td>${item.created_at}</td>
+                        <td>${item.division}</td>
+                        <td>${item.subcategory}</td>
+                    </tr>
+                `).join('');
+                            }
+
 
                 // clear after showing
                 localStorage.removeItem('upload_summary');

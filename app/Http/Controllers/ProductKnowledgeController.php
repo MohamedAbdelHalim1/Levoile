@@ -411,7 +411,16 @@ class ProductKnowledgeController extends Controller
                     $no = trim($no);
                     if (DB::table('product_knowledge')->where('no_code', $no)->exists()) {
                         $duplicateCount++;
-                        $duplicateCodes[] = $no;
+                        $duplicateCodes[] = [
+                            'no_code' => $no,
+                            'description' => $row['Description'] ?? '',
+                            'color' => $row['Color'] ?? '',
+                            'size' => $row['Size'] ?? '',
+                            'created_at' => $row['Created At'] ?? '',
+                            'division' => $divisionName,
+                            'subcategory' => $subcategoryName,
+                        ];
+
                         continue;
                     }
 
@@ -470,6 +479,8 @@ class ProductKnowledgeController extends Controller
                 'new_count' => $newCount,
                 'duplicate_count' => $duplicateCount,
                 'duplicates' => $duplicateCodes,
+                'new_products' => count(collect($data)->unique('product_code')), // عدد المنتجات الفريدة
+
             ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 200);
