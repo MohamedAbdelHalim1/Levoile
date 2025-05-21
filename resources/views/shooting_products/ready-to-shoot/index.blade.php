@@ -47,9 +47,10 @@
                                                 $status = $items->first()->status;
                                             @endphp
 
-                                            @if($status !== 'قيد التصوير')
-                                                <input type="checkbox" name="selected_products[]" value="{{ $productId }}"
-                                                    data-type="{{ $type ?? '' }}" onclick="return handleCheckboxClick(this)">
+                                            @if ($status !== 'قيد التصوير')
+                                                <input type="checkbox" name="selected_products[]"
+                                                    value="{{ $productId }}" data-type="{{ $type ?? '' }}"
+                                                    onclick="return handleCheckboxClick(this)">
                                             @endif
                                         </td>
 
@@ -59,8 +60,8 @@
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
                                                 @foreach ($colorCodes as $code)
-                                                <li>{{ $code }}</li>
-                                                @endforeach
+<li>{{ $code }}</li>
+@endforeach
                                                 </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
@@ -68,8 +69,11 @@
                                         <td><span class="badge bg-success">{{ $status ?? '-' }}</span></td>
                                         <td>{{ $type ?? '-' }}</td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-success assign-type"
-                                                data-id="{{ $productId }}">تعيين نوع التصوير</button>
+                                            @if ($status !== 'قيد التصوير')
+                                                <button type="button" class="btn btn-sm btn-success assign-type"
+                                                    data-id="{{ $productId }}">تعيين نوع التصوير</button>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -166,6 +170,7 @@
         }
 
         document.querySelectorAll('.assign-type').forEach(btn => {
+            console.log('assign-type found');
             btn.addEventListener('click', function() {
                 const id = this.dataset.id;
                 document.getElementById('modal_product_id').value = id;
@@ -173,6 +178,7 @@
                 modal.show();
             });
         });
+
 
         document.addEventListener("DOMContentLoaded", function() {
             const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
