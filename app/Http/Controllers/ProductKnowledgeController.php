@@ -396,8 +396,10 @@ class ProductKnowledgeController extends Controller
             $newCount = 0;
             $duplicateCount = 0;
             $duplicateCodes = [];
+            $addedProductCodes = [];
 
-            DB::transaction(function () use ($data, $allCategories, $allSubcategories, &$newCount, &$duplicateCount, &$duplicateCodes) {
+
+            DB::transaction(function () use ($data, $allCategories, $allSubcategories, &$newCount, &$duplicateCount, &$duplicateCodes , &$addedProductCodes) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
@@ -470,8 +472,12 @@ class ProductKnowledgeController extends Controller
                     ]);
 
                     $newCount++;
+                    $addedProductCodes[] = $product_item_code; // ✅ اجمع الكود بعد الإضافة
+
                 }
             });
+
+            $newUniqueProducts = count(array_unique($addedProductCodes)); // ✅ عدد المنتجات الفريدة فعلاً
 
             // ✅ رجّع البيانات علشان نستخدمها في التقرير
             return response()->json([
@@ -479,7 +485,7 @@ class ProductKnowledgeController extends Controller
                 'new_count' => $newCount,
                 'duplicate_count' => $duplicateCount,
                 'duplicates' => $duplicateCodes,
-                'new_products' => count(collect($data)->unique('product_code')), // عدد المنتجات الفريدة
+                'new_products' => $newUniqueProducts, // عدد المنتجات الفريدة
 
             ]);
         } catch (\Exception $e) {
