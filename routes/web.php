@@ -298,6 +298,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-products/multi-start/save', [ShootingProductController::class, 'multiStartSave'])
         ->name('shooting-products.multi.start.save');
 
+        // عرض المنتجات الجاهزة للتصوير
+    Route::get('/ready-to-shoot', [ShootingProductController::class, 'readyToShootIndex'])->name('ready-to-shoot.index');
+
+    // بدء التصوير من المنتجات الجاهزة
+    Route::post('/ready-to-shoot/start', [ShootingProductController::class, 'startFromReady'])->name('ready-to-shoot.start');
+
+
 
     Route::get('/shooting-sessions', [ShootingProductController::class, 'shootingSessions'])->name('shooting-sessions.index');
     Route::get('/shooting-sessions/{reference}', [ShootingProductController::class, 'showShootingSession'])->name('shooting-sessions.show');

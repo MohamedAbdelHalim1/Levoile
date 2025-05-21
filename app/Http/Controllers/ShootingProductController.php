@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ReadyToShoot;
 use App\Models\ShootingDelivery;
 use App\Models\ShootingDeliveryContent;
 use App\Models\ShootingGallery;
 use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
+use App\Models\ShootingSession;
 use App\Models\SocialMediaProduct;
 use App\Models\SocialMediaProductPlatform;
 use App\Models\User;
 use App\Models\WebsiteAdminProduct;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Models\ShootingSession;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 
@@ -1309,5 +1310,38 @@ class ShootingProductController extends Controller
         }
 
         return back()->with('success', 'تم حذف اللون من الجلسة وإعادة حالته إلى جديد.');
+    }
+
+
+    public function readyToShootIndex()
+    {
+        $readyItems = ReadyToShoot::with('shootingProduct')
+            ->whereNull('deleted_at')
+            ->get();
+
+        return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
+    }
+
+    public function startFromReady(Request $request)
+    {
+        $ids = $request->input('selected_ready_ids', []);
+
+        if (empty($ids)) {
+            return back()->with('error', 'يجب اختيار عناصر لبدء التصوير');
+        }
+
+        $items = \App\Models\ReadyToShoot::whereIn('id', $ids)->get();
+
+        $types = $items->pluck('type_of_shooting')->unique();
+
+        if ($types->count() > 1) {
+            return back()->with('error', 'الرجاء اختيار عناصر من نفس نوع التصوير فقط');
+        }
+
+        $productIds = $items->pluck('shooting_product_id')->unique()->toArray();
+
+        return redirect()->route('shooting-products.multi.start.page', [
+            'selected' => implode(',', $productIds)
+        ]);
     }
 }

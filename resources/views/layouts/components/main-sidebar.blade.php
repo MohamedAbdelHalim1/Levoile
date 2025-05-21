@@ -356,6 +356,10 @@
                                                     <a href="{{ route('shooting-deliveries.index') }}"
                                                         class="slide-item">المنتجات الجديده</a>
                                                 </li>
+                                                <li>
+                                                    <a href="{{ route('ready-to-shoot.index') }}"
+                                                        class="slide-item">المنتجات جاهزه للتصوير</a>
+                                                </li>
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">منتجات التصوير</a></li>
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
