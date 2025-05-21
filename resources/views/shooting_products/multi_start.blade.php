@@ -25,7 +25,7 @@
                     <input type="hidden" name="selected_products"
                         value="{{ implode(',', $products->pluck('id')->toArray()) }}">
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>نوع التصوير</label>
                             <select name="type_of_shooting" id="shootingType" class="form-control" required disabled>
                                 <option value="{{ $type }}">{{ $type }}</option>
@@ -33,7 +33,7 @@
                             <input type="hidden" name="type_of_shooting" value="{{ $type }}">
                         </div>
 
-                        <div class="col-md-4" style="display: none;">
+                        <div class="col-md-3" style="display: none;">
                             <label>مكان التصوير</label>
                             <select name="location" id="shootingLocation" class="form-control">
                                 <option value="">اختر</option>
@@ -42,19 +42,19 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>تاريخ التصوير</label>
                             <input type="date" name="date_of_shooting" class="form-control">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>تاريخ التسليم</label>
                             <input type="date" name="date_of_delivery" class="form-control" required>
                         </div>
 
 
                         {{-- المصورين --}}
-                        <div class="col-md-4 mt-3 d-none" id="photographerSection">
+                        <div class="col-md-3 mt-3 d-none" id="photographerSection">
                             <label>المصورين</label>
                             <select name="photographer[]" class="form-control tom-select" multiple>
                                 @foreach ($photographers as $photographer)
@@ -64,7 +64,7 @@
                         </div>
 
                         {{-- المحررين --}}
-                        <div class="col-md-4 mt-3 d-none" id="editorSection">
+                        <div class="col-md-3 mt-3 d-none" id="editorSection">
                             <label>المحررين</label>
                             <select name="editor[]" class="form-control tom-select" multiple>
                                 @foreach ($editors as $editor)
@@ -73,11 +73,21 @@
                             </select>
                         </div>
                         {{-- طريقة التصوير --}}
-                        <div class="col-md-4 mt-3 d-none" id="shootingMethodSection">
+                        <div class="col-md-3 mt-3 d-none" id="shootingMethodSection">
                             <label>لينك التصوير </label>
                             <input type="text" name="shooting_method" class="form-control"
                                 placeholder="ادخل طريقة التصوير او لينك">
                         </div>
+
+                        <div class="col-md-3 mt-3 d-none" id="shootingWaySection">
+                            <label>طرق التصوير</label>
+                            <select name="way_of_shooting_ids[]" class="form-control tom-select" multiple>
+                                @foreach ($waysOfShooting as $way)
+                                    <option value="{{ $way->id }}">{{ $way->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
 
                     </div>
 
@@ -162,6 +172,7 @@
                 $('#photographerSection').removeClass('d-none');
                 $('#editorSection').addClass('d-none');
                 $('#shootingMethodSection').removeClass('d-none');
+                $('#shootingWaySection').removeClass('d-none');
             } else if (selectedType === 'تعديل لون') {
                 $('#shootingLocation').parent().hide();
                 $('#editorSection').removeClass('d-none');

@@ -12,6 +12,7 @@ use App\Models\ShootingSession;
 use App\Models\SocialMediaProduct;
 use App\Models\SocialMediaProductPlatform;
 use App\Models\User;
+use App\Models\WayOfShooting;
 use App\Models\WebsiteAdminProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -140,7 +141,10 @@ class ShootingProductController extends Controller
             $q->where('name', 'editor');
         })->get();
 
-        return view('shooting_products.multi_start', compact('products', 'photographers', 'editors', 'type'));
+        $waysOfShooting = WayOfShooting::all();
+
+
+        return view('shooting_products.multi_start', compact('products', 'photographers', 'editors', 'type', 'waysOfShooting'));
     }
 
 
@@ -284,6 +288,16 @@ class ShootingProductController extends Controller
                     'reference' => $reference,
                     'shooting_product_color_id' => $colorId,
                 ]);
+            }
+
+            // ربط طرق التصوير بالـ reference
+            if ($request->has('way_of_shooting_ids')) {
+                foreach ($request->way_of_shooting_ids as $wayId) {
+                    \App\Models\ShootingSessionWay::create([
+                        'reference' => $reference,
+                        'way_of_shooting_id' => $wayId,
+                    ]);
+                }
             }
         });
 
