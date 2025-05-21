@@ -281,7 +281,7 @@
                     let lines = [1, 2].map(id => {
                         let label = stockMap[id] || 'غير محدد';
                         let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
-                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                        return `<div><small class="fw-semibold back-ground text-white rounded-1 p-1 mb-1">${label} - ${quantity}</small></div>`;
                     }).join('');
 
 
