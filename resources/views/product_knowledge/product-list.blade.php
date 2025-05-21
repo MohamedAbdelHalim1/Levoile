@@ -23,6 +23,7 @@
                                 <th>السعر</th>
                                 <th>الألوان</th>
                                 <th>عدد الصور المتبقية</th>
+                                <th>إجمالي الكمية</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,6 +33,8 @@
                                     $mainImage = $group->firstWhere('image_url')?->image_url;
                                     $colors = $group->groupBy('color')->count();
                                     $missing = $group->whereNull('image_url');
+                                    $totalQty = $group->flatMap(fn($v) => $v->stock_entries)->sum('quantity');
+
                                 @endphp
                                 <tr>
                                     <td>
@@ -73,6 +76,8 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                             window.missingImagesData["{{ $missingKey }}"] = {!! json_encode($missing) !!};
                                         </script>
                                     </td>
+
+                                    <td>{{ $totalQty }}</td>
 
 
                                 </tr>
