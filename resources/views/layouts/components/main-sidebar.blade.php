@@ -354,7 +354,7 @@
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('shooting-deliveries.index') }}"
-                                                        class="slide-item">المنتجات الجديده</a>
+                                                        class="slide-item">تحويل المخازن للتصوير</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('ready-to-shoot.index') }}"

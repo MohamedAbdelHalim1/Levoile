@@ -55,7 +55,13 @@
                                             class="btn btn-info">عرض</a>
                                     @else --}}
                                         <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                            class="btn btn-warning">نشر</a>
+                                            class="btn btn-warning">
+                                            @if ($delivery->status == 'تم ألنشر')
+                                            اعاده النشر
+                                            @else
+                                            نشر
+                                            @endif
+                                        </a>
                                     {{-- @endif --}}
                                 </td>
 

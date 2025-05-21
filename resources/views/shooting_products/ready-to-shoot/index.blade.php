@@ -13,6 +13,8 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4 class="mb-4">المنتجات الجاهزة للتصوير</h4>
 
+
+
                 <div class="table-responsive">
                     <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                         @csrf
@@ -21,6 +23,10 @@
                     </div> --}}
                         <button type="submit" class="btn btn-success mb-3" id="startShootingBtn" style="display:none;"
                             onclick="return validateBeforeSubmit()">بدء التصوير</button>
+
+                        <button type="button" class="btn btn-primary mb-3" id="bulkAssignBtn" style="display:none;">
+                            تعيين نوع التصوير جماعي
+                        </button>
                         <table class="table table-bordered text-center">
                             <thead class="table-light">
                                 <tr>
