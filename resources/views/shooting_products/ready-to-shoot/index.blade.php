@@ -40,7 +40,7 @@
                                 @endphp
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="selected_ready_ids[]" value="{{ $productId }}" data-type="{{ $type }}">
+                                        <input type="checkbox" name="selected_ready_ids[]" value="{{ $productId }}" data-type="{{ $type ?? '' }}" onclick="return handleCheckboxClick(this)">
                                     </td>
                                     <td>{{ $product->name }}</td>
                                     <td>
@@ -51,7 +51,7 @@
                                     </td>
                                     <td>{{ $type ?? '-' }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-secondary assign-type" data-id="{{ $productId }}">تعيين نوع التصوير</button>
+                                        <button type="button" class="btn btn-sm btn-success assign-type" data-id="{{ $productId }}">تعيين نوع التصوير</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -98,7 +98,9 @@
 <script>
     document.getElementById('checkAll').addEventListener('change', function () {
         const checked = this.checked;
-        document.querySelectorAll('input[name="selected_ready_ids[]"]').forEach(cb => cb.checked = checked);
+        document.querySelectorAll('input[name="selected_ready_ids[]"]').forEach(cb => {
+            if (!cb.disabled) cb.checked = checked;
+        });
         toggleStartButton();
     });
 
@@ -112,13 +114,11 @@
 
         if (selected.length > 0) {
             if (types.has('') || types.has(null)) {
-                alert('يجب تحديد نوع التصوير لكل منتج أولاً');
                 document.getElementById('startShootingBtn').style.display = 'none';
                 return;
             }
 
             if (types.size > 1) {
-                alert('يجب اختيار عناصر من نفس نوع التصوير فقط');
                 document.getElementById('startShootingBtn').style.display = 'none';
             } else {
                 document.getElementById('startShootingBtn').style.display = 'inline-block';
@@ -126,6 +126,26 @@
         } else {
             document.getElementById('startShootingBtn').style.display = 'none';
         }
+    }
+
+    function handleCheckboxClick(cb) {
+        if (!cb.dataset.type || cb.dataset.type === '') {
+            alert('يجب تحديد نوع التصوير أولاً لهذا المنتج');
+            cb.checked = false;
+            return false;
+        }
+
+        const selected = [...document.querySelectorAll('input[name="selected_ready_ids[]"]:checked')];
+        const types = new Set(selected.map(el => el.dataset.type));
+
+        if (types.size > 1) {
+            alert('لا يمكنك اختيار منتجات من أنواع تصوير مختلفة');
+            cb.checked = false;
+            return false;
+        }
+
+        toggleStartButton();
+        return true;
     }
 
     document.querySelectorAll('.assign-type').forEach(btn => {

@@ -1190,7 +1190,6 @@ class ShootingProductController extends Controller
                                     'description' => $color['description'],
                                     'quantity' => $color['quantity'],
                                     'status' => 'جديد',
-                                    'type_of_shooting' => $existingProduct->type_of_shooting,
                                 ]);
                             }
 
