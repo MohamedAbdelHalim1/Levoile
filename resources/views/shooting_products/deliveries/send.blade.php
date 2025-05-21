@@ -53,12 +53,12 @@
                                     <tr>
                                         <td>
                                             {{-- <input type="checkbox" name="selected_rows[]" value="{{ $index }}"> --}}
-                                            @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
-                                                @if ($content->status === 'new')
+                                            {{-- @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
+                                                @if ($content->status === 'new') --}}
                                                     <input type="checkbox" name="selected_rows[]"
                                                         value="{{ $index }}">
-                                                @endif
-                                            @endif
+                                                {{-- @endif
+                                            @endif --}}
 
                                             <input type="hidden" name="rows[{{ $index }}][item_no]"
                                                 value="{{ $itemNo }}">

@@ -985,6 +985,140 @@ class ShootingProductController extends Controller
     }
 
 
+    // public function sendSave(Request $request, $id)
+    // {
+    //     try {
+    //         $selectedIndexes = $request->input('selected_rows', []);
+
+    //         if (empty($selectedIndexes)) {
+    //             return redirect()->back()->with('error', 'يجب اختيار منتج واحد على الأقل قبل النشر');
+    //         }
+
+    //         DB::transaction(function () use ($selectedIndexes, $request, $id) {
+    //             $delivery = ShootingDelivery::findOrFail($id);
+    //             $rows = $request->input('rows', []);
+
+    //             $grouped = [];
+    //             $addedCodes = [];
+
+    //             foreach ($selectedIndexes as $index) {
+    //                 $row = $rows[$index];
+    //                 $itemNo = $row['item_no'];
+
+    //                 if (isset($addedCodes[$itemNo])) {
+    //                     continue;
+    //                 }
+    //                 $addedCodes[$itemNo] = true;
+
+    //                 $description = $row['description'];
+    //                 $quantity = $row['quantity'];
+    //                 $primaryId = substr($itemNo, 3, 6);
+
+    //                 $grouped[$primaryId][] = [
+    //                     'item_no' => $itemNo,
+    //                     'description' => $description,
+    //                     'quantity' => $quantity,
+    //                 ];
+    //             }
+
+    //             foreach ($grouped as $primaryId => $items) {
+    //                 $firstItem = $items[0];
+    //                 $description = $firstItem['description'];
+
+    //                 $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
+
+    //                 if ($existingProduct) {
+    //                     if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
+    //                         // المنتج موجود بنفس الاسم
+    //                         foreach ($items as $color) {
+    //                             $itemNo = $color['item_no'];
+    //                             $colorCode = substr($itemNo, -5, 3);
+    //                             $sizeCode = substr($itemNo, -2);
+
+    //                             $existingColor = ShootingProductColor::where('code', $itemNo)->first();
+
+    //                             if (!$existingColor) {
+    //                                 ShootingProductColor::create([
+    //                                     'shooting_product_id' => $existingProduct->id,
+    //                                     'code' => $itemNo,
+    //                                     'color_code' => $colorCode,
+    //                                     'size_code' => $sizeCode,
+    //                                 ]);
+    //                             }
+
+    //                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+    //                                 ->where('item_no', $itemNo)
+    //                                 ->update([
+    //                                     'is_received' => 1,
+    //                                     'status' => 'old',
+    //                                 ]);
+    //                         }
+
+    //                         $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
+    //                             ->pluck('color_code')->unique()->count();
+    //                         $existingProduct->save();
+    //                         $existingProduct->refreshStatusBasedOnColors();
+    //                     } else {
+    //                         // نفس الرقم لكن باسم مختلف → تجاهل وأعلِم إنه قديم
+    //                         foreach ($items as $color) {
+    //                             ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+    //                                 ->where('item_no', $color['item_no'])
+    //                                 ->update([
+    //                                     'is_received' => 1,
+    //                                     'status' => 'old',
+    //                                 ]);
+    //                         }
+    //                         continue;
+    //                     }
+    //                 } else {
+    //                     // منتج جديد
+    //                     $uniqueColors = collect($items)->map(function ($item) {
+    //                         return substr($item['item_no'], -5, 3);
+    //                     })->unique();
+
+    //                     $product = ShootingProduct::create([
+    //                         'custom_id' => $primaryId,
+    //                         'name' => $description,
+    //                         'number_of_colors' => $uniqueColors->count(),
+    //                         'quantity' => $firstItem['quantity'],
+    //                         'status' => 'new',
+    //                     ]);
+
+    //                     foreach ($items as $color) {
+    //                         $itemNo = $color['item_no'];
+    //                         $colorCode = substr($itemNo, -5, 3);
+    //                         $sizeCode = substr($itemNo, -2);
+
+    //                         ShootingProductColor::create([
+    //                             'shooting_product_id' => $product->id,
+    //                             'code' => $itemNo,
+    //                             'color_code' => $colorCode,
+    //                             'size_code' => $sizeCode,
+    //                         ]);
+
+    //                         ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+    //                             ->where('item_no', $itemNo)
+    //                             ->update([
+    //                                 'is_received' => 1,
+    //                                 'status' => 'old',
+    //                             ]);
+    //                     }
+    //                 }
+    //             }
+
+    //             $delivery->update([
+    //                 'sent_by' => auth()->id(),
+    //                 'status' => 'تم ألنشر',
+    //                 'sent_records' => count($addedCodes),
+    //             ]);
+    //         });
+
+    //         return redirect()->route('shooting-deliveries.index')->with('success', 'تم نشر البيانات الجديدة بنجاح');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'حصل خطأ أثناء النشر: ' . $e->getMessage());
+    //     }
+    // }
+
     public function sendSave(Request $request, $id)
     {
         try {
@@ -1029,7 +1163,6 @@ class ShootingProductController extends Controller
 
                     if ($existingProduct) {
                         if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
-                            // المنتج موجود بنفس الاسم
                             foreach ($items as $color) {
                                 $itemNo = $color['item_no'];
                                 $colorCode = substr($itemNo, -5, 3);
@@ -1052,6 +1185,16 @@ class ShootingProductController extends Controller
                                         'is_received' => 1,
                                         'status' => 'old',
                                     ]);
+
+                                // إضافة في ready_to_shoot
+                                \App\Models\ReadyToShoot::create([
+                                    'shooting_product_id' => $existingProduct->id,
+                                    'item_no' => $itemNo,
+                                    'description' => $color['description'],
+                                    'quantity' => $color['quantity'],
+                                    'status' => 'جديد',
+                                    'type_of_shooting' => $existingProduct->type_of_shooting,
+                                ]);
                             }
 
                             $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
@@ -1059,7 +1202,6 @@ class ShootingProductController extends Controller
                             $existingProduct->save();
                             $existingProduct->refreshStatusBasedOnColors();
                         } else {
-                            // نفس الرقم لكن باسم مختلف → تجاهل وأعلِم إنه قديم
                             foreach ($items as $color) {
                                 ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
                                     ->where('item_no', $color['item_no'])
@@ -1071,7 +1213,6 @@ class ShootingProductController extends Controller
                             continue;
                         }
                     } else {
-                        // منتج جديد
                         $uniqueColors = collect($items)->map(function ($item) {
                             return substr($item['item_no'], -5, 3);
                         })->unique();
@@ -1102,6 +1243,16 @@ class ShootingProductController extends Controller
                                     'is_received' => 1,
                                     'status' => 'old',
                                 ]);
+
+                            // إدخال في ready_to_shoot
+                            \App\Models\ReadyToShoot::create([
+                                'shooting_product_id' => $product->id,
+                                'item_no' => $itemNo,
+                                'description' => $color['description'],
+                                'quantity' => $color['quantity'],
+                                'status' => 'جديد',
+                                'type_of_shooting' => null, // المستخدم هيحدده بعدين
+                            ]);
                         }
                     }
                 }
@@ -1118,6 +1269,7 @@ class ShootingProductController extends Controller
             return redirect()->back()->with('error', 'حصل خطأ أثناء النشر: ' . $e->getMessage());
         }
     }
+
 
 
 

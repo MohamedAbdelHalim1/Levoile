@@ -50,13 +50,13 @@
                                 </td>
 
                                 <td>
-                                    @if ($delivery->contents()->where('status', 'new')->count() === 0)
+                                    {{-- @if ($delivery->contents()->where('status', 'new')->count() === 0)
                                         <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
                                             class="btn btn-info">عرض</a>
-                                    @else
+                                    @else --}}
                                         <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
                                             class="btn btn-warning">نشر</a>
-                                    @endif
+                                    {{-- @endif --}}
                                 </td>
 
                             </tr>
