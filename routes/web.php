@@ -4,12 +4,13 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\BranchOrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\DesignMaterialController;
 use App\Http\Controllers\DesignSampleController;
-use App\Http\Controllers\FactoryController;
 
+use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductKnowledgeController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\ShootingProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WayOfShootingController;
 use App\Http\Livewire\About;
 use App\Http\Livewire\Accordion;
 use App\Http\Livewire\AddProduct;
@@ -136,7 +138,7 @@ use App\Http\Livewire\Wishlist;
 use App\Models\ProductColorVariantMaterial;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BranchOrderController;
+
 
 
 
@@ -301,6 +303,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/ready-to-shoot', [ShootingProductController::class, 'readyToShootIndex'])->name('ready-to-shoot.index');
     Route::post('/ready-to-shoot/assign-type', [ShootingProductController::class, 'assignType'])->name('ready-to-shoot.assign-type');
     Route::post('/ready-to-shoot/bulk-assign-type', [ShootingProductController::class, 'bulkAssignType'])->name('ready-to-shoot.bulk-assign-type');
+    Route::get('/ways-of-shooting', [WayOfShootingController::class, 'index'])->name('ways-of-shooting.index');
+    Route::post('/ways-of-shooting', [WayOfShootingController::class, 'store'])->name('ways-of-shooting.store');
 
 
 

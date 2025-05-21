@@ -12,6 +12,12 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4 class="mb-4">جلسات التصوير</h4>
 
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="{{ route('ways-of-shooting.index') }}" class="btn btn-primary">
+                        <i class="fa fa-list"></i> طرق التصوير
+                    </a>
+                </div>
+
                 <div class="table-responsive">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
@@ -120,8 +126,8 @@
                                             {{ $colors->first()->color->date_of_delivery ?? '-' }}
                                         @endif
                                     </td>
-                                    
-                                    
+
+
 
                                     {{-- الوقت المتبقي --}}
                                     <td>
@@ -133,11 +139,11 @@
                                                 $remaining = $deliveryDate
                                                     ? \Carbon\Carbon::now()->diffInDays(
                                                         \Carbon\Carbon::parse($deliveryDate),
-                                                        false
+                                                        false,
                                                     )
                                                     : null;
                                             @endphp
-                                    
+
                                             @if (is_null($deliveryDate))
                                                 <span>-</span>
                                             @else
@@ -151,12 +157,12 @@
                                             @endif
                                         @endif
                                     </td>
-                                    
 
 
 
 
-                                    
+
+
 
                                     <td>
                                         @if ($firstLink)
@@ -172,17 +178,18 @@
                                         @php
                                             $shootingMethod = $colors->first()?->color?->shooting_method ?? null;
                                         @endphp
-                                    
+
                                         @if (!empty($shootingMethod))
-                                            <a href="{{ $shootingMethod }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                            <a href="{{ $shootingMethod }}" class="btn btn-outline-primary btn-sm"
+                                                target="_blank">
                                                 <i class="fa fa-link"></i>
                                             </a>
                                         @else
                                             <span>-</span>
                                         @endif
                                     </td>
-                                    
-                                    
+
+
 
                                     <td>
                                         <button class="btn btn-success btn-sm open-drive-link-modal"

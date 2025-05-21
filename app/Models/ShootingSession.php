@@ -18,5 +18,8 @@ class ShootingSession extends Model
         return $this->belongsTo(ShootingProductColor::class, 'shooting_product_color_id');
     }
 
-
+    public function sessionWays()
+    {
+        return $this->hasMany(ShootingSessionWay::class, 'shooting_session_id');
+    }
 }
