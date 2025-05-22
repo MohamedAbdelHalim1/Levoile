@@ -30,6 +30,10 @@
                             <option value="قيد التصوير">قيد التصوير</option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-secondary" id="resetFilters">إعادة تعيين الفلاتر</button>
+                    </div>
+
                 </div>
 
 
@@ -140,7 +144,8 @@
     </div>
 
     <!-- Bulk Assign Modal -->
-    <div class="modal fade" id="bulkAssignModal" tabindex="-1" aria-labelledby="bulkAssignModalLabel" aria-hidden="true">
+    <div class="modal fade" id="bulkAssignModal" tabindex="-1" aria-labelledby="bulkAssignModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <form method="POST" action="{{ route('ready-to-shoot.bulk-assign-type') }}">
                 @csrf
@@ -338,6 +343,16 @@
                 $('input.start-shooting').prop('checked', checked);
                 toggleStartButton();
             });
+
+
+            $('#resetFilters').on('click', function() {
+                $('#filterType').val('');
+                $('#filterStatus').val('');
+
+                // Trigger change to apply filter reset
+                $('#filterType, #filterStatus').trigger('change');
+            });
+
         });
     </script>
 @endsection
