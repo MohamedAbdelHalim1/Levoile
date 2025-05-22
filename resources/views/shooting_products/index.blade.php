@@ -116,13 +116,13 @@
                             التصوير اليدوي
                         </a>
                     </div>
-                    <div id="startShootingContainer" style="display: none;" class="m-2">
+                    {{-- <div id="startShootingContainer" style="display: none;" class="m-2">
                         <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                             @csrf
                             <input type="hidden" name="selected_products" id="selectedProducts">
                             <button type="submit" class="btn btn-success">بدء التصوير</button>
                         </form>
-                    </div>
+                    </div> --}}
 
                 </div>
 
@@ -132,9 +132,6 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>
-                                <input type="checkbox" id="checkAll"> اختر المنتج
-                            </th>
                             <th>اسم المنتج</th>
                             <th>الحالة</th>
                             <th>عدد الألوان</th>
@@ -160,9 +157,6 @@
                         @foreach ($shooting_products as $index => $product)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>
-                                    <input type="checkbox" name="selected_products[]" value="{{ $product->id }}">
-                                </td>
                                 <td>
                                     <a href="{{ route('shooting-products.show', $product->id) }}"
                                         class="text-primary text-decoration-underline">
