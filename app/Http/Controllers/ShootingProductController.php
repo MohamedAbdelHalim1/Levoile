@@ -1362,15 +1362,33 @@ class ShootingProductController extends Controller
     }
 
 
-    public function readyToShootIndex()
+    // public function readyToShootIndex()
+    // {
+    //     $readyItems = ReadyToShoot::with('shootingProduct')
+    //         ->whereNull('deleted_at')
+    //         ->latest()
+    //         ->get();
+
+    //     return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
+    // }
+    public function readyToShootIndex(Request $request)
     {
-        $readyItems = ReadyToShoot::with('shootingProduct')
-            ->whereNull('deleted_at')
-            ->latest()
-            ->get();
+        $query = ReadyToShoot::with('shootingProduct')
+            ->whereNull('deleted_at');
+
+        if ($request->filled('type_of_shooting')) {
+            $query->where('type_of_shooting', $request->type_of_shooting);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $readyItems = $query->latest()->get();
 
         return view('shooting_products.ready-to-shoot.index', compact('readyItems'));
     }
+
 
 
     public function assignType(Request $request)

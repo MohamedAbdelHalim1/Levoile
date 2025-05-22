@@ -12,29 +12,33 @@
 
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4 class="mb-4">المنتجات الجاهزة للتصوير</h4>
-                <!-- Filters -->
-                <div class="row mb-3">
+                <form method="GET" action="{{ route('ready-to-shoot.index') }}" class="row mb-3">
                     <div class="col-md-3">
-                        <select id="filterType" class="form-select">
+                        <select name="type_of_shooting" class="form-select" onchange="this.form.submit()">
                             <option value="">كل أنواع التصوير</option>
-                            <option value="تصوير منتج">تصوير منتج</option>
-                            <option value="تصوير موديل">تصوير موديل</option>
-                            <option value="تصوير انفلونسر">تصوير انفلونسر</option>
-                            <option value="تعديل لون">تعديل لون</option>
+                            <option value="تصوير منتج" {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>
+                                تصوير منتج</option>
+                            <option value="تصوير موديل"
+                                {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>تصوير موديل</option>
+                            <option value="تصوير انفلونسر"
+                                {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>تصوير انفلونسر
+                            </option>
+                            <option value="تعديل لون" {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>
+                                تعديل لون</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <select id="filterStatus" class="form-select">
+                        <select name="status" class="form-select" onchange="this.form.submit()">
                             <option value="">كل الحالات</option>
-                            <option value="new">جديد</option>
-                            <option value="قيد التصوير">قيد التصوير</option>
+                            <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
+                            <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>قيد
+                                التصوير</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-secondary" id="resetFilters">إعادة تعيين الفلاتر</button>
+                        <a href="{{ route('ready-to-shoot.index') }}" class="btn btn-secondary">إعادة تعيين الفلاتر</a>
                     </div>
-
-                </div>
+                </form>
 
 
                 <div class="table-responsive">
@@ -302,27 +306,6 @@
 
     <script>
         $(document).ready(function() {
-            let table = $('#file-datatable').DataTable({
-                responsive: true
-            });
-
-            $('#filterType, #filterStatus').on('change', function() {
-                let typeVal = $('#filterType').val();
-                let statusVal = $('#filterStatus').val();
-
-                table.rows().every(function() {
-                    let row = $(this.node());
-                    let rowType = row.data('type');
-                    let rowStatus = row.data('status');
-                    let show = true;
-
-                    if (typeVal && rowType !== typeVal) show = false;
-                    if (statusVal && rowStatus !== statusVal) show = false;
-
-                    row.toggle(show);
-                });
-            });
-
             $('#checkAllStartShooting').on('change', function() {
                 const checked = this.checked;
                 let types = new Set();
@@ -344,14 +327,6 @@
                 toggleStartButton();
             });
 
-
-            $('#resetFilters').on('click', function() {
-                $('#filterType').val('');
-                $('#filterStatus').val('');
-
-                // Trigger change to apply filter reset
-                $('#filterType, #filterStatus').trigger('change');
-            });
 
         });
     </script>
