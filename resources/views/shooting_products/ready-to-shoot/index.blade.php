@@ -30,7 +30,7 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select" onchange="this.form.submit()">
                             <option value="">كل الحالات</option>
-                            <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
+                            <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>جديد</option>
                             <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>قيد
                                 التصوير</option>
                         </select>
@@ -88,10 +88,10 @@
                                             <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
-@foreach ($colorCodes as $code)
-<li>{{ $code }}</li>
-@endforeach
-</ul>">
+                                                @foreach ($colorCodes as $code)
+                                                <li>{{ $code }}</li>
+                                                @endforeach
+                                                </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
                                         </td>
