@@ -89,8 +89,8 @@
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
                                                 @foreach ($colorCodes as $code)
-                                                <li>{{ $code }}</li>
-                                                @endforeach
+<li>{{ $code }}</li>
+@endforeach
                                                 </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
@@ -178,9 +178,7 @@
 @endsection
 
 @section('scripts')
-    <script>
-        < script src = "{{ asset('build/assets/plugins/select2/select2.full.min.js') }}" >
-    </script>
+    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
     @vite('resources/assets/js/select2.js')
 
     <!-- DATA TABLE JS -->
@@ -197,78 +195,78 @@
     <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
+    <script>
+        document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
+            cb.addEventListener('change', toggleStartButton);
+        });
 
-    document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
-    cb.addEventListener('change', toggleStartButton);
-    });
+        function toggleStartButton() {
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
+            const types = new Set(selected.map(cb => cb.dataset.type));
 
-    function toggleStartButton() {
-    const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
-    const types = new Set(selected.map(cb => cb.dataset.type));
+            if (selected.length > 0) {
+                if (types.has('') || types.has(null)) {
+                    document.getElementById('startShootingBtn').style.display = 'none';
+                    return;
+                }
 
-    if (selected.length > 0) {
-    if (types.has('') || types.has(null)) {
-    document.getElementById('startShootingBtn').style.display = 'none';
-    return;
-    }
+                if (types.size > 1) {
+                    document.getElementById('startShootingBtn').style.display = 'none';
+                } else {
+                    document.getElementById('startShootingBtn').style.display = 'inline-block';
+                }
+            } else {
+                document.getElementById('startShootingBtn').style.display = 'none';
+            }
+        }
 
-    if (types.size > 1) {
-    document.getElementById('startShootingBtn').style.display = 'none';
-    } else {
-    document.getElementById('startShootingBtn').style.display = 'inline-block';
-    }
-    } else {
-    document.getElementById('startShootingBtn').style.display = 'none';
-    }
-    }
+        function handleCheckboxClick(cb) {
+            if (!cb.dataset.type || cb.dataset.type === '') {
+                alert('يجب تحديد نوع التصوير أولاً لهذا المنتج');
+                cb.checked = false;
+                return false;
+            }
 
-    function handleCheckboxClick(cb) {
-    if (!cb.dataset.type || cb.dataset.type === '') {
-    alert('يجب تحديد نوع التصوير أولاً لهذا المنتج');
-    cb.checked = false;
-    return false;
-    }
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
+            const types = new Set(selected.map(el => el.dataset.type));
 
-    const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
-    const types = new Set(selected.map(el => el.dataset.type));
+            if (types.size > 1) {
+                alert('لا يمكنك اختيار منتجات من أنواع تصوير مختلفة');
+                cb.checked = false;
+                return false;
+            }
 
-    if (types.size > 1) {
-    alert('لا يمكنك اختيار منتجات من أنواع تصوير مختلفة');
-    cb.checked = false;
-    return false;
-    }
-
-    toggleStartButton();
-    return true;
-    }
+            toggleStartButton();
+            return true;
+        }
 
 
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    popoverTriggerList.forEach(function(popoverTriggerEl) {
-    new bootstrap.Popover(popoverTriggerEl);
-    });
+        document.addEventListener("DOMContentLoaded", function() {
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            popoverTriggerList.forEach(function(popoverTriggerEl) {
+                new bootstrap.Popover(popoverTriggerEl);
+            });
 
-    document.querySelectorAll('.assign-type').forEach(btn => {
-    btn.addEventListener('click', function() {
-    const id = this.dataset.id;
-    document.getElementById('modal_product_id').value = id;
-    const modal = new bootstrap.Modal(document.getElementById('typeModal'));
-    modal.show();
-    });
-    });
+            document.querySelectorAll('.assign-type').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    document.getElementById('modal_product_id').value = id;
+                    const modal = new bootstrap.Modal(document.getElementById('typeModal'));
+                    modal.show();
+                });
+            });
 
-    });
+        });
 
-    function validateBeforeSubmit() {
-    const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
-    if (selected.length === 0) {
-    alert('يجب اختيار منتج واحد على الأقل لبدء التصوير');
-    return false;
-    }
-    return true;
-    }
+        function validateBeforeSubmit() {
+            const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
+            if (selected.length === 0) {
+                alert('يجب اختيار منتج واحد على الأقل لبدء التصوير');
+                return false;
+            }
+            return true;
+        }
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
