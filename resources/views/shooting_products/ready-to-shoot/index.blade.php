@@ -107,7 +107,7 @@
                                                     <input type="hidden" name="shooting_product_id" value="{{ $productId }}">
                                                     <button type="submit" class="btn btn-sm btn-light" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
-                                                        <i class="fas fa-sync-alt" style="color: seashell;"></i>
+                                                        <i class="fa fa-refresh" style="color: seashell;"></i>
                                                     </button>
                                                 </form>
                                             @endif
@@ -224,7 +224,6 @@
     <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <script>
         document.querySelectorAll('input[name="selected_products[]"]').forEach(cb => {
             cb.addEventListener('change', toggleStartButton);
