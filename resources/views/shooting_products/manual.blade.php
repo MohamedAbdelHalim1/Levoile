@@ -124,10 +124,11 @@
         $('#shootingType').on('change', function() {
             let type = $(this).val();
 
-            $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper').addClass('d-none');
+            $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper , #shootingWaySection').addClass('d-none');
 
             if (type === 'تصوير منتج' || type === 'تصوير موديل' || type === 'تصوير انفلونسر') {
-                $('#locationWrapper, #photographerWrapper, #methodWrapper', '#shootingWaySection').removeClass('d-none');
+                $('#locationWrapper, #photographerWrapper, #methodWrapper, #shootingWaySection').removeClass(
+                    'd-none');
             } else if (type === 'تعديل لون') {
                 $('#editorWrapper, #methodWrapper').removeClass('d-none');
             }
