@@ -398,8 +398,9 @@ class ShootingProductController extends Controller
     {
         $photographers = \App\Models\User::where('role_id', 7)->get(); // مثال
         $editors = \App\Models\User::where('role_id', 8)->get(); // مثال
+        $waysOfShooting = WayOfShooting::all();
 
-        return view('shooting_products.manual', compact('photographers', 'editors'));
+        return view('shooting_products.manual', compact('photographers', 'editors', 'waysOfShooting'));
     }
 
     public function findColorByCode(Request $request)
@@ -445,10 +446,12 @@ class ShootingProductController extends Controller
                     $color->date_of_delivery = $request->date_of_delivery;
                     $color->shooting_method = $request->shooting_method;
 
+
                     if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $color->location = $request->location;
                         $color->date_of_shooting = $request->date_of_shooting;
                         $color->photographer = json_encode($request->photographer);
+
                     } else {
                         $color->date_of_editing = $request->date_of_editing;
                         $color->editor = json_encode($request->editor);
@@ -498,6 +501,16 @@ class ShootingProductController extends Controller
                 $product = ShootingProduct::find($productId);
                 if ($product) {
                     $product->refreshStatusBasedOnColors();
+                }
+            }
+
+            // ربط طرق التصوير بالـ reference
+            if ($request->has('way_of_shooting_ids')) {
+                foreach ($request->way_of_shooting_ids as $wayId) {
+                    \App\Models\ShootingSessionWay::create([
+                        'reference' => $reference,
+                        'way_of_shooting_id' => $wayId,
+                    ]);
                 }
             }
         });

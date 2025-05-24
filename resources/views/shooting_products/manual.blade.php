@@ -16,7 +16,7 @@
 
                     <form id="manualShootingForm" method="POST" action="{{ url('/shooting-product/manual/save') }}">
                         @csrf
-                        
+
 
                         <table class="table table-bordered mt-4 d-none" id="selectedColorsTable">
                             <thead>
@@ -95,6 +95,14 @@
                             <label>طريقة التصوير / لينك</label>
                             <input type="text" name="shooting_method" class="form-control" form="manualShootingForm">
                         </div>
+                        <div class="col-md-3 mt-3 d-none" id="shootingWaySection">
+                            <label>طرق التصوير</label>
+                            <select name="way_of_shooting_ids[]" class="form-control tom-select" multiple>
+                                @foreach ($waysOfShooting as $way)
+                                    <option value="{{ $way->id }}">{{ $way->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="col-md-12">
                             <button type="submit" form="manualShootingForm" class="btn btn-success">حفظ التصوير</button>
@@ -118,8 +126,8 @@
 
             $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper').addClass('d-none');
 
-            if (type === 'تصوير منتج' || type === 'تصوير موديل') {
-                $('#locationWrapper, #photographerWrapper, #methodWrapper').removeClass('d-none');
+            if (type === 'تصوير منتج' || type === 'تصوير موديل' || type === 'تصوير انفلونسر') {
+                $('#locationWrapper, #photographerWrapper, #methodWrapper', '#shootingWaySection').removeClass('d-none');
             } else if (type === 'تعديل لون') {
                 $('#editorWrapper, #methodWrapper').removeClass('d-none');
             }
