@@ -51,7 +51,14 @@
                                 </td>
                                 <td>
                                     @if ($session->user_id)
-                                        {{ \App\Models\User::find($session->user_id)?->name ?? '---' }}
+                                        <span class="d-flex align-items-center justify-content-between">
+                                            {{ \App\Models\User::find($session->user_id)?->name ?? '---' }}
+                                            <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
+                                                data-bs-toggle="modal" data-bs-target="#assignEditorModal"
+                                                data-reference="{{ $session->reference }}">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        </span>
                                     @else
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
@@ -59,6 +66,7 @@
                                         </button>
                                     @endif
                                 </td>
+
                                 <td>
                                     <span class="badge bg-{{ $session->status === 'تم التعديل' ? 'success' : 'warning' }}">
                                         {{ $session->status }}
