@@ -238,6 +238,10 @@
                             <label class="form-label">لينك درايف</label>
                             <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
                         </div>
+                        <div class="mb-3 d-none" id="noteWrapper">
+                            <label class="form-label">سبب التأخير</label>
+                            <textarea name="note" id="noteInput" class="form-control" rows="3"></textarea>
+                        </div>
 
                         <button type="submit" class="btn btn-primary">حفظ</button>
                     </form>
@@ -274,10 +278,26 @@
             let reference = $(this).data("reference");
             let driveLink = $(this).data("drive-link") || '';
 
+            // وقت التسليم من الـ row
+            let $row = $(this).closest("tr");
+            let timeLeftText = $row.find("td:nth-child(11)").text(); // عمود الوقت المتبقي
+
+            let isLate = timeLeftText.includes("متأخر");
+
             $("#drive_session_reference").val(reference);
             $("#drive_link_input").val(driveLink);
+
+            if (isLate) {
+                $("#noteWrapper").removeClass("d-none");
+                $("#noteInput").attr("required", true);
+            } else {
+                $("#noteWrapper").addClass("d-none");
+                $("#noteInput").removeAttr("required").val('');
+            }
+
             $("#driveLinkModal").modal("show");
         });
+
 
 
         $("#driveLinkForm").on("submit", function(e) {

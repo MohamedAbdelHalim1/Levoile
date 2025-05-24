@@ -11,6 +11,7 @@ class ShootingSession extends Model
         'shooting_product_color_id',
         'status',
         'drive_link',
+        'note',
     ];
 
     public function color()

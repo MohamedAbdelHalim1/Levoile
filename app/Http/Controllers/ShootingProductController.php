@@ -342,6 +342,10 @@ class ShootingProductController extends Controller
             foreach ($sessions as $session) {
                 $session->drive_link = $request->drive_link;
                 $session->status = 'completed';
+                // هنا نضيف النوت لو موجودة
+                if ($request->filled('note')) {
+                    $session->note = $request->note;
+                }
                 $session->save();
                 // ✅ تحديث حالة اللون المرتبط بالسيشن
                 $session->color->status = 'completed';
@@ -451,7 +455,6 @@ class ShootingProductController extends Controller
                         $color->location = $request->location;
                         $color->date_of_shooting = $request->date_of_shooting;
                         $color->photographer = json_encode($request->photographer);
-
                     } else {
                         $color->date_of_editing = $request->date_of_editing;
                         $color->editor = json_encode($request->editor);
