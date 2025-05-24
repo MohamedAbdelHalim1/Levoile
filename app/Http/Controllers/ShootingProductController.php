@@ -1437,9 +1437,9 @@ class ShootingProductController extends Controller
         foreach ($newVariants as $variant) {
             ReadyToShoot::create([
                 'shooting_product_id' => $variant->shooting_product_id,
-                'item_no' => $variant->item_no,
-                'description' => $variant->description ?? '',
-                'quantity' => $variant->quantity ?? 0,
+                'item_no' => $variant->code ?? '',
+                'description' => $variant->shootingProduct->description ?? '',
+                'quantity' => $variant->shootingProduct->quantity ?? 0,
                 'status' => 'جديد',
             ]);
         }

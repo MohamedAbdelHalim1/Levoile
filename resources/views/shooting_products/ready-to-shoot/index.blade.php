@@ -66,15 +66,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php $grouped = $readyItems->groupBy('shooting_product_id'); @endphp
+                                @php
+                                    $grouped = $readyItems->groupBy(function ($item) {
+                                        return $item->shooting_product_id .
+                                            '|' .
+                                            ($item->type_of_shooting ?? '-') .
+                                            '|' .
+                                            ($item->status ?? '-');
+                                    });
+                                @endphp
 
-                                @foreach ($grouped as $productId => $items)
+                                @foreach ($grouped as $key => $items)
                                     @php
+                                        [$productId, $type, $status] = explode('|', $key);
                                         $product = $items->first()->shootingProduct;
                                         $colorCodes = $items->pluck('item_no');
-                                        $type = $items->first()->type_of_shooting;
-                                        $status = $items->first()->status;
                                     @endphp
+
                                     <tr data-type="{{ $type }}" data-status="{{ $status }}">
                                         <td>
                                             @if ($status !== 'قيد التصوير')
@@ -89,24 +97,32 @@
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
                                                                 @foreach ($colorCodes as $code)
-                                                                <li>{{ $code }}</li>
-                                                                @endforeach
+<li>{{ $code }}</li>
+@endforeach
                                                                 </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
 
                                             @php
                                                 // نشوف لو فيه فارينتس تانية غير اللي موجودة بالفعل
-                                                $otherVariantsCount = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
-                                                    ->whereNotIn('code', $colorCodes)->count();
+                                                $otherVariantsCount = \App\Models\ShootingProductColor::where(
+                                                    'shooting_product_id',
+                                                    $productId,
+                                                )
+                                                    ->whereNotIn('code', $colorCodes)
+                                                    ->count();
                                             @endphp
-                                            @if ($otherVariantsCount > 0)
+                                            @if ($otherVariantsCount > 0 && $status !== 'قيد التصوير')
                                                 -
-                                                <form method="POST" action="{{ route('ready-to-shoot.refresh-variants') }}" class="d-inline">
+                                                <form method="POST"
+                                                    action="{{ route('ready-to-shoot.refresh-variants') }}"
+                                                    class="d-inline">
                                                     @csrf
-                                                    <input type="hidden" name="shooting_product_id" value="{{ $productId }}">
-                                                    <button type="submit" class="btn btn-sm btn-light" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
+                                                    <input type="hidden" name="shooting_product_id"
+                                                        value="{{ $productId }}">
+                                                    <button type="submit" class="btn btn-sm btn-light"
+                                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="استرجاع جميع المنتجات المتشابهة">
                                                         <i class="fa fa-refresh" style="color: rgb(65, 49, 37);"></i>
                                                     </button>
                                                 </form>
