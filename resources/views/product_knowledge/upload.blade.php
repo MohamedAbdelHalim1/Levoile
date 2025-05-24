@@ -206,6 +206,7 @@
                 summary.new_count += result.new_count || 0;
                 summary.duplicate_count += result.duplicate_count || 0;
                 summary.duplicates = [...summary.duplicates, ...(result.duplicates || [])];
+                summary.new_products = (summary.new_products || 0) + (result.new_products || 0);
 
                 const progress = ((i + 1) / chunks.length) * 100;
                 progressBar.style.width = progress + '%';
