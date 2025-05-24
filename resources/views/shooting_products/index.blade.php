@@ -149,7 +149,7 @@
                             <th>الوقت المتبقي</th>
                             <th>طريقه التصوير</th>
                             <th>حاله البيانات</th>
-                            <th>المراجعة</th>
+                            {{-- <th>المراجعة</th> --}}
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -469,14 +469,14 @@
                                 @endif
 
 
-                                <td>
+                                {{-- <td>
                                     @if ($product->is_reviewed)
                                         <span class="badge bg-success">تم التكويد</span>
                                     @else
                                         <input type="checkbox" class="form-check-input review-toggle"
                                             data-id="{{ $product->id }}">
                                     @endif
-                                </td>
+                                </td> --}}
 
 
                                 <td>
@@ -731,7 +731,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         $(document).on('change', '.review-toggle', function() {
             const checkbox = $(this);
             const productId = checkbox.data('id');
@@ -764,5 +764,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endsection

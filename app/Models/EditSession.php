@@ -17,6 +17,7 @@ class EditSession extends Model
         'user_id',
         'receiving_date',
         'note',
+        'is_reviewed',
     ];
 
     public $timestamps = true;

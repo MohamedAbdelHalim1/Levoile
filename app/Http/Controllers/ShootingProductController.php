@@ -687,22 +687,22 @@ class ShootingProductController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function markReviewed(Request $request)
-    {
-        $request->validate(['id' => 'required|exists:shooting_products,id']);
+    // public function markReviewed(Request $request)
+    // {
+    //     $request->validate(['id' => 'required|exists:shooting_products,id']);
 
-        $product = ShootingProduct::findOrFail($request->id);
-        $product->is_reviewed = 1;
-        $product->save();
+    //     $product = ShootingProduct::findOrFail($request->id);
+    //     $product->is_reviewed = 1;
+    //     $product->save();
 
-        // ✅ أضفه لموقع الادمن
-        WebsiteAdminProduct::updateOrCreate(
-            ['shooting_product_id' => $product->id],
-            ['name' => $product->name, 'status' => 'new']
-        );
+    //     // ✅ أضفه لموقع الادمن
+    //     WebsiteAdminProduct::updateOrCreate(
+    //         ['shooting_product_id' => $product->id],
+    //         ['name' => $product->name, 'status' => 'new']
+    //     );
 
-        return response()->json(['success' => true]);
-    }
+    //     return response()->json(['success' => true]);
+    // }
 
 
     public function indexWebsite()
