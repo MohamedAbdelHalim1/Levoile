@@ -66,6 +66,7 @@ class EditSessionController extends Controller
 
     public function bulkAssign(Request $request)
     {
+        try{
         $request->validate([
             'references'   => 'required|array',
             'user_id'      => 'required|exists:users,id',
@@ -90,5 +91,8 @@ class EditSessionController extends Controller
         }
 
         return redirect()->back()->with('success', 'تم تعيين المحرر للجلسات المختارة بنجاح');
+        }catch(\Exception $e){
+            dd($e);
+        }
     }
 }
