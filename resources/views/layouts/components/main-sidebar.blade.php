@@ -364,6 +364,11 @@
                                                         class="slide-item">منتجات التصوير</a></li>
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
                                                         class="slide-item">جلسات التصوير</a></li>
+                                                <li>
+                                                    <a href="{{ route('edit-sessions.index') }}" class="slide-item">
+                                                        جلسات جاهزه للتعديل
+                                                    </a>
+                                                </li>
 
                                             </ul>
                                         </div>
