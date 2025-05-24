@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EditSession;
 use App\Models\ReadyToShoot;
 use App\Models\ShootingDelivery;
 use App\Models\ShootingDeliveryContent;
@@ -328,6 +329,12 @@ class ShootingProductController extends Controller
                 $session->color->status = 'completed';
                 $session->color->save();
             }
+            EditSession::firstOrCreate(
+                ['reference' => $request->reference],
+                ['photo_drive_link' => $request->drive_link],
+                ['status' => 'جديد']
+            );
+
 
             // ✅ جيب كل المنتجات المرتبطة بالسيشنات
             $productIds = $sessions->pluck('color.shootingProduct.id')->unique();
