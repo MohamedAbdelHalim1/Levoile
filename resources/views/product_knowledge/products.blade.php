@@ -250,6 +250,9 @@
                 const container = document.querySelector('#productModal .modal-body .row');
                 container.innerHTML = '';
 
+                variants.sort((a, b) => (a.color || '').localeCompare(b.color || ''));
+
+
                 // Group by no_code
                 const grouped = variants.reduce((acc, item) => {
                     if (!acc[item.no_code]) acc[item.no_code] = [];
