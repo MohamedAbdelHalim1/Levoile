@@ -268,25 +268,28 @@
                     const totalQty = group.reduce((sum, item) =>
                         sum + (item.stock_entries?.reduce((s, q) => s + q.quantity, 0) || 0), 0);
 
-                    const productCodesHtml = group.map(v =>
-                        `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${v.product_code}</small></div>`
-                    ).join('');
+                    const productCodesHtml = `
+                        <div class="mt-2 text-center">
+                            <small class="fw-semibold text-dark">الأكواد:</small><br>
+                            ${group.map(v => `<span class="badge bg-dark m-1">${v.product_code}</span>`).join('')}
+                        </div>
+                    `;
+
 
                     box.innerHTML = `
-        <div class="position-relative">
-            <img src="${firstWithImage.image_url || '/assets/images/comming.png'}" class="rounded-1">
-            <div class="position-absolute top-0 end-0 me-1">
-                <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-            </div>
-            <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                <small class="fw-semibold back-ground text-white rounded-1 p-1">${firstWithImage.color}</small>
-            </div>
-            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                ${isAdmin ? productCodesHtml : ''}
-            </div>
+    <div class="position-relative">
+        <img src="${firstWithImage.image_url || '/assets/images/comming.png'}" class="rounded-1">
+        <div class="position-absolute top-0 end-0 me-1">
+            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
         </div>
-        <h4 class="text-center mt-2">${firstWithImage.no_code}</h4>
-    `;
+        <div class="position-absolute top-0 start-0 ms-1 mt-1">
+            <small class="fw-semibold back-ground text-white rounded-1 p-1">${firstWithImage.color}</small>
+        </div>
+    </div>
+    <h4 class="text-center mt-2">${firstWithImage.no_code}</h4>
+    ${productCodesHtml}
+`;
+
 
                     container.appendChild(box);
                 });
