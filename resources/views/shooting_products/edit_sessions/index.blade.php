@@ -132,7 +132,7 @@
 
                     <div id="noteWrapper" style="display: none;">
                         <label for="note">سبب التأخير:</label>
-                        <textarea name="note" id="noteInput" class="form-control" rows="3" required></textarea>
+                        <textarea name="note" id="noteInput" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -174,39 +174,38 @@
 
 @section('scripts')
     <script>
-        const driveModal = document.getElementById('uploadDriveModal');
-        driveModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            document.getElementById('driveModalReference').value = button.getAttribute('data-reference');
-        });
-
-        const editorModal = document.getElementById('assignEditorModal');
-        editorModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            document.getElementById('editorModalReference').value = button.getAttribute('data-reference');
-        });
-    </script>
-    <script>
-        const driveModal = document.getElementById('uploadDriveModal');
-        driveModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            const reference = button.getAttribute('data-reference');
-            const receivingDate = button.getAttribute('data-receiving-date'); // لازم تبعته من الزرار
-            const today = new Date().toISOString().split('T')[0];
-
-            document.getElementById('driveModalReference').value = reference;
-
+        document.addEventListener('DOMContentLoaded', function() {
+            const driveModal = document.getElementById('uploadDriveModal');
+            const driveModalRef = document.getElementById('driveModalReference');
             const noteWrapper = document.getElementById('noteWrapper');
             const noteInput = document.getElementById('noteInput');
 
-            if (receivingDate && receivingDate < today) {
-                noteWrapper.style.display = 'block';
-                noteInput.setAttribute('required', 'required');
-            } else {
-                noteWrapper.style.display = 'none';
-                noteInput.removeAttribute('required');
-                noteInput.value = '';
-            }
+            driveModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const reference = button.getAttribute('data-reference');
+                const receivingDate = button.getAttribute('data-receiving-date');
+                const today = new Date().toISOString().split('T')[0];
+
+                driveModalRef.value = reference;
+
+                if (receivingDate && receivingDate < today) {
+                    noteWrapper.style.display = 'block';
+                    noteInput.removeAttribute('disabled');
+                    noteInput.setAttribute('required', 'required');
+                } else {
+                    noteWrapper.style.display = 'none';
+                    noteInput.removeAttribute('required');
+                    noteInput.setAttribute('disabled', 'disabled');
+                    noteInput.value = '';
+                }
+            });
+
+            const editorModal = document.getElementById('assignEditorModal');
+            editorModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                document.getElementById('editorModalReference').value = button.getAttribute(
+                    'data-reference');
+            });
         });
     </script>
 @endsection
