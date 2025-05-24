@@ -258,23 +258,24 @@
                                                     'color_name' => $first->name,
                                                 ];
                                             });
-                                
-                                        $colorTooltip = '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>الكود</th><th>اللون</th></tr></thead><tbody>';
-                                
+
+                                        $colorTooltip =
+                                            '<div class="table-responsive"><table class=\'table table-sm table-bordered mb-0\' style=\'font-size: 13px;\'><thead class=\'table-light\'><tr><th>الكود</th><th>اللون</th></tr></thead><tbody>';
+
                                         foreach ($colors as $color) {
                                             $colorTooltip .= "<tr><td>{$color['color_code']}</td><td>{$color['color_name']}</td></tr>";
                                         }
-                                
+
                                         $colorTooltip .= '</tbody></table></div>';
                                     @endphp
-                                
+
                                     <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
                                         data-bs-trigger="hover focus" data-bs-html="true"
                                         data-bs-content="{!! htmlentities($colorTooltip, ENT_QUOTES, 'UTF-8') !!}">
                                         {{ $colors->count() }}
                                     </span>
                                 </td>
-                                
+
                                 <td>
                                     @php
                                         $sizes = $product->shootingProductColors
@@ -458,11 +459,17 @@
 
                                 @php
                                     $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
-                                        return !is_null($color->name) && $color->name !== '';
+                                        return !is_null($color->name) &&
+                                            $color->name !== '' &&
+                                            !is_null($color->size_name) &&
+                                            $color->size_name !== '' &&
+                                            !is_null($color->weight) &&
+                                            $color->weight !== '';
                                     });
+
                                 @endphp
 
-                                @if ($product->main_image != null && $product->price != null && $hasAllColorNames)
+                                @if ($hasAllColorNames)
                                     <td>البيانات مكتملة</td>
                                 @else
                                     <td>البيانات غير مكتملة</td>
@@ -480,16 +487,20 @@
 
 
                                 <td>
-                                    <a href="{{ route('shooting-products.complete.page', $product->id) }}"
+                                    {{-- <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                         class="btn btn-warning">
                                         اكمال البيانات
-                                    </a>
+                                    </a> --}}
                                     @if (auth()->user()->role->name == 'admin')
                                         <!-- edit btn and delete form -->
                                         {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
                                             class="btn btn-secondary">
                                             تعديل
                                         </a> --}}
+                                        <button class="btn btn-info mb-1" data-bs-toggle="modal"
+                                            data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}">
+                                            إضافة مقاس ووزن
+                                        </button>
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
                                             method="POST" style="display: inline-block">
                                             @csrf
@@ -506,15 +517,34 @@
                         @endforeach
                     </tbody>
                 </table>
-
-
-
-
-
-
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="sizeWeightModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('shooting-products.save-size-weight') }}" class="modal-content">
+                @csrf
+                <input type="hidden" name="product_id" id="sizeWeightProductId">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مقاس ووزن</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>المقاس</label>
+                    <input type="text" name="size_name" class="form-control mb-3" required>
+
+                    <label>الوزن</label>
+                    <input type="text" name="weight" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <style>
         .session-link {
@@ -765,4 +795,12 @@
             });
         });
     </script> --}}
+
+    <script>
+        const sizeWeightModal = document.getElementById('sizeWeightModal');
+        sizeWeightModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            document.getElementById('sizeWeightProductId').value = button.getAttribute('data-id');
+        });
+    </script>
 @endsection

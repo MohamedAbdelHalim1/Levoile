@@ -99,6 +99,24 @@ class ShootingProductController extends Controller
         return view('shooting_products.index', compact('shooting_products', 'photographers', 'editors'));
     }
 
+    public function saveSizeWeight(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:shooting_products,id',
+            'size_name'  => 'required|string|max:255',
+            'weight'     => 'required|string|max:255',
+        ]);
+
+        ShootingProductColor::where('shooting_product_id', $request->product_id)
+            ->update([
+                'size_name' => $request->size_name,
+                'weight'    => $request->weight,
+            ]);
+
+        return back()->with('success', 'تم تحديث المقاس والوزن بنجاح');
+    }
+
+
 
     // public function multiStartPage(Request $request)
     // {

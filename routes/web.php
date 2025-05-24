@@ -285,6 +285,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/shooting-product/manual', [ShootingProductController::class, 'manual'])->name('shooting-products.manual');
     Route::post('/shooting-product/manual/save', [ShootingProductController::class, 'manualSave'])->name('shooting-products.manual.save');
     Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
+    Route::post('/shooting-products/save-size-weight', [ShootingProductController::class, 'saveSizeWeight'])
+        ->name('shooting-products.save-size-weight');
 
 
 
