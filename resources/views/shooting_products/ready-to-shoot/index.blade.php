@@ -107,7 +107,7 @@
                                                     <input type="hidden" name="shooting_product_id" value="{{ $productId }}">
                                                     <button type="submit" class="btn btn-sm btn-light" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
-                                                        <i class="fas fa-sync-alt"></i>
+                                                        <i class="fa fa-sync-alt"></i>
                                                     </button>
                                                 </form>
                                             @endif
