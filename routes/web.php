@@ -10,6 +10,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\DesignMaterialController;
 use App\Http\Controllers\DesignSampleController;
 
+use App\Http\Controllers\EditSessionController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductController;
@@ -138,6 +139,7 @@ use App\Http\Livewire\Wishlist;
 use App\Models\ProductColorVariantMaterial;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -315,6 +317,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/shooting-sessions/{reference}', [ShootingProductController::class, 'showShootingSession'])->name('shooting-sessions.show');
     Route::post('/shooting-products/review', [ShootingProductController::class, 'markReviewed'])->name('shooting-products.review');
     Route::delete('shooting-sessions/{session}/remove-color', [ShootingProductController::class, 'removeColor'])->name('shooting-sessions.remove-color');
+
+    Route::get('/edit-sessions', [EditSessionController::class, 'index'])->name('edit-sessions.index');
+    Route::post('/edit-sessions/assign-editor', [EditSessionController::class, 'assignEditor'])->name('edit-sessions.assign-editor');
+    Route::post('/edit-sessions/upload-drive-link', [EditSessionController::class, 'uploadDriveLink'])->name('edit-sessions.upload-drive-link');
 
 
 
