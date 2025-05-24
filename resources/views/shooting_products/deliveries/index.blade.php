@@ -14,6 +14,7 @@
                         <tr>
                             <th>تاريخ الرفع</th>
                             <th>الحالة</th>
+                            <th>عدد المنتجات</th>
                             <th>عدد الموديلات</th>
                             <th>تم النشر</th>
                             <th>عدد الموديلات الجديده</th>
@@ -32,6 +33,7 @@
                                     <span
                                         class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
+                                <td>{{ $delivery->unique_products }}</td>
                                 <td>{{ $delivery->total_records }}</td>
                                 @php
                                     $receivedCount = $delivery->contents()->where('is_received', 1)->count();

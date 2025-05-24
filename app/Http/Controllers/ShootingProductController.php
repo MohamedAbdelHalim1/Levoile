@@ -835,11 +835,25 @@ class ShootingProductController extends Controller
     //     return view('shooting_products.deliveries.index', compact('deliveries'));
     // }
 
+
     public function deliveryIndex()
     {
-        $deliveries = ShootingDelivery::latest()->get();
+        $deliveries = ShootingDelivery::withCount([
+            'contents as unique_products' => function ($query) {
+                $query->select(\DB::raw('COUNT(DISTINCT primary_id)'));
+            }
+        ])
+            ->latest()
+            ->get();
+
         return view('shooting_products.deliveries.index', compact('deliveries'));
     }
+
+    // public function deliveryIndex()
+    // {
+    //     $deliveries = ShootingDelivery::latest()->get();
+    //     return view('shooting_products.deliveries.index', compact('deliveries'));
+    // }
 
 
     public function deliveryUploadForm()
