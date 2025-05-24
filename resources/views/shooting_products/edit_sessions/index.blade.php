@@ -41,15 +41,24 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($session->drive_link)
-                                        <a href="{{ $session->drive_link }}" target="_blank">فتح</a>
-                                    @else
-                                        <button class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                            data-bs-target="#uploadDriveModal" data-reference="{{ $session->reference }}">
-                                            رفع لينك
-                                        </button>
-                                    @endif
+                                    <span class="d-flex align-items-center justify-content-between">
+                                        @if ($session->drive_link)
+                                            <a href="{{ $session->drive_link }}" target="_blank">فتح</a>
+                                            <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
+                                                data-bs-toggle="modal" data-bs-target="#uploadDriveModal"
+                                                data-reference="{{ $session->reference }}">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                                data-bs-target="#uploadDriveModal"
+                                                data-reference="{{ $session->reference }}">
+                                                رفع لينك
+                                            </button>
+                                        @endif
+                                    </span>
                                 </td>
+
                                 <td>
                                     @if ($session->user_id)
                                         <span class="d-flex align-items-center justify-content-between">
