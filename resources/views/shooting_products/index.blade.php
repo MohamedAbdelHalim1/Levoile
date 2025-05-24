@@ -423,22 +423,29 @@
                                                             $remaining = $date
                                                                 ? \Carbon\Carbon::now()->diffInDays($date, false)
                                                                 : null;
+
+                                                            // نجيب السيشنات ونشوف لو كلهم مكتملين
+                                                            $sessionRefs = collect($colors)
+                                                                ->flatMap(fn($c) => $c->sessions)
+                                                                ->pluck('status');
+                                                            $allSessionsCompleted =
+                                                                $sessionRefs->count() > 0 &&
+                                                                $sessionRefs->every(fn($s) => $s === 'completed');
                                                         @endphp
-                                                        @if (is_null($date))
-                                                            <span class="d-block">-</span>
-                                                        @else
-                                                            <span class="d-block">
-                                                                @if ($remaining > 0)
-                                                                    <span>{{ $remaining }} يوم
-                                                                        متبقي</span>
-                                                                @elseif ($remaining == 0)
-                                                                    <span>ينتهي اليوم</span>
-                                                                @else
-                                                                    <span>متأخر بـ {{ abs($remaining) }}
-                                                                        يوم</span>
-                                                                @endif
-                                                            </span>
-                                                        @endif
+
+                                                        <span class="d-block">
+                                                            @if ($allSessionsCompleted)
+                                                                -
+                                                            @elseif (is_null($date))
+                                                                -
+                                                            @elseif ($remaining > 0)
+                                                                {{ $remaining }} يوم متبقي
+                                                            @elseif ($remaining == 0)
+                                                                ينتهي اليوم
+                                                            @else
+                                                                متأخر بـ {{ abs($remaining) }} يوم
+                                                            @endif
+                                                        </span>
                                                     @break
 
                                                     @case('shooting_method')
