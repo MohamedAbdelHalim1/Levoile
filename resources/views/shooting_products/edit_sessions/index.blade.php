@@ -13,9 +13,13 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
 
                 <h3>جلسات جاهزه للتعديل</h3>
+                <button id="bulkAssignBtn" class="btn btn-warning mb-3 d-none" data-bs-toggle="modal"
+                    data-bs-target="#bulkAssignModal">تعيين محرر جماعي</button>
+
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>لينك الجلسة</th>
                             <th>لينك التصوير</th>
                             <th>لينك التعديل</th>
@@ -30,6 +34,8 @@
                     <tbody>
                         @foreach ($sessions as $session)
                             <tr>
+                                <td><input type="checkbox" class="session-checkbox" value="{{ $session->reference }}"></td>
+
                                 <td>
                                     <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                         class="btn btn-sm btn-info">
@@ -184,6 +190,43 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal: التعيين الجماعي -->
+    <div class="modal fade" id="bulkAssignModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form method="POST" action="{{ route('edit-sessions.bulk-assign') }}" class="modal-content">
+                @csrf
+                <input type="hidden" name="references" id="bulkReferences">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعيين محرر جماعي</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>اختر المحرر</label>
+                            <select name="user_id" class="form-select" required>
+                                <option value="">اختر المستخدم</option>
+                                @foreach (\App\Models\User::all() as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>تاريخ تسليم موحد (اختياري)</label>
+                            <input type="date" name="common_date" class="form-control">
+                        </div>
+                    </div>
+                    <div id="individualDates" class="row row-cols-1 row-cols-md-2 g-2">
+                        <!-- التاريخ لكل جلسة لو متحددش الموحد -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -220,6 +263,38 @@
                 document.getElementById('editorModalReference').value = button.getAttribute(
                     'data-reference');
             });
+        });
+    </script>
+    <script>
+        const checkboxes = document.querySelectorAll('.session-checkbox');
+        const selectAll = document.getElementById('selectAll');
+        const bulkAssignBtn = document.getElementById('bulkAssignBtn');
+        const bulkReferences = document.getElementById('bulkReferences');
+        const individualDates = document.getElementById('individualDates');
+
+        function updateBulkButtonVisibility() {
+            const selected = Array.from(checkboxes).filter(cb => cb.checked);
+            bulkAssignBtn.classList.toggle('d-none', selected.length === 0);
+        }
+
+        checkboxes.forEach(cb => cb.addEventListener('change', updateBulkButtonVisibility));
+
+        selectAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBulkButtonVisibility();
+        });
+
+        document.getElementById('bulkAssignModal').addEventListener('show.bs.modal', function() {
+            const selected = Array.from(checkboxes).filter(cb => cb.checked);
+            const refs = selected.map(cb => cb.value);
+            bulkReferences.value = refs.join(',');
+
+            individualDates.innerHTML = refs.map(ref => `
+            <div class="col">
+                <label>تاريخ تسليم لـ: ${ref}</label>
+                <input type="date" name="dates[${ref}]" class="form-control">
+            </div>
+        `).join('');
         });
     </script>
 @endsection

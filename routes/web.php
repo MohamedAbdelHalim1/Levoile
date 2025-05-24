@@ -322,6 +322,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/edit-sessions/assign-editor', [EditSessionController::class, 'assignEditor'])->name('edit-sessions.assign-editor');
     Route::post('/edit-sessions/upload-drive-link', [EditSessionController::class, 'uploadDriveLink'])->name('edit-sessions.upload-drive-link');
     Route::post('/edit-sessions/review', [EditSessionController::class, 'markReviewed'])->name('edit-sessions.review');
+    Route::post('/edit-sessions/bulk-assign', [EditSessionController::class, 'bulkAssign'])->name('edit-sessions.bulk-assign');
 
 
 

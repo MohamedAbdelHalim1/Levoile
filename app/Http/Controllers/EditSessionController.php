@@ -63,4 +63,32 @@ class EditSessionController extends Controller
 
         return redirect()->back()->with('success', 'تم مراجعة الجلسة وتكويدها بنجاح');
     }
+
+    public function bulkAssign(Request $request)
+    {
+        $request->validate([
+            'references'   => 'required|array',
+            'user_id'      => 'required|exists:users,id',
+            'common_date'  => 'nullable|date',
+            'dates'        => 'nullable|array',
+        ]);
+
+        foreach ($request->references as $ref) {
+            $session = EditSession::where('reference', $ref)->first();
+
+            if (!$session) continue;
+
+            $session->user_id = $request->user_id;
+
+            if ($request->filled('common_date')) {
+                $session->receiving_date = $request->common_date;
+            } elseif (!empty($request->dates[$ref])) {
+                $session->receiving_date = $request->dates[$ref];
+            }
+
+            $session->save();
+        }
+
+        return redirect()->back()->with('success', 'تم تعيين المحرر للجلسات المختارة بنجاح');
+    }
 }
