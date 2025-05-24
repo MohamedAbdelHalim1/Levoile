@@ -12,7 +12,7 @@
 
             <div class="bg-white shadow sm:rounded-lg p-4">
 
-                <h3>جلسات التعديل</h3>
+                <h3>جلسات جاهزه للتعديل</h3>
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
