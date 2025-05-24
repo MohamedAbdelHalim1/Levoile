@@ -196,7 +196,8 @@
         <div class="modal-dialog modal-lg">
             <form method="POST" action="{{ route('edit-sessions.bulk-assign') }}" class="modal-content">
                 @csrf
-                <input type="hidden" name="references" id="bulkReferences">
+                <!-- نخليها مصفوفة -->
+                <div id="bulkHiddenInputs"></div>
                 <div class="modal-header">
                     <h5 class="modal-title">تعيين محرر جماعي</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -287,14 +288,20 @@
         document.getElementById('bulkAssignModal').addEventListener('show.bs.modal', function() {
             const selected = Array.from(checkboxes).filter(cb => cb.checked);
             const refs = selected.map(cb => cb.value);
-            bulkReferences.value = refs.join(',');
 
-            individualDates.innerHTML = refs.map(ref => `
-            <div class="col">
-                <label>تاريخ تسليم لـ: ${ref}</label>
-                <input type="date" name="dates[${ref}]" class="form-control">
-            </div>
-        `).join('');
+            // 1. ضيف الهيدن inputs بدلاً من string
+            const hiddenInputsContainer = document.getElementById('bulkHiddenInputs');
+            hiddenInputsContainer.innerHTML = refs.map(ref => `
+        <input type="hidden" name="references[]" value="${ref}">
+            `).join('');
+
+                    // 2. ضيف الانبوتات الخاصة بالتواريخ
+                    individualDates.innerHTML = refs.map(ref => `
+                <div class="col">
+                    <label>تاريخ تسليم لـ: ${ref}</label>
+                    <input type="date" name="dates[${ref}]" class="form-control">
+                </div>
+            `).join('');
         });
     </script>
 @endsection
