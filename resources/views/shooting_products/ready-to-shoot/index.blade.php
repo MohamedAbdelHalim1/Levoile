@@ -98,7 +98,7 @@
                                             @php
                                                 // نشوف لو فيه فارينتس تانية غير اللي موجودة بالفعل
                                                 $otherVariantsCount = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
-                                                    ->whereNotIn('item_no', $colorCodes)->count();
+                                                    ->whereNotIn('code', $colorCodes)->count();
                                             @endphp
 
                                             @if ($otherVariantsCount > 0)
