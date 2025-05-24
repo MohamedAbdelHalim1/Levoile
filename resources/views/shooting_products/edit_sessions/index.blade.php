@@ -21,6 +21,7 @@
                             <th>لينك التعديل</th>
                             <th>المحرر</th>
                             <th>الحالة</th>
+                            <th>تاريخ التسليم</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,6 +73,9 @@
                                         {{ $session->status }}
                                     </span>
                                 </td>
+                                <td>
+                                    {{ $session->receiving_date ? \Carbon\Carbon::parse($session->receiving_date)->format('Y-m-d') : '-' }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -118,6 +122,10 @@
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
+                </div>
+                <div>
+                    <label for="receiving_date" class="form-label">تاريخ التسليم</label>
+                    <input type="date" name="receiving_date" class="form-control" required>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">تأكيد</button>

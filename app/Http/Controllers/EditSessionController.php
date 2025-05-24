@@ -20,11 +20,16 @@ class EditSessionController extends Controller
         $request->validate([
             'reference' => 'required|string|exists:edit_sessions,reference',
             'user_id' => 'required|exists:users,id',
+            'receiving_date' => 'required|date',
+
         ]);
 
         EditSession::where('reference', $request->reference)
-            ->update(['user_id' => $request->user_id]);
-
+            ->update([
+                'user_id' => $request->user_id,
+                'receiving_date' => $request->receiving_date,
+            ]);
+            
         return redirect()->back()->with('success', 'تم تعيين المحرر بنجاح');
     }
 

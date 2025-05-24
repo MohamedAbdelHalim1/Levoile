@@ -14,7 +14,8 @@ class EditSession extends Model
         'drive_link',
         'status',
         'photo_drive_link',
-        'user_id'
+        'user_id',
+        'receiving_date'
     ];
 
     public $timestamps = true;
