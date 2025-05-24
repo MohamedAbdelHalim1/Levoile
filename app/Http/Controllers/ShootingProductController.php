@@ -1432,14 +1432,16 @@ class ShootingProductController extends Controller
             ->pluck('item_no')
             ->toArray();
 
-        $newVariants = ShootingProductColor::where('shooting_product_id', $productId)
-            ->whereNotIn('item_no', $existingItems)
+        $newVariants = ShootingProductColor::with('shootingProduct') // ضروري جدًا
+            ->where('shooting_product_id', $productId)
+            ->whereNotIn('code', $existingItems)
             ->get();
+
 
         foreach ($newVariants as $variant) {
             ReadyToShoot::create([
                 'shooting_product_id' => $variant->shooting_product_id,
-                'code' => $variant->item_no,
+                'item_no' => $variant->code,
                 'description' => $variant->shootingProduct->description ?? '',
                 'quantity' => $variant->shootingProduct->quantity ?? 0,
                 'status' => 'جديد',
