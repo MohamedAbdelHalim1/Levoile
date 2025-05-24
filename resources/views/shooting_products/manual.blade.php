@@ -95,7 +95,7 @@
                             <label>طريقة التصوير / لينك</label>
                             <input type="text" name="shooting_method" class="form-control" form="manualShootingForm">
                         </div>
-                        <div class="col-md-3 mt-3 d-none" id="shootingWaySection">
+                        <div class="col-md-12 mt-3 d-none" id="shootingWaySection">
                             <label>طرق التصوير</label>
                             <select name="way_of_shooting_ids[]" class="form-control tom-select" multiple>
                                 @foreach ($waysOfShooting as $way)
