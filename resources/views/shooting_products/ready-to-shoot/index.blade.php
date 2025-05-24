@@ -114,18 +114,11 @@
                                             @endphp
                                             @if ($otherVariantsCount > 0 && $status !== 'قيد التصوير')
                                                 -
-                                                <form method="POST"
-                                                    action="{{ route('ready-to-shoot.refresh-variants') }}"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="shooting_product_id"
-                                                        value="{{ $productId }}">
-                                                    <button type="submit" class="btn btn-sm btn-light"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="استرجاع جميع المنتجات المتشابهة">
-                                                        <i class="fa fa-refresh" style="color: rgb(65, 49, 37);"></i>
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-light refresh-variants-btn"
+                                                    data-product-id="{{ $productId }}" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
+                                                    <i class="fa fa-refresh" style="color: rgb(65, 49, 37);"></i>
+                                                </button>
                                             @endif
                                         </td>
 
@@ -371,6 +364,40 @@
             });
 
 
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.refresh-variants-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+
+                    fetch("{{ route('ready-to-shoot.refresh-variants') }}", {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                shooting_product_id: productId
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error("HTTP error " + response.status);
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.message || 'تم استرجاع المنتجات بنجاح');
+                            // ممكن تعمل reload أو تحديث جزء من الصفحة
+                            location.reload(); // أو أعملها تحديث ذكي لاحقًا
+                        })
+                        .catch(error => {
+                            alert('حصل خطأ أثناء الاسترجاع');
+                            console.error(error);
+                        });
+                });
+            });
         });
     </script>
 @endsection

@@ -1428,22 +1428,27 @@ class ShootingProductController extends Controller
     {
         $productId = $request->shooting_product_id;
 
-        $existingItems = ReadyToShoot::where('shooting_product_id', $productId)->pluck('item_no')->toArray();
+        $existingItems = ReadyToShoot::where('shooting_product_id', $productId)
+            ->pluck('item_no')
+            ->toArray();
 
-        $newVariants = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
+        $newVariants = ShootingProductColor::where('shooting_product_id', $productId)
             ->whereNotIn('item_no', $existingItems)
             ->get();
 
         foreach ($newVariants as $variant) {
             ReadyToShoot::create([
                 'shooting_product_id' => $variant->shooting_product_id,
-                'item_no' => $variant->code ?? '',
-                'description' => $variant->shootingProduct->description ?? '',
-                'quantity' => $variant->shootingProduct->quantity ?? 0,
+                'item_no' => $variant->item_no,
+                'description' => $variant->description ?? '',
+                'quantity' => $variant->quantity ?? 0,
                 'status' => 'جديد',
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم استرجاع المنتجات المشابهة بنجاح');
+        return response()->json([
+            'message' => 'تم استرجاع المنتجات المشابهة بنجاح',
+            'added_count' => $newVariants->count()
+        ]);
     }
 }
