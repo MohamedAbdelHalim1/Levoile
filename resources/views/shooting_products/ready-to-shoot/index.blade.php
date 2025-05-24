@@ -100,14 +100,14 @@
                                                 $otherVariantsCount = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
                                                     ->whereNotIn('code', $colorCodes)->count();
                                             @endphp
-
                                             @if ($otherVariantsCount > 0)
+                                                -
                                                 <form method="POST" action="{{ route('ready-to-shoot.refresh-variants') }}" class="d-inline">
                                                     @csrf
                                                     <input type="hidden" name="shooting_product_id" value="{{ $productId }}">
                                                     <button type="submit" class="btn btn-sm btn-light" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
-                                                        -<i class="fas fa-sync-alt" style="color: seashell;"></i>
+                                                        <i class="fas fa-sync-alt" style="color: seashell;"></i>
                                                     </button>
                                                 </form>
                                             @endif
