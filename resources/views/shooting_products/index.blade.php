@@ -459,8 +459,7 @@
 
                                 @php
                                     $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
-                                        return 
-                                            !is_null($color->size_name) &&
+                                        return !is_null($color->size_name) &&
                                             $color->size_name !== '' &&
                                             !is_null($color->weight) &&
                                             $color->weight !== '';
@@ -497,7 +496,9 @@
                                             تعديل
                                         </a> --}}
                                         <button class="btn btn-info mb-1" data-bs-toggle="modal"
-                                            data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}">
+                                            data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
+                                            data-size="{{ $product->shootingProductColors->first()?->size_name }}"
+                                            data-weight="{{ $product->shootingProductColors->first()?->weight }}">>
                                             إضافة مقاس ووزن
                                         </button>
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
@@ -800,6 +801,12 @@
         sizeWeightModal.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
             document.getElementById('sizeWeightProductId').value = button.getAttribute('data-id');
+
+            // تعبئة الحقول
+            const size = button.getAttribute('data-size') || '';
+            const weight = button.getAttribute('data-weight') || '';
+            document.querySelector('input[name="size_name"]').value = size;
+            document.querySelector('input[name="weight"]').value = weight;
         });
     </script>
 @endsection
