@@ -459,8 +459,7 @@
 
                                 @php
                                     $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
-                                        return !is_null($color->name) &&
-                                            $color->name !== '' &&
+                                        return 
                                             !is_null($color->size_name) &&
                                             $color->size_name !== '' &&
                                             !is_null($color->weight) &&
