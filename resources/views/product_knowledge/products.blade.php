@@ -250,114 +250,67 @@
                 const container = document.querySelector('#productModal .modal-body .row');
                 container.innerHTML = '';
 
-                const groupedByColor = {};
+                // Group by no_code
+                const grouped = variants.reduce((acc, item) => {
+                    if (!acc[item.no_code]) acc[item.no_code] = [];
+                    acc[item.no_code].push(item);
+                    return acc;
+                }, {});
 
-                variants.forEach(item => {
-                    const colorKey = item.color?.trim().toLowerCase();
-                    if (!groupedByColor[colorKey]) groupedByColor[colorKey] = [];
-                    groupedByColor[colorKey].push(item);
-                });
+                Object.values(grouped).forEach(group => {
+                    // sort to show المخزن فوق
+                    // group.sort((a, b) => a.stock_id - b.stock_id);
 
-                Object.values(groupedByColor).forEach(group => {
-                    // نجيب أول عنصر فيه صورة (أو fallback لأول عنصر)
-                    const firstWithImage = group.find(g => g.image_url) || group[0];
+                    const first = group[0]; // use one for image/color display
 
                     const box = document.createElement('div');
                     box.className = 'sub-img position-relative';
 
-                    const totalQty = group.reduce((sum, item) =>
-                        sum + (item.stock_entries?.reduce((s, q) => s + q.quantity, 0) || 0), 0);
+                    let stockMap = {
+                        1: 'مخزن',
+                        2: 'جملة'
+                    };
 
-                    const productCodesHtml = group.map(v =>
-                        `<div><small class="fw-semibold back-ground text-white rounded-1 p-1">${v.product_code}</small></div>`
-                    ).join('');
+                    // خريطة فيها الكميات حسب stock_id
+                    let entryMap = {};
+                    (first.stock_entries || []).forEach(q => {
+                        entryMap[q.stock_id] = q.quantity;
+                    });
+
+                    // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
+                    let lines = [1, 2].map(id => {
+                        let label = stockMap[id] || 'غير محدد';
+                        let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
+                        return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+                    }).join('');
+
+
+                    const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
+                        0);
+
 
                     box.innerHTML = `
-    <div class="position-relative">
-        <img src="${firstWithImage.image_url || '/assets/images/comming.png'}" class="rounded-1">
-
-        <div class="position-absolute top-0 end-0 me-1">
-            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-        </div>
-
-        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-            <small class="fw-semibold back-ground text-white rounded-1 p-1">${firstWithImage.color}</small>
-        </div>
-
-        <div class="position-absolute bottom-0 end-0 me-1 mb-1">
-            <small class="fw-semibold back-ground text-white rounded-1 p-1">${firstWithImage.product_code}</small>
-        </div>
-    </div>
-
-    <h4 class="text-center mt-2">${firstWithImage.no_code}</h4>
-`;
-
+                    <div class="position-relative">
+                        <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
+                        <div class="position-absolute top-0 end-0 me-1">
+                            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+                        </div>
+                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
+                        </div>
+                        ${isAdmin ? `
+                                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                                                ${lines}
+                                            </div>` : ''}
+                    </div>
+                    <h4 class="text-center mt-2">${first.no_code}</h4>
+                `;
 
                     container.appendChild(box);
                 });
-
-
-                // // Group by no_code
-                // const grouped = variants.reduce((acc, item) => {
-                //     if (!acc[item.no_code]) acc[item.no_code] = [];
-                //     acc[item.no_code].push(item);
-                //     return acc;
-                // }, {});
-
-                // Object.values(grouped).forEach(group => {
-                //     // sort to show المخزن فوق
-                //     // group.sort((a, b) => a.stock_id - b.stock_id);
-
-                //     const first = group[0]; // use one for image/color display
-
-                //     const box = document.createElement('div');
-                //     box.className = 'sub-img position-relative';
-
-                //     let stockMap = {
-                //         1: 'مخزن',
-                //         2: 'جملة'
-                //     };
-
-                //     // خريطة فيها الكميات حسب stock_id
-                //     let entryMap = {};
-                //     (first.stock_entries || []).forEach(q => {
-                //         entryMap[q.stock_id] = q.quantity;
-                //     });
-
-                //     // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
-                //     let lines = [1, 2].map(id => {
-                //         let label = stockMap[id] || 'غير محدد';
-                //         let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
-                //         return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                //     }).join('');
-
-
-                //     const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
-                //         0);
-
-
-                //     box.innerHTML = `
-            //     <div class="position-relative">
-            //         <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
-            //         <div class="position-absolute top-0 end-0 me-1">
-            //             <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-            //         </div>
-            //         <div class="position-absolute top-0 start-0 ms-1 mt-1">
-            //             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
-            //         </div>
-            //         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-            //             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
-            //         </div>
-            //         ${isAdmin ? `
-                //                             <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                //                                 ${lines}
-                //                             </div>` : ''}
-            //     </div>
-            //     <h4 class="text-center mt-2">${first.no_code}</h4>
-            // `;
-
-                //     container.appendChild(box);
-                // });
             });
         });
     </script>
@@ -403,4 +356,4 @@
         });
     </script>
 @endsection --}}
-)
+
