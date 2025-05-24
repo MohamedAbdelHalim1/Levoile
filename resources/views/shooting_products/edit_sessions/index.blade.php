@@ -22,6 +22,8 @@
                             <th>المحرر</th>
                             <th>الحالة</th>
                             <th>تاريخ التسليم</th>
+                            <th>الوقت المتبقي</th>
+                            <th>ملاحظة</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,13 +48,15 @@
                                             <a href="{{ $session->drive_link }}" target="_blank">فتح</a>
                                             <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
                                                 data-bs-toggle="modal" data-bs-target="#uploadDriveModal"
-                                                data-reference="{{ $session->reference }}">
+                                                data-reference="{{ $session->reference }}"
+                                                data-receiving-date="{{ $session->receiving_date }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @else
                                             <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                                 data-bs-target="#uploadDriveModal"
-                                                data-reference="{{ $session->reference }}">
+                                                data-reference="{{ $session->reference }}"
+                                                data-receiving-date="{{ $session->receiving_date }}">
                                                 رفع لينك
                                             </button>
                                         @endif
@@ -85,6 +89,25 @@
                                 <td>
                                     {{ $session->receiving_date ? \Carbon\Carbon::parse($session->receiving_date)->format('Y-m-d') : '-' }}
                                 </td>
+                                <td>
+                                    @if ($session->receiving_date)
+                                        @php
+                                            $date = \Carbon\Carbon::parse($session->receiving_date);
+                                            $diff = now()->diffInDays($date, false); // false: to keep sign
+                                        @endphp
+
+                                        @if ($diff > 0)
+                                            <span class="text-success">بعد {{ $diff }} يوم</span>
+                                        @elseif ($diff === 0)
+                                            <span class="text-warning">اليوم</span>
+                                        @else
+                                            <span class="text-danger">متأخر {{ abs($diff) }} يوم</span>
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>{{ $session->note ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -106,6 +129,11 @@
                 <div class="modal-body">
                     <input type="url" name="drive_link" class="form-control" placeholder="ضع رابط Google Drive"
                         required>
+
+                    <div id="noteWrapper" style="display: none;">
+                        <label for="note">سبب التأخير:</label>
+                        <textarea name="note" id="noteInput" class="form-control" rows="3" required></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">حفظ</button>
@@ -156,6 +184,29 @@
         editorModal.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
             document.getElementById('editorModalReference').value = button.getAttribute('data-reference');
+        });
+    </script>
+    <script>
+        const driveModal = document.getElementById('uploadDriveModal');
+        driveModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const reference = button.getAttribute('data-reference');
+            const receivingDate = button.getAttribute('data-receiving-date'); // لازم تبعته من الزرار
+            const today = new Date().toISOString().split('T')[0];
+
+            document.getElementById('driveModalReference').value = reference;
+
+            const noteWrapper = document.getElementById('noteWrapper');
+            const noteInput = document.getElementById('noteInput');
+
+            if (receivingDate && receivingDate < today) {
+                noteWrapper.style.display = 'block';
+                noteInput.setAttribute('required', 'required');
+            } else {
+                noteWrapper.style.display = 'none';
+                noteInput.removeAttribute('required');
+                noteInput.value = '';
+            }
         });
     </script>
 @endsection

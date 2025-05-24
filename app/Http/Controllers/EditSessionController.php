@@ -29,7 +29,7 @@ class EditSessionController extends Controller
                 'user_id' => $request->user_id,
                 'receiving_date' => $request->receiving_date,
             ]);
-            
+
         return redirect()->back()->with('success', 'تم تعيين المحرر بنجاح');
     }
 
@@ -39,12 +39,14 @@ class EditSessionController extends Controller
         $request->validate([
             'reference' => 'required|string|exists:edit_sessions,reference',
             'drive_link' => 'required|url',
+            'note' => 'nullable|string',
         ]);
 
         EditSession::where('reference', $request->reference)
             ->update([
                 'drive_link' => $request->drive_link,
                 'status' => 'تم التعديل',
+                'note' => $request->note
             ]);
 
         return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح');
