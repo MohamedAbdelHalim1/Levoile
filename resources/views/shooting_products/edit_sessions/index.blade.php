@@ -98,17 +98,21 @@
                                 </td>
                                 <td>
                                     @if ($session->receiving_date)
-                                        @php
-                                            $date = \Carbon\Carbon::parse($session->receiving_date);
-                                            $diff = now()->diffInDays($date, false); // false: to keep sign
-                                        @endphp
+                                        @if ($session->status === 'جديد')
+                                            @php
+                                                $date = \Carbon\Carbon::parse($session->receiving_date);
+                                                $diff = now()->diffInDays($date, false); // false: to keep sign
+                                            @endphp
 
-                                        @if ($diff > 0)
-                                            <span class="text-success">بعد {{ $diff }} يوم</span>
-                                        @elseif ($diff === 0)
-                                            <span class="text-warning">اليوم</span>
+                                            @if ($diff > 0)
+                                                <span class="text-success">بعد {{ $diff }} يوم</span>
+                                            @elseif ($diff === 0)
+                                                <span class="text-warning">اليوم</span>
+                                            @else
+                                                <span class="text-danger">متأخر {{ abs($diff) }} يوم</span>
+                                            @endif
                                         @else
-                                            <span class="text-danger">متأخر {{ abs($diff) }} يوم</span>
+                                            <span class="text-muted">-</span>
                                         @endif
                                     @else
                                         -
@@ -295,8 +299,8 @@
         <input type="hidden" name="references[]" value="${ref}">
             `).join('');
 
-                    // 2. ضيف الانبوتات الخاصة بالتواريخ
-                    individualDates.innerHTML = refs.map(ref => `
+            // 2. ضيف الانبوتات الخاصة بالتواريخ
+            individualDates.innerHTML = refs.map(ref => `
                 <div class="col">
                     <label>تاريخ تسليم لـ: ${ref}</label>
                     <input type="date" name="dates[${ref}]" class="form-control">
