@@ -1423,4 +1423,27 @@ class ShootingProductController extends Controller
 
         return redirect()->back()->with('success', 'تم تعيين نوع التصوير بنجاح للمنتجات المحددة');
     }
+
+    public function refreshVariants(Request $request)
+    {
+        $productId = $request->shooting_product_id;
+
+        $existingItems = ReadyToShoot::where('shooting_product_id', $productId)->pluck('item_no')->toArray();
+
+        $newVariants = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
+            ->whereNotIn('item_no', $existingItems)
+            ->get();
+
+        foreach ($newVariants as $variant) {
+            ReadyToShoot::create([
+                'shooting_product_id' => $variant->shooting_product_id,
+                'item_no' => $variant->item_no,
+                'description' => $variant->description ?? '',
+                'quantity' => $variant->quantity ?? 0,
+                'status' => 'جديد',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'تم استرجاع المنتجات المشابهة بنجاح');
+    }
 }

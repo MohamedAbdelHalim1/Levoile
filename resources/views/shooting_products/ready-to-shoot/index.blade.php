@@ -88,13 +88,42 @@
                                             <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
                                                 data-bs-trigger="hover focus" data-bs-html="true"
                                                 data-bs-content="<ul style='margin:0;padding-left:15px;'>
+                                                                @foreach ($colorCodes as $code)
+                                                                <li>{{ $code }}</li>
+                                                                @endforeach
+                                                                </ul>">
+                                                {{ $colorCodes->count() }}
+                                            </span>
+
+                                            @php
+                                                // نشوف لو فيه فارينتس تانية غير اللي موجودة بالفعل
+                                                $otherVariantsCount = \App\Models\ShootingProductColor::where('shooting_product_id', $productId)
+                                                    ->whereNotIn('item_no', $colorCodes)->count();
+                                            @endphp
+
+                                            @if ($otherVariantsCount > 0)
+                                                <form method="POST" action="{{ route('ready-to-shoot.refresh-variants') }}" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="shooting_product_id" value="{{ $productId }}">
+                                                    <button type="submit" class="btn btn-sm btn-light" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </td>
+
+                                        {{-- <td>
+                                            <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
+                                                data-bs-trigger="hover focus" data-bs-html="true"
+                                                data-bs-content="<ul style='margin:0;padding-left:15px;'>
                                                 @foreach ($colorCodes as $code)
 <li>{{ $code }}</li>
 @endforeach
                                                 </ul>">
                                                 {{ $colorCodes->count() }}
                                             </span>
-                                        </td>
+                                        </td> --}}
                                         <td><span class="badge bg-success">{{ $status ?? '-' }}</span></td>
                                         <td>{{ $type ?? '-' }}</td>
                                         <td>
