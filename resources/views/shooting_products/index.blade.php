@@ -498,7 +498,7 @@
                                         <button class="btn btn-info mb-1" data-bs-toggle="modal"
                                             data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
                                             data-size="{{ $product->shootingProductColors->first()?->size_name }}"
-                                            data-weight="{{ $product->shootingProductColors->first()?->weight }}">>
+                                            data-weight="{{ $product->shootingProductColors->first()?->weight }}">
                                             إضافة مقاس ووزن
                                         </button>
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
