@@ -36,6 +36,7 @@
                                 <th>الدرايف</th>
                                 <th>لينك طريقه التصوير</th>
                                 <th>طرق التصوير</th>
+                                <th>ملاحظة</th>
                                 <th>التحكم</th>
                             </tr>
                         </thead>
@@ -197,6 +198,8 @@
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
+
+                                    <td>{{ $groupedSessions->first()?->note ?? '-' }}</td>
 
 
                                     <td>
