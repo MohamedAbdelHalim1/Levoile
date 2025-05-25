@@ -368,7 +368,7 @@
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
                                             $editSessions = $session?->editSessions ?? collect();
                                         @endphp
-                                        <div style="margin-bottom: 8px;">
+                                        <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                             @forelse ($editSessions as $edit)
                                                 <div>
                                                     {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}
@@ -386,7 +386,7 @@
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
                                             $editSessions = $session?->editSessions ?? collect();
                                         @endphp
-                                        <div style="margin-bottom: 8px;">
+                                        <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                             @forelse ($editSessions as $edit)
                                                 @if ($edit->photo_drive_link)
                                                     <a href="{{ $edit->photo_drive_link }}" target="_blank"
@@ -409,7 +409,7 @@
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
                                             $editSessions = $session?->editSessions ?? collect();
                                         @endphp
-                                        <div style="margin-bottom: 8px;">
+                                        <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                             @forelse ($editSessions as $edit)
                                                 @if ($edit->drive_link)
                                                     <a href="{{ $edit->drive_link }}" target="_blank"
@@ -432,14 +432,14 @@
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
                                             $editSessions = $session?->editSessions ?? collect();
                                         @endphp
-                                        <div style="margin-bottom: 8px;">
+                                        <div style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                             @forelse ($editSessions as $edit)
                                                 <span
                                                     class="badge bg-{{ $edit->status === 'completed' ? 'success' : 'warning' }}">
                                                     {{ $edit->status }}
                                                 </span>
                                             @empty
-                                                <span>-</span>
+                                                <span class="badge bg-primary">جديد</span>
                                             @endforelse
                                         </div>
                                     @endforeach
