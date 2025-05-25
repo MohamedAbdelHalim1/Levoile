@@ -206,7 +206,14 @@ class ShootingProductController extends Controller
 
     public function multiStartSave(Request $request)
     {
-        $selectedColorIds = $request->selected_colors;
+        $readyIds = $request->selected_colors;
+        $selectedColorIds = \App\Models\ReadyToShoot::whereIn('id', $readyIds)
+            ->join('shooting_product_colors', function ($join) {
+                $join->on('ready_to_shoot.shooting_product_id', '=', 'shooting_product_colors.shooting_product_id')
+                    ->on('ready_to_shoot.item_no', '=', 'shooting_product_colors.code');
+            })
+            ->pluck('shooting_product_colors.id')
+            ->toArray();
 
         if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
