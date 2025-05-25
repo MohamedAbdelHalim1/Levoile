@@ -67,6 +67,7 @@
                             </thead>
                             <tbody>
                                 @php
+                                dd($readyItems);
                                     $grouped = $readyItems->groupBy(function ($item) {
                                         return $item->shooting_product_id .
                                             '|' .
