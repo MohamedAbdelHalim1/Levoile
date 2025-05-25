@@ -74,6 +74,8 @@
                                             '|' .
                                             ($item->status ?? '-');
                                     });
+
+                                    dd($grouped);
                                 @endphp
 
                                 @foreach ($grouped as $key => $items)
