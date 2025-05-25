@@ -607,10 +607,10 @@
                                             data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
                                             data-size="{{ $product->shootingProductColors->first()?->size_name }}"
                                             data-weight="{{ $product->shootingProductColors->first()?->weight }}">
-                                            @if ($product->shootingProductColors->first()?->size_name || $product->shootingProductColors->first()?->weight)
-                                                تعديل مقاس ووزن
-                                            @else
+                                            @if (empty($product->shootingProductColors->first()?->size_name) && empty($product->shootingProductColors->first()?->weight))
                                                 إضافة مقاس ووزن
+                                            @else
+                                                تعديل المقاس والوزن
                                             @endif
                                         </button>
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
