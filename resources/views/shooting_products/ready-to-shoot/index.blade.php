@@ -83,6 +83,7 @@
                                         $colorCodes = $items->pluck('item_no');
                                     @endphp
 
+@dd($productId)
                                     <tr data-type="{{ $type }}" data-status="{{ $status }}">
                                         <td>
                                             @if ($status !== 'قيد التصوير')
@@ -371,6 +372,10 @@
             document.querySelectorAll('.refresh-variants-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.getAttribute('data-product-id');
+                        if (!confirm('هل أنت واثق أنك تريد استرجاع جميع المنتجات المتشابهة؟')) {
+                            return;
+                        }
+
 
                     fetch("{{ route('ready-to-shoot.refresh-variants') }}", {
                             method: 'POST',

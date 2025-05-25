@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReadyToShoot extends Model
 {
-    use SoftDeletes;
 
     protected $table = 'ready_to_shoot';
 

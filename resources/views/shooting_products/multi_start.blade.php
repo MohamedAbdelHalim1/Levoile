@@ -20,7 +20,8 @@
                     </span>
                 </h4>
 
-                <form method="POST" action="{{ route('shooting-products.multi.start.save') }}">
+                <form method="POST" action="{{ route('shooting-products.multi.start.save') }}"
+                    onsubmit="return validateColorsSelection()">
                     @csrf
                     <input type="hidden" name="selected_products"
                         value="{{ implode(',', $products->pluck('id')->toArray()) }}">
@@ -197,5 +198,15 @@
             });
 
         });
+    </script>
+    <script>
+        function validateColorsSelection() {
+            const selected = document.querySelectorAll('input[name="selected_colors[]"]:checked');
+            if (selected.length === 0) {
+                alert('يجب اختيار على الأقل منتج واحد من الألوان');
+                return false;
+            }
+            return true;
+        }
     </script>
 @endsection

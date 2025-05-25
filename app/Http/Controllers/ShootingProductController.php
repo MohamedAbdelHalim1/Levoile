@@ -380,10 +380,7 @@ class ShootingProductController extends Controller
                 $product->save();
 
                 \App\Models\ReadyToShoot::where('shooting_product_id', $productId)
-                    ->update([
-                        'status' => 'تم التصوير',
-                        'deleted_at' => now()
-                    ]);
+                    ->delete();
             }
 
 
@@ -1428,8 +1425,7 @@ class ShootingProductController extends Controller
     // }
     public function readyToShootIndex(Request $request)
     {
-        $query = ReadyToShoot::with('shootingProduct')
-            ->whereNull('deleted_at');
+        $query = ReadyToShoot::with('shootingProduct');
 
         if ($request->filled('type_of_shooting')) {
             $query->where('type_of_shooting', $request->type_of_shooting);
