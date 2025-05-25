@@ -206,6 +206,7 @@ class ShootingProductController extends Controller
 
     public function multiStartSave(Request $request)
     {
+        dd($request->all());
         $selectedColorIds = $request->selected_colors;
 
         if (empty($selectedColorIds)) {
