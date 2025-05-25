@@ -171,29 +171,18 @@ class ShootingProductController extends Controller
         $ids = $request->input('selected_products', []);
 
         // بدال ما نجيب المنتجات وارتباطها بكل الألوان، هنجيب فقط الألوان اللي كانت موجودة في ready_to_shoot
-        // $readyItems = ReadyToShoot::whereIn('shooting_product_id', $ids)->get()->groupBy('shooting_product_id');
+        $readyItems = ReadyToShoot::whereIn('shooting_product_id', $ids)->get()->groupBy('shooting_product_id');
 
-        // $productIds = $readyItems->keys();
+        $productIds = $readyItems->keys();
 
-        // $products = ShootingProduct::whereIn('id', $productIds)->get();
-
-        // // عشان كل منتج يبقى فيه بس الألوان اللي جاهزة فعلاً
-        // foreach ($products as $product) {
-        //     $colors = $readyItems[$product->id];
-        //     // نخليها شكل علاقة وهمية على نفس النموذج
-        //     $product->setRelation('shootingProductColors', $colors);
-        // }
-
-        $readyItems = ReadyToShoot::whereIn('id', $request->selected_colors)->get();
-        $productIds = $readyItems->pluck('shooting_product_id')->unique();
         $products = ShootingProduct::whereIn('id', $productIds)->get();
 
-        // ربط كل منتج بالألوان المختارة فقط
+        // عشان كل منتج يبقى فيه بس الألوان اللي جاهزة فعلاً
         foreach ($products as $product) {
-            $colors = $readyItems->where('shooting_product_id', $product->id);
+            $colors = $readyItems[$product->id];
+            // نخليها شكل علاقة وهمية على نفس النموذج
             $product->setRelation('shootingProductColors', $colors);
         }
-
 
         // النوع لازم يكون متحد
         $type = null;
@@ -223,7 +212,7 @@ class ShootingProductController extends Controller
             $join->on('ready_to_shoot.shooting_product_id', '=', 'shooting_product_colors.shooting_product_id')
                 ->on('ready_to_shoot.item_no', '=', 'shooting_product_colors.code');
         })
-            ->whereIn('ready_to_shoot.id', $readyIds)
+            ->whereIn('ready_to_shoot.id', $readyIds) // 👈 حل المشكلة هنا
             ->pluck('shooting_product_colors.id')
             ->toArray();
 
@@ -1350,14 +1339,15 @@ class ShootingProductController extends Controller
                                         'status' => 'old',
                                     ]);
 
-                                $alreadyExists = \App\Models\ReadyToShoot::where('shooting_product_id', $product->id)
+                                // ✅ check if this item already exists in ready_to_shoot with "جديد"
+                                $alreadyExists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
                                     ->where('item_no', $itemNo)
                                     ->where('status', 'جديد')
                                     ->exists();
 
                                 if (!$alreadyExists) {
                                     \App\Models\ReadyToShoot::create([
-                                        'shooting_product_id' => $product->id,
+                                        'shooting_product_id' => $existingProduct->id,
                                         'item_no' => $itemNo,
                                         'description' => $color['description'],
                                         'quantity' => $color['quantity'],
