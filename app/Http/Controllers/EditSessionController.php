@@ -52,17 +52,17 @@ class EditSessionController extends Controller
         return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح');
     }
 
-    public function markReviewed(Request $request)
-    {
-        $request->validate([
-            'reference' => 'required|string|exists:edit_sessions,reference',
-        ]);
+    // public function markReviewed(Request $request)
+    // {
+    //     $request->validate([
+    //         'reference' => 'required|string|exists:edit_sessions,reference',
+    //     ]);
 
-        EditSession::where('reference', $request->reference)
-            ->update(['is_reviewed' => 1]);
+    //     EditSession::where('reference', $request->reference)
+    //         ->update(['is_reviewed' => 1]);
 
-        return redirect()->back()->with('success', 'تم مراجعة الجلسة وتكويدها بنجاح');
-    }
+    //     return redirect()->back()->with('success', 'تم مراجعة الجلسة وتكويدها بنجاح');
+    // }
 
     public function bulkAssign(Request $request)
     {

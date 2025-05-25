@@ -28,7 +28,7 @@
                             <th>تاريخ التسليم</th>
                             <th>الوقت المتبقي</th>
                             <th>ملاحظة</th>
-                            <th>المراجعة</th>
+                            {{-- <th>المراجعة</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -119,7 +119,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $session->note ?? '-' }}</td>
-                                <td>
+                                {{-- <td>
                                     @if ($session->is_reviewed)
                                         <span class="badge bg-success">تم التكويد</span>
                                     @else
@@ -130,7 +130,7 @@
                                             <button type="submit" class="btn btn-sm btn-warning">مراجعة</button>
                                         </form>
                                     @endif
-                                </td>
+                                </td> --}}
 
                             </tr>
                         @endforeach

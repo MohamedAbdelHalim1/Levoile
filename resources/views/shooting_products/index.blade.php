@@ -481,14 +481,14 @@
                                 @endif
 
 
-                                {{-- <td>
+                                <td>
                                     @if ($product->is_reviewed)
                                         <span class="badge bg-success">تم التكويد</span>
                                     @else
                                         <input type="checkbox" class="form-check-input review-toggle"
                                             data-id="{{ $product->id }}">
                                     @endif
-                                </td> --}}
+                                </td>
 
 
                                 <td>
@@ -768,7 +768,7 @@
         }
     </script>
 
-    {{-- <script>
+    <script>
         $(document).on('change', '.review-toggle', function() {
             const checkbox = $(this);
             const productId = checkbox.data('id');
@@ -801,7 +801,7 @@
                 }
             });
         });
-    </script> --}}
+    </script>
 
     <script>
         const sizeWeightModal = document.getElementById('sizeWeightModal');

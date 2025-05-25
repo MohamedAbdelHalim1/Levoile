@@ -318,6 +318,7 @@ class ShootingProductController extends Controller
                     $product->type_of_shooting = $request->type_of_shooting;
                     $product->date_of_delivery = $request->date_of_delivery;
                     $product->shooting_method  = $request->shooting_method;
+                    $product->is_reviewed      = 0;
 
                     if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
                         $product->location         = $request->location;
@@ -768,22 +769,22 @@ class ShootingProductController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // public function markReviewed(Request $request)
-    // {
-    //     $request->validate(['id' => 'required|exists:shooting_products,id']);
+    public function markReviewed(Request $request)
+    {
+        $request->validate(['id' => 'required|exists:shooting_products,id']);
 
-    //     $product = ShootingProduct::findOrFail($request->id);
-    //     $product->is_reviewed = 1;
-    //     $product->save();
+        $product = ShootingProduct::findOrFail($request->id);
+        $product->is_reviewed = 1;
+        $product->save();
 
-    //     // ✅ أضفه لموقع الادمن
-    //     WebsiteAdminProduct::updateOrCreate(
-    //         ['shooting_product_id' => $product->id],
-    //         ['name' => $product->name, 'status' => 'new']
-    //     );
+        // ✅ أضفه لموقع الادمن
+        WebsiteAdminProduct::updateOrCreate(
+            ['shooting_product_id' => $product->id],
+            ['name' => $product->name, 'status' => 'new']
+        );
 
-    //     return response()->json(['success' => true]);
-    // }
+        return response()->json(['success' => true]);
+    }
 
 
     public function indexWebsite()
