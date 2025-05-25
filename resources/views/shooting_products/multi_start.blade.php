@@ -135,7 +135,7 @@
                                             </td>
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
-                                            <td>{{ $color->code }}</td>
+                                            <td>{{ $color->item_no }}</td>
                                             {{-- <td>
                                                 @if ($color->status == 'new')
                                                     <span class="badge bg-warning">جديد</span>
