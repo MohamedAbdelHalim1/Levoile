@@ -206,159 +206,162 @@ class ShootingProductController extends Controller
 
     public function multiStartSave(Request $request)
     {
-        dd($request->all());
         $selectedColorIds = $request->selected_colors;
 
         if (empty($selectedColorIds)) {
             return redirect()->back()->with('error', 'يجب اختيار لون واحد على الأقل');
         }
 
-        DB::transaction(function () use ($selectedColorIds, $request) {
-            $finalColorIds = [];
+        try {
+            DB::transaction(function () use ($selectedColorIds, $request) {
+                $finalColorIds = [];
 
-            foreach ($selectedColorIds as $colorId) {
-                $color = ShootingProductColor::findOrFail($colorId);
+                foreach ($selectedColorIds as $colorId) {
+                    $color = ShootingProductColor::findOrFail($colorId);
 
-                // Check if it's a clean (first time) record
-                $isFirstTime = is_null($color->type_of_shooting) &&
-                    is_null($color->date_of_delivery) &&
-                    is_null($color->shooting_method) &&
-                    is_null($color->location) &&
-                    is_null($color->date_of_shooting) &&
-                    is_null($color->photographer) &&
-                    is_null($color->editor) &&
-                    is_null($color->date_of_editing);
+                    // Check if it's a clean (first time) record
+                    $isFirstTime = is_null($color->type_of_shooting) &&
+                        is_null($color->date_of_delivery) &&
+                        is_null($color->shooting_method) &&
+                        is_null($color->location) &&
+                        is_null($color->date_of_shooting) &&
+                        is_null($color->photographer) &&
+                        is_null($color->editor) &&
+                        is_null($color->date_of_editing);
 
-                if ($isFirstTime) {
-                    // Just update the current one
-                    $color->status            = 'in_progress';
-                    $color->type_of_shooting  = $request->type_of_shooting;
-                    $color->date_of_delivery  = $request->date_of_delivery;
-                    $color->shooting_method   = $request->shooting_method;
+                    if ($isFirstTime) {
+                        // Just update the current one
+                        $color->status            = 'in_progress';
+                        $color->type_of_shooting  = $request->type_of_shooting;
+                        $color->date_of_delivery  = $request->date_of_delivery;
+                        $color->shooting_method   = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
-                        $color->location         = $request->location;
-                        $color->date_of_shooting = $request->date_of_shooting;
-                        $color->photographer     = json_encode($request->photographer);
-                        $color->editor           = null;
-                        $color->date_of_editing  = null;
+                        if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
+                            $color->location         = $request->location;
+                            $color->date_of_shooting = $request->date_of_shooting;
+                            $color->photographer     = json_encode($request->photographer);
+                            $color->editor           = null;
+                            $color->date_of_editing  = null;
+                        } else {
+                            $color->date_of_editing  = $request->date_of_editing;
+                            $color->editor           = json_encode($request->editor);
+                            $color->photographer     = null;
+                            $color->location         = null;
+                            $color->date_of_shooting = null;
+                        }
+
+                        $color->save();
+                        $finalColorIds[] = $color->id;
                     } else {
-                        $color->date_of_editing  = $request->date_of_editing;
-                        $color->editor           = json_encode($request->editor);
-                        $color->photographer     = null;
-                        $color->location         = null;
-                        $color->date_of_shooting = null;
+                        // Clone and create new record
+                        $newColor = $color->replicate();
+                        $newColor->status           = 'in_progress';
+                        $newColor->type_of_shooting = $request->type_of_shooting;
+                        $newColor->date_of_delivery = $request->date_of_delivery;
+                        $newColor->shooting_method  = $request->shooting_method;
+
+                        if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
+                            $newColor->location         = $request->location;
+                            $newColor->date_of_shooting = $request->date_of_shooting;
+                            $newColor->photographer     = json_encode($request->photographer);
+                            $newColor->editor           = null;
+                            $newColor->date_of_editing  = null;
+                        } else {
+                            $newColor->date_of_editing  = $request->date_of_editing;
+                            $newColor->editor           = json_encode($request->editor);
+                            $newColor->photographer     = null;
+                            $newColor->location         = null;
+                            $newColor->date_of_shooting = null;
+                        }
+
+                        $newColor->save();
+                        $finalColorIds[] = $newColor->id;
+                    }
+                }
+
+                // Update products status
+                $productIds = ShootingProductColor::whereIn('id', $finalColorIds)
+                    ->pluck('shooting_product_id')
+                    ->unique()
+                    ->toArray();
+
+                \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
+                    ->update(['status' => 'قيد التصوير']);
+
+
+                foreach ($productIds as $productId) {
+                    $product = ShootingProduct::findOrFail($productId);
+
+                    $colors = $product->shootingProductColors;
+                    $total = $colors->count();
+                    $completed = $colors->where('status', 'completed')->count();
+                    $new = $colors->where('status', 'new')->count();
+
+                    if ($completed === $total) {
+                        $product->status = 'completed';
+                    } elseif ($new === $total) {
+                        $product->status = 'new';
+                    } else {
+                        $product->status = 'partial';
                     }
 
-                    $color->save();
-                    $finalColorIds[] = $color->id;
-                } else {
-                    // Clone and create new record
-                    $newColor = $color->replicate();
-                    $newColor->status           = 'in_progress';
-                    $newColor->type_of_shooting = $request->type_of_shooting;
-                    $newColor->date_of_delivery = $request->date_of_delivery;
-                    $newColor->shooting_method  = $request->shooting_method;
+
+                    $product->type_of_shooting = $request->type_of_shooting;
+                    $product->date_of_delivery = $request->date_of_delivery;
+                    $product->shooting_method  = $request->shooting_method;
 
                     if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
-                        $newColor->location         = $request->location;
-                        $newColor->date_of_shooting = $request->date_of_shooting;
-                        $newColor->photographer     = json_encode($request->photographer);
-                        $newColor->editor           = null;
-                        $newColor->date_of_editing  = null;
+                        $product->location         = $request->location;
+                        $product->date_of_shooting = $request->date_of_shooting;
+                        $product->photographer     = json_encode($request->photographer);
+                        $product->editor           = null;
+                        $product->date_of_editing  = null;
                     } else {
-                        $newColor->date_of_editing  = $request->date_of_editing;
-                        $newColor->editor           = json_encode($request->editor);
-                        $newColor->photographer     = null;
-                        $newColor->location         = null;
-                        $newColor->date_of_shooting = null;
+                        $product->date_of_editing  = $request->date_of_editing;
+                        $product->editor           = json_encode($request->editor);
+                        $product->photographer     = null;
+                        $product->location         = null;
+                        $product->date_of_shooting = null;
                     }
 
-                    $newColor->save();
-                    $finalColorIds[] = $newColor->id;
-                }
-            }
-
-            // Update products status
-            $productIds = ShootingProductColor::whereIn('id', $finalColorIds)
-                ->pluck('shooting_product_id')
-                ->unique()
-                ->toArray();
-
-            \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
-                ->update(['status' => 'قيد التصوير']);
-
-
-            foreach ($productIds as $productId) {
-                $product = ShootingProduct::findOrFail($productId);
-
-                $colors = $product->shootingProductColors;
-                $total = $colors->count();
-                $completed = $colors->where('status', 'completed')->count();
-                $new = $colors->where('status', 'new')->count();
-
-                if ($completed === $total) {
-                    $product->status = 'completed';
-                } elseif ($new === $total) {
-                    $product->status = 'new';
-                } else {
-                    $product->status = 'partial';
+                    $product->save();
                 }
 
+                // Generate new reference
+                $today = Carbon::now()->format('Y-m-d');
 
-                $product->type_of_shooting = $request->type_of_shooting;
-                $product->date_of_delivery = $request->date_of_delivery;
-                $product->shooting_method  = $request->shooting_method;
+                $lastReference = ShootingSession::where('reference', 'LIKE', $today . '%')
+                    ->orderBy('reference', 'desc')
+                    ->first();
 
-                if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
-                    $product->location         = $request->location;
-                    $product->date_of_shooting = $request->date_of_shooting;
-                    $product->photographer     = json_encode($request->photographer);
-                    $product->editor           = null;
-                    $product->date_of_editing  = null;
-                } else {
-                    $product->date_of_editing  = $request->date_of_editing;
-                    $product->editor           = json_encode($request->editor);
-                    $product->photographer     = null;
-                    $product->location         = null;
-                    $product->date_of_shooting = null;
-                }
+                $newNumber = $lastReference
+                    ? str_pad(((int) substr($lastReference->reference, -3)) + 1, 3, '0', STR_PAD_LEFT)
+                    : '001';
 
-                $product->save();
-            }
+                $reference = $today . '-' . $newNumber;
 
-            // Generate new reference
-            $today = Carbon::now()->format('Y-m-d');
-
-            $lastReference = ShootingSession::where('reference', 'LIKE', $today . '%')
-                ->orderBy('reference', 'desc')
-                ->first();
-
-            $newNumber = $lastReference
-                ? str_pad(((int) substr($lastReference->reference, -3)) + 1, 3, '0', STR_PAD_LEFT)
-                : '001';
-
-            $reference = $today . '-' . $newNumber;
-
-            foreach ($finalColorIds as $colorId) {
-                ShootingSession::create([
-                    'reference' => $reference,
-                    'shooting_product_color_id' => $colorId,
-                ]);
-            }
-
-            // ربط طرق التصوير بالـ reference
-            if ($request->has('way_of_shooting_ids')) {
-                foreach ($request->way_of_shooting_ids as $wayId) {
-                    \App\Models\ShootingSessionWay::create([
+                foreach ($finalColorIds as $colorId) {
+                    ShootingSession::create([
                         'reference' => $reference,
-                        'way_of_shooting_id' => $wayId,
+                        'shooting_product_color_id' => $colorId,
                     ]);
                 }
-            }
-        });
 
-        return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير بنجاح');
+                // ربط طرق التصوير بالـ reference
+                if ($request->has('way_of_shooting_ids')) {
+                    foreach ($request->way_of_shooting_ids as $wayId) {
+                        \App\Models\ShootingSessionWay::create([
+                            'reference' => $reference,
+                            'way_of_shooting_id' => $wayId,
+                        ]);
+                    }
+                }
+            });
+
+            return redirect()->route('shooting-sessions.index')->with('success', 'تم بدء التصوير بنجاح');
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
 
