@@ -11,7 +11,7 @@ class EditSessionController extends Controller
 {
     public function index()
     {
-        $sessions = EditSession::latest()->get();
+        $sessions = EditSession::where('status', 'جديد')->latest()->get();
         return view('shooting_products.edit_sessions.index', compact('sessions'));
     }
 
