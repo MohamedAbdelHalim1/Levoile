@@ -28,7 +28,7 @@ class ShootingProductController extends Controller
     public function index(Request $request)
     {
         $query = ShootingProduct::with([
-            'shootingProductColors.sessions',  // eager load
+            'shootingProductColors.sessions.editSessions',  // eager load
             'shootingProductColors',
         ]);
         // Filters

@@ -139,6 +139,7 @@
                             <th>عدد السيشنات</th>
                             <th>السيشنات</th>
                             <th>حاله السيشن</th>
+                            <th>محرري السيشن</th>
                             <th>نوع التصوير</th>
                             <th>الموقع</th>
                             <th>تاريخ التصوير</th>
@@ -348,6 +349,53 @@
                                         @endforeach
                                     @endforeach
                                 </td>
+
+                                <td>
+                                    @foreach ($product->shootingProductColors as $color)
+                                        @foreach ($color->sessions as $session)
+                                            <div
+                                                style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
+                                                @if ($session->editSessions->count())
+                                                    @foreach ($session->editSessions as $edit)
+                                                        <div class="mb-1">
+                                                            <strong>محرر:</strong>
+                                                            {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}
+                                                            <br>
+                                                            <strong>رابط الصور:</strong>
+                                                            @if ($edit->photo_drive_link)
+                                                                <a href="{{ $edit->photo_drive_link }}" target="_blank"
+                                                                    class="text-success">
+                                                                    Drive
+                                                                </a>
+                                                            @else
+                                                                <span>-</span>
+                                                            @endif
+                                                            <br>
+                                                            <strong>الرابط العام:</strong>
+                                                            @if ($edit->drive_link)
+                                                                <a href="{{ $edit->drive_link }}" target="_blank"
+                                                                    class="text-primary">
+                                                                    Edit Link
+                                                                </a>
+                                                            @else
+                                                                <span>-</span>
+                                                            @endif
+                                                            <br>
+                                                            <strong>الحالة:</strong>
+                                                            <span
+                                                                class="badge bg-{{ $edit->status === 'completed' ? 'success' : 'warning' }}">
+                                                                {{ $edit->status }}
+                                                            </span>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <span>لا يوجد</span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @endforeach
+                                </td>
+
 
 
                                 {{-- باقي الأعمدة داخل box منظم لكل session --}}

@@ -119,18 +119,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $session->note ?? '-' }}</td>
-                                {{-- <td>
-                                    @if ($session->is_reviewed)
-                                        <span class="badge bg-success">تم التكويد</span>
-                                    @else
-                                        <form method="POST" action="{{ route('edit-sessions.review') }}"
-                                            onsubmit="return confirm('هل أنت متأكد من مراجعة هذه الجلسة؟');">
-                                            @csrf
-                                            <input type="hidden" name="reference" value="{{ $session->reference }}">
-                                            <button type="submit" class="btn btn-sm btn-warning">مراجعة</button>
-                                        </form>
-                                    @endif
-                                </td> --}}
+                               
 
                             </tr>
                         @endforeach

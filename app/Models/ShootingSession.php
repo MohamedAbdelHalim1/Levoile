@@ -23,4 +23,9 @@ class ShootingSession extends Model
     {
         return $this->hasMany(ShootingSessionWay::class, 'shooting_session_id');
     }
+
+    public function editSessions()
+    {
+        return $this->hasMany(EditSession::class, 'reference', 'reference');
+    }
 }
