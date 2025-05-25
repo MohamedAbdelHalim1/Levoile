@@ -67,7 +67,6 @@
                             </thead>
                             <tbody>
                                 @php
-                                dd($readyItems);
                                     $grouped = $readyItems->groupBy(function ($item) {
                                         return $item->shooting_product_id .
                                             '|' .
@@ -76,7 +75,6 @@
                                             ($item->status ?? '-');
                                     });
 
-                                    dd($grouped);
                                 @endphp
 
                                 @foreach ($grouped as $key => $items)
@@ -86,7 +84,6 @@
                                         $colorCodes = $items->pluck('item_no');
                                     @endphp
 
-@dd($productId)
                                     <tr data-type="{{ $type }}" data-status="{{ $status }}">
                                         <td>
                                             @if ($status !== 'قيد التصوير')
