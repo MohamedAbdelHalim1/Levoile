@@ -140,6 +140,9 @@
                             <th>السيشنات</th>
                             <th>حاله السيشن</th>
                             <th>محرري السيشن</th>
+                            <th>رابط الصور</th>
+                            <th>رابط التعديل</th>
+                            <th>حالة التعديل</th>
                             <th>نوع التصوير</th>
                             <th>الموقع</th>
                             <th>تاريخ التصوير</th>
@@ -361,51 +364,86 @@
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
-                                        <div
-                                            style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
-                                            @php
-                                                $session = $colors[0]->sessions->firstWhere('reference', $ref);
-                                                $editSessions = $session?->editSessions ?? collect();
-                                            @endphp
-
-                                            @if ($editSessions->count())
-                                                @foreach ($editSessions as $edit)
-                                                    <div class="mb-1">
-                                                        <strong>محرر:</strong>
-                                                        {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}<br>
-
-                                                        <strong>رابط الصور:</strong>
-                                                        @if ($edit->photo_drive_link)
-                                                            <a href="{{ $edit->photo_drive_link }}" target="_blank"
-                                                                class="text-success"><i class="fa fa-image"></i></a>
-                                                        @else
-                                                            <span>-</span>
-                                                        @endif
-                                                        <br>
-
-                                                        <strong>رابط التعديل:</strong>
-                                                        @if ($edit->drive_link)
-                                                            <a href="{{ $edit->drive_link }}" target="_blank"
-                                                                class="text-primary"><i class="fa fa-edit"></i></a>
-                                                        @else
-                                                            <span>-</span>
-                                                        @endif
-                                                        <br>
-
-                                                        <strong>الحالة:</strong>
-                                                        <span
-                                                            class="badge bg-{{ $edit->status === 'completed' ? 'success' : 'warning' }}">
-                                                            {{ $edit->status }}
-                                                        </span>
-                                                    </div>
-                                                @endforeach
-                                            @else
-                                                <span>لا يوجد</span>
-                                            @endif
+                                        @php
+                                            $session = $colors[0]->sessions->firstWhere('reference', $ref);
+                                            $editSessions = $session?->editSessions ?? collect();
+                                        @endphp
+                                        <div style="margin-bottom: 8px;">
+                                            @forelse ($editSessions as $edit)
+                                                <div>
+                                                    {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}
+                                                </div>
+                                            @empty
+                                                <div>لا يوجد</div>
+                                            @endforelse
                                         </div>
                                     @endforeach
                                 </td>
 
+                                <td>
+                                    @foreach ($sessionsGrouped as $ref => $colors)
+                                        @php
+                                            $session = $colors[0]->sessions->firstWhere('reference', $ref);
+                                            $editSessions = $session?->editSessions ?? collect();
+                                        @endphp
+                                        <div style="margin-bottom: 8px;">
+                                            @forelse ($editSessions as $edit)
+                                                @if ($edit->photo_drive_link)
+                                                    <a href="{{ $edit->photo_drive_link }}" target="_blank"
+                                                        class="text-success">
+                                                        <i class="fa fa-image"></i>
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            @empty
+                                                <span>لا يوجد</span>
+                                            @endforelse
+                                        </div>
+                                    @endforeach
+                                </td>
+
+                                <td>
+                                    @foreach ($sessionsGrouped as $ref => $colors)
+                                        @php
+                                            $session = $colors[0]->sessions->firstWhere('reference', $ref);
+                                            $editSessions = $session?->editSessions ?? collect();
+                                        @endphp
+                                        <div style="margin-bottom: 8px;">
+                                            @forelse ($editSessions as $edit)
+                                                @if ($edit->drive_link)
+                                                    <a href="{{ $edit->drive_link }}" target="_blank"
+                                                        class="text-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            @empty
+                                                <span>لا يوجد</span>
+                                            @endforelse
+                                        </div>
+                                    @endforeach
+                                </td>
+
+                                <td>
+                                    @foreach ($sessionsGrouped as $ref => $colors)
+                                        @php
+                                            $session = $colors[0]->sessions->firstWhere('reference', $ref);
+                                            $editSessions = $session?->editSessions ?? collect();
+                                        @endphp
+                                        <div style="margin-bottom: 8px;">
+                                            @forelse ($editSessions as $edit)
+                                                <span
+                                                    class="badge bg-{{ $edit->status === 'completed' ? 'success' : 'warning' }}">
+                                                    {{ $edit->status }}
+                                                </span>
+                                            @empty
+                                                <span>-</span>
+                                            @endforelse
+                                        </div>
+                                    @endforeach
+                                </td>
 
 
 
