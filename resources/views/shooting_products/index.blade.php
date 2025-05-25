@@ -377,7 +377,7 @@
                                                         <strong>رابط الصور:</strong>
                                                         @if ($edit->photo_drive_link)
                                                             <a href="{{ $edit->photo_drive_link }}" target="_blank"
-                                                                class="text-success">Drive</a>
+                                                                class="text-success"><i class="fa fa-image"></i></a>
                                                         @else
                                                             <span>-</span>
                                                         @endif
@@ -386,7 +386,7 @@
                                                         <strong>رابط التعديل:</strong>
                                                         @if ($edit->drive_link)
                                                             <a href="{{ $edit->drive_link }}" target="_blank"
-                                                                class="text-primary">Edit</a>
+                                                                class="text-primary"><i class="fa fa-edit"></i></a>
                                                         @else
                                                             <span>-</span>
                                                         @endif
