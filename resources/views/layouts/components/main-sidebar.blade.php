@@ -352,24 +352,23 @@
                                             <ul class="sidemenu-list">
                                                 <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
                                                 </li>
-                                                <li>
-                                                    <a href="{{ route('shooting-deliveries.index') }}"
-                                                        class="slide-item">تحويل المخازن للتصوير</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('ready-to-shoot.index') }}"
-                                                        class="slide-item">المنتجات جاهزه للتصوير</a>
-                                                </li>
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">منتجات التصوير</a></li>
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
                                                         class="slide-item">جلسات التصوير</a></li>
                                                 <li>
+                                                    <a href="{{ route('ready-to-shoot.index') }}"
+                                                        class="slide-item">المنتجات جاهزه للتصوير</a>
+                                                </li>
+                                                <li>
                                                     <a href="{{ route('edit-sessions.index') }}" class="slide-item">
                                                         جلسات جاهزه للتعديل
                                                     </a>
                                                 </li>
-
+                                                <li>
+                                                    <a href="{{ route('shooting-deliveries.index') }}"
+                                                        class="slide-item">تحويل المخازن للتصوير</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
