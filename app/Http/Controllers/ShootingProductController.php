@@ -295,7 +295,7 @@ class ShootingProductController extends Controller
                     ->toArray();
 
                 \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
-                    ->update(['status' => 'قيد التصوير']);
+                    ->delete();
 
 
                 foreach ($productIds as $productId) {
