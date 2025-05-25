@@ -134,17 +134,60 @@ class ShootingProductController extends Controller
     //     return view('shooting_products.multi_start', compact('products', 'photographers', 'editors'));
     // }
 
+    // public function multiStartPage(Request $request)
+    // {
+    //     $ids = $request->input('selected_products', []);
+    //     $products = ShootingProduct::whereIn('id', $ids)
+    //         ->with(['readyToShoot', 'shootingProductColors']) // أضف العلاقة دي
+    //         ->get();
+
+    //     // جلب نوع التصوير من جدول ready_to_shoot
+    //     $type = null;
+    //     foreach ($products as $product) {
+    //         $readyType = $product->readyToShoot->first()?->type_of_shooting;
+    //         if ($type === null) {
+    //             $type = $readyType;
+    //         } elseif ($readyType !== $type) {
+    //             return redirect()->back()->with('error', 'يجب أن يكون لكل المنتجات نفس نوع التصوير');
+    //         }
+    //     }
+
+    //     $photographers = User::whereHas('role', function ($q) {
+    //         $q->where('name', 'photographer');
+    //     })->get();
+
+    //     $editors = User::whereHas('role', function ($q) {
+    //         $q->where('name', 'editor');
+    //     })->get();
+
+    //     $waysOfShooting = WayOfShooting::all();
+
+
+    //     return view('shooting_products.multi_start', compact('products', 'photographers', 'editors', 'type', 'waysOfShooting'));
+    // }
+
     public function multiStartPage(Request $request)
     {
         $ids = $request->input('selected_products', []);
-        $products = ShootingProduct::whereIn('id', $ids)
-            ->with(['readyToShoot', 'shootingProductColors']) // أضف العلاقة دي
-            ->get();
 
-        // جلب نوع التصوير من جدول ready_to_shoot
+        // بدال ما نجيب المنتجات وارتباطها بكل الألوان، هنجيب فقط الألوان اللي كانت موجودة في ready_to_shoot
+        $readyItems = ReadyToShoot::whereIn('shooting_product_id', $ids)->get()->groupBy('shooting_product_id');
+
+        $productIds = $readyItems->keys();
+
+        $products = ShootingProduct::whereIn('id', $productIds)->get();
+
+        // عشان كل منتج يبقى فيه بس الألوان اللي جاهزة فعلاً
+        foreach ($products as $product) {
+            $colors = $readyItems[$product->id];
+            // نخليها شكل علاقة وهمية على نفس النموذج
+            $product->setRelation('shootingProductColors', $colors);
+        }
+
+        // النوع لازم يكون متحد
         $type = null;
         foreach ($products as $product) {
-            $readyType = $product->readyToShoot->first()?->type_of_shooting;
+            $readyType = $product->shootingProductColors->first()?->type_of_shooting;
             if ($type === null) {
                 $type = $readyType;
             } elseif ($readyType !== $type) {
@@ -152,19 +195,13 @@ class ShootingProductController extends Controller
             }
         }
 
-        $photographers = User::whereHas('role', function ($q) {
-            $q->where('name', 'photographer');
-        })->get();
-
-        $editors = User::whereHas('role', function ($q) {
-            $q->where('name', 'editor');
-        })->get();
-
+        $photographers = User::whereHas('role', fn($q) => $q->where('name', 'photographer'))->get();
+        $editors = User::whereHas('role', fn($q) => $q->where('name', 'editor'))->get();
         $waysOfShooting = WayOfShooting::all();
-
 
         return view('shooting_products.multi_start', compact('products', 'photographers', 'editors', 'type', 'waysOfShooting'));
     }
+
 
 
     public function multiStartSave(Request $request)
