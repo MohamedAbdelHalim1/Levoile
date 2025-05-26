@@ -45,7 +45,9 @@
                     $parent = $group->firstWhere('image_url') ?? $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
                     $imageSrc = $mainImage
-                        ? (Str::startsWith($mainImage, 'http') ? $mainImage : asset($mainImage))
+                        ? (Str::startsWith($mainImage, 'http')
+                            ? $mainImage
+                            : asset($mainImage))
                         : asset('assets/images/comming.png');
                 @endphp
                 <div class="main-product m-2 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3"
@@ -85,28 +87,30 @@
                     </p>
                     <div class="row justify-content-center">
 
-                            @foreach ($group->filter(fn($v) => isset($requestedItems[$v->id]) && $v->image_url)->take(6) as $variant)
-                                @php
-                                    $requestedQty = $requestedItems[$variant->id]->requested_quantity ?? null;
-                                    $variantImage = Str::startsWith($variant->image_url, 'http')
-                                        ? $variant->image_url
-                                        : asset($variant->image_url);
-                                @endphp
+                        @foreach ($group->filter(fn($v) => isset($requestedItems[$v->id]) && $v->image_url)->take(6) as $variant)
+                            @php
+                                $requestedQty = $requestedItems[$variant->id]->requested_quantity ?? null;
+                                $variantImage = Str::startsWith($variant->image_url, 'http')
+                                    ? $variant->image_url
+                                    : asset($variant->image_url);
+                            @endphp
 
-                                <div class="sub-color position-relative">
-                                        <img src="{{ $variantImage }}" class="rounded-1">
-                                        <div class="position-absolute top-0 end-0 me-1">
-                                            <img src="{{ asset('assets/images/' . ($variant->stock_entries->sum('quantity') > 0 ? 'right.png' : 'wrong.png')) }}" class="icon-mark">
-                                        </div>
-                                        <div class="position-absolute top-0 end-0 me-1 mt-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                                الكمية: {{ $requestedQty }}
-                                            </small>
-                                        </div>
-                                        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
-                                            <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
-                                        </div>
-                                    </div>
+                            <div class="sub-color position-relative">
+                                <img src="{{ $variantImage }}" class="rounded-1">
+                                <div class="position-absolute top-0 end-0 me-1">
+                                    <img src="{{ asset('assets/images/' . ($variant->stock_entries->sum('quantity') > 0 ? 'right.png' : 'wrong.png')) }}"
+                                        class="icon-mark">
+                                </div>
+                                <div class="position-absolute top-0 end-0 me-1 mt-1">
+                                    <small class="fw-semibold back-ground text-white rounded-1 p-1">
+                                        الكمية: {{ $requestedQty }}
+                                    </small>
+                                </div>
+                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
+                                    <small
+                                        class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
+                                </div>
+                            </div>
                         @endforeach
 
 
@@ -116,7 +120,7 @@
                 <div class="col-12">
                     <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
                 </div>
-@endforelse
+            @endforelse
             <div class="d-flex justify-content-center mt-4">
                 {{ $pagination->links() }}
             </div>
@@ -244,6 +248,17 @@
         }
 
 
+        #productModal .modal-body .row {
+            gap: 20px 0;
+            /* Vertical spacing */
+        }
+
+        .sub-img img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
         @media screen & (max-width: 1000px) {
             .last-ui .sub-img {
                 width: 40%;
@@ -254,6 +269,9 @@
             .main-product {
                 width: 100%;
             }
+
+
+
         }
     </style>
 @endsection
@@ -263,112 +281,103 @@
         const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
     </script>
 
-                <script>
-                    const requestedItems = @json($requestedItems);
+    <script>
+        const requestedItems = @json($requestedItems);
 
-                    document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
-                        card.addEventListener('click', () => {
-                            const variants = JSON.parse(card.dataset.variants);
-                            const container = document.querySelector('#productModal .modal-body .row');
-                            container.innerHTML = '';
+        document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+            card.addEventListener('click', () => {
+                const variants = JSON.parse(card.dataset.variants);
+                const container = document.querySelector('#productModal .modal-body .row');
+                container.innerHTML = '';
 
-                            variants.sort((a, b) => (a.color || '').localeCompare(b.color || ''));
+                // Group by color_code
+                const grouped = variants.reduce((acc, item) => {
+                    if (!acc[item.color_code]) acc[item.color_code] = [];
+                    acc[item.color_code].push(item);
+                    return acc;
+                }, {});
 
+                Object.values(grouped).forEach(group => {
+                    const display = group.find(v => v.image_url) || group[0];
+                    const image = display.image_url ?
+                        (display.image_url.startsWith('http') ? display.image_url :
+                            `/${display.image_url}`) :
+                        '/assets/images/comming.png';
 
-                            const groupedByNoCode = variants.reduce((acc, variant) => {
-                                if (!acc[variant.no_code]) acc[variant.no_code] = [];
-                                acc[variant.no_code].push(variant);
-                                return acc;
-                            }, {});
+                    const box = document.createElement('div');
+                    box.className =
+                        'sub-img col-md-4 px-3 mb-4 d-flex flex-column align-items-center';
 
-                            Object.values(groupedByNoCode).forEach(group => {
-                                // sort to show مخزن فوق
-                                // group.sort((a, b) => a.stock_id - b.stock_id);
-
-                                const first = group[0];
-                                const box = document.createElement('div');
-                                box.className = 'sub-img text-center mb-4';
-
-                                let stockMap = {
-                                    1: 'مخزن',
-                                    2: 'جملة'
-                                };
-
-                                // خريطة فيها الكميات حسب stock_id
-                                let entryMap = {};
-                                (first.stock_entries || []).forEach(q => {
-                                    entryMap[q.stock_id] = q.quantity;
-                                });
-
-                                // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
-                                let lines = [1, 2].map(id => {
-                                    let label = stockMap[id] || 'غير محدد';
-                                    let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
-                                    return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                                }).join('');
-
-
-                                const totalQty = (first.stock_entries || []).reduce((sum, q) => sum + q
-                                    .quantity, 0);
-
-                                    let imgSrc = first.image_url
-                                    ? (first.image_url.startsWith('http') ? first.image_url : `/${first.image_url}`)
-                                    : '/assets/images/comming.png';
-
-
-
-                                box.innerHTML = `
-                    <div class="position-relative">
-                        <img src="${imgSrc}" class="rounded-1 mb-2">
-                        <div class="position-absolute top-0 end-0 me-1">
-                            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-                        </div>
-                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
-                        </div>
-                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
-                        </div>
-                       ${isAdmin ? `
-                                                                    <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                                                        ${lines}
-                                                                    </div>` 
-                            : `
-                                                                    <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end" style="z-index: 5;">
-                                                                        <small class="fw-semibold back-ground text-white rounded-1 p-1">
-                                                                            ${group.reduce((sum, v) => sum + (v.quantity ?? 0), 0)}
-                                                                        </small>
-                                                                    </div>`
+                    const tableRows = group.map(variant => {
+                        let size = variant.size;
+                        const standardSizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL',
+                            'XXXL'
+                        ];
+                        if (!size || !standardSizes.includes(size)) {
+                            size = variant.size_code || '-';
                         }
 
+                        const stockMap = {
+                            1: 0,
+                            2: 0
+                        };
+                        (variant.stock_entries || []).forEach(e => {
+                            if (e.stock_id === 1 || e.stock_id === 2) {
+                                stockMap[e.stock_id] = e.quantity;
+                            }
+                        });
+
+                        return `
+                        <tr>
+                            <td>${variant.no_code}</td>
+                            <td>${size}</td>
+                            <td>${stockMap[1]}</td>
+                            <td>${stockMap[2]}</td>
+                            <td>
+                                <input type="number" name="quantities[${variant.id}]" min="0" class="form-control form-control-sm" placeholder="0">
+                            </td>
+                        </tr>
+                    `;
+                    }).join('');
+
+                    box.innerHTML = `
+                    <div class="text-center mb-3">
+                        <img src="${image}" class="rounded-1 w-100 mb-2" style="max-height: 250px; object-fit: contain;">
+                        <div class="badge bg-dark">${display.color}</div>
                     </div>
-                    <h4 class="text-center mt-2">${first.no_code}</h4>
-
-
-                    <input type="number" min="0" name="quantities[${first.id}]" class="form-control mt-2" placeholder="الكمية المطلوبة">
-                    ${requestedItems[first.id] ? `
-                                                                <span class="badge bg-success mt-2">
-                                                                    ✅ تم الطلب (${requestedItems[first.id].requested_quantity})
-                                                                </span>` : ''}
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center table-striped align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>المقاس</th>
+                                    <th>مخزن</th>
+                                    <th>جملة</th>
+                                    <th>ادخل الكمية</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
                 `;
 
-                                container.appendChild(box);
-                            });
+                    container.appendChild(box);
+                });
+            });
+        });
+    </script>
 
-                        });
-                    });
-                </script>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const alerts = document.querySelectorAll('.alert');
-                        alerts.forEach(alert => {
-                            setTimeout(() => {
-                                alert.classList.add('fade');
-                                setTimeout(() => alert.remove(), 500); // Remove from DOM
-                            }, 3000); // بعد 3 ثواني
-                        });
-                    });
-                </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 500); // Remove from DOM
+                }, 3000); // بعد 3 ثواني
+            });
+        });
+    </script>
 @endsection
-)
