@@ -61,7 +61,7 @@ class EditSessionController extends Controller
                 'shooting_product_id' => $shootingProduct->id,
             ], [
                 'name' => $shootingProduct->name,
-                'status' => 'جديد', // عدّلها لو في منطق معين
+                'status' => 'new', // عدّلها لو في منطق معين
             ]);
         }
 
