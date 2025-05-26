@@ -252,84 +252,165 @@
     <script>
         const isAdmin = {{ auth()->user()->id == 1 ? 'true' : 'false' }};
 
-        document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
-            card.addEventListener('click', () => {
-                const variants = JSON.parse(card.dataset.variants);
-                const container = document.querySelector('#productModal .modal-body .row');
-                container.innerHTML = '';
+         document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+        card.addEventListener('click', () => {
+            const variants = JSON.parse(card.dataset.variants);
+            const container = document.querySelector('#productModal .modal-body .row');
+            container.innerHTML = '';
 
-                variants.sort((a, b) => (a.color || '').localeCompare(b.color || ''));
+            // Group by color_code
+            const grouped = variants.reduce((acc, item) => {
+                if (!acc[item.color_code]) acc[item.color_code] = [];
+                acc[item.color_code].push(item);
+                return acc;
+            }, {});
 
+            Object.values(grouped).forEach(group => {
+                const display = group.find(v => v.image_url) || group[0];
 
-                // Group by no_code
-                const grouped = variants.reduce((acc, item) => {
-                    if (!acc[item.no_code]) acc[item.no_code] = [];
-                    acc[item.no_code].push(item);
-                    return acc;
-                }, {});
+                const totalQty = display.stock_entries?.reduce((sum, q) => sum + q.quantity, 0) || 0;
 
-                Object.values(grouped).forEach(group => {
-                    // sort to show المخزن فوق
-                    // group.sort((a, b) => a.stock_id - b.stock_id);
+                const image = display.image_url
+                    ? (display.image_url.startsWith('http') ? display.image_url : `{{ asset('') }}` + display.image_url)
+                    : `{{ asset('assets/images/comming.png') }}`;
 
-                    const first = group[0]; // use one for image/color display
+                const box = document.createElement('div');
+                box.className = 'sub-img col-md-6 mb-4';
 
-                    const box = document.createElement('div');
-                    box.className = 'sub-img position-relative';
+                // Build table rows
+                const tableRows = group.map(variant => {
+                    let size = variant.size;
 
-                    let stockMap = {
-                        1: 'مخزن',
-                        2: 'جملة'
+                    const standardSizes = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                    if (!size || !standardSizes.includes(size)) {
+                        size = variant.size_code || '-';
+                    }
+
+                    const stockMap = {
+                        1: 0,
+                        2: 0
                     };
 
-                    // خريطة فيها الكميات حسب stock_id
-                    let entryMap = {};
-                    (first.stock_entries || []).forEach(q => {
-                        entryMap[q.stock_id] = q.quantity;
+                    (variant.stock_entries || []).forEach(e => {
+                        if (e.stock_id === 1 || e.stock_id === 2) {
+                            stockMap[e.stock_id] = e.quantity;
+                        }
                     });
 
-                    // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
-                    let lines = [1, 2].map(id => {
-                        let label = stockMap[id] || 'غير محدد';
-                        let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
-                        return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
-                    }).join('');
+                    return `
+                        <tr>
+                            <td>${variant.no_code}</td>
+                            <td>${size}</td>
+                            <td>${stockMap[1]}</td>
+                            <td>${stockMap[2]}</td>
+                        </tr>
+                    `;
+                }).join('');
 
-
-                    const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
-                        0);
-
-                    const image = first.image_url ?
-                        (first.image_url.startsWith('http') ? first.image_url :
-                            `{{ asset('') }}` + first.image_url) :
-                        `{{ asset('assets/images/comming.png') }}`;
-
-
-
-                    box.innerHTML = `
-                    <div class="position-relative">
-<img src="${image}" class="rounded-1">
-                        <div class="position-absolute top-0 end-0 me-1">
-                            <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
-                        </div>
-                        <div class="position-absolute top-0 start-0 ms-1 mt-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
-                        </div>
-                        <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                            <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
-                        </div>
-                        ${isAdmin ? `
-                                                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                                                                ${lines}
-                                                            </div>` : ''}
+                box.innerHTML = `
+                    <div class="text-center mb-3">
+                        <img src="${image}" class="rounded-1 w-100 mb-2" style="max-height: 250px; object-fit: contain;">
+                        <div class="badge bg-dark">${display.color}</div>
                     </div>
-                    <h4 class="text-center mt-2">${first.no_code}</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center table-striped align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>المقاس</th>
+                                    <th>مخزن</th>
+                                    <th>جملة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
                 `;
 
-                    container.appendChild(box);
-                });
+                container.appendChild(box);
             });
         });
+    });
+        // document.querySelectorAll('[data-bs-target="#productModal"]').forEach(card => {
+        //     card.addEventListener('click', () => {
+        //         const variants = JSON.parse(card.dataset.variants);
+        //         const container = document.querySelector('#productModal .modal-body .row');
+        //         container.innerHTML = '';
+
+        //         variants.sort((a, b) => (a.color || '').localeCompare(b.color || ''));
+
+
+        //         // Group by no_code
+        //         const grouped = variants.reduce((acc, item) => {
+        //             if (!acc[item.no_code]) acc[item.no_code] = [];
+        //             acc[item.no_code].push(item);
+        //             return acc;
+        //         }, {});
+
+        //         Object.values(grouped).forEach(group => {
+        //             // sort to show المخزن فوق
+        //             // group.sort((a, b) => a.stock_id - b.stock_id);
+
+        //             const first = group[0]; // use one for image/color display
+
+        //             const box = document.createElement('div');
+        //             box.className = 'sub-img position-relative';
+
+        //             let stockMap = {
+        //                 1: 'مخزن',
+        //                 2: 'جملة'
+        //             };
+
+        //             // خريطة فيها الكميات حسب stock_id
+        //             let entryMap = {};
+        //             (first.stock_entries || []).forEach(q => {
+        //                 entryMap[q.stock_id] = q.quantity;
+        //             });
+
+        //             // نحضر القيم الثابتة (1 للمخزن، 2 للجملة)
+        //             let lines = [1, 2].map(id => {
+        //                 let label = stockMap[id] || 'غير محدد';
+        //                 let quantity = entryMap[id] !== undefined ? entryMap[id] : 0;
+        //                 return `<div class="mt-1"><small class="fw-semibold back-ground text-white rounded-1 p-1">${label} - ${quantity}</small></div>`;
+        //             }).join('');
+
+
+        //             const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
+        //                 0);
+
+        //             const image = first.image_url ?
+        //                 (first.image_url.startsWith('http') ? first.image_url :
+        //                     `{{ asset('') }}` + first.image_url) :
+        //                 `{{ asset('assets/images/comming.png') }}`;
+
+
+
+        //             box.innerHTML = `
+        //             <div class="position-relative">
+        //             <img src="${image}" class="rounded-1">
+        //                 <div class="position-absolute top-0 end-0 me-1">
+        //                     <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
+        //                 </div>
+        //                 <div class="position-absolute top-0 start-0 ms-1 mt-1">
+        //                     <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.color}</small>
+        //                 </div>
+        //                 <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
+        //                     <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
+        //                 </div>
+        //                 ${isAdmin ? `
+        //                                                     <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+        //                                                         ${lines}
+        //                                                     </div>` : ''}
+        //             </div>
+        //             <h4 class="text-center mt-2">${first.no_code}</h4>
+        //         `;
+
+        //             container.appendChild(box);
+        //         });
+        //     });
+        // });
     </script>
 @endsection
 
