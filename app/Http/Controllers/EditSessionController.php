@@ -42,15 +42,50 @@ class EditSessionController extends Controller
             'note' => 'nullable|string',
         ]);
 
+        // 1. تحديث الـ edit session
         EditSession::where('reference', $request->reference)
             ->update([
                 'drive_link' => $request->drive_link,
                 'status' => 'تم التعديل',
-                'note' => $request->note
+                'note' => $request->note,
             ]);
 
-        return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح');
+        // 2. جلب السيشن
+        $shootingSession = \App\Models\ShootingSession::where('reference', $request->reference)->first();
+
+        if ($shootingSession && $shootingSession->color && $shootingSession->color->shootingProduct) {
+            $shootingProduct = $shootingSession->color->shootingProduct;
+
+            // 3. إنشاء سجل في جدول مسؤول الموقع لو مش موجود
+            \App\Models\WebsiteAdminProduct::firstOrCreate([
+                'shooting_product_id' => $shootingProduct->id,
+            ], [
+                'name' => $shootingProduct->name,
+                'status' => 'جديد', // عدّلها لو في منطق معين
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع');
     }
+
+
+    // public function uploadDriveLink(Request $request)
+    // {
+    //     $request->validate([
+    //         'reference' => 'required|string|exists:edit_sessions,reference',
+    //         'drive_link' => 'required|url',
+    //         'note' => 'nullable|string',
+    //     ]);
+
+    //     EditSession::where('reference', $request->reference)
+    //         ->update([
+    //             'drive_link' => $request->drive_link,
+    //             'status' => 'تم التعديل',
+    //             'note' => $request->note
+    //         ]);
+
+    //     return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح');
+    // }
 
     // public function markReviewed(Request $request)
     // {
@@ -66,32 +101,32 @@ class EditSessionController extends Controller
 
     public function bulkAssign(Request $request)
     {
-        try{
-        $request->validate([
-            'references'   => 'required|array',
-            'user_id'      => 'required|exists:users,id',
-            'common_date'  => 'nullable|date',
-            'dates'        => 'nullable|array',
-        ]);
+        try {
+            $request->validate([
+                'references'   => 'required|array',
+                'user_id'      => 'required|exists:users,id',
+                'common_date'  => 'nullable|date',
+                'dates'        => 'nullable|array',
+            ]);
 
-        foreach ($request->references as $ref) {
-            $session = EditSession::where('reference', $ref)->first();
+            foreach ($request->references as $ref) {
+                $session = EditSession::where('reference', $ref)->first();
 
-            if (!$session) continue;
+                if (!$session) continue;
 
-            $session->user_id = $request->user_id;
+                $session->user_id = $request->user_id;
 
-            if ($request->filled('common_date')) {
-                $session->receiving_date = $request->common_date;
-            } elseif (!empty($request->dates[$ref])) {
-                $session->receiving_date = $request->dates[$ref];
+                if ($request->filled('common_date')) {
+                    $session->receiving_date = $request->common_date;
+                } elseif (!empty($request->dates[$ref])) {
+                    $session->receiving_date = $request->dates[$ref];
+                }
+
+                $session->save();
             }
 
-            $session->save();
-        }
-
-        return redirect()->back()->with('success', 'تم تعيين المحرر للجلسات المختارة بنجاح');
-        }catch(\Exception $e){
+            return redirect()->back()->with('success', 'تم تعيين المحرر للجلسات المختارة بنجاح');
+        } catch (\Exception $e) {
             dd($e);
         }
     }
