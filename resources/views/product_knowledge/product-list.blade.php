@@ -34,17 +34,16 @@
                                     $colors = $group->groupBy('color')->count();
                                     $missing = $group->whereNull('image_url');
                                     $totalQty = $group->flatMap(fn($v) => $v->stockEntries)->sum('quantity');
-
+                                    $img = $mainImage
+                                        ? (Str::startsWith($mainImage, 'http')
+                                            ? $mainImage
+                                            : asset($mainImage))
+                                        : asset('assets/images/comming.png');
                                 @endphp
                                 <tr>
                                     <td>
-                                        @if ($mainImage)
-                                            <img src="{{ $mainImage }}" width="60" height="60"
-                                                style="object-fit: contain" loading="lazy">
-                                        @else
-                                            <img src="{{ asset('assets/images/comming.png') }}" width="60"
-                                                height="60" style="object-fit: contain" loading="lazy">
-                                        @endif
+                                        <img src="{{ $img }}" width="60" height="60"
+                                            style="object-fit: contain" loading="lazy">
                                     </td>
                                     <td>{{ $parent->product_code }}</td>
                                     <td>{{ $parent->description }}</td>
@@ -188,7 +187,10 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     const image = this.dataset.image;
                     const parent = group[0];
 
-                    document.getElementById('modalImage').src = image || '';
+                    const modalImage = document.getElementById('modalImage');
+                    modalImage.src = image ?
+                        (image.startsWith('http') ? image : `{{ asset('') }}` + image) :
+                        `{{ asset('assets/images/comming.png') }}`;
                     document.getElementById('modalDescription').innerText = parent.description;
                     document.getElementById('modalGomla').innerText = parent.gomla;
                     document.getElementById('modalCode').innerText = parent.product_code;
@@ -201,13 +203,21 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     document.getElementById('modalSubcategory').innerText = parent.subcategory_name;
 
                     const container = document.getElementById('modalVariants');
+
                     container.innerHTML = '';
                     group.forEach(item => {
                         let stocks = item.stock_entries || [];
 
+
                         // جهز الإنبوكس بتاع الكمية (editable فقط لو في جملة أو مخزن)
                         let stockHtml = '';
                         let editableQty = 0;
+
+                        const imageSrc = item.image_url ?
+                            (item.image_url.startsWith('http') ?
+                                item.image_url :
+                                `{{ asset('') }}` + item.image_url) :
+                            `{{ asset('assets/images/comming.png') }}`;
 
                         if (stocks.length) {
                             stocks.forEach(stock => {
@@ -235,9 +245,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
 
                         container.innerHTML += `
                             <div class='col-md-3 text-center mb-3'>
-                                <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}"
-                                    class="img-fluid mb-1"
-                                    style="height: 80px; object-fit: contain;" loading="lazy">
+                                <img src="${imageSrc}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
                                 <div><strong>Code:</strong> ${item.no_code}</div>
                                 <div><strong>Color:</strong> ${item.color}</div>
                                 <div><strong>Size:</strong> ${item.size}</div>
