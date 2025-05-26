@@ -917,7 +917,7 @@
             // تعبئة الحقول
             const size = button.getAttribute('data-size') || '';
             const weight = button.getAttribute('data-weight') || '';
-            document.querySelector('input[name="size_name"]').value = size;
+            document.querySelector('textarea[name="size_name"]').value = size;
             document.querySelector('input[name="weight"]').value = weight;
         });
     </script>
