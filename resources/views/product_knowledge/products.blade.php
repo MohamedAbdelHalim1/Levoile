@@ -199,11 +199,11 @@
             --bs-modal-width: 1200px;
         }
 
-        .last-ui .sub-img {
+        /* .last-ui .sub-img {
             width: 20%;
             margin: 10px 10px;
             padding: 0px;
-        }
+        } */
 
         .last-ui .sub-img img {
             width: 100%;
@@ -233,6 +233,16 @@
             width: 28%;
         }
 
+        #productModal .modal-body .row {
+            gap: 20px 0; /* Vertical spacing */
+        }
+
+        .sub-img img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
         @media screen & (max-width: 1000px) {
             .last-ui .sub-img {
                 width: 40%;
@@ -242,6 +252,11 @@
 
             .main-product {
                 width: 100%;
+            }
+
+                .sub-img {
+                padding-left: 15px;
+                padding-right: 15px;
             }
         }
     </style>
@@ -275,7 +290,7 @@
                     : `{{ asset('assets/images/comming.png') }}`;
 
                 const box = document.createElement('div');
-                box.className = 'sub-img col-md-6 mb-4';
+                box.className = 'sub-img col-md-4 px-2 mb-4 d-flex flex-column align-items-center';
 
                 // Build table rows
                 const tableRows = group.map(variant => {
