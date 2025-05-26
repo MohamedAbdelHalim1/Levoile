@@ -112,6 +112,10 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                         <tbody id="missingImagesTableBody"></tbody>
                     </table>
                 </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="uploadImagesBtn">تعديل الصور</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -358,7 +362,12 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                 <td>${item.no_code}</td>
                                 <td>${item.description || '-'}</td>
                                 <td>${item.color || '-'}</td>
+                                <td>
+                                    <input type="file" accept="image/*" class="form-control form-control-sm image-upload-input" 
+                                        data-no-code="${item.no_code}">
+                                </td>
                             </tr>
+
                         `;
                     });
 
@@ -367,6 +376,47 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     modal.show();
                 });
             });
+        });
+    </script>
+    <script>
+        document.getElementById('uploadImagesBtn').addEventListener('click', function() {
+            const inputs = document.querySelectorAll('.image-upload-input');
+            const formData = new FormData();
+
+            inputs.forEach(input => {
+                const file = input.files[0];
+                const noCode = input.dataset.noCode;
+                if (file) {
+                    formData.append('images[]', file);
+                    formData.append('no_codes[]', noCode);
+                }
+            });
+
+            if (!formData.has('images[]')) {
+                alert('من فضلك اختر صورة واحدة على الأقل.');
+                return;
+            }
+
+            fetch("{{ route('product-knowledge.upload-missing-images') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('تم رفع الصور بنجاح');
+                        location.reload();
+                    } else {
+                        alert('فشل في رفع الصور');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('حدث خطأ أثناء الرفع');
+                });
         });
     </script>
 @endsection

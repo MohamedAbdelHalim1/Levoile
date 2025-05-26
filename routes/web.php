@@ -206,6 +206,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/product-knowledge', [ProductKnowledgeController::class, 'index'])->name('product-knowledge.index');
     Route::get('/product-knowledge/{category}', [ProductKnowledgeController::class, 'subcategories'])->name('product-knowledge.subcategories');
     Route::get('/product-knowledge/subcategory/{subcategory}', [ProductKnowledgeController::class, 'products'])->name('product-knowledge.products');
+    Route::post('/product-knowledge/upload-missing-images', [ProductKnowledgeController::class, 'uploadMissingImages'])
+        ->name('product-knowledge.upload-missing-images');
 
 
     Route::get('/branch-orders', [BranchOrderController::class, 'index'])->name('branch.orders.index');

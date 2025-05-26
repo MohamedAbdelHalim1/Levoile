@@ -399,7 +399,7 @@ class ProductKnowledgeController extends Controller
             $addedProductCodes = [];
 
 
-            DB::transaction(function () use ($data, $allCategories, $allSubcategories, &$newCount, &$duplicateCount, &$duplicateCodes , &$addedProductCodes) {
+            DB::transaction(function () use ($data, $allCategories, $allSubcategories, &$newCount, &$duplicateCount, &$duplicateCodes, &$addedProductCodes) {
                 foreach ($data as $row) {
                     $divisionName = trim($row['Division Code'] ?? '');
                     $subcategoryName = trim($row['Item Category Code'] ?? '');
@@ -485,7 +485,7 @@ class ProductKnowledgeController extends Controller
                 'new_count' => $newCount,
                 'duplicate_count' => $duplicateCount,
                 'duplicates' => $duplicateCodes,
-                'new_products' => $newUniqueProducts, 
+                'new_products' => $newUniqueProducts,
 
             ]);
         } catch (\Exception $e) {
@@ -552,5 +552,39 @@ class ProductKnowledgeController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage());
         }
+    }
+
+    public function uploadMissingImages(Request $request)
+    {
+        $files = $request->file('images');
+        $codes = $request->input('no_codes');
+
+        if (!$files || !$codes) {
+            return response()->json(['success' => false, 'message' => 'بيانات غير مكتملة']);
+        }
+
+        foreach ($files as $index => $file) {
+            $noCode = $codes[$index] ?? null;
+            if (!$noCode) continue;
+
+            $extension = $file->getClientOriginalExtension();
+            $filename = $noCode . '.' . $extension;
+            $destinationPath = public_path('images/products-knowledge');
+
+            // تأكد الفولدر موجود
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+
+            $url = 'images/products-knowledge/' . $filename;
+
+            ProductKnowledge::where('no_code', $noCode)->update([
+                'image_url' => $url
+            ]);
+        }
+
+        return response()->json(['success' => true]);
     }
 }
