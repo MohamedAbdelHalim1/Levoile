@@ -32,17 +32,18 @@
                 @php
                     $parent = $group->firstWhere('image_url') ?? $group->first();
                     $mainImage = $group->firstWhere('image_url')?->image_url;
+                    $mainImageSrc = $mainImage
+                        ? (Str::startsWith($mainImage, 'http')
+                            ? $mainImage
+                            : asset($mainImage))
+                        : asset('assets/images/comming.png');
 
                 @endphp
                 <div class="main-product m-2 border border-1 pe-0 ps-0 pt-0 rounded-1 pb-3"
                     data-variants='@json($group)' data-bs-toggle="modal" data-bs-target="#productModal"
                     style="cursor: pointer;">
                     <div class="position-relative">
-                        @if ($mainImage)
-                            <img src="{{ $mainImage }}" class="main-image rounded-top-1">
-                        @else
-                            <img src="{{ asset('assets/images/comming.png') }}" class="main-image rounded-top-1">
-                        @endif
+                        <img src="{{ $mainImageSrc }}" class="main-image rounded-top-1">
                         <div class="position-absolute top-0 end-0 me-1 mt-1">
                             <small
                                 class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->unit_price }}</small>
@@ -75,8 +76,15 @@
                     <div class="row justify-content-center">
                         @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
 <div class="sub-color position-relative">
-                                <img src="{{ $variant->image_url ?? asset('assets/images/comming.png') }}"
-                                    class="rounded-1">
+                                @php
+                                    $variantImage = $variant->image_url
+                                        ? (Str::startsWith($variant->image_url, 'http')
+                                            ? $variant->image_url
+                                            : asset($variant->image_url))
+                                        : asset('assets/images/comming.png');
+                                @endphp
+<img src="{{ $variantImage }}" class="rounded-1">
+
                                 <div class="position-absolute top-0 end-0 me-1">
                                     @php
                                         $variantQty = $variant->stockEntries->sum('quantity');
@@ -291,10 +299,16 @@
                     const totalQty = (first.stockEntries || []).reduce((sum, q) => sum + q.quantity,
                         0);
 
+                    const image = first.image_url ?
+                        (first.image_url.startsWith('http') ? first.image_url :
+                            `{{ asset('') }}` + first.image_url) :
+                        `{{ asset('assets/images/comming.png') }}`;
+
+
 
                     box.innerHTML = `
                     <div class="position-relative">
-                        <img src="${first.image_url || '/assets/images/comming.png'}" class="rounded-1">
+<img src="${image}" class="rounded-1">
                         <div class="position-absolute top-0 end-0 me-1">
                             <img src="/assets/images/${totalQty > 0 ? 'right.png' : 'wrong.png'}" class="icon-mark">
                         </div>
@@ -305,9 +319,9 @@
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">${first.product_code}</small>
                         </div>
                         ${isAdmin ? `
-                                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
-                                                ${lines}
-                                            </div>` : ''}
+                                                            <div class="position-absolute bottom-0 end-0 me-1 mb-1 text-end">
+                                                                ${lines}
+                                                            </div>` : ''}
                     </div>
                     <h4 class="text-center mt-2">${first.no_code}</h4>
                 `;
@@ -360,3 +374,4 @@
     </script>
 @endsection --}}
 
+)
