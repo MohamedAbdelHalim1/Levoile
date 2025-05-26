@@ -208,11 +208,11 @@
             --bs-modal-width: 1200px;
         }
 
-        .last-ui .sub-img {
+        /* .last-ui .sub-img {
             width: 20%;
             margin: 10px 10px;
             padding: 0px;
-        }
+        } */
 
         .last-ui .sub-img img {
             width: 100%;
