@@ -645,7 +645,7 @@
                 </div>
                 <div class="modal-body">
                     <label>المقاس</label>
-                    <input type="text" name="size_name" class="form-control mb-3" required>
+                    <textarea type="text" name="size_name" class="form-control mb-3" required></textarea>
 
                     <label>الوزن</label>
                     <input type="text" name="weight" class="form-control" required>
