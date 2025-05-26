@@ -85,22 +85,15 @@
                     </p>
                     <div class="row justify-content-center">
 
-                        @foreach ($group->where('image_url', '!=', null)->take(6) as $variant)
-                            
+                            @foreach ($group->filter(fn($v) => isset($requestedItems[$v->id]) && $v->image_url)->take(6) as $variant)
                                 @php
                                     $requestedQty = $requestedItems[$variant->id]->requested_quantity ?? null;
+                                    $variantImage = Str::startsWith($variant->image_url, 'http')
+                                        ? $variant->image_url
+                                        : asset($variant->image_url);
                                 @endphp
 
-                                @if ($requestedQty)
                                 <div class="sub-color position-relative">
-                                        @php
-                                            $variantImage = $variant->image_url
-                                                ? (Str::startsWith($variant->image_url, 'http')
-                                                    ? $variant->image_url
-                                                    : asset($variant->image_url))
-                                                : asset('assets/images/comming.png');
-                                        @endphp
-
                                         <img src="{{ $variantImage }}" class="rounded-1">
                                         <div class="position-absolute top-0 end-0 me-1">
                                             <img src="{{ asset('assets/images/' . ($variant->stock_entries->sum('quantity') > 0 ? 'right.png' : 'wrong.png')) }}" class="icon-mark">
@@ -114,7 +107,6 @@
                                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ $variant->color }}</small>
                                         </div>
                                     </div>
-                                @endif
                         @endforeach
 
 
