@@ -129,19 +129,23 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="text-center mb-3">
-                        <img id="modalImage" src="" class="img-fluid" style="max-height: 300px;">
+                    <div class="d-flex align-items-start gap-4 flex-wrap mb-4">
+                        <img id="modalImage" src="" class="img-fluid rounded"
+                            style="max-width: 300px; max-height: 300px; object-fit: cover;">
+                        <div>
+                            <h5 id="modalDescription" class="mb-2"></h5>
+                            <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
+                            <p><strong>Code:</strong> <span id="modalCode"></span></p>
+                            <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                            <p><strong>Material:</strong> <span id="modalMaterial"></span></p>
+                            <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
+                            <p><strong>Season:</strong> <span id="modalSeason"></span></p>
+                            <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
+                            <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                            <p><strong>Subcategory:</strong> <span id="modalSubcategory"></span></p>
+                        </div>
                     </div>
-                    <h5 id="modalDescription"></h5>
-                    <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
-                    <p><strong>Code:</strong> <span id="modalCode"></span></p>
-                    <p><strong>Price:</strong> <span id="modalPrice"></span></p>
-                    <p><strong>material:</strong> <span id="modalMaterial"></span></p>
-                    <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
-                    <p><strong>Season:</strong> <span id="modalSeason"></span></p>
-                    <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
-                    <p><strong>Category:</strong> <span id="modalCategory"></span></p>
-                    <p><strong>Subcategory:</strong> <span id="modalSubcategory"></span></p>
+
 
                     <hr>
                     <h6>Variants:</h6>
@@ -154,6 +158,16 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
     <style>
         .modal-xl {
             max-width: 75% !important;
+        }
+
+        #modalVariants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #modalVariants>div {
+            flex: 1 1 calc(33.333% - 20px);
         }
     </style>
 @endsection
@@ -248,7 +262,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                         }).join('');
 
                         container.innerHTML += `
-                        <div class="col-12 mb-4">
+                        <div class="col-md-4 mb-4">
                             <div class="d-flex gap-3 align-items-center">
                                 <img src="${imageSrc}" class="rounded" style="width: 120px; height: 120px; object-fit: cover;">
                                 <div>
