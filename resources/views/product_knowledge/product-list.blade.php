@@ -203,154 +203,127 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     document.getElementById('modalSubcategory').innerText = parent.subcategory_name;
 
                     const container = document.getElementById('modalVariants');
-
                     container.innerHTML = '';
-                    group.forEach(item => {
-                        let stocks = item.stock_entries || [];
 
+                    const grouped = group.reduce((acc, item) => {
+                        if (!acc[item.color_code]) acc[item.color_code] = [];
+                        acc[item.color_code].push(item);
+                        return acc;
+                    }, {});
 
-                        // جهز الإنبوكس بتاع الكمية (editable فقط لو في جملة أو مخزن)
-                        let stockHtml = '';
-                        let editableQty = 0;
-
-                        const imageSrc = item.image_url ?
-                            (item.image_url.startsWith('http') ?
-                                item.image_url :
-                                `{{ asset('') }}` + item.image_url) :
+                    Object.values(grouped).forEach(variants => {
+                        const display = variants.find(v => v.image_url) || variants[0];
+                        const imageSrc = display.image_url ?
+                            (display.image_url.startsWith('http') ? display.image_url :
+                                `{{ asset('') }}` + display.image_url) :
                             `{{ asset('assets/images/comming.png') }}`;
 
-                        if (stocks.length) {
-                            stocks.forEach(stock => {
-                                let label = stock.stock_id === 1 ? 'مخزن' : (stock
-                                    .stock_id === 2 ? 'جملة' : 'غير محدد');
-                                stockHtml += `
-                                    <div class="mt-1">
-                                        <strong>${label}:</strong>
-                                        <div class="d-flex justify-content-center gap-1 align-items-center mt-1">
-                                            <input type="number"
-                                                class="form-control form-control-sm text-center qty-input"
-                                                value="${stock.quantity}"
-                                                data-id="${item.id}"
-                                                data-stock="${stock.stock_id}"
-                                                style="width: 60px;">
-                                            <button class="btn btn-sm btn-outline-secondary toggle-edit">✏️</button>
-                                        </div>
-                                    </div>
-                                `;
+                        const tableRows = variants.map(variant => {
+                            let stockMap = {
+                                1: 0,
+                                2: 0
+                            };
+                            (variant.stock_entries || []).forEach(e => {
+                                if (e.stock_id === 1 || e.stock_id === 2) {
+                                    stockMap[e.stock_id] = e.quantity;
+                                }
                             });
-                        } else {
-                            stockHtml =
-                                `<div class="mt-2 text-muted"><strong>غير محدد - 0</strong></div>`;
-                        }
+
+                            return `
+                            <tr>
+                                <td>${variant.no_code}</td>
+                                <td>${variant.size || variant.size_code || '-'}</td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm text-center qty-input" 
+                                        value="${stockMap[1]}" data-id="${variant.id}" data-stock="1" disabled style="width: 60px;">
+                                    <button class="btn btn-sm btn-outline-secondary toggle-edit mt-1">✏️</button>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm text-center qty-input" 
+                                        value="${stockMap[2]}" data-id="${variant.id}" data-stock="2" disabled style="width: 60px;">
+                                    <button class="btn btn-sm btn-outline-secondary toggle-edit mt-1">✏️</button>
+                                </td>
+                            </tr>
+                        `;
+                        }).join('');
 
                         container.innerHTML += `
-                            <div class='col-md-3 text-center mb-3'>
-                                <img src="${imageSrc}" class="img-fluid mb-1" style="height: 80px; object-fit: contain;" loading="lazy">
-                                <div><strong>Code:</strong> ${item.no_code}</div>
-                                <div><strong>Color:</strong> ${item.color}</div>
-                                <div><strong>Size:</strong> ${item.size}</div>
-                                ${stockHtml}
+                        <div class="col-12 mb-4">
+                            <div class="d-flex gap-3 align-items-center">
+                                <img src="${imageSrc}" class="rounded" style="width: 120px; height: 120px; object-fit: cover;">
+                                <div>
+                                    <h5 class="mb-1">${display.color}</h5>
+                                </div>
                             </div>
-                        `;
+                            <div class="table-responsive mt-3">
+                                <table class="table table-bordered text-center">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>الكود</th>
+                                            <th>المقاس</th>
+                                            <th>مخزن</th>
+                                            <th>جملة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${tableRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
                     });
-
-                    // group.forEach(item => {
-                    //     container.innerHTML += `
-                //         <div class='col-md-3 text-center mb-3'>
-                //         <img src="${item.image_url ? item.image_url : '{{ asset('assets/images/comming.png') }}'}" 
-                //                     class="img-fluid mb-1" 
-                //                     style="height: 80px; object-fit: contain;" 
-                //                     loading="lazy">                                <div><strong>Code:</strong> ${item.no_code}</div>
-                //             <div><strong>Color:</strong> ${item.color}</div>
-                //             <div><strong>Size:</strong> ${item.size}</div>
-                //                 <div>
-                //                     <strong>Stock:</strong>
-                //                     ${
-                //                         (item.stock_entries || []).length > 0
-                //                         ? item.stock_entries.map(e => {
-                //                             let label = 'غير محدد';
-                //                             if (e.stock_id === 1) label = 'مخزن';
-                //                             else if (e.stock_id === 2) label = 'جملة';
-                //                             return `${label} - ${e.quantity}`;
-                //                         }).join('<br>')
-                //                         : 'غير محدد - 0'
-                //                     }
-                //                 </div>
-
-
-
-                //             <div class="d-flex align-items-center justify-content-center gap-1 mt-1">
-                //                 <input type="number" class="form-control form-control-sm text-center qty-input" 
-                //                     value="${item.quantity}" 
-                //                     data-id="${item.id}" 
-                //                     disabled style="width: 60px;">
-                //                 <button class="btn btn-sm btn-outline-secondary toggle-edit">
-                //                     ✏️
-                //                 </button>
-                //             </div>
-
-                //             <span class="badge ${item.quantity > 0 ? 'bg-success' : 'bg-danger'} mt-2">
-                //                 ${item.quantity > 0 ? 'Active' : 'Not Active'}
-                //             </span>
-                //         </div>
-                //         `;
-                    // });
 
                     const modal = new bootstrap.Modal(document.getElementById('productModal'));
                     modal.show();
                 });
             });
-        });
 
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('toggle-edit')) {
-                const btn = e.target;
-                const wrapper = btn.closest('.d-flex');
-                const input = wrapper.querySelector('.qty-input');
-                const stockId = input.dataset.stock;
-                const id = input.dataset.id;
-                const newQty = input.value;
-                const isEditing = !input.disabled;
-
-                if (isEditing) {
-                    // Save via AJAX
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('toggle-edit')) {
+                    const btn = e.target;
+                    const wrapper = btn.closest('td');
+                    const input = wrapper.querySelector('input');
+                    const stockId = input.dataset.stock;
                     const id = input.dataset.id;
-                    const newQty = input.value;
+                    const isEditing = !input.disabled;
 
-                    btn.disabled = true;
-                    btn.innerText = '...';
+                    if (isEditing) {
+                        btn.disabled = true;
+                        btn.innerText = '...';
 
-                    fetch(`/product-knowledge/update-quantity/${id}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                quantity: newQty,
-                                stock_id: stockId
+                        fetch(`/product-knowledge/update-quantity/${id}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({
+                                    quantity: input.value,
+                                    stock_id: stockId
+                                })
                             })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            btn.innerText = '✏️';
-                            input.disabled = true;
-                            btn.disabled = false;
-                        })
-                        .catch(err => {
-                            alert('حصل خطأ');
-                            btn.innerText = '✏️';
-                            btn.disabled = false;
-                        });
-                } else {
-                    // Enable input
-                    input.disabled = false;
-                    input.focus();
-                    btn.innerText = '✔️';
+                            .then(res => res.json())
+                            .then(() => {
+                                btn.innerText = '✏️';
+                                input.disabled = true;
+                                btn.disabled = false;
+                            })
+                            .catch(() => {
+                                alert('حدث خطأ أثناء التحديث');
+                                btn.innerText = '✏️';
+                                btn.disabled = false;
+                            });
+                    } else {
+                        input.disabled = false;
+                        input.focus();
+                        btn.innerText = '✔️';
+                    }
                 }
-            }
+            });
         });
     </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.show-missing-images').forEach(button => {
