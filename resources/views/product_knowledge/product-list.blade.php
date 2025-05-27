@@ -129,10 +129,12 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex align-items-start gap-4 flex-wrap mb-4">
-                        <img id="modalImage" src="" class="img-fluid rounded"
-                            style="max-width: 300px; max-height: 300px; object-fit: cover;">
-                        <div>
+                    <div class="row align-items-start mb-4">
+                        <div class="col-md-4 text-center">
+                            <img id="modalImage" src="" class="img-fluid rounded shadow"
+                                style="max-width: 100%; max-height: 350px; object-fit: contain;">
+                        </div>
+                        <div class="col-md-8">
                             <h5 id="modalDescription" class="mb-2"></h5>
                             <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
                             <p><strong>Code:</strong> <span id="modalCode"></span></p>
@@ -145,7 +147,6 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                             <p><strong>Subcategory:</strong> <span id="modalSubcategory"></span></p>
                         </div>
                     </div>
-
 
                     <hr>
                     <h6>Variants:</h6>
@@ -262,13 +263,9 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                         }).join('');
 
                         container.innerHTML += `
-                        <div class="col-md-4 mb-4">
-                            <div class="d-flex gap-3 align-items-center">
-                                <img src="${imageSrc}" class="rounded" style="width: 120px; height: 120px; object-fit: cover;">
-                                <div>
-                                    <h5 class="mb-1">${display.color}</h5>
-                                </div>
-                            </div>
+                        <div class="col-md-4 mb-4 text-center">
+                            <img src="${imageSrc}" class="rounded shadow mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+                            <h6 class="fw-bold text-muted">${display.color}</h6>
                             <div class="table-responsive mt-3">
                                 <table class="table table-bordered text-center">
                                     <thead class="table-dark">
