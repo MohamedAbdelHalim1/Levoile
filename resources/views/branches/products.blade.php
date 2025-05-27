@@ -327,6 +327,8 @@
                             }
                         });
 
+                        const requested = requestedItems[variant.id]?.requested_quantity || '';
+
                         return `
                         <tr>
                             <td>${variant.no_code}</td>
@@ -334,7 +336,7 @@
                             <td>${stockMap[1]}</td>
                             <td>${stockMap[2]}</td>
                             <td>
-                                <input type="number" name="quantities[${variant.id}]" min="0" class="form-control form-control-sm" placeholder="0">
+                                <input type="number" name="quantities[${variant.id}]" min="0" class="form-control form-control-sm" placeholder="0" value="${requested}">
                             </td>
                         </tr>
                     `;
