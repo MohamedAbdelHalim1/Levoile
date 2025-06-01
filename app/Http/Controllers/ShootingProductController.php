@@ -103,7 +103,7 @@ class ShootingProductController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:shooting_products,id',
-            'size_name'  => 'required|string|max:255',
+            'size_name'  => 'required|string',
             'weight'     => 'required|string|max:255',
         ]);
 
