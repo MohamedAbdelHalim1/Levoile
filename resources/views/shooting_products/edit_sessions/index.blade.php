@@ -56,14 +56,16 @@
                                             <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
                                                 data-bs-toggle="modal" data-bs-target="#uploadDriveModal"
                                                 data-reference="{{ $session->reference }}"
-                                                data-receiving-date="{{ $session->receiving_date }}">
+                                                data-receiving-date="{{ $session->receiving_date }}"
+                                                data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @else
                                             <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                                 data-bs-target="#uploadDriveModal"
                                                 data-reference="{{ $session->reference }}"
-                                                data-receiving-date="{{ $session->receiving_date }}">
+                                                data-receiving-date="{{ $session->receiving_date }}"
+                                                data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
                                                 رفع لينك
                                             </button>
                                         @endif
@@ -235,6 +237,15 @@
                 const button = event.relatedTarget;
                 const reference = button.getAttribute('data-reference');
                 const receivingDate = button.getAttribute('data-receiving-date');
+                const hasEditor = button.getAttribute('data-has-editor') === 'true'; // هنا هنستخدمها
+
+                    if (!hasEditor) {
+                        alert('يجب تعيين محرر أولاً قبل رفع لينك التعديل.');
+                        event.preventDefault(); // يمنع فتح المودال
+                        return;
+                    }
+
+
                 const today = new Date().toISOString().split('T')[0];
 
                 driveModalRef.value = reference;
