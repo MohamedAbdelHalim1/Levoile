@@ -170,7 +170,7 @@
                 <div class="modal-body">
                     <select name="user_id" class="form-select" required>
                         <option value="">اختر المستخدم</option>
-                        @foreach (\App\Models\User::all() as $user)
+                        @foreach (\App\Models\User::WHERE('role_id', '=', 7)->all() as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
