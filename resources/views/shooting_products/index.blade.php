@@ -597,22 +597,25 @@
                                         class="btn btn-warning">
                                         اكمال البيانات
                                     </a> --}}
-                                    @if (auth()->user()->role->name == 'admin')
-                                        <!-- edit btn and delete form -->
-                                        {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
+
+                                    <!-- edit btn and delete form -->
+                                    {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
                                             class="btn btn-secondary">
                                             تعديل
                                         </a> --}}
-                                        <button class="btn btn-info mb-1" data-bs-toggle="modal"
-                                            data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
-                                            data-size="{{ $product->shootingProductColors->first()?->size_name }}"
-                                            data-weight="{{ $product->shootingProductColors->first()?->weight }}">
-                                            @if (empty($product->shootingProductColors->first()?->size_name) && empty($product->shootingProductColors->first()?->weight))
-                                                إضافة مقاس ووزن
-                                            @else
-                                                تعديل المقاس والوزن
-                                            @endif
-                                        </button>
+                                    <button class="btn btn-info mb-1" data-bs-toggle="modal"
+                                        data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
+                                        data-size="{{ $product->shootingProductColors->first()?->size_name }}"
+                                        data-weight="{{ $product->shootingProductColors->first()?->weight }}">
+                                        @if (empty($product->shootingProductColors->first()?->size_name) &&
+                                                empty($product->shootingProductColors->first()?->weight))
+                                            إضافة مقاس ووزن
+                                        @else
+                                            تعديل المقاس والوزن
+                                        @endif
+                                    </button>
+
+                                    @if (auth()->user()->role->name == 'admin')
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
                                             method="POST" style="display: inline-block">
                                             @csrf
