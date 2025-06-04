@@ -41,37 +41,37 @@
                 @php
                     $models = [
                         [
-                            'name' => '{{ __('messages.seasons') }}',
+                            'name' => ' __('messages.seasons')',
                             'count' => $seasons,
                             'route' => 'seasons.index',
                             'icon' => 'fe-calendar text-primary',
                         ],
                         [
-                            'name' => '{{ __('messages.colors') }}',
+                            'name' => ' __('messages.colors')',
                             'count' => $colors,
                             'route' => 'colors.index',
                             'icon' => 'fe-droplet text-info',
                         ],
                         [
-                            'name' => '{{ __('messages.factories') }}',
+                            'name' => ' __('messages.factories')',
                             'count' => $factories,
                             'route' => 'factories.index',
                             'icon' => 'fe-home text-success',
                         ],
                         [
-                            'name' => '{{ __('messages.categories') }}',
+                            'name' => ' __('messages.categories')',
                             'count' => $categories,
                             'route' => 'categories.index',
                             'icon' => 'fe-grid text-warning',
                         ],
                         [
-                            'name' => '{{ __('messages.products') }}',
+                            'name' => ' __('messages.products')',
                             'count' => $products,
                             'route' => 'products.index',
                             'icon' => 'fe-box text-danger',
                         ],
                         [
-                            'name' => '{{ __('messages.materials') }}',
+                            'name' => ' __('messages.materials')',
                             'count' => $materials,
                             'route' => 'materials.index',
                             'icon' => 'fe-layers text-secondary',
