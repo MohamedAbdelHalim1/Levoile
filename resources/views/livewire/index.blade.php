@@ -47,7 +47,7 @@
                             'icon' => 'fe-calendar text-primary',
                         ],
                         [
-                            'name' =>  __('messages.colors'),
+                            'name' => __('messages.colors'),
                             'count' => $colors,
                             'route' => 'colors.index',
                             'icon' => 'fe-droplet text-info',
@@ -71,7 +71,7 @@
                             'icon' => 'fe-box text-danger',
                         ],
                         [
-                            'name' =>  __('messages.materials'),
+                            'name' => __('messages.materials'),
                             'count' => $materials,
                             'route' => 'materials.index',
                             'icon' => 'fe-layers text-secondary',
@@ -152,22 +152,40 @@
             <!-- Third Row: ProductColorVariant Status Counts -->
             <div class="row">
                 @php
-                    $variantStatusesIcons = [
-                        '{{ __('messages.complete') }}' => 'fe-check-circle text-success',
-                        '{{ __('messages.processing') }}' => 'fe-sliders text-info', // Changed icon
-                        '{{ __('messages.partial') }}' => 'fe-pie-chart text-warning', // Changed icon
-                        '{{ __('messages.new') }}' => 'fe-plus text-primary',
-                        '{{ __('messages.cancel') }}' => 'fe-x text-danger',
-                        '{{ __('messages.stop') }}' => 'fe-pause text-secondary',
+                    $variantStatusesLabels = [
+                        'complete' => [
+                            'label' => __('messages.complete'),
+                            'icon' => 'fe-check-circle text-success',
+                        ],
+                        'processing' => [
+                            'label' => __('messages.processing'),
+                            'icon' => 'fe-sliders text-info', // Changed icon
+                        ],
+                        'partial' => [
+                            'label' => __('messages.partial'),
+                            'icon' => 'fe-pie-chart text-warning', // Changed icon
+                        ],
+                        'new' => [
+                            'label' => __('messages.new'),
+                            'icon' => 'fe-plus text-primary',
+                        ],
+                        'cancel' => [
+                            'label' => __('messages.cancel'),
+                            'icon' => 'fe-x text-danger',
+                        ],
+                        'stop' => [
+                            'label' => __('messages.stop'),
+                            'icon' => 'fe-pause text-secondary',
+                        ],
                     ];
                 @endphp
 
-                @foreach ($productStatusesLabels as $key => $status)
+                @foreach ($variantStatusesLabels as $key => $status)
                     <div class="col-md-2">
                         <a href="{{ route('products.index', ['variant_status' => $key]) }}"
                             class="card shadow p-3 text-decoration-none">
                             <div class="d-flex align-items-center">
-                                <i class="fe {{ $variantStatusesIcons[$key] }} fs-3"></i>
+                                <i class="fe {{ $status['icon'] }} fs-3"></i>
                                 <div class="ms-3">
                                     <h5 class="mt-2 mb-1 text-start">{{ $status['label'] }}</h5>
                                     <h3 class="text-dark fw-bold text-start">{{ $variantStatuses[$key] ?? 0 }}</h3>
