@@ -58,7 +58,8 @@ class BranchOrderController extends Controller
             'closed_at' => now(),
         ]);
 
-        return redirect()->route('branch.orders.my')->with('success', 'تم غلق الطلب بنجاح');
+        return redirect()->route('branch.orders.my')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم غلق الطلب بنجاح' : 'Order closed successfully');  
     }
 
 
