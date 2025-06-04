@@ -38,6 +38,6 @@ return [
     'website_admin' => 'مدير الموقع',
     'social_media_specialist' => 'أخصائي سوشيال ميديا',
     'social_media' => 'سوشيال ميديا',
-    'levoile_title' => 'نظام اداره لفوال',
+    'levoile_title' => 'نظام ادارة لفوال',
     
 ];
