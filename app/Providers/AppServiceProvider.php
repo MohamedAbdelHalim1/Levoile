@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale('ar');
         Paginator::useBootstrapFive();
+        App::setLocale(Session::get('locale', 'ar'));
 
     }
     

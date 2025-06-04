@@ -44,7 +44,7 @@
 
 </head>
 
-<body class="app sidebar-mini rtl">
+<body class="app sidebar-mini {{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
     <!--- GLOBAL LOADER -->
     <div id="global-loader">
