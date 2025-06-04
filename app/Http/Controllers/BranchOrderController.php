@@ -271,7 +271,10 @@ class BranchOrderController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'تم حفظ الطلب بنجاح');
+            return redirect()->back()->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم حفظ الطلب بنجاح' : 'Order saved successfully'
+            );
         } catch (\Throwable $e) {
             return back()->with('error', 'حدث خطأ أثناء حفظ الطلب: ' . $e->getMessage());
         }
