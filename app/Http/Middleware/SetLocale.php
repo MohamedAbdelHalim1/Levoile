@@ -16,8 +16,8 @@ class SetLocale
             $locale = auth()->user()->current_lang;
             session(['locale' => $locale]);
         } else {
-            $locale = 'ar';
-            session(['locale' => 'ar']);
+            $locale = 'en';
+            session(['locale' => 'en']);
         }
 
         App::setLocale($locale);
