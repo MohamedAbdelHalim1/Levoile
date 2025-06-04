@@ -39,5 +39,10 @@ return [
     'social_media_specialist' => 'Social Media Specialist',
     'social_media' => 'Social Media',
     'levoile_title' => 'Levoile ERP System',
+    'from_date' => 'From Date',
+    'to_date' => 'To Date',
+    'search' => 'Search',
+    'reset' => 'Reset',
+    'main_data' => 'Main Data',
     
 ];

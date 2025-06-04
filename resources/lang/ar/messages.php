@@ -39,5 +39,10 @@ return [
     'social_media_specialist' => 'أخصائي سوشيال ميديا',
     'social_media' => 'سوشيال ميديا',
     'levoile_title' => 'نظام ادارة لفوال',
+    'from_date' => 'من تاريخ',
+    'to_date' => 'الى تاريخ',
+    'search' => 'بحث',
+    'reset' => 'الغاء',
+    'main_data' => 'البيانات الرئيسية',
     
 ];

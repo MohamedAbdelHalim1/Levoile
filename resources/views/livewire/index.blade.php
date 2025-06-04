@@ -8,8 +8,8 @@
     <!-- PAGE HEADER -->
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">الرئيسية</a></li>
-            <li class="breadcrumb-item active" aria-current="page">لوحة التحكم</li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.main') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ __('messages.dashboard') }}</li>
         </ol>
     </div>
     <!-- END PAGE HEADER -->
@@ -20,21 +20,21 @@
             <!-- Date Range Filter -->
             <form method="GET" action="{{ route('dashboard') }}" class="row mb-4">
                 <div class="col-md-4">
-                    <label>من تاريخ</label>
+                    <label>{{ __('messages.from_date') }}</label>
                     <input type="date" class="form-control" name="startDate" value="{{ request('startDate') }}">
                 </div>
                 <div class="col-md-4">
-                    <label>إلى تاريخ</label>
+                    <label>{{ __('messages.to_date') }}</label>
                     <input type="date" class="form-control" name="endDate" value="{{ request('endDate') }}">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">بحث</button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-success">إلغاء</a>
+                    <button type="submit" class="btn btn-primary me-2">{{ __('messages.search') }}</button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-success">{{ __('messages.reset') }}</a>
                 </div>
             </form>
 
             <!-- Section Title -->
-            <h4 class="mt-4 mb-3 text-primary fw-bold">البيانات الأساسية</h4>
+            <h4 class="mt-4 mb-3 text-primary fw-bold">{{ __('messages.main_data') }}</h4>
 
             <!-- First Row: Model Counts -->
             <div class="row">
