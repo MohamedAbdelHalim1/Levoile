@@ -4,6 +4,7 @@ return [
     'welcome' => 'Welcome',
     'dashboard' => 'Dashboard',
     'logout' => 'Logout',
+    'profile' => 'Profile',
     'main' => 'Main',
     'categories' => 'Categories',
     'inventory' => 'Inventory',

@@ -99,7 +99,7 @@
                                     </div>
                                     <a class="dropdown-item text-dark fw-semibold border-top"
                                         href="{{ url('profile') }}">
-                                        <i class="dropdown-icon fe fe-user"></i> الحساب
+                                        <i class="dropdown-icon fe fe-user"></i> {{ __('messages.profile') }}
                                     </a>
                                     {{-- <a class="dropdown-item text-dark fw-semibold" href="{{url('email-inbox')}}">
 														<i class="dropdown-icon fe fe-mail"></i> Inbox
@@ -119,7 +119,7 @@
 
                                     <a class="dropdown-item text-dark fw-semibold" href="#"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="dropdown-icon fe fe-log-out"></i> تسجيل الخروج
+                                        <i class="dropdown-icon fe fe-log-out"></i> {{ __('messages.logout') }}
                                     </a>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
 										$label = $switchTo === 'ar' ? 'عربي' : 'English';
 									@endphp
 
-									<a class="nav-link" href="{{ route('change.lang', $switchTo) }}" title="تغيير اللغة">
+									<a class="nav-link" href="{{ route('change.lang', $switchTo) }}" title="@if(auth()->user()->current_lang == 'ar')تغيير اللغة @else Change Language @endif">
 										{{ $label }}
 									</a>
 								</li>

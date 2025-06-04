@@ -4,6 +4,7 @@ return [
     'welcome' => 'مرحبا بك',
     'dashboard' => 'لوحة التحكم',
     'logout' => 'تسجيل الخروج',
+    'profile' => 'الصفحة الشخصية',
     'main' => 'الرئيسية',
     'categories' => 'الاقسام',
     'inventory' => 'المخزن',
