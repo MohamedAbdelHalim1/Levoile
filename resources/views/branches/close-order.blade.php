@@ -20,7 +20,7 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead class="table-light">
                         <tr>
-                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.images') }}</th>
                             <th>{{ __('messages.code') }}</th>
                             <th>{{ __('messages.sku') }}</th>
                             <th>{{ __('messages.description') }}</th>

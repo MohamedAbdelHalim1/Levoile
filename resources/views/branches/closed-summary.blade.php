@@ -17,7 +17,7 @@
                 <table class="table table-bordered text-center">
                     <thead class="table-light">
                         <tr>
-                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.images') }}</th>
                             <th>{{ __('messages.code') }}</th>
                             <th>{{ __('messages.description') }}</th>
                             <th>{{ __('messages.required_quantity') }}</th>
