@@ -97,5 +97,6 @@ return [
     'gomla' => 'Gomla',
     'subcategories' => 'Subcategories',
     'close_order' => 'Close Order',
+    'view' => 'View',
     
 ];

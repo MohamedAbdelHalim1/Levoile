@@ -37,7 +37,7 @@
                                     <td>{{ $order->items->sum('requested_quantity') }}</td>
                                     <td>
                                         <button class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#detailsModal{{ $order->id }}">عرض</button>
+                                            data-bs-target="#detailsModal{{ $order->id }}">{{ __('messages.view') }}</button>
 
                                         <!-- Modal -->
                                         <div class="modal fade" id="detailsModal{{ $order->id }}" tabindex="-1"

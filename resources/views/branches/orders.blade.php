@@ -40,7 +40,7 @@
                                     <td>{{ $order->items->sum('requested_quantity') }}</td>
                                     <td>{{ $order->notes ?? '-' }}</td>
                                     <td>
-                                        <a href="{{ route('branch.orders.show', $order->id) }}" class="btn btn-info btn-sm">عرض</a>
+                                        <a href="{{ route('branch.orders.show', $order->id) }}" class="btn btn-info btn-sm">{{ __('messages.view') }}</a>
 
 
                                         <!-- Modal -->
