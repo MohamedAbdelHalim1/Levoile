@@ -131,6 +131,19 @@
                                 </a>
                             </div>
                             <!-- Theme-Layout -->
+							<div>
+								<li class="nav-item dropdown">
+									@php
+										$locale = app()->getLocale();
+										$switchTo = $locale === 'ar' ? 'en' : 'ar';
+										$label = $switchTo === 'ar' ? 'عربي' : 'English';
+									@endphp
+
+									<a class="nav-link" href="{{ route('change.lang', $switchTo) }}" title="تغيير اللغة">
+										{{ $label }}
+									</a>
+								</li>
+							</div>
                             {{-- <div class="dropdown d-flex shopping-cart">
 												<a class="nav-link icon text-center" data-bs-toggle="dropdown">
 													<i class="ri-shopping-bag-line"></i><span
