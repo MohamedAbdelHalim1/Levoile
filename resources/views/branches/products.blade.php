@@ -29,11 +29,17 @@
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
 
-                <h4>@if(auth()->user()->current_lang == 'ar')المنتجات الخاصة بـ @else Products of @endif: {{ $subcategory->name }}</h4>
+                <h4>
+                    @if (auth()->user()->current_lang == 'ar')
+                        المنتجات الخاصة بـ
+                    @else
+                        Products of
+                    @endif: {{ $subcategory->name }}
+                </h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                        placeholder="@if(auth()->user()->current_lang == 'ar')ابحث باستخدام الاسم - اسم الجملة - الكود @else Search by name - Gomla - code @endif">
+                        placeholder="@if (auth()->user()->current_lang == 'ar') ابحث باستخدام الاسم - اسم الجملة - الكود @else Search by name - Gomla - code @endif">
                     <button type="submit" class="btn btn-primary">{{ __('messages.search') }}</button>
                     <a href="{{ route('product-knowledge.products', $subcategory->id) }}"
                         class="btn btn-secondary">{{ __('messages.reset') }}</a>
@@ -65,8 +71,17 @@
                                 {{ __('messages.colors') }}</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
-                            <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? '@if(auth()->user()->current_lang == "ar")لا يوجد خامه @else No Material @endif'}}</small>
+                            <small class="fw-semibold back-ground text-white  rounded-1 p-1">
+                                @if ($parent->material)
+                                    {{ $parent->material }}
+                                @else
+                                    @if (auth()->user()->current_lang == 'ar')
+                                        لا يوجد خامه
+                                    @else
+                                        No Material
+                                    @endif
+                                @endif
+                            </small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small
@@ -118,7 +133,13 @@
                 </div>
             @empty
                 <div class="col-12">
-                    <div class="alert alert-info text-center">@if(auth()->user()->current_lang == 'ar')لا يوجد منتجات لهذه الصب كاتيجوري @else There are no products for this subcategory @endif</div>
+                    <div class="alert alert-info text-center">
+                        @if (auth()->user()->current_lang == 'ar')
+                            لا يوجد منتجات لهذه الصب كاتيجوري
+                        @else
+                            There are no products for this subcategory
+                        @endif
+                    </div>
                 </div>
             @endforelse
             <div class="d-flex justify-content-center mt-4">
@@ -209,10 +230,10 @@
         }
 
         /* .last-ui .sub-img {
-            width: 20%;
-            margin: 10px 10px;
-            padding: 0px;
-        } */
+                width: 20%;
+                margin: 10px 10px;
+                padding: 0px;
+            } */
 
         .last-ui .sub-img img {
             width: 100%;
@@ -327,7 +348,8 @@
                             }
                         });
 
-                        const requested = requestedItems[variant.id]?.requested_quantity || '';
+                        const requested = requestedItems[variant.id]?.requested_quantity ||
+                            '';
 
                         return `
                         <tr>
@@ -351,11 +373,11 @@
                         <table class="table table-bordered text-center table-striped align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>{{ __("messages.code") }}</th>
-                                    <th>{{ __("messages.size") }}</th>
-                                    <th>{{ __("messages.stock") }}</th>
-                                    <th>{{ __("messages.gomla") }}</th>
-                                    <th>{{ __("messages.quantity") }} </th>
+                                    <th>{{ __('messages.code') }}</th>
+                                    <th>{{ __('messages.size') }}</th>
+                                    <th>{{ __('messages.stock') }}</th>
+                                    <th>{{ __('messages.gomla') }}</th>
+                                    <th>{{ __('messages.quantity') }} </th>
                                 </tr>
                             </thead>
                             <tbody>
