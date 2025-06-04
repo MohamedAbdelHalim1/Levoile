@@ -19,7 +19,7 @@
                 </svg></div>
             <ul class="side-menu">
                 <li class="sub-category">
-                    <h3>الرئيسية</h3>
+                    <h3>{{ __('messages.main') }}</h3>
                 </li>
                 <li class="slide">
                     <a class="side-menu__item has-link" data-bs-toggle="slide" href="javascript:void(0)"><i
@@ -56,7 +56,7 @@
                         <li class="slide">
                             <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
                                 <i class="side-menu__icon fe fe-package"></i>
-                                <span class="side-menu__label">المخزن</span>
+                                <span class="side-menu__label">{{ __('messages.inventory') }}</span>
                                 <i class="angle fe fe-chevron-right"></i>
                             </a>
                             <ul class="slide-menu">
@@ -83,7 +83,7 @@
                     <li class="slide">
                         <a class="side-menu__item" href="{{ route('branch.orders.my') }}">
                             <i class="side-menu__icon fe fe-file-text"></i>
-                            <span class="side-menu__label">الطلبات</span>
+                            <span class="side-menu__label">{{ __('messages.my_orders') }}</span>
                         </a>
                     </li>
 
@@ -93,12 +93,12 @@
 
                 @if (auth()->user()->role_id == 1)
                     <li class="sub-category">
-                        <h3>منتجات الماستر شيت</h3>
+                        <h3> {{ __('messages.master_sheet_products') }} </h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon fe fe-database"></i>
-                            <span class="side-menu__label">منتجات الماستر شيت</span>
+                            <span class="side-menu__label">{{ __('messages.master_sheet_products') }} </span>
                             <i class="angle fe fe-chevron-right"></i>
                         </a>
                         <ul class="slide-menu">
@@ -107,19 +107,18 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">منتجات الماستر
-                                                        شيت</a></li>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.master_sheet_products') }}</a></li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.index') }}"
-                                                        class="slide-item">عرض تقديمي للمنتجات</a>
+                                                        class="slide-item">{{ __('messages.product_presentation') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.lists') }}"
-                                                        class="slide-item">عرض ليست للمنتجات</a>
+                                                        class="slide-item">{{ __('messages.product_lists') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.upload') }}"
-                                                        class="slide-item">رفع ماستر شيت</a>
+                                                        class="slide-item">{{ __('messages.upload_master_sheet') }} </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -133,27 +132,27 @@
 
                 @if (auth()->user()->role_id == 1)
                     <li class="sub-category">
-                        <h3>التصميم</h3>
+                        <h3> {{ __('messages.design') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-feather"></i><span
-                                class="side-menu__label">التصميم</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.design') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">التصميم</a>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.design') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('design-materials.index') }}"
-                                                        class="slide-item">خامات العينه</a>
+                                                        class="slide-item">{{ __('messages.material_samples') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('design-sample-products.index') }}"
-                                                        class="slide-item">عينات المنتج</a>
+                                                        class="slide-item">{{ __('messages.sample_products') }}</a>
                                                 </li>
 
                                             </ul>
@@ -180,17 +179,17 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-bubble-chart-line"></i><span
-                                class="side-menu__label">المنتجات</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.products') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">المنتجات</a>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.products') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('products.index') }}" class="slide-item"> كل
-                                                        المنتجات</a></li>
+                                                <li><a href="{{ route('products.index') }}" class="slide-item"> 
+                                                        {{ __('messages.all_products') }}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -221,14 +220,14 @@
                         auth()->user()->hasPermission('حذف خامة') ||
                         auth()->user()->hasPermission('إضافة خامة'))
                     <li class="sub-category">
-                        <h3>الاعدادات الرئيسية</h3>
+                        <h3>{{ __('messages.main_settings') }}</h3>
                     </li>
 
 
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">الاعدادات</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
@@ -236,18 +235,18 @@
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
                                                 <li class="side-menu-label1"><a
-                                                        href="javascript:void(0)">الاعدادات</a>
+                                                        href="javascript:void(0)">{{ __('messages.settings') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('categories.index') }}" class="slide-item">
-                                                        الاقسام</a></li>
+                                                        {{ __('messages.categories') }}</a></li>
                                                 <li><a href="{{ route('seasons.index') }}" class="slide-item">
-                                                        المواسم</a></li>
+                                                        {{ __('messages.seasons') }}</a></li>
                                                 <li><a href="{{ route('factories.index') }}" class="slide-item">
-                                                        المصانع</a></li>
+                                                        {{ __('messages.factories') }}</a></li>
                                                 <li><a href="{{ route('materials.index') }}" class="slide-item">
-                                                        الخامات</a></li>
+                                                        {{ __('messages.materials') }}</a></li>
                                                 <li><a href="{{ route('colors.index') }}" class="slide-item">
-                                                        الالوان</a></li>
+                                                        {{ __('messages.colors') }}</a></li>
 
                                             </ul>
                                         </div>
@@ -263,28 +262,28 @@
 
                 @if (auth()->user()->hasPermission('عرض التقارير'))
                     <li class="sub-category">
-                        <h3>التقارير</h3>
+                        <h3>{{ __('messages.reports') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-bar-chart-line"></i><span
-                                class="side-menu__label">التقارير</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.reports') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">التقارير</a>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.reports') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('reports.receive') }}" class="slide-item">تقرير
-                                                        الاستلامات</a></li>
+                                                <li><a href="{{ route('reports.receive') }}" class="slide-item">
+                                                        {{ __('messages.receiving_reports') }}</a></li>
                                                 <li><a href="{{ route('reports.productStatusForSeason') }}"
-                                                        class="slide-item">تقرير
-                                                        المواسم </a></li>
+                                                        class="slide-item">
+                                                        {{ __('messages.sessions_reports') }} </a></li>
                                                 <li><a href="{{ route('reports.categoryStatus') }}"
-                                                        class="slide-item">تقرير
-                                                        الاقسام </a></li>
+                                                        class="slide-item">
+                                                        {{ __('messages.category_reports') }} </a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -305,12 +304,12 @@
                         auth()->user()->hasPermission('إضافة دور') ||
                         auth()->user()->hasPermission('تعديل صلاحيات مستخدم'))
                     <li class="sub-category">
-                        <h3>المستخدمين</h3>
+                        <h3>{{ __('messages.users') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-user"></i><span
-                                class="side-menu__label">المستخدمين</span><i
+                                class="side-menu__label">{{ __('messages.users') }}</span><i
                                 class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
@@ -319,13 +318,13 @@
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
                                                 <li class="side-menu-label1"><a
-                                                        href="javascript:void(0)">المستخدمين</a></li>
+                                                        href="javascript:void(0)">{{ __('messages.users') }}</a></li>
                                                 @if (auth()->user()->role_id == 1)
-                                                    <li><a href="{{ route('roles.index') }}" class="slide-item">وظائف
-                                                            المستخدمين</a></li>
+                                                    <li><a href="{{ route('roles.index') }}" class="slide-item">
+                                                            {{ __('messages.roles') }}</a></li>
                                                 @endif
                                                 <li><a href="{{ route('users.index') }}"
-                                                        class="slide-item">المستخدمين</a></li>
+                                                        class="slide-item">{{ __('messages.users') }}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -338,36 +337,36 @@
 
                 @if (auth()->user()->role_id == 10 || auth()->user()->role->name == 'Shooting' || auth()->user()->role_id == 1)
                     <li class="sub-category">
-                        <h3>التصوير</h3>
+                        <h3>{{ __('messages.shooting') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-camera"></i><span
-                                class="side-menu__label">التصوير</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.shooting') }}</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">التصوير</a>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.shooting') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('shooting-products.index') }}"
-                                                        class="slide-item">منتجات التصوير</a></li>
+                                                        class="slide-item">{{ __('messages.shooting_products') }}</a></li>
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
-                                                        class="slide-item">جلسات التصوير</a></li>
+                                                        class="slide-item">{{ __('messages.shooting_sessions') }}</a></li>
                                                 <li>
                                                     <a href="{{ route('ready-to-shoot.index') }}"
-                                                        class="slide-item">المنتجات جاهزه للتصوير</a>
+                                                        class="slide-item"> {{ __('messages.ready_to_shoot') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('edit-sessions.index') }}" class="slide-item">
-                                                        جلسات جاهزه للتعديل
+                                                        {{ __('messages.edit_sessions') }} 
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('shooting-deliveries.index') }}"
-                                                        class="slide-item">تحويل المخازن للتصوير</a>
+                                                        class="slide-item">{{ __('messages.shooting_deliveries') }}</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -380,12 +379,12 @@
 
                 @if (auth()->user()->role_id == 1)
                     <li class="sub-category">
-                        <h3>مسؤول الموقع</h3>
+                        <h3>{{ __('messages.website_admin') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon fe fe-globe"></i>
-                            <span class="side-menu__label">مسؤول الموقع</span>
+                            <span class="side-menu__label">{{ __('messages.website_admin') }}</span>
                             <i class="angle fe fe-chevron-right"></i>
                         </a>
                         <ul class="slide-menu">
@@ -394,12 +393,12 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="site-admin">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">مسؤول
-                                                        الموقع</a>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">
+                                                        {{ __('messages.website_admin') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('website-admin.index') }}"
-                                                        class="slide-item">مسؤول
-                                                        الموقع</a></li>
+                                                        class="slide-item">
+                                                        {{ __('messages.website_admin') }}</a></li>
 
                                             </ul>
                                         </div>
@@ -410,12 +409,12 @@
                     </li>
 
                     <li class="sub-category">
-                        <h3>أخصائي السوشيال ميديا</h3>
+                        <h3>{{ __('messages.social_media_specialist') }}</h3>
                     </li>
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon fe fe-share-2"></i>
-                            <span class="side-menu__label">السوشيال ميديا</span>
+                            <span class="side-menu__label">{{ __('messages.social_media') }}</span>
                             <i class="angle fe fe-chevron-right"></i>
                         </a>
                         <ul class="slide-menu">
@@ -424,11 +423,11 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="social-tab">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">أخصائي
-                                                        السوشيال
-                                                        ميديا</a></li>
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">
+                                                        {{ __('messages.social_media_specialist') }}
+                                                        </a></li>
                                                 <li><a href="{{ route('social-media.index') }}"
-                                                        class="slide-item">السوشيال ميديا</a></li>
+                                                        class="slide-item">{{ __('messages.social_media') }}</a></li>
                                             </ul>
                                         </div>
                                     </div>
