@@ -66,7 +66,7 @@
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? '@if(auth()->user()->current_lang == 'ar')لا يوجد خامه @else No Material @endif'}}</small>
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? '@if(auth()->user()->current_lang == "ar")لا يوجد خامه @else No Material @endif'}}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small
