@@ -96,5 +96,6 @@ return [
     'stock' => 'Stock',
     'gomla' => 'Gomla',
     'subcategories' => 'Subcategories',
+    'close_order' => 'Close Order',
     
 ];

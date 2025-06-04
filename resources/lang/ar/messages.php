@@ -96,5 +96,6 @@ return [
     'stock' => 'المخزن',
     'gomla' => 'جمله',
     'subcategories' => 'التصنيفات الفرعية',
+    'close_order' => 'اغلاق الطلب',
     
 ];

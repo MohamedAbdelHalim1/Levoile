@@ -78,7 +78,7 @@
                             @if ($openOrder)
                                 <a href="{{ route('branch.orders.close.page', $openOrder->id) }}"
                                     class="btn btn-danger ms-3">
-                                    <i class="fe fe-x-circle"></i> غلق الطلب
+                                    <i class="fe fe-x-circle"></i>{{ __('messages.close_order') }}
                                 </a>
                             @endif
 
