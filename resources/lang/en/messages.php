@@ -19,7 +19,7 @@ return [
     'all_products' => 'All Products',
     'main_settings' => 'Main Settings',
     'settings' => 'Settings',
-    'sessions' => 'Sessions',
+    'seasons' => 'Seasons',
     'factories' => 'Factories',
     'materials' => 'Materials',
     'colors' => 'Colors',

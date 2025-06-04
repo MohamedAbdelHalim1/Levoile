@@ -19,7 +19,7 @@ return [
     'all_products' => 'جميع المنتجات',
     'main_settings' => 'الاعدادات الرئيسية',
     'settings' => 'الاعدادات',
-    'sessions' => 'المواسم',
+    'seasons' => 'المواسم',
     'factories' => 'المصانع',
     'materials' => 'الخامات',
     'colors' => 'الالوان',
