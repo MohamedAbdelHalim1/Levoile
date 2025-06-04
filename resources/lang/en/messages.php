@@ -19,6 +19,7 @@ return [
     'all_products' => 'All Products',
     'main_settings' => 'Main Settings',
     'settings' => 'Settings',
+    'operations' => 'Operations',
     'seasons' => 'Seasons',
     'factories' => 'Factories',
     'materials' => 'Materials',
