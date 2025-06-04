@@ -41,37 +41,37 @@
                 @php
                     $models = [
                         [
-                            'name' => 'المواسم',
+                            'name' => '{{ __("messages.seasons") }}',
                             'count' => $seasons,
                             'route' => 'seasons.index',
                             'icon' => 'fe-calendar text-primary',
                         ],
                         [
-                            'name' => 'الألوان',
+                            'name' => '{{ __("messages.colors") }}',
                             'count' => $colors,
                             'route' => 'colors.index',
                             'icon' => 'fe-droplet text-info',
                         ],
                         [
-                            'name' => 'المصانع',
+                            'name' => '{{ __("messages.factories") }}',
                             'count' => $factories,
                             'route' => 'factories.index',
                             'icon' => 'fe-home text-success',
                         ],
                         [
-                            'name' => 'الأقسام',
+                            'name' => '{{ __("messages.categories") }}',
                             'count' => $categories,
                             'route' => 'categories.index',
                             'icon' => 'fe-grid text-warning',
                         ],
                         [
-                            'name' => 'المنتجات',
+                            'name' => '{{ __("messages.products") }}',
                             'count' => $products,
                             'route' => 'products.index',
                             'icon' => 'fe-box text-danger',
                         ],
                         [
-                            'name' => 'الخامات',
+                            'name' => '{{ __("messages.materials") }}',
                             'count' => $materials,
                             'route' => 'materials.index',
                             'icon' => 'fe-layers text-secondary',
@@ -95,18 +95,18 @@
             </div>
 
             <!-- Section Title -->
-            <h4 class="mt-5 mb-3 text-primary fw-bold">حالات التصنيع للمنتجات</h4>
+            <h4 class="mt-5 mb-3 text-primary fw-bold"> {{ __('messages.manufacturing_status') }}</h4>
 
             <!-- Second Row: Product Status Counts -->
             <div class="row">
                 @php
                     $productStatusesLabels = [
-                        'complete' => ['label' => 'مكتمل', 'icon' => 'fe-check-circle text-success'],
-                        'processing' => ['label' => 'قيد التصنيع', 'icon' => 'fe-zap text-info'], // Fixed icon
-                        'partial' => ['label' => 'استلام جزئي', 'icon' => 'fe-percent text-warning'],
-                        'new' => ['label' => 'جديد', 'icon' => 'fe-plus-circle text-primary'],
-                        'cancel' => ['label' => 'ملغي', 'icon' => 'fe-x-circle text-danger'],
-                        'stop' => ['label' => 'متوقف', 'icon' => 'fe-pause-circle text-secondary'],
+                        'complete' => ['label' => '{{ __("messages.complete") }}', 'icon' => 'fe-check-circle text-success'],
+                        'processing' => ['label' => '{{ __("messages.processing") }}', 'icon' => 'fe-zap text-info'], // Fixed icon
+                        'partial' => ['label' => '{{ __("messages.partial") }}', 'icon' => 'fe-percent text-warning'],
+                        'new' => ['label' => '{{ __("messages.new") }}', 'icon' => 'fe-plus-circle text-primary'],
+                        'cancel' => ['label' => '{{ __("messages.cancel") }}', 'icon' => 'fe-x-circle text-danger'],
+                        'stop' => ['label' => '{{ __("messages.stop") }}', 'icon' => 'fe-pause-circle text-secondary'],
                     ];
                 @endphp
 
@@ -127,18 +127,18 @@
             </div>
 
             <!-- Section Title -->
-            <h4 class="mt-5 mb-3 text-primary fw-bold">حالات الألوان الحالية</h4>
+            <h4 class="mt-5 mb-3 text-primary fw-bold"> {{ __('messages.color_status') }}</h4>
 
             <!-- Third Row: ProductColorVariant Status Counts -->
             <div class="row">
                 @php
                     $variantStatusesIcons = [
-                        'complete' => 'fe-check-circle text-success',
-                        'processing' => 'fe-sliders text-info', // Changed icon
-                        'partial' => 'fe-pie-chart text-warning', // Changed icon
-                        'new' => 'fe-plus text-primary',
-                        'cancel' => 'fe-x text-danger',
-                        'stop' => 'fe-pause text-secondary',
+                        '{{ __("messages.complete") }}' => 'fe-check-circle text-success',
+                        '{{ __("messages.processing") }}' => 'fe-sliders text-info', // Changed icon
+                        '{{ __("messages.partial") }}' => 'fe-pie-chart text-warning', // Changed icon
+                        '{{ __("messages.new") }}' => 'fe-plus text-primary',
+                        '{{ __("messages.cancel") }}' => 'fe-x text-danger',
+                        '{{ __("messages.stop") }}' => 'fe-pause text-secondary',
                     ];
                 @endphp
 
@@ -163,12 +163,12 @@
 
     @if (auth()->user()->role_id == 12)
         <div class="p-4 text-center">
-        <h4 class="mb-3">مرحباً <span class="text-purple fw-bold text-uppercase">{{ auth()->user()->name }}</span></h4>
-        <h5 class="mb-4">قم بإنشاء طلب جديد إلى المخزن الرئيسي</h5>
+        <h4 class="mb-3">{{ __('messages.welcome') }} <span class="text-purple fw-bold text-uppercase">{{ auth()->user()->name }}</span></h4>
+        <h5 class="mb-4">{{ __('messages.create_order_for_branch') }}</h5>
         <form method="POST" action="{{ route('branch.orders.create') }}">
             @csrf
             <button type="submit" class="btn btn-success btn-lg">
-                <i class="fe fe-plus"></i> إنشاء طلب جديد
+                <i class="fe fe-plus"></i>  {{ __('messages.create_order') }} 
             </button>
         </form>
     </div>
