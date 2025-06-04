@@ -38,5 +38,6 @@ return [
     'website_admin' => 'Website Admin',
     'social_media_specialist' => 'Social Media Specialist',
     'social_media' => 'Social Media',
+    'levoile_title' => 'Levoile ERP System',
     
 ];

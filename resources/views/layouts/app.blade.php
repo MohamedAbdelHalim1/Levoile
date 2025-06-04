@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- TITLE -->
-    <title> نظام الإدارة لفوال </title>
+    <title>{{ __('messages.levoile_title') }}</title>
 
     <!-- FAVICON -->
     <link rel="icon" href="{{ asset('images/products/logo.png') }}" type="image/x-icon">
