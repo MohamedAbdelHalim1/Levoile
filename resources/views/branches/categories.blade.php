@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>{{ __('menu.categories') }}</h4>
+            <h4>{{ __('messages.categories') }}</h4>
         </div>
 
         <div class="row">
