@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>الاقسام الفرعية - {{ $category->name }}</h4>
+            <h4>{{ __('messages.subcategories') }}  - {{ $category->name }}</h4>
 
         </div>
 
@@ -24,7 +24,7 @@
                     </a>
                 </div>
             @empty
-                <div class="alert alert-info text-center">لا يوجد أقسام فرعية</div>
+                <div class="alert alert-info text-center">@if(auth()->user()->current_lang == 'ar')لا يوجد أقسام فرعية @else There are no subcategories @endif</div>
             @endforelse
         </div>
     </div>

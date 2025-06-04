@@ -8,11 +8,11 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h4 class="mb-4">جميع الطلبات للمستخدمين</h4>
+            <h4 class="mb-4">{{ __('messages.all_orders') }}</h4>
 
             @if ($orders->isEmpty())
                 <div class="alert alert-info text-center">
-                    لا توجد طلبات حتى الآن.
+                    @if(auth()->user()->current_lang == 'ar')لا توجد طلبات حتى الآن.@else No Orders yet. @endif
                 </div>
             @else
                 <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -20,13 +20,13 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>#</th>
-                                <th>المستخدم</th>
-                                <th>الحالة</th>
-                                <th>تاريخ الأوردر</th>
-                                <th>عدد المنتجات</th>
-                                <th>الكمية</th>
-                                <th>ألملاحظات</th>
-                                <th>الإجراءات</th>
+                                <th>{{ __('messages.user') }}</th>
+                                <th>{{ __('messages.status') }}</th>
+                                <th>{{ __('messages.order_date') }}</th>
+                                <th>{{ __('messages.number_of_products') }}</th>
+                                <th>{{ __('messages.quantity') }}</th>
+                                <th>{{ __('messages.notes') }}</th>
+                                <th>{{ __('messages.operations') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,7 +101,7 @@
 
                                         <!-- زرار التحضير الجديد -->
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#prepareModal{{ $order->id }}">تحضير</button>
+                                            data-bs-target="#prepareModal{{ $order->id }}">{{ __('messages.prepare') }}</button>
 
                                         <!-- مودال التحضير -->
                                         <div class="modal fade" id="prepareModal{{ $order->id }}" tabindex="-1"
@@ -111,17 +111,17 @@
                                                     method="POST" enctype="multipart/form-data" class="modal-content">
                                                     @csrf
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">رفع ملف التحضير للطلب رقم
+                                                        <h5 class="modal-title">@if(auth()->user()->current_lang == 'ar')رفع ملف التحضير للطلب رقم @else Upload prepare sheet for order @endif
                                                             #{{ $order->id }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="إغلاق"></button>
+                                                            aria-label="{{ __('messages.close') }}"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <input type="file" name="excel_file" accept=".xlsx,.xls"
                                                             class="form-control" required>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">رفع وتحضير</button>
+                                                        <button type="submit" class="btn btn-primary">{{ __('messages.upload') }}</button>
                                                     </div>
                                                 </form>
                                             </div>

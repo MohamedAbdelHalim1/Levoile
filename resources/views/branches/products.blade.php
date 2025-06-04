@@ -29,14 +29,14 @@
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
 
-                <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
+                <h4>@if(auth()->user()->current_lang == 'ar')المنتجات الخاصة بـ @else Products of @endif: {{ $subcategory->name }}</h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                        placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
-                    <button type="submit" class="btn btn-primary">ابحث</button>
+                        placeholder="@if(auth()->user()->current_lang == 'ar')ابحث باستخدام الاسم - اسم الجملة - الكود @else Search by name - Gomla - code @endif">
+                    <button type="submit" class="btn btn-primary">{{ __('messages.search') }}</button>
                     <a href="{{ route('product-knowledge.products', $subcategory->id) }}"
-                        class="btn btn-secondary">العودة</a>
+                        class="btn btn-secondary">{{ __('messages.reset') }}</a>
                 </form>
 
             </div>
@@ -62,11 +62,11 @@
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                colors</small>
+                                {{ __('messages.colors') }}</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه' }}</small>
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? '@if(auth()->user()->current_lang == 'ar')لا يوجد خامه @else No Material @endif'}}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small
@@ -118,7 +118,7 @@
                 </div>
             @empty
                 <div class="col-12">
-                    <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
+                    <div class="alert alert-info text-center">@if(auth()->user()->current_lang == 'ar')لا يوجد منتجات لهذه الصب كاتيجوري @else There are no products for this subcategory @endif</div>
                 </div>
             @endforelse
             <div class="d-flex justify-content-center mt-4">
@@ -140,7 +140,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success">
-                                <i class="fe fe-save"></i> إرسال الطلب
+                                <i class="fe fe-save"></i> {{ __('messages.send_request') }}
                             </button>
                         </div>
                     </div>
@@ -351,11 +351,11 @@
                         <table class="table table-bordered text-center table-striped align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>الكود</th>
-                                    <th>المقاس</th>
-                                    <th>مخزن</th>
-                                    <th>جملة</th>
-                                    <th>ادخل الكمية</th>
+                                    <th>{{ __("messages.code") }}</th>
+                                    <th>{{ __("messages.size") }}</th>
+                                    <th>{{ __("messages.stock") }}</th>
+                                    <th>{{ __("messages.gomla") }}</th>
+                                    <th>{{ __("messages.quantity") }} </th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -8,7 +8,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h4 class="mb-4">ملخص الطلب رقم #{{ $order->id }}</h4>
+            <h4 class="mb-4"> {{ __('messages.order_summary') }} #{{ $order->id }}</h4>
 
 
 
@@ -20,11 +20,11 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead class="table-light">
                         <tr>
-                            <th>صورة المنتج</th>
-                            <th>كود المنتج</th>
-                            <th>الكود الرئيسي</th>
-                            <th>الوصف</th>
-                            <th>الكمية المطلوبة</th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.sku') }}</th>
+                            <th>{{ __('messages.description') }}</th>
+                            <th>{{ __('messages.required_quantity') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,20 +39,20 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center text-muted">لا توجد منتجات مضافة في هذا الطلب</td>
+                                <td colspan="4" class="text-center text-muted"> @if(auth()->user()->current_lang == 'ar') لا توجد منتجات مضافة في هذا الطلب @else There are no products added to this order @endif</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
 
                 <div class="mb-3 mt-4">
-                    <label for="notes" class="form-label">ملاحظات</label>
-                    <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+                    <label for="notes" class="form-label">{{ __('messages.notes') }}</label>
+                    <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="@if(auth()->user()->current_lang == 'ar') اضافة ملاحظات @else Add notes @endif"></textarea>
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success">تأكيد وإغلاق الطلب</button>
-                    <a href="{{ url()->previous() }}" class="btn btn-secondary ms-2">رجوع</a>
+                    <button type="submit" class="btn btn-success">@if(auth()->user()->current_lang == 'ar')تأكيد وإغلاق الطلب @else Confirm & Close Order @endif</button>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary ms-2">{{ __('messages.cancel') }}</a>
                 </div>
             </form>
         </div>

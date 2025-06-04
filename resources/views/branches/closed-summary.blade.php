@@ -8,7 +8,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <h4 class="mb-4 text-center text-success">ملخص الطلب المغلق</h4>
+            <h4 class="mb-4 text-center text-success">@if(auth()->user()->current_lang == 'ar')ملخص الطلب المغلق @else Closed Order Summary @endif</h4>
 
 
             <div class="table-responsive export-table p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -17,10 +17,10 @@
                 <table class="table table-bordered text-center">
                     <thead class="table-light">
                         <tr>
-                            <th>صورة المنتج</th>
-                            <th>كود المنتج</th>
-                            <th>الوصف</th>
-                            <th>الكمية المطلوبة</th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.description') }}</th>
+                            <th>{{ __('messages.required_quantity') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +34,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4">لا توجد منتجات في هذا الطلب</td>
+                                <td colspan="4">@if(auth()->user()->current_lang == 'ar')لا توجد منتجات في هذا الطلب @else There are no products in this order @endif</td>
                             </tr>
                         @endforelse
                     </tbody>

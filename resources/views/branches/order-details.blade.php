@@ -3,24 +3,24 @@
 @section('content')
     <div class="p-4">
         <div class="max-w-7xl mx-auto space-y-6">
-            <h4 class="mb-4">تفاصيل الطلب رقم #{{ $order->id }}</h4>
+            <h4 class="mb-4">{{ __('messages.order_details') }} #{{ $order->id }}</h4>
 
             <button class="btn btn-primary mb-3" id="download-preparation-sheet" data-order="{{ $order->id }}">
-                تحميل شيت التحضير
+                {{ __('messages.download_preparation_sheet') }}
             </button>
 
             <div class="table-responsive bg-white shadow sm:rounded-lg p-4">
                 <table class="table table-bordered text-center">
                     <thead>
                         <tr>
-                            <th>الصورة</th>
-                            <th>كود المنتج</th>
-                            <th>الكود الرئيسي</th>
-                            <th>الوصف</th>
-                            <th>الكمية</th>
-                            <th>الكمية المستلمة</th>
-                            <th>الكمية المتبقية</th>
-                            <th>حالة الاستلام</th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.sku') }}</th>
+                            <th>{{ __('messages.description') }}</th>
+                            <th>{{ __('messages.quantity') }}</th>
+                            <th>{{ __('messages.received_quantity') }}</th>
+                            <th>{{ __('messages.remaining_quantity') }}</th>
+                            <th>{{ __('messages.receiving_status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +28,7 @@
                             <tr>
                                 <td>
                                     <img src="{{ $item->product->image_url ?? asset('assets/images/comming.png') }}"
-                                        alt="صورة المنتج" style="width: 60px; height: 60px; object-fit: contain;">
+                                        alt="@if(auth()->user()->current_lang == 'ar')صورة المنتج@else Product Image @endif" onclick="openImage('{{ $item->product->image_url ?? asset('assets/images/comming.png') }}')" style="width: 60px; height: 60px; object-fit: contain;">
                                 </td>
                                 <td>{{ $item->product->product_code ?? '-' }}</td>
                                 <td>{{ $item->product->no_code ?? '-' }}</td>
@@ -44,7 +44,7 @@
                                 </td>
                                 <td>
                                     @php
-                                        $status = $item->receiving_status ?? 'لم يتم الاستلام بعد';
+                                        $status = $item->receiving_status ?? '@if(auth()->user()->current_lang == "ar")لم يتم الاستلام بعد @else Not Received yet @endif';
                                     @endphp
                                     <span class="badge bg-secondary">{{ $status }}</span>
                                 </td>
@@ -56,12 +56,12 @@
 
             @if ($unmatchedItems->isNotEmpty())
                 <div class="mt-5">
-                    <h5>الأكواد غير المطابقة</h5>
+                    <h5>{{ __('messages.mismatched_codes') }}</h5>
                     <table class="table table-bordered text-center">
                         <thead>
                             <tr>
-                                <th>الكود</th>
-                                <th>الكمية</th>
+                                <th>{{ __('messages.sku') }}</th>
+                                <th>{{ __('messages.quantity') }}</th>
                             </tr>
                         </thead>
                         <tbody>
