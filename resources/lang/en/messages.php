@@ -354,6 +354,7 @@ return [
     'you_cannot_select_all' => 'You cannot select all because some products do not have a type of shooting or different types of shooting',
     'do_you_want_to_restore_all_similar_products' => 'Do You Want To Restore All Similar Products?',
     'restored_successfully' => 'Restored Successfully',
+    'type_of_shooting' => 'Type Of Shooting',
 
 
 

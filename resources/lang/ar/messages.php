@@ -350,6 +350,7 @@ return [
     'you_cannot_select_all' => 'لا يمكن تحديد الكل لأن بعض المنتجات ليس لها نوع تصوير أو أنواع مختلفة',
     'do_you_want_to_restore_all_similar_products' => 'هل أنت واثق أنك تريد استرجاع جميع المنتجات المتشابهة؟',
     'restored_successfully' => 'تم استرجاع المنتجات بنجاح',
+    'type_of_shooting' => 'نوع التصوير',
 
 
 
