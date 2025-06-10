@@ -16,9 +16,9 @@
                     <div class="row">
                         <!-- Category Filter -->
                         <div class="col-md-4">
-                            <label for="categoryFilter">{{ __('القسم') }}</label>
+                            <label for="categoryFilter">{{ __('messages.category') }}</label>
                             <select name="category" id="categoryFilter" class="ts-filter">
-                                <option value="">{{ __('كل الاقسام') }}</option>
+                                <option value="">{{ __('messages.all_categories') }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->name }}"
                                         {{ request('category') == $category->name ? 'selected' : '' }}>
@@ -30,9 +30,9 @@
 
                         <!-- Season Filter -->
                         <div class="col-md-4">
-                            <label for="seasonFilter">{{ __('الموسم') }}</label>
+                            <label for="seasonFilter">{{ __('messages.season') }}</label>
                             <select name="season" id="seasonFilter" class="ts-filter">
-                                <option value="">{{ __('كل المواسم') }}</option>
+                                <option value="">{{ __('messages.all_seasons') }}</option>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->name }}"
                                         {{ request('season') == $season->name ? 'selected' : '' }}>
@@ -58,9 +58,9 @@
 
                         <!-- Color Filter -->
                         <div class="col-md-4">
-                            <label for="colorFilter">{{ __('اللون') }}</label>
+                            <label for="colorFilter">{{ __('messages.color') }}</label>
                             <select name="color" id="colorFilter" class="ts-filter">
-                                <option value="">{{ __('كل الألوان') }}</option>
+                                <option value="">{{ __('messages.all_colors') }}</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->name }}"
                                         {{ request('color') == $color->name ? 'selected' : '' }}>
@@ -72,45 +72,45 @@
 
                         <!-- Status Filter -->
                         <div class="col-md-4 mt-3">
-                            <label for="statusFilter">{{ __('الحالة') }}</label>
+                            <label for="statusFilter">{{ __('messages.status') }}</label>
                             <select name="status" id="statusFilter" class="ts-filter">
-                                <option value="">{{ __('كل الحالات') }}</option>
+                                <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>
-                                    {{ __('جديد') }}</option>
+                                    {{ __('messages.new') }}</option>
                                 <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
-                                    {{ __('تصنيع') }}</option>
+                                    {{ __('messages.processing') }}</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
-                                    {{ __('قيد الانتظار') }}</option>
+                                    {{ __('messages.pending') }}</option>
                                 <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>
-                                    {{ __(' جزئي') }}</option>
+                                    {{ __('messages.partial') }}</option>
                                 <option value="complete" {{ request('status') == 'complete' ? 'selected' : '' }}>
-                                    {{ __(' مكتمل') }}</option>
+                                    {{ __('messages.complete') }}</option>
                                 <option value="cancel" {{ request('status') == 'cancel' ? 'selected' : '' }}>
-                                    {{ __('ملغي') }}</option>
+                                    {{ __('messages.cancel') }}</option>
                                 <option value="stop" {{ request('status') == 'stop' ? 'selected' : '' }}>
-                                    {{ __('متوقف') }}</option>
+                                    {{ __('messages.stop') }}</option>
                             </select>
                         </div>
 
                         <!-- receiving status Filter -->
                         <div class="col-md-4 mt-3">
-                            <label for="receivingStatusFilter">{{ __('حالة الاستلام') }}</label>
+                            <label for="receivingStatusFilter">{{ __('messages.receiving_status') }}</label>
                             <select name="receiving_status" id="receivingStatusFilter" class="ts-filter">
-                                <option value="">{{ __('كل الحالات') }}</option>
+                                <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="new" {{ request('receiving_status') == 'new' ? 'selected' : '' }}>
-                                    {{ __('جديد') }}</option>
+                                    {{ __('messages.new') }}</option>
                                 <option value="processing" {{ request('receiving_status') == 'processing' ? 'selected' : '' }}>
-                                    {{ __('تصنيع') }}</option>
+                                    {{ __('messages.processing') }}</option>
                                 <option value="pending" {{ request('receiving_status') == 'pending' ? 'selected' : '' }}>
-                                    {{ __('قيد الانتظار') }}</option>
+                                    {{ __('messages.pending') }}</option>
                                 <option value="partial" {{ request('receiving_status') == 'partial' ? 'selected' : '' }}>
-                                    {{ __(' جزئي') }}</option>
+                                    {{ __('messages.partial') }}</option>
                                 <option value="complete" {{ request('receiving_status') == 'complete' ? 'selected' : '' }}>
-                                    {{ __(' مكتمل') }}</option>
+                                    {{ __('messages.complete') }}</option>
                                 <option value="cancel" {{ request('receiving_status') == 'cancel' ? 'selected' : '' }}>
-                                    {{ __('ملغي') }}</option>
+                                    {{ __('messages.cancel') }}</option>
                                 <option value="stop" {{ request('receiving_status') == 'stop' ? 'selected' : '' }}>
-                                    {{ __('متوقف') }}</option>
+                                    {{ __('messages.stop') }}</option>
                             </select>
                         </div>
 
@@ -130,7 +130,7 @@
 
                         <!-- Expected Delivery Date Range -->
                         <div class="col-md-4 mt-3">
-                            <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
+                            <label for="expectedDeliveryStart">{{ __('messages.expected_delivery_date ') }}</label>
                             <div class="input-group">
                                 <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
                                     class="form-control" value="{{ request('expected_delivery_start') }}">
@@ -144,8 +144,8 @@
 
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary me-2">{{ __('عرض') }}</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('إلغاء') }}</a>
+                            <button type="submit" class="btn btn-primary me-2">{{ __('messages.filter') }}</button>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('messages.reset') }}</a>
                         </div>
                     </div>
                 </form>
@@ -156,7 +156,7 @@
                 @if (auth()->user()->hasPermission('إضافة منتج'))
                     <div class="flex justify-end mb-4">
                         <a href="{{ route('products.create') }}" class="btn btn-success">
-                            {{ __('إضافة منتج') }}
+                            {{ __('messages.add_product') }}
                         </a>
                     </div>
                 @endif
@@ -164,15 +164,15 @@
                     <thead>
                         <tr>
                             <th>{{ __('#') }}</th>
-                            <th>{{ __('الصورة') }}</th>
-                            <th>{{ __('الاسم') }}</th>
-                            <th>{{ __('القسم') }}</th>
-                            <th>{{ __('الموسم') }}</th>
-                            <th>{{ __('حاله الطلب') }}</th>
-                            <th>{{ __('جار التصنيع') }}</th>
-                            <th>{{ __('الألوان') }}</th>
-                            <th>{{ __('حاله التسليم النهائيه') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.category') }}</th>
+                            <th>{{ __('messages.season') }}</th>
+                            <th>{{ __('messages.order_status') }}</th>
+                            <th>{{ __('messages.manufacturing_in_progress') }}</th>
+                            <th>{{ __('messages.colors') }}</th>
+                            <th>{{ __('messages.final_receiving_status') }}</th>
+                            <th>{{ __('messages.expected_delivery_date') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -181,7 +181,7 @@
                                 <td>{{ $product->id }}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bold">{{ $product->code ?? 'لا يوجد كود' }}</span>
+                                        <span class="fw-bold">{{ $product->code ?? __('messages.N/A') }}</span>
 
                                         @if ($product->photo && file_exists(public_path($product->photo)))
                                             <a href="{{ asset($product->photo) }}" target="_blank">
@@ -189,13 +189,13 @@
                                                     style="width: 200px; height: auto;" class="mt-2">
                                             </a>
                                         @else
-                                            <p class="text-muted mt-2">لا توجد صورة</p>
+                                            <p class="text-muted mt-2">{{ __('messages.N/A') }}</p>
                                         @endif
                                     </div>
                                 </td>
                                 <td>{{ $product->description }}</td>
-                                <td>{{ $product->category->name ?? 'لا يوجد' }}</td>
-                                <td>{{ $product->season->name ?? 'لا يوجد' }}</td>
+                                <td>{{ $product->category->name ?? __('messages.N/A') }}</td>
+                                <td>{{ $product->season->name ?? __('messages.N/A') }}</td>
                                 <td>
                                     @php
                                         $totalVariants = $product->productColors->sum(function ($color) {
@@ -209,21 +209,21 @@
                                         });
                                     @endphp
                                     @if ($product->status === 'new')
-                                        <span class="badge bg-primary">{{ __('طلب جديد') }}</span>
+                                        <span class="badge bg-primary">{{ __('messages.new') }}</span>
                                     @elseif ($product->status === 'cancel')
-                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                     @elseif ($product->status === 'pending')
-                                        <span class="badge bg-warning">{{ __('قيد الانتظار') }}</span>
+                                        <span class="badge bg-warning">{{ __('messages.pending') }}</span>
                                     @elseif ($product->status === 'partial')
-                                        <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
+                                        <span class="badge bg-warning">{{ __('messages.partial') }}</span>
                                     @elseif ($product->status === 'postponed')
-                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.postponed') }}</span>
                                     @elseif ($product->status === 'stop')
-                                        <span class="badge bg-danger">{{ __('توقف') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.stop') }}</span>
                                     @elseif($product->status === 'complete')
-                                        <span class="badge bg-info">{{ __('مكتمل') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.complete') }}</span>
                                     @elseif($product->status === 'processing')
-                                        <span class="badge bg-success">{{ __('تصنيع') }}
+                                        <span class="badge bg-success">{{ __('messages.processing') }}
                                         </span>
                                     @endif
                                 </td>
@@ -236,12 +236,12 @@
                                     <table class="table table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>{{ __('اللون') }}</th>
-                                                <th>{{ __('ألكود') }}</th>
-                                                <th>{{ __('حاله التصنيع') }}</th>
-                                                <th>{{ __('حاله التسليم') }}</th>
-                                                <th>{{ __('الكميه المطلوبه') }}</th>
-                                                <th>{{ __('الكميه المستلمه') }}</th>
+                                                <th>{{ __('messages.color') }}</th>
+                                                <th>{{ __('messages.code') }}</th>
+                                                <th>{{ __('messages.manufacturing_status') }}</th>
+                                                <th>{{ __('messages.receiving_status') }}</th>
+                                                <th>{{ __('messages.required_quantity') }}</th>
+                                                <th>{{ __('messages.received_quantity') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -271,35 +271,35 @@
                                                     <td>
                                                         @switch($variant->status)
                                                             @case('new')
-                                                                {{ __('لم يتم البدء') }}
+                                                                {{ __('messages.not_started') }}
                                                             @break
 
                                                             @case('processing')
-                                                                {{ __('جاري التصنيع') }}
+                                                                {{ __('messages.processing') }}
                                                             @break
 
                                                             @case('postponed')
-                                                                {{ __('مؤجل ') }}
+                                                                {{ __('messages.postponed') }}
                                                             @break
 
                                                             @case('partial')
-                                                                {{ __('جزئي الاستلام') }}
+                                                                {{ __('messages.partial') }}
                                                             @break
 
                                                             @case('complete')
-                                                                {{ __('تم التصنيع') }}
+                                                                {{ __('messages.complete') }}
                                                             @break
 
                                                             @case('cancel')
-                                                                {{ __('تم الغاء التصنيع') }}
+                                                                {{ __('messages.cancel') }}
                                                             @break
 
                                                             @case('stop')
-                                                                {{ __('تم ايقاف التصنيع') }}
+                                                                {{ __('messages.stop') }}
                                                             @break
 
                                                             @default
-                                                                {{ __('غير معروف') }}
+                                                                {{ __('messages.unknown') }}
                                                         @endswitch
                                                     </td>
 
@@ -317,18 +317,18 @@
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
                                                             @if ($remainingDays > 0)
-                                                                <span class="badge bg-danger">{{ $remainingDays }} يوم
-                                                                    متأخر</span>
+                                                                <span class="badge bg-danger">{{ $remainingDays }} 
+                                                                    {{ __('messages.day_overdue') }}</span>
                                                             @elseif ($remainingDays === 0)
-                                                                <span class="badge bg-warning">الاستلام اليوم</span>
+                                                                <span class="badge bg-warning">{{ __('messages.today') }}</span>
                                                             @else
                                                                 <span class="badge bg-success">{{ abs($remainingDays) }}
-                                                                    يوم
-                                                                    متبقي</span>
+                                                                    {{ __('messages.day_remaining') }}
+                                                                    </span>
                                                             @endif
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
-                                                                class="badge bg-danger">{{ __('تم الاستلام كامل') }}</span>
+                                                                class="badge bg-danger">{{ __('messages.received_completely') }}</span>
                                                         @elseif ($variant->receiving_status === 'postponed')
                                                             <span>-</span>
                                                         @endif
@@ -346,28 +346,28 @@
                                     @if ($product->receiving_status === 'new')
                                         <span>-</span>
                                     @elseif ($product->receiving_status === 'partial')
-                                        <span class="badge bg-pink">{{ __('تسليم جزئي') }}</span>
+                                        <span class="badge bg-pink">{{ __('messages.partial') }}</span>
                                     @elseif ($product->receiving_status === 'complete')
-                                        <span class="badge bg-success">{{ __('تم التسليم') }}</span>
+                                        <span class="badge bg-success">{{ __('messages.complete') }}</span>
                                     @elseif ($product->receiving_status === 'pending')
-                                        <span class="badge bg-warning">{{ __('في انتظار التسليم') }}</span>
+                                        <span class="badge bg-warning">{{ __(' messages.pending') }}</span>
                                     @elseif ($product->receiving_status === 'postponed')
-                                        <span class="badge bg-pink">{{ __('مؤجل') }}</span>
+                                        <span class="badge bg-pink">{{ __('messages.postponed') }}</span>
                                     @elseif ($product->receiving_status === 'stop')
-                                        <span class="badge bg-danger">{{ __('توقف') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.stop') }}</span>
                                     @elseif ($product->receiving_status === 'cancel')
-                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column gap-2">
                                         @if (auth()->user()->hasPermission('تصنيع المنتج'))
                                             <a href="{{ route('products.manufacture', $product->id) }}"
-                                                class="btn btn-info w-100">{{ __('تصنيع') }}</a>
+                                                class="btn btn-info w-100">{{ __('messages.manufacture') }}</a>
                                         @endif
                                         @if (auth()->user()->hasPermission('عرض منتج'))
                                             <a href="{{ route('products.show', $product->id) }}"
-                                                class="btn btn-primary w-100">{{ __('عرض') }}</a>
+                                                class="btn btn-primary w-100">{{ __('messages.view') }}</a>
                                         @endif
                                         @if (auth()->user()->hasPermission('تعديل منتج') &&
                                                 $product->productColors->every(function ($color) {
@@ -376,21 +376,21 @@
                                                     });
                                                 }))
                                             <a href="{{ route('products.edit', $product->id) }}"
-                                                class="btn btn-secondary w-100">{{ __('تعديل') }}</a>
+                                                class="btn btn-secondary w-100">{{ __('messages.edit') }}</a>
                                         @endif
                                         @if (auth()->user()->hasPermission('استلام منتج'))
                                             @if ($product->status !== 'Complete')
                                                 <a href="{{ route('products.receive', $product->id) }}"
-                                                    class="btn btn-success w-100">{{ __('استلام') }}</a>
+                                                    class="btn btn-success w-100">{{ __('messages.receive') }}</a>
                                             @endif
                                         @endif
                                         @if (auth()->user()->hasPermission('إكمال بيانات المنتج'))
                                             <a href="{{ route('products.completeData', $product->id) }}"
                                                 class="btn btn-info w-100">
                                                 @if (empty($product->name))
-                                                    أكمال البيانات
+                                                    {{ __('messages.complete_data') }} 
                                                 @else
-                                                    تعديل البيانات
+                                                    {{ __('messages.edit_date') }}
                                                 @endif
                                             </a>
                                         @endif
@@ -398,28 +398,28 @@
                                         @if ($product->status === 'cancel')
                                             @if (auth()->user()->hasPermission('تفعيل منتج'))
                                                 <a href="javascript:void(0);" class="btn btn-warning renew-btn w-100"
-                                                    data-id="{{ $product->id }}">{{ __('تفعيل') }}</a>
+                                                    data-id="{{ $product->id }}">{{ __('messages.activate') }}</a>
                                             @endif
                                         @else
                                             @if (auth()->user()->hasPermission('إلغاء منتج'))
                                                 <a href="javascript:void(0);" class="btn btn-warning cancel-btn w-100"
-                                                    data-id="{{ $product->id }}">{{ __('الغاء') }}</a>
+                                                    data-id="{{ $product->id }}">{{ __('messages.cancel') }}</a>
                                             @endif
                                         @endif
                                         @if (auth()->user()->hasPermission('حذف منتج'))
                                             <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج؟ ')"
+                                                onsubmit="return confirm('{{ __('messages.confirm_delete_product') }}')"
                                                 class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="btn btn-danger w-100">{{ __('مسح') }}</button>
+                                                    class="btn btn-danger w-100">{{ __('messages.delete') }}</button>
                                             </form>
                                         @endif
                                         @if (auth()->user()->role->name === 'admin')
                                             <a href="{{ route('products.history', $product->id) }}"
                                                 class="btn btn-dark w-100">
-                                                {{ __('المراجعه ') }}
+                                                {{ __('messages.history') }}
                                             </a>
                                         @endif
                                     </div>
@@ -438,7 +438,7 @@
             document.querySelectorAll(".ts-filter").forEach(select => {
                 new TomSelect(select, {
                     plugins: ['remove_button'], // Optional: Allow removing selections
-                    placeholder: 'اختر خيارًا',
+                    placeholder: '{{ __('messages.choose_option') }}',
                     allowEmptyOption: true
                 });
             });
@@ -471,7 +471,7 @@
         $(document).on('click', '.cancel-btn', function() {
             const productId = $(this).data('id');
 
-            if (confirm('هل أنت متأكد من الغاء هذا المنتج؟')) {
+            if (confirm('{{ __('messages.are_you_sure') }}')) {
                 $.ajax({
                     url: `/products/${productId}/cancel`,
                     type: 'POST',
@@ -496,7 +496,7 @@
         $(document).on('click', '.renew-btn', function() {
             const productId = $(this).data('id');
 
-            if (confirm('هل أنت متأكد من تفعيل هذا المنتج؟')) {
+            if (confirm('{{ __('messages.are_you_sure') }}')) {
                 $.ajax({
                     url: `/products/${productId}/renew`,
                     type: 'POST',

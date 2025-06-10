@@ -36,37 +36,37 @@
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="img-fluid rounded shadow"
                                     style="max-width: 350px; height: auto;">
                             @else
-                                <p class="text-muted"><i>لا يوجد صورة</i></p>
+                                <p class="text-muted"><i>{{ __('messages.N/A') }}</i></p>
                             @endif
                         </div>
                     
                         <!-- Product Details -->
                         <div class="col-md-6">
-                            <h3 class="mb-4 text-center">تفاصيل المنتج</h3>
+                            <h3 class="mb-4 text-center">{{ __('messages.product_details') }}</h3>
                             <div class="table-responsive">
                                 <table class="table table-borderless">
                                     <tbody>
                                         <tr>
-                                            <th class="text-end">الوصف:</th>
+                                            <th class="text-end">{{ __('messages.description') }}:</th>
                                             <td style="font-weight: bold;">{{ $product->description }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-end">الكود:</th>
+                                            <th class="text-end">{{ __('messages.code') }}:</th>
                                             <td style="font-weight: bold;">{{ $product->code ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-end">القسم:</th>
+                                            <th class="text-end">{{ __('messages.category') }}:</th>
                                             <td style="font-weight: bold;">{{ $product->category->name ?? 'لا يوجد' }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-end">الموسم:</th>
+                                            <th class="text-end">{{ __('messages.season') }}:</th>
                                             <td style="font-weight: bold;">{{ $product->season->name ?? 'لا يوجد' }}</td>
                                         </tr>
                          
                                         <tr>
-                                            <th class="text-end">حالة مخزون الخامات:</th>
+                                            <th class="text-end">{{ __('messages.stock_status') }}:</th>
                                             <td style="font-weight: bold;">
-                                                {{ $product->have_stock ? 'متوفر' : 'غير متوفر' }}
+                                                {{ $product->have_stock ? '___(messages.available)' : '___(messages.not_available)' }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -82,15 +82,15 @@
                                                     @elseif ($product->status === 'stop') bg-danger
                                                     @elseif ($product->status === 'postponed') bg-info
                                                     @else bg-secondary @endif">
-                                                @if ($product->status === 'new') جديد 
-                                                @elseif ($product->status === 'complete') مكتمل 
-                                                @elseif ($product->status === 'partial') جزئي 
-                                                @elseif ($product->status === 'pending') قيد الانتظار
-                                                @elseif ($product->status === 'processing') قيد التنصيع
-                                                @elseif ($product->status === 'cancel') ملغي
-                                                @elseif ($product->status === 'stop') توقف
-                                                @elseif ($product->status === 'postponed') مؤجل
-                                                @else لا يوجد @endif
+                                                @if ($product->status === 'new') {{ __('messages.new') }} 
+                                                @elseif ($product->status === 'complete') {{ __('messages.complete') }} 
+                                                @elseif ($product->status === 'partial') {{ __('messages.partial') }} 
+                                                @elseif ($product->status === 'pending') {{ __('messages.pending') }}
+                                                @elseif ($product->status === 'processing') {{ __('messages.processing') }} 
+                                                @elseif ($product->status === 'cancel') {{ __('messages.cancel') }}
+                                                @elseif ($product->status === 'stop') {{ __('messages.stop') }}
+                                                @elseif ($product->status === 'postponed') {{ __('messages.postponed') }}
+                                                @else {{ __('messages.N/A') }} @endif
                                                 </span>
                                             </td>
                                         </tr>
@@ -102,63 +102,63 @@
                     
                     <hr>
 
-                    <h2>الالوان</h2>
+                    <h2>{{ __('messages.colors') }}</h2>
                     @if ($product->productColors->isEmpty())
-                        <p>لا يوجد ألوان لهذا المنتج</p>
+                        <p>{{ __('messages.no_colors') }}</p>
                     @else
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>اللون</th>
-                                        <th>تاريخ التوصيل</th>
-                                        <th>الكمية</th>
-                                        <th>الحالة</th>
-                                        <th>ملاحظات</th>
+                                        <th>{{ __('messages.color') }}</th>
+                                        <th>{{ __('messages.expected_delivery_date') }}</th>
+                                        <th>{{ __('messages.quantity') }}</th>
+                                        <th>{{ __('messages.status') }}</th>
+                                        <th>{{ __('messages.notes') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($product->productColors as $productColor)
                                         @foreach ($productColor->productcolorvariants->where('parent_id', null) as $variant)
                                             <tr>
-                                                <td>{{ $productColor->color->name ?? 'لا يوجد' }}</td>
-                                                <td>{{ $variant->expected_delivery ?? 'لا يوجد' }}</td>
-                                                <td>{{ $variant->quantity ?? 'لا يوجد' }}</td>
+                                                <td>{{ $productColor->color->name ?? '-' }}</td>
+                                                <td>{{ $variant->expected_delivery ?? '-' }}</td>
+                                                <td>{{ $variant->quantity ?? '-' }}</td>
                                                 <td>
                                                     @switch($variant->status)
                                                         @case('new')
-                                                            {{ __('لم يتم البدء') }}
+                                                            {{ __('messages.new') }}
                                                         @break
 
                                                         @case('processing')
-                                                            {{ __('جاري التصنيع') }}
+                                                            {{ __('messages.processing') }}
                                                         @break
 
                                                         @case('postponed')
-                                                            {{ __('مؤجل ') }}
+                                                            {{ __('messages.postponed') }}
                                                         @break
 
                                                         @case('partial')
-                                                            {{ __('جزئي الاستلام') }}
+                                                            {{ __('messages.partial') }}
                                                         @break
 
                                                         @case('complete')
-                                                            {{ __('تم التصنيع') }}
+                                                            {{ __('messages.complete') }}
                                                         @break
 
                                                         @case('cancel')
-                                                            {{ __('تم الغاء التصنيع') }}
+                                                            {{ __('messages.cancel') }}
                                                         @break
 
                                                         @case('stop')
-                                                            {{ __('تم ايقاف التصنيع') }}
+                                                            {{ __('messages.stop') }}
                                                         @break
 
                                                         @default
-                                                            {{ __('غير معروف') }}
+                                                            {{ __('messages.unknown') }}
                                                     @endswitch
                                                 </td>
-                                                <td>{{ $variant->note ?? 'لا يوجد' }}</td>
+                                                <td>{{ $variant->note ?? '-' }}</td>
                                             </tr>
                                             @if ($variant->children && $variant->children->isNotEmpty())
                                                 @foreach ($variant->children as $child)
@@ -170,27 +170,27 @@
                                                                 <path fill-rule="evenodd"
                                                                     d="M10.146 4.146a.5.5 0 0 1 .708.708L7.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5z" />
                                                             </svg>
-                                                            {{ $child->productcolor->color->name ?? 'لا يوجد' }}
+                                                            {{ $child->productcolor->color->name ?? '-' }}
                                                         </td>
-                                                        <td>{{ $child->expected_delivery ?? 'لا يوجد' }}</td>
-                                                        <td>{{ $child->quantity ?? 'لا يوجد' }}</td>
+                                                        <td>{{ $child->expected_delivery ?? '-' }}</td>
+                                                        <td>{{ $child->quantity ?? '-' }}</td>
                                                         <td>
                                                             @if ($child->status === 'new')
-                                                                {{ __('لم يتم البدء') }}
+                                                                {{ __('messages.new') }}
                                                             @elseif ($child->status === 'processing')
-                                                                {{ __('جاري التصنيع') }}
+                                                                {{ __('messages.processing') }}
                                                             @elseif ($child->status === 'postponed')
-                                                                {{ __('مؤجل ') }}
+                                                                {{ __('messages.postponed') }}
                                                             @elseif ($child->status === 'partial')
-                                                                {{ __('جزئي الاستلام') }}
+                                                                {{ __('messages.partial') }}
                                                             @elseif ($child->status === 'complete')
-                                                                {{ __('تم التصنيع') }}
+                                                                {{ __('messages.complete') }}
                                                             @elseif ($child->status === 'cancel')
-                                                                {{ __('تم الغاء التصنيع') }}
+                                                                {{ __('messages.cancel') }}
                                                             @elseif ($child->status === 'stop')
-                                                                {{ __('تم ايقاف التصنيع') }}
+                                                                {{ __('messages.stop') }}
                                                             @elseif ($child->status === 'pending')
-                                                                {{ __('قيد الانتظار') }}
+                                                                {{ __('messages.pending ') }}
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -205,7 +205,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
                 </div>
             </div>
         </div>

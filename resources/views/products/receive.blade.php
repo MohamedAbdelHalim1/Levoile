@@ -96,21 +96,21 @@
                                 <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image m-3">
                             @endif
                             <div class="product-details">
-                                <div class="key-value"><span>الكود:</span> <span>{{ $product->code ?? 'لا يوجد' }}</span>
+                                <div class="key-value"><span>{{ __('messages.code') }}:</span> <span>{{ $product->code ?? '-'  }}</span>
                                 </div>
-                                <div class="key-value"><span>الوصف:</span>
-                                    <span>{{ $product->description ?? 'لا يوجد' }}</span>
+                                <div class="key-value"><span>{{ __('messages.description') }}:</span>
+                                    <span>{{ $product->description ?? '-' }}</span>
                                 </div>
                                 <div class="key-value">
-                                    <span>القسم:</span><span>{{ $product->category->name ?? 'لا يوجد' }}</span>
+                                    <span>{{ __('messages.category') }}:</span><span>{{ $product->category->name ?? '-' }}</span>
                                 </div>
 
                                 <div class="key-value">
-                                    <span>الموسم:</span><span>{{ $product->season->name ?? 'لا يوجد' }}</span>
+                                    <span>{{ __('messages.season') }}:</span><span>{{ $product->season->name ?? '-' }}</span>
                                 </div>
 
                                 <div class="key-value">
-                                    <span>الحالة:</span>
+                                    <span>{{ __('messages.status') }}:</span>
                                     <span
                                         class="badge
                                         @if ($product->status === 'complete') bg-success
@@ -123,23 +123,23 @@
                                         @elseif ($product->status === 'pending') bg-info
                                         @else bg-primary @endif">
                                         @if ($product->status === 'new')
-                                            جديد
+                                            {{ __('messages.new') }}
                                         @elseif ($product->status === 'cancel')
-                                            ملغي
+                                            {{ __('messages.cancel') }}
                                         @elseif ($product->status === 'pending')
-                                            قيد الانتظار
+                                            {{ __('messages.pending') }}
                                         @elseif ($product->status === 'postponed')
-                                            مؤجل
+                                            {{ __('messages.postponed') }}
                                         @elseif ($product->status === 'stop')
-                                            متوقف
+                                            {{ __('messages.stop') }}
                                         @elseif ($product->status === 'complete')
-                                            مكتمل
+                                            {{ __('messages.complete') }}
                                         @elseif ($product->status === 'processing')
-                                            قيد التنصيع
+                                            {{ __('messages.processing') }}
                                         @elseif ($product->status === 'partial')
-                                            جزئي
+                                            {{ __('messages.partial') }}
                                         @else
-                                            لا يوجد
+                                            {{ __('messages.unknown') }}
                                         @endif
                                     </span>
                                 </div>
@@ -149,21 +149,21 @@
 
                     <hr>
 
-                    <h2>الالوان</h2>
+                    <h2>{{ __('messages.colors') }}</h2>
                     @if ($product->productColors->isEmpty())
-                        <p>لا يوجد ألوان لهذا المنتج</p>
+                        <p>{{ __('messages.no_colors') }}</p>
                     @else
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>اللون</th>
-                                        <th>ألكود</th>
-                                        <th>تاريخ التوصيل</th>
-                                        <th>الكمية</th>
-                                        <th>الكمية المستلمة</th>
-                                        <th>الحالة</th>
-                                        <th class="action-column">العمليات</th>
+                                        <th>{{ __('messages.color') }}</th>
+                                        <th>{{ __('messages.sku') }}</th>
+                                        <th>{{ __('messages.expected_delivery') }}</th>
+                                        <th>{{ __('messages.quantity') }}</th>
+                                        <th>{{ __('messages.received_quantity') }} </th>
+                                        <th>{{ __('messages.status') }}</th>
+                                        <th class="action-column">{{ __('messages.operations') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -175,13 +175,13 @@
 
                                             @endphp
                                             <tr>
-                                                <td>{{ $productColor->color->name ?? 'لا يوجد لون' }}</td>
-                                                <td>{{ $variant->sku ?? 'لا يوجد' }}</td>
-                                                <td>{{ $variant->expected_delivery ?? 'لا يوجد تاريخ' }}</td>
+                                                <td>{{ $productColor->color->name ?? '-' }}</td>
+                                                <td>{{ $variant->sku ?? '-' }}</td>
+                                                <td>{{ $variant->expected_delivery ?? '-' }}</td>
                                                 @if ($variant->status === 'complete' && $remainingQuantity > 0)
-                                                    <td>{{ $variant->quantity . ' ' . '(' . $remainingQuantity . 'ملغي' .')' }}</td>
+                                                    <td>{{ $variant->quantity . ' ' . '(' . $remainingQuantity . '__(messages.cancelled)' .')' }}</td>
                                                 @else
-                                                    <td>{{ $variant->quantity ?? 'لا يوجد كمية' }}</td>
+                                                    <td>{{ $variant->quantity ?? '-' }}</td>
                                                 @endif
                                                 <td>
                                                     <input type="number" class="form-control receiving-quantity"
@@ -192,19 +192,19 @@
                                                 </td>
                                                 <td>
                                                     @if ($variant->status === 'new')
-                                                        <span class="badge bg-success">{{ __('جديد') }}</span>
+                                                        <span class="badge bg-success">{{ __('messages.new') }}</span>
                                                     @elseif ($variant->status === 'processing')
-                                                        <span class="badge bg-warning">{{ __('جاري التصنيع') }}</span>
+                                                        <span class="badge bg-warning">{{ __('messages.processing') }}</span>
                                                     @elseif ($variant->status === 'partial')
-                                                        <span class="badge bg-warning">{{ __('استلام جزئي') }}</span>
+                                                        <span class="badge bg-warning">{{ __('messages.partial') }}</span>
                                                     @elseif ($variant->status === 'postponed')
-                                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                                        <span class="badge bg-info">{{ __('messages.postponed') }}</span>
                                                     @elseif ($variant->status === 'complete')
-                                                        <span class="badge bg-danger">{{ __('مكتمل') }}</span>
+                                                        <span class="badge bg-danger">{{ __('messages.complete') }}</span>
                                                     @elseif ($variant->status === 'cancel')
-                                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                                        <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                                     @elseif ($variant->status === 'stop')
-                                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
+                                                        <span class="badge bg-danger">{{ __('messages.stop') }}</span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -214,7 +214,7 @@
                                                             empty($variant->receiving_quantity) &&
                                                             !empty($variant->expected_delivery))
                                                         <button type="button" class="btn btn-info validate-btn"
-                                                            data-variant-id="{{ $variant->id }}">تأكيد</button>
+                                                            data-variant-id="{{ $variant->id }}">{{ __('messages.validate') }}</button>
                                                     @endif
 
 
@@ -228,7 +228,7 @@
                     @endif
 
                     <div class="mt-4">
-                        <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                        <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
                     </div>
                 </div>
             </div>
@@ -241,26 +241,26 @@
             <div class="modal-content">
                 <form id="rescheduleForm">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="rescheduleModalLabel">اعاده جدوله الكمية المتبقية</h5>
+                        <h5 class="modal-title" id="rescheduleModalLabel">{{ __('messages.reschedule_quantity') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- Remaining Quantity Field -->
                         <div class="mb-3">
-                            <label for="remainingQuantity" id="remainingQuantityLabel" class="form-label">الكمية
-                                المتبقية</label>
+                            <label for="remainingQuantity" id="remainingQuantityLabel" class="form-label">
+                                {{ __('messages.remaining_quantity') }}</label>
                             <input type="number" id="remainingQuantity" class="form-control" readonly>
                         </div>
 
                         <!-- Caution Text -->
                         <small class="text-danger">
-                            هل تريد الاكتفاء بالكميه المتسلمه واعتبار ان اللون تم استلامه بالكامل؟
+                            {{ __('messages.confirm_received_quantity') }}
                         </small>
 
                         <!-- Submit Button -->
                         <div class="mt-3">
                             <button type="button" id="submitReceiving" class="btn btn-success w-100">
-                                نعم، وتأكيد استلام اللون بالكامل
+                                {{ __('messages.yes_confirm_received_quantity') }}
                             </button>
                         </div>
 
@@ -269,35 +269,35 @@
                             <input class="form-check-input" type="checkbox" id="rescheduleCheckbox"
                                 style="margin-left: 10px;">
                             <label class="form-check-label" for="rescheduleCheckbox">
-                                تريد اعاده جدوله الكميه المتبقية؟
+                                {{ __('messages.reschedule_remaining_quantity') }}
                             </label>
                         </div>
 
                         <!-- Expected Delivery Date -->
                         <div id="expectedDeliveryContainer" class="mt-3 d-none">
-                            <label for="newExpectedDelivery" class="form-label">تاريخ التوصيل المتوقع</label>
+                            <label for="newExpectedDelivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
                             <input type="date" id="newExpectedDelivery" name="new_expected_delivery"
                                 class="form-control">
                         </div>
 
                         <!-- Notes Section -->
                         <div class="mt-3">
-                            <label for="rescheduleNotes" class="form-label">ملاحظات <span
+                            <label for="rescheduleNotes" class="form-label">{{ __('messages.notes') }}<span
                                     class="text-danger">*</span></label>
-                            <textarea id="rescheduleNotes" name="reschedule_notes" class="form-control" placeholder="أضف أي ملاحظات هنا..."
+                            <textarea id="rescheduleNotes" name="reschedule_notes" class="form-control"
                                 rows="3" required></textarea>
                         </div>
 
                         <!-- Reschedule Button -->
                         <div class="mt-3">
                             <button type="button" id="rescheduleBtn" class="btn btn-primary w-100 d-none">
-                                اعاده جدوله الكميه المتبقية
+                                {{ __('messages.reschedule_remaining_quantity') }}
                             </button>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </form>
             </div>
@@ -309,7 +309,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="statusModalLabel">إضافة ملاحظة للحالة</h5>
+                    <h5 class="modal-title" id="statusModalLabel">{{ __('messages.add_note_for_status') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -317,11 +317,11 @@
                     <input type="hidden" id="productId"> <!-- Added Product ID -->
                     <input type="hidden" id="statusType">
 
-                    <label for="statusNote" class="form-label">الملاحظات</label>
-                    <textarea id="statusNote" class="form-control" rows="3" placeholder="أضف أي ملاحظات هنا..."></textarea>
+                    <label for="statusNote" class="form-label">{{ __('messages.add_note') }}</label>
+                    <textarea id="statusNote" class="form-control" rows="3"></textarea>
 
                     <div class="mt-3">
-                        <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">حفظ</button>
+                        <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </div>
@@ -374,11 +374,11 @@
 
                 // Check if receiving quantity is greater than original quantity
                 if (receivingQuantity > originalQuantity) {
-                    $("#remainingQuantityLabel").text("الكميه الزائده"); // Change label text
+                    $("#remainingQuantityLabel").text("{{ __('messages.excess_quantity') }}"); // Change label text
                     $("#remainingQuantity").val(receivingQuantity -
                         originalQuantity); // Set excess quantity
                 } else {
-                    $("#remainingQuantityLabel").text("الكمية المتبقية"); // Default label
+                    $("#remainingQuantityLabel").text("{{ __('messages.remaining_quantity') }}"); // Default label
                     $("#remainingQuantity").val(originalQuantity -
                         receivingQuantity); // Set remaining quantity
                 }
@@ -423,7 +423,7 @@
 
                 // Check if notes are filled
                 if (!notes || notes.trim() === "") {
-                    alert("يرجى إدخال الملاحظات");
+                    alert("{{ __('messages.note_required') }}");
                     return;
                 }
 
@@ -465,12 +465,12 @@
                 const notes = $("#rescheduleNotes").val(); // Get notes input
 
                 if (!notes || notes.trim() === "") {
-                    alert("يرجى إدخال الملاحظات");
+                    alert("{{ __('messages.note_required') }} ");
                     return;
                 }
 
                 if (!newExpectedDelivery) {
-                    alert("الرجاء ادخال تاريخ التسليم");
+                    alert("{{ __('messages.expected_delivery_required') }}");
                     return;
                 }
 
@@ -527,7 +527,7 @@
                 const note = $("#statusNote").val().trim();
 
                 if (!note) {
-                    alert("يرجى إدخال الملاحظات");
+                    alert("{{ __('messages.note_required') }}");
                     return;
                 }
 

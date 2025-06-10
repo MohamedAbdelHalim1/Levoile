@@ -11,7 +11,7 @@
                     </div>
                 @endif
 
-                <h1>{{ __('تعديل منتج') }}</h1>
+                <h1>{{ __('messages.edit_product') }}</h1>
                 <form id="update-product-form" action="{{ route('products.update', $product->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -19,14 +19,14 @@
 
                     <!-- Product Description -->
                     <div class="mb-3">
-                        <label for="description" class="form-label">{{ __('الاسم') }}</label>
+                        <label for="description" class="form-label">{{ __('messages.name') }}</label>
                         <textarea class="form-control" id="description" name="description" required>{{ $product->description }}</textarea>
                     </div>
 
                     <div class="row">
                         <!-- Product Category -->
                         <div class="col-md-6 mb-3">
-                            <label for="category_id" class="form-label">{{ __('القسم') }}</label>
+                            <label for="category_id" class="form-label">{{ __('messages.category') }}</label>
                             <select id="category_id" name="category_id" required>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
@@ -39,7 +39,7 @@
 
                         <!-- Product Season -->
                         <div class="col-md-6 mb-3">
-                            <label for="season_id" class="form-label">{{ __('الموسم') }}</label>
+                            <label for="season_id" class="form-label">{{ __('messages.season') }}</label>
                             <select id="season_id" name="season_id" required>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->id }}"
@@ -55,7 +55,7 @@
 
                     <!-- Product Photo -->
                     <div class="mb-3">
-                        <label for="photo" class="form-label">{{ __('الصورة') }}</label>
+                        <label for="photo" class="form-label">{{ __('messages.image') }}</label>
                         <input type="file" class="form-control" id="photo" name="photo">
                         @if ($product->photo)
                             <img src="{{ asset($product->photo) }}" alt="Product Image" class="mt-3"
@@ -68,9 +68,9 @@
 
                     <!-- Add New Color -->
                     <div class="mb-3">
-                        <label for="new_color_id" class="form-label">{{ __('اللون') }}</label>
+                        <label for="new_color_id" class="form-label">{{ __('messages.color') }}</label>
                         <select id="new_color_id">
-                            <option value="">{{ __('اختر لون') }}</option>
+                            <option value="">{{ __('messages.choose_color') }}</option>
                             @foreach ($colors as $color)
                                 <option value="{{ $color->id }}">{{ $color->name }}</option>
                             @endforeach
@@ -82,8 +82,8 @@
                         <table class="table table-bordered" id="color-details-table">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>{{ __('اللون') }}</th>
-                                    <th>{{ __('العمليات') }}</th>
+                                    <th>{{ __('messages.color') }}</th>
+                                    <th>{{ __('messages.operations') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,7 +99,7 @@
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger delete-color"
-                                                data-id="{{ $productColor->id }}">{{ __('حذف') }}</button>
+                                                data-id="{{ $productColor->id }}">{{ __('messages.delete') }}</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -108,7 +108,7 @@
                         </table>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">{{ __('تحديث') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.edit') }}</button>
                 </form>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 if (colorId) {
                     if (document.querySelector(
                         `#color-details-table tbody tr[data-color-id="${colorId}"]`)) {
-                        alert("هذا اللون مضاف من قبل");
+                        alert("{{ __('messages.color_already_added') }}");
                         return;
                     }
 
@@ -149,7 +149,7 @@
                             ${colorName}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger remove-row">{{ __('حذف') }}</button>
+                            <button type="button" class="btn btn-danger remove-row">{{ __('messages.delete') }}</button>
                         </td>
                     </tr>
                 `;
@@ -172,7 +172,7 @@
                     const colorId = e.target.dataset.id;
                     const row = e.target.closest("tr");
 
-                    if (confirm("هل أنت متأكد من حذف هذا اللون؟")) {
+                    if (confirm("{{ __('messages.are_you_sure') }}")) {
                         fetch(`/product-color/${colorId}`, {
                                 method: "DELETE",
                                 headers: {

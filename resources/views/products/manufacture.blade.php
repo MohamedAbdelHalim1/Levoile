@@ -30,7 +30,7 @@
                     </div>
                 @endif
 
-                <h1>{{ __('بدء التصنيع') }}</h1>
+                <h1>{{ __('messages.start_manufacture') }}</h1>
 
                 <!-- Color Details Table -->
                 <div class="mb-3">
@@ -39,14 +39,14 @@
                             <tr>
                                 <th><input type="checkbox" id="select-all"></th> <!-- ✅ Select All Checkbox -->
 
-                                <th>{{ __('اللون') }}</th>
-                                <th>{{ __('الحالة') }}</th>
-                                <th>{{ __('الكمية') }}</th>
-                                <th>{{ __('المصنع') }}</th>
-                                <th>{{ __('الخامة') }}</th>
-                                <th>{{ __('رقم الماركر') }}</th>
-                                <th>{{ __('الكود') }}</th>
-                                <th>{{ __('العمليات') }}</th>
+                                <th>{{ __('messages.color') }}</th>
+                                <th>{{ __('messages.status') }}</th>
+                                <th>{{ __('messages.quantity') }}</th>
+                                <th>{{ __('messages.factory') }}</th>
+                                <th>{{ __('messages.material') }}</th>
+                                <th>{{ __('messages.marker_number') }}</th>
+                                <th>{{ __('messages.code') }}</th>
+                                <th>{{ __('messages.operations') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,42 +62,42 @@
                                         <td>
                                             @switch($variant->status)
                                                 @case('new')
-                                                    {{ __('لم يتم البدء') }}
+                                                    {{ __('messages.new') }}
                                                 @break
 
                                                 @case('processing')
-                                                    {{ __('جاري التصنيع') }}
+                                                    {{ __('messages.processing') }}
                                                 @break
 
                                                 @case('postponed')
-                                                    {{ __(' مؤجل الي ' . $variant->pending_date) }}
+                                                    {{ __(' messages.postponed  ' . $variant->pending_date) }}
                                                 @break
 
                                                 @case('partial')
-                                                    {{ __('جزئي الاستلام') }}
+                                                    {{ __('messages.partial ') }}
                                                 @break
 
                                                 @case('complete')
-                                                    {{ __('تم التصنيع') }}
+                                                    {{ __('messages.complete ') }}
                                                 @break
 
                                                 @case('cancel')
-                                                    {{ __('تم الغاء التصنيع') }}
+                                                    {{ __('messages.cancel') }}
                                                 @break
 
                                                 @case('stop')
-                                                    {{ __('تم ايقاف التصنيع') }}
+                                                    {{ __('messages.stop') }}
                                                 @break
 
                                                 @default
-                                                    {{ __('غير معروف') }}
+                                                    {{ __('messages.unknown') }}
                                             @endswitch
                                         </td>
 
                                         <td>{{ $variant->quantity ?? 0 }}</td>
 
                                         <td>
-                                            {{ $variant->factory->name ?? 'لا يوجد' }}
+                                            {{ $variant->factory->name ?? __('messages.N/A') }}
                                         </td>
 
                                         <td class="materials-td" data-variant-id="{{ $variant->id }}"
@@ -106,7 +106,7 @@
                                                 // ✅ Fetch materials correctly
                                                 $materials = $variant->materials
                                                     ->map(function ($item) {
-                                                        return $item->material->name ?? 'غير معروف'; // ✅ Get the actual material name
+                                                        return $item->material->name ?? '-'; // ✅ Get the actual material name
                                                     })
                                                     ->toArray();
                                             @endphp
@@ -125,7 +125,7 @@
 
 
                                         <td>
-                                            {{ $variant->marker_number ?? 'لا يوجد' }}
+                                            {{ $variant->marker_number ?? __('messages.N/A') }}
                                             @if (!empty($variant->marker_file))
                                                 <a href="{{ asset($variant->marker_file) }}" download class="ms-2">
                                                     <i class="bi bi-download" title="Download Marker File"></i>
@@ -134,7 +134,7 @@
                                         </td>
 
                                         <td>
-                                            {{ $variant->sku ?? 'لا يوجد' }}
+                                            {{ $variant->sku ??  __('messages.N/A') }}
                                         </td>
 
                                         <td>
@@ -142,42 +142,42 @@
                                             <button type="button" class="btn btn-info assign-material-btn"
                                                 data-variant-id="{{ $variant->id }}" data-bs-toggle="modal"
                                                 data-bs-target="#assignMaterialsModal">
-                                                {{ __('اضف الخامات') }}
+                                                {{ __('messages.add_materials') }}
                                             </button>
                                             @if ($variant->quantity > 0)
                                                 <button type="button" class="btn btn-warning start-manufacturing-btn"
                                                     data-color-id="{{ $productColor->id }}"
                                                     data-color-name="{{ $productColor->color->name }}"
                                                     data-bs-toggle="modal" data-bs-target="#manufacturingModal">
-                                                    {{ __('تعديل التصنيع') }}
+                                                    {{ __('messages.edit_manufacturing') }}
                                                 </button>
                                             @else
                                                 <button type="button" class="btn btn-primary start-manufacturing-btn"
                                                     data-color-id="{{ $productColor->id }}"
                                                     data-color-name="{{ $productColor->color->name }}"
                                                     data-bs-toggle="modal" data-bs-target="#manufacturingModal">
-                                                    {{ __('ابدأ التصنيع') }}
+                                                    {{ __('messages.start_manufacturing') }}
                                                 </button>
                                             @endif
                                             <button type="button" class="btn btn-secondary stop-btn"
                                                 data-variant-id="{{ $variant->id }}"
                                                 data-product-id="{{ $product->id }}" data-status="stop"
                                                 data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('إيقاف') }}
+                                                {{ __('messages.stop') }}
                                             </button>
 
                                             <button type="button" class="btn btn-danger cancel-btn"
                                                 data-variant-id="{{ $variant->id }}"
                                                 data-product-id="{{ $product->id }}" data-status="cancel"
                                                 data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('إلغاء') }}
+                                                {{ __('messages.cancel') }}
                                             </button>
 
                                             <button type="button" class="btn btn-warning postpone-btn"
                                                 data-variant-id="{{ $variant->id }}"
                                                 data-product-id="{{ $product->id }}" data-status="postponed"
                                                 data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('تأجيل') }}
+                                                {{ __('messages.postpone') }}
                                             </button>
                                         </td>
                                     </tr>
@@ -188,9 +188,9 @@
                     </table>
                 </div>
                 <div class="mt-4 d-flex">
-                    <a href="{{ route('products.index') }}" class="btn btn-secondary">العوده للقائمه</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
                     <button type="button" class="btn btn-success ms-2" id="bulk-manufacturing-btn" style="display: none;">
-                        تصنيع
+                        {{ __('messages.start_manufacturing') }}
                     </button> <!-- ✅ Bulk Manufacturing Button (Hidden Initially) -->
                 </div>
             </div>
@@ -205,7 +205,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="assignMaterialsModalLabel">اضافة خامات</h5>
+                    <h5 class="modal-title" id="assignMaterialsModalLabel">{{ __('messages.add_materials') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="assign-materials-form" action="{{ route('products.assign.materials') }}" method="POST">
@@ -213,18 +213,18 @@
                     <div class="modal-body">
                         <input type="hidden" name="variant_id" id="modal-variant-id">
 
-                        <label for="materials" class="form-label">اختر الخامات</label>
+                        <label for="materials" class="form-label">{{ __('messages.materials') }}</label>
                         <select name="materials[]" id="materials" class="form-control tom-select-materials" multiple
                             required>
-                            <option value="">اختر الخامات</option>
+                            <option value="">{{ __('messages.choose_materials') }}</option>
                             @foreach ($all_materials as $material)
                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">حفظ</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </form>
             </div>
@@ -238,14 +238,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="materialsModalLabel">جميع الخامات</h5>
+                    <h5 class="modal-title" id="materialsModalLabel">{{ __('messages.materials') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul id="materialsList"></ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                 </div>
             </div>
         </div>
@@ -258,7 +258,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="manufacturingModalLabel">{{ __('بدء تصنيع اللون') }}</h5>
+                    <h5 class="modal-title" id="manufacturingModalLabel">{{ __('messages.start_manufacturing') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="manufacturing-form" action="{{ route('products.update.manufacture', $product->id) }}"
@@ -277,32 +277,32 @@
                             <div class="manufacturing-input-group row" style="border: 1px solid #acacac; padding: 10px">
                                 <!-- ✅ Color Name -->
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">{{ __('اللون') }}</label>
+                                    <label class="form-label">{{ __('messages.color') }}</label>
                                     <input type="text" class="form-control color-name-field" value="" disabled>
                                 </div>
 
 
                                 <div class="col-md-4 mb-3">
-                                    <label for="expected_delivery" class="form-label">{{ __('تاريخ الاستلام') }}</label>
+                                    <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
                                     <input type="date" class="form-control" name="expected_delivery[]" required>
                                 </div>
 
                                 <div class="col-md-4 mb-3">
-                                    <label for="order_delivery" class="form-label">{{ __('تاريخ الطلب') }}</label>
+                                    <label for="order_delivery" class="form-label">{{ __('messages.order_delivery_date') }}</label>
                                     <input type="date" class="form-control" name="order_delivery[]" required>
                                 </div>
 
                                 <div class="col-md-4 mb-3">
-                                    <label for="quantity" class="form-label">{{ __('الكمية') }}</label>
+                                    <label for="quantity" class="form-label">{{ __('messages.quantity') }}</label>
                                     <input type="number" class="form-control" name="quantity[]" min="1"
                                         required>
                                 </div>
 
                                 <!-- ✅ Factory Selection -->
                                 <div class="col-md-4 mb-3 factory-container">
-                                    <label for="factory_id" class="form-label">{{ __('المصنع') }}</label>
+                                    <label for="factory_id" class="form-label">{{ __('messages.factory') }}</label>
                                     <select name="factory_id[]" class="tom-select-factory" required>
-                                        <option value="">{{ __('اختر المصنع') }}</option>
+                                        <option value="">{{ __('messages.choose_factory') }}</option>
                                         @foreach ($factories as $factory)
                                             <option value="{{ $factory->id }}">{{ $factory->name }}</option>
                                         @endforeach
@@ -311,20 +311,20 @@
 
                                 <!-- ✅ Marker Number Input -->
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">{{ __('رقم الماركر') }}</label>
+                                    <label class="form-label">{{ __('messages.marker_number') }}</label>
                                     <input type="text" class="form-control" name="marker_number[]">
                                 </div>
 
                                 <!-- ✅ Marker File Upload -->
                                 <div class="col-md-4 mb-3">
-                                    <label for="marker_file" class="form-label">{{ __('ملف الماركر') }}</label>
+                                    <label for="marker_file" class="form-label">{{ __('messages.marker_file') }}</label>
                                     <input type="file" class="form-control" name="marker_file[]"
                                         accept="image/*,.pdf,.xlsx,.xls,.csv,.zip,.rar">
                                 </div>
 
                                 <!-- ✅ sku Input -->
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">{{ __('الكود') }}</label>
+                                    <label class="form-label">{{ __('messages.sku') }}</label>
                                     <input type="text" class="form-control" name="sku[]" required>
                                 </div>
 
@@ -333,9 +333,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">{{ __('ابدأ التصنيع') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.start') }}</button>
                         <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('إلغاء') }}</button>
+                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </form>
             </div>
@@ -349,7 +349,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="bulkManufacturingModalLabel">بدء التصنيع لأكثر من لون</h5>
+                    <h5 class="modal-title" id="bulkManufacturingModalLabel">{{ __('messages.bulk_manufacturing') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="bulk-manufacturing-form" action="{{ route('products.update.bulk-manufacture', $product->id) }}"
@@ -359,19 +359,19 @@
                         <!-- ✅ Common Fields (Shared for all colors) -->
                         <div class="row border p-3 mb-3 bg-light">
                             <div class="col-md-3 mb-3">
-                                <label for="expected_delivery" class="form-label">تاريخ الاستلام</label>
+                                <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
                                 <input type="date" class="form-control" name="expected_delivery" required>
                             </div>
 
                             <div class="col-md-3 mb-3">
-                                <label for="order_delivery" class="form-label">تاريخ الطلب</label>
+                                <label for="order_delivery" class="form-label">{{ __('messages.order_delivery_date') }}</label>
                                 <input type="date" class="form-control" name="order_delivery" required>
                             </div>
 
                             <div class="col-md-3 mb-3">
-                                <label for="factory_id" class="form-label">المصنع</label>
+                                <label for="factory_id" class="form-label">{{ __('messages.factory') }}</label>
                                 <select name="factory_id" class="form-control bulk-tom-select-factory" required>
-                                    <option value="">اختر المصنع</option>
+                                    <option value="">{{ __('messages.choose_factory') }}</option>
                                     @foreach ($factories as $factory)
                                         <option value="{{ $factory->id }}">{{ $factory->name }}</option>
                                     @endforeach
@@ -384,8 +384,8 @@
                         <div id="bulk-inputs-container"></div> <!-- ✅ Dynamic Inputs Go Here -->
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">ابدأ التصنيع</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.start') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </form>
             </div>
@@ -399,7 +399,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="statusModalLabel">إضافة ملاحظة للحالة</h5>
+                    <h5 class="modal-title" id="statusModalLabel">{{ __('messages.add_note') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -409,15 +409,15 @@
 
                     <!-- ✅ Pending Date Input (Initially Hidden) -->
                     <div id="pending-date-container" style="display: none;">
-                        <label for="pending_date" class="form-label">تاريخ التأجيل</label>
+                        <label for="pending_date" class="form-label">{{ __('messages.pending_date') }}</label>
                         <input type="date" id="pending_date" class="form-control">
                     </div>
 
                     <label for="statusNote" class="form-label">الملاحظات</label>
-                    <textarea id="statusNote" class="form-control" rows="3" placeholder="أضف أي ملاحظات هنا..."></textarea>
+                    <textarea id="statusNote" class="form-control" rows="3" placeholder="{{ __('messages.add_note') }}"></textarea>
 
                     <div class="mt-3">
-                        <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">حفظ</button>
+                        <button type="button" id="saveStatusBtn" class="btn btn-primary w-100">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </div>
@@ -431,19 +431,19 @@
             // ✅ Initialize TomSelect for Materials in Assign Materials Modal
             let materialSelect = new TomSelect('.tom-select-materials', {
                 plugins: ['remove_button'],
-                placeholder: "اختر الخامات"
+                placeholder: "{{ __('messages.choose_material') }}"
             });
 
             // ✅ Initialize TomSelect for Factories in Both Modals
             let factorySelects = document.querySelectorAll('.tom-select-factory');
             factorySelects.forEach(select => {
                 new TomSelect(select, {
-                    placeholder: "اختر المصنع"
+                    placeholder: "{{ __('messages.choose_factory') }}"
                 });
             });
 
             let bulkFactorySelect = new TomSelect('.bulk-tom-select-factory', {
-                placeholder: "اختر المصنع"
+                placeholder: "{{ __('messages.choose_factory') }}"
             });
 
             document.getElementById('add-manufacturing-inputs').addEventListener('click', function() {
@@ -502,7 +502,7 @@
                 document.querySelectorAll('.tom-select-factory').forEach(select => {
                     if (!select.tomselect) {
                         new TomSelect(select, {
-                            placeholder: "اختر المصنع"
+                            placeholder: "{{ __('messages.choose_factory') }}"
                         });
                     }
                 });
@@ -593,15 +593,15 @@
                 let status = $(this).data("status");
 
                 if (status === "stop") {
-                    modalTitle = "إيقاف التصنيع";
+                    modalTitle = "{{ __('messages.stop') }}";
                     $("#pending-date-container").hide();
                     $("#pending_date").prop('required', false);
                 } else if (status === "cancel") {
-                    modalTitle = "إلغاء التصنيع";
+                    modalTitle = "{{ __('messages.cancel') }}";
                     $("#pending-date-container").hide();
                     $("#pending_date").prop('required', false);
                 } else if (status === "postponed") {
-                    modalTitle = "تأجيل التصنيع";
+                    modalTitle = "{{ __('messages.postponed') }}";
                     $("#pending-date-container").show();
                     $("#pending_date").prop('required', true);
                 }
@@ -656,7 +656,7 @@
             $(document).on("click", ".delete-material", function() {
                 let materialId = $(this).data("id");
 
-                if (confirm("هل أنت متأكد من حذف هذه الخامة؟")) {
+                if (confirm("{{ __('messages.are_you_sure') }}")) {
                     $.ajax({
                         url: "/delete-material/" + materialId,
                         method: "DELETE",
@@ -664,7 +664,7 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(response) {
-                            alert("تم حذف الخامة بنجاح.");
+                            alert("{{ __('messages.material_deleted_successfully') }}");
                             location.reload();
                         }
                     });
@@ -693,21 +693,21 @@
                         <input type="hidden" name="color_ids[]" value="${colorId}">
     
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">اللون</label>
+                            <label class="form-label">{{ __('messages.color') }}</label>
                             <input type="text" class="form-control" value="${colorName}" disabled>
                         </div>
     
                         <div class="col-md-2 mb-3">
-                            <label for="quantity" class="form-label">الكمية</label>
+                            <label for="quantity" class="form-label">{{ __('messages.quantity') }}</label>
                             <input type="number" class="form-control" name="quantities[]" min="1" required>
                         </div>
     
                         <div class="col-md-2 mb-3">
-                            <label class="form-label">رقم الماركر</label>
+                            <label class="form-label">{{ __('messages.marker_number') }} </label>
                             <input type="text" class="form-control" name="marker_numbers[]">
                         </div>
                         <div class="col-md-2 mb-3">
-                            <label class="form-label">الكود</label>
+                            <label class="form-label">{{ __('messages.sku') }}</label>
                             <input type="text" class="form-control" name="sku[]" required>
                         </div>
                     </div>
