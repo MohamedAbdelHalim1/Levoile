@@ -351,7 +351,7 @@ return [
     'do_you_want_to_restore_all_similar_products' => 'هل أنت واثق أنك تريد استرجاع جميع المنتجات المتشابهة؟',
     'restored_successfully' => 'تم استرجاع المنتجات بنجاح',
     'type_of_shooting' => 'نوع التصوير',
-
+    'product' => 'منتج',
 
 
 

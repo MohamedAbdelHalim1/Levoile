@@ -355,6 +355,7 @@ return [
     'do_you_want_to_restore_all_similar_products' => 'Do You Want To Restore All Similar Products?',
     'restored_successfully' => 'Restored Successfully',
     'type_of_shooting' => 'Type Of Shooting',
+    'product' => 'Product',
 
 
 
