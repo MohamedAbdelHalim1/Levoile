@@ -283,7 +283,7 @@
 
 
                                 <div class="col-md-4 mb-3">
-                                    <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
+                                    <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery_date') }}</label>
                                     <input type="date" class="form-control" name="expected_delivery[]" required>
                                 </div>
 
@@ -359,7 +359,7 @@
                         <!-- ✅ Common Fields (Shared for all colors) -->
                         <div class="row border p-3 mb-3 bg-light">
                             <div class="col-md-3 mb-3">
-                                <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
+                                <label for="expected_delivery" class="form-label">{{ __('messages.expected_delivery_date') }}</label>
                                 <input type="date" class="form-control" name="expected_delivery" required>
                             </div>
 
