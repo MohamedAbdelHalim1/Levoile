@@ -66,7 +66,7 @@
                                         <tr>
                                             <th class="text-end">{{ __('messages.stock_status') }}:</th>
                                             <td style="font-weight: bold;">
-                                                {{ $product->have_stock ? '__(messages.available)' : '__(messages.not_available)' }}
+                                                {{ $product->have_stock ? __('messages.available') : __('messages.not_available') }}
                                             </td>
                                         </tr>
                                         <tr>
