@@ -13,7 +13,7 @@
             </div>
             <div class="d-flex mb-3">
                 <label class="form-label text-lg"><strong><b>{{ __('messages.code') }}:</b></strong></label>
-                <p class="ms-3">{{ $season->code ?? '{{ __('messages.N/A') }}' }}</p>
+                <p class="ms-3">{{ $season->code ??  __('messages.N/A')  }}</p>
             </div>
             <a href="{{ route('seasons.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
         </div>
