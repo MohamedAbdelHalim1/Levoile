@@ -22,7 +22,7 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('messages.name ') }}</th>
+                            <th>{{ __('messages.name') }}</th>
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
