@@ -413,7 +413,7 @@
                         <input type="date" id="pending_date" class="form-control">
                     </div>
 
-                    <label for="statusNote" class="form-label">الملاحظات</label>
+                    <label for="statusNote" class="form-label">{{ __('messages.notes') }}</label>
                     <textarea id="statusNote" class="form-control" rows="3" placeholder="{{ __('messages.add_note') }}"></textarea>
 
                     <div class="mt-3">
