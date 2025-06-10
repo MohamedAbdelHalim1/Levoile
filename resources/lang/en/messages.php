@@ -302,7 +302,8 @@ return [
     'profile_updated' => 'Profile Updated Successfully',
     'variant_status' => 'Variant Status',
     'publish_date' => 'Publish Date',
-    'manufacturer_status' => 'Manufacturer Status'
+    'manufacturer_status' => 'Manufacturer Status',
+    'receiving_quantity' => 'Receiving Quantity',
 
 
 

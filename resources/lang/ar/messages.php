@@ -299,6 +299,7 @@ return [
     'variant_status' => 'حاله الوان',
     'publish_date' => 'موعد الطرح',
     'manufacturer_status' => 'حاله التصنيع',
+    'receiving_quantity' => 'الكمية المستلمه',
 
 
 
