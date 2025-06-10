@@ -11,7 +11,7 @@
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
 
-                <h4 class="mb-4">ارسال الشيت للتصوير: {{ $delivery->filename }}</h4>
+                <h4 class="mb-4"> {{ __('messages.send_file_to_shooting') }} : {{ $delivery->filename }}</h4>
 
                 <form method="POST" action="{{ route('shooting-deliveries.send.save', $delivery->id) }}">
                     @csrf
@@ -21,7 +21,7 @@
                     </div> --}}
 
                     <div class="mb-3">
-                        <input type="checkbox" id="checkAllNew"> <label for="checkAllNew">تحديد كل العناصر الجديدة</label>
+                        <input type="checkbox" id="checkAllNew"> <label for="checkAllNew">{{ __('messages.check_all_new') }}</label>
                     </div>
                     
 
@@ -29,12 +29,12 @@
                         <table class="table table-bordered text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th>اختيار</th>
-                                    <th>الكود</th>
-                                    <th>الوصف</th>
-                                    <th>الكمية</th>
-                                    <th>الرقم الاساسي</th>
-                                    <th>الحاله</th>
+                                    <th>#</th>
+                                    <th>{{ __('messages.code') }}</th>
+                                    <th>{{ __('messages.description') }}</th>
+                                    <th>{{ __('messages.quantity') }}</th>
+                                    <th>{{ __('messages.code') }}</th>
+                                    <th>{{ __('messages.status') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,9 +75,9 @@
                                         <td>
                                             @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
                                                  @if($content->status === 'new')
-                                                    <span class="badge bg-success">جديد</span>
+                                                    <span class="badge bg-success">{{ __('messages.new') }}</span>
                                                 @elseif($content->status === 'old')
-                                                    <span class="badge bg-warning">قديم</span>
+                                                    <span class="badge bg-warning">{{ __('messages.old') }}</span>
                                                 @endif
                                             @endif
                                         </td>
@@ -87,8 +87,8 @@
                         </table>
                     </div>
 
-                    <button type="submit" class="btn btn-success mt-3">نشر المنتجات الجديده</button>
-                    <a href="{{ route('shooting-deliveries.index') }}" class="btn btn-secondary mt-3">رجوع</a>
+                    <button type="submit" class="btn btn-success mt-3">{{ __('messages.publish') }}</button>
+                    <a href="{{ route('shooting-deliveries.index') }}" class="btn btn-secondary mt-3">{{ __('messages.cancel') }}</a>
                 </form>
 
             </div>
@@ -116,7 +116,7 @@
             const selected = document.querySelectorAll('input[name="selected_rows[]"]:checked').length;
             if (selected == 0) {
                 e.preventDefault();
-                alert('يجب اختيار منتج واحد على الأقل قبل النشر');
+                alert('{{ __('messages.select_at_least_one_item') }}');
             }
         });
     </script>

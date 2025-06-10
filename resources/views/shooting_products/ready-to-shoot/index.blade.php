@@ -11,32 +11,32 @@
             @endif
 
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4 class="mb-4">المنتجات الجاهزة للتصوير</h4>
+                <h4 class="mb-4">{{ __('messages.ready_to_shoot') }}</h4>
                 <form method="GET" action="{{ route('ready-to-shoot.index') }}" class="row mb-3">
                     <div class="col-md-3">
                         <select name="type_of_shooting" class="form-select" onchange="this.form.submit()">
-                            <option value="">كل أنواع التصوير</option>
+                            <option value="">{{ __('messages.all_types_of_shooting') }}</option>
                             <option value="تصوير منتج" {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>
-                                تصوير منتج</option>
+                                 {{ __('messages.product_shooting') }}</option>
                             <option value="تصوير موديل"
-                                {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>تصوير موديل</option>
+                                {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>{{ __('messages.model_shooting') }} </option>
                             <option value="تصوير انفلونسر"
-                                {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>تصوير انفلونسر
+                                {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>{{ __('messages.inflo_shooting') }} 
                             </option>
                             <option value="تعديل لون" {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>
-                                تعديل لون</option>
+                                {{ __('messages.change_color') }} </option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <select name="status" class="form-select" onchange="this.form.submit()">
                             <option value="">كل الحالات</option>
-                            <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>جديد</option>
-                            <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>قيد
-                                التصوير</option>
+                            <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>{{ __('messages.new') }}</option>
+                            <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>
+                                {{ __('messages.processing') }}</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <a href="{{ route('ready-to-shoot.index') }}" class="btn btn-secondary">إعادة تعيين الفلاتر</a>
+                        <a href="{{ route('ready-to-shoot.index') }}" class="btn btn-secondary">{{ __('messages.reset') }}</a>
                     </div>
                 </form>
 
@@ -45,23 +45,23 @@
                     <form method="POST" action="{{ route('shooting-products.multi.start.page') }}">
                         @csrf
                         <button type="submit" class="btn btn-success mb-3" id="startShootingBtn" style="display:none;"
-                            onclick="return validateBeforeSubmit()">بدء التصوير</button>
+                            onclick="return validateBeforeSubmit()">{{ __('messages.start_shooting') }}</button>
 
                         <button type="button" class="btn btn-primary mb-3" id="bulkAssignBtn" style="display:none;">
-                            تعيين نوع التصوير جماعي
+                            {{ __('messages.bulk_shooting_type_assign') }}
                         </button>
 
                         <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                             <thead class="table-light">
                                 <tr>
                                     <th><input type="checkbox" id="checkAllStartShooting"></th>
-                                    <th>اسم المنتج</th>
-                                    <th>عدد الألوان</th>
-                                    <th>الحالة</th>
-                                    <th>نوع التصوير</th>
-                                    <th>الإجراء</th>
+                                    <th>{{ __('messages.product') }}</th>
+                                    <th>{{ __('messages.number_of_colors') }} </th>
+                                    <th>{{ __('messages.status') }}</th>
+                                    <th>{{ __('messages.type_of_shooting') }} </th>
+                                    <th>{{ __('messages.operations') }}</th>
                                     <th>
-                                        تعيين نوع التصوير <input type="checkbox" id="bulkCheckAll">
+                                        {{ __('messages.assign_type_of_shooting') }}<input type="checkbox" id="bulkCheckAll">
                                     </th>
                                 </tr>
                             </thead>
@@ -117,7 +117,7 @@
                                                 -
                                                 <button type="button" class="btn btn-sm btn-light refresh-variants-btn"
                                                     data-product-id="{{ $productId }}" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="استرجاع جميع المنتجات المتشابهة">
+                                                    data-bs-placement="top" title="{{ __('messages.refresh_variants') }}">
                                                     <i class="fa fa-refresh" style="color: rgb(65, 49, 37);"></i>
                                                 </button>
                                             @endif
@@ -139,7 +139,7 @@
                                         <td>
                                             @if ($status !== 'قيد التصوير')
                                                 <button type="button" class="btn btn-sm btn-success assign-type"
-                                                    data-id="{{ $productId }}">تعيين نوع التصوير</button>
+                                                    data-id="{{ $productId }}">{{ __('messages.assign_type_of_shooting') }}</button>
                                             @endif
                                         </td>
                                         <td>
@@ -166,20 +166,20 @@
                 <input type="hidden" name="product_id" id="modal_product_id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="typeModalLabel">تعيين نوع التصوير</h5>
+                        <h5 class="modal-title" id="typeModalLabel">{{ __('messages.assign_type_of_shooting') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <select name="type_of_shooting" class="form-control" required>
-                            <option value="">اختر نوع التصوير</option>
-                            <option value="تصوير منتج">تصوير منتج</option>
-                            <option value="تصوير موديل">تصوير موديل</option>
-                            <option value="تصوير انفلونسر">تصوير انفلونسر</option>
-                            <option value="تعديل لون">تعديل لون</option>
+                            <option value="">{{ __('messages.select_type_of_shooting') }}</option>
+                            <option value="تصوير منتج">{{ __('messages.product_shooting') }}</option>
+                            <option value="تصوير موديل">{{ __('messages.model_shooting') }}</option>
+                            <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }}</option>
+                            <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">حفظ</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </form>
@@ -195,20 +195,20 @@
                 <input type="hidden" name="product_ids" id="bulk_product_ids">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">تعيين نوع التصوير (جماعي)</h5>
+                        <h5 class="modal-title">{{ __('messages.assign_type_of_shooting') }} ({{ __('messages.bulk') }})</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <select name="type_of_shooting" class="form-control" required>
-                            <option value="">اختر نوع التصوير</option>
-                            <option value="تصوير منتج">تصوير منتج</option>
-                            <option value="تصوير موديل">تصوير موديل</option>
-                            <option value="تصوير انفلونسر">تصوير انفلونسر</option>
-                            <option value="تعديل لون">تعديل لون</option>
+                            <option value="">{{ __('messages.select_type_of_shooting') }}</option>
+                            <option value="تصوير منتج">{{ __('messages.product_shooting') }}</option>
+                            <option value="تصوير موديل">{{ __('messages.model_shooting') }} </option>
+                            <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }}</option>
+                            <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">حفظ</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </form>
@@ -261,7 +261,7 @@
 
         function handleCheckboxClick(cb) {
             if (!cb.dataset.type || cb.dataset.type === '') {
-                alert('يجب تحديد نوع التصوير أولاً لهذا المنتج');
+                alert('{{ __('messages.select_type_of_shooting') }}');
                 cb.checked = false;
                 return false;
             }
@@ -270,7 +270,7 @@
             const types = new Set(selected.map(el => el.dataset.type));
 
             if (types.size > 1) {
-                alert('لا يمكنك اختيار منتجات من أنواع تصوير مختلفة');
+                alert('{{ __('messages.select_one_type_of_shooting') }}');
                 cb.checked = false;
                 return false;
             }
@@ -301,7 +301,7 @@
         function validateBeforeSubmit() {
             const selected = [...document.querySelectorAll('input[name="selected_products[]"]:checked')];
             if (selected.length === 0) {
-                alert('يجب اختيار منتج واحد على الأقل لبدء التصوير');
+                alert('{{ __('messages.select_at_least_one_product') }}');
                 return false;
             }
             return true;
@@ -355,7 +355,7 @@
                 });
 
                 if (!allHaveType || types.size > 1) {
-                    alert('لا يمكن تحديد الكل لأن بعض المنتجات ليس لها نوع تصوير أو أنواع مختلفة');
+                    alert('{{ __('messages.you_cannot_select_all') }}');
                     this.checked = false;
                     return;
                 }
@@ -372,7 +372,7 @@
             document.querySelectorAll('.refresh-variants-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.getAttribute('data-product-id');
-                        if (!confirm('هل أنت واثق أنك تريد استرجاع جميع المنتجات المتشابهة؟')) {
+                        if (!confirm('{{ __('messages.do_you_want_to_restore_all_similar_products') }}')) {
                             return;
                         }
 
@@ -393,7 +393,7 @@
                             return response.json();
                         })
                         .then(data => {
-                            alert(data.message || 'تم استرجاع المنتجات بنجاح');
+                            alert(data.message || '{{ __('messages.restored_successfully') }}');
                             // ممكن تعمل reload أو تحديث جزء من الصفحة
                             location.reload(); // أو أعملها تحديث ذكي لاحقًا
                         })

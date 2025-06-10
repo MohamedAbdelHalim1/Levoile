@@ -16,24 +16,24 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="file" class="form-label"> اختر ملف Excel (الملف من النوع xlsx و xls فقط)</label>
+                        <label for="file" class="form-label">{{ __('messages.upload_only_xlsx_or_xls') }}</label>
                         <input type="file" name="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                     </div>
 
-                    <button type="submit" class="btn btn-success">رفع</button>
+                    <button type="submit" class="btn btn-success">{{ __('messages.upload') }}</button>
                 </form>
 
                 <div id="sheet-preview" class="mt-4 d-none">
-                    <h5 class="mb-3"><b>معاينة البيانات(بالرجاء تأكد من صحه واكتمال البيانات) : </b></h5>
+                    <h5 class="mb-3"><b>{{ __('messages.review_data') }} </b></h5>
                     <div class="table-responsive">
                         <table class="table table-bordered text-center" id="preview-table">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Item No</th>
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Unit of Measure</th>
-                                    <th>Primary ID</th>
+                                    <th>{{ __('messages.item_no') }}</th>
+                                    <th>{{ __('messages.description') }}</th>
+                                    <th>{{ __('messages.quantity') }}</th>
+                                    <th>{{ __('messages.unit') }}</th>
+                                    <th>{{ __('messages.code') }}</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -46,7 +46,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content text-center p-4">
                             <div class="spinner-border text-primary mb-3" role="status"></div>
-                            <h5>جاري رفع الشيت، من فضلك لا تغلق الصفحة</h5>
+                            <h5>{{ __('messages.uploading_sheet') }}</h5>
                         </div>
                     </div>
                 </div>

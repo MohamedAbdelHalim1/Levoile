@@ -12,22 +12,22 @@
 
             <div class="bg-white shadow sm:rounded-lg p-4">
 
-                <h3>جلسات جاهزه للتعديل</h3>
+                <h3>{{ __('messages.ready_to_edit_sessions') }}</h3>
                 <button id="bulkAssignBtn" class="btn btn-warning mb-3 d-none" data-bs-toggle="modal"
-                    data-bs-target="#bulkAssignModal">تعيين محرر جماعي</button>
+                    data-bs-target="#bulkAssignModal">{{ __('messages.bulk_editor_assign') }}</button>
 
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
-                            <th>لينك الجلسة</th>
-                            <th>لينك التصوير</th>
-                            <th>لينك التعديل</th>
-                            <th>المحرر</th>
-                            <th>الحالة</th>
-                            <th>تاريخ التسليم</th>
-                            <th>الوقت المتبقي</th>
-                            <th>ملاحظة</th>
+                            <th>{{ __('messages.reference') }}</th>
+                            <th>{{ __('messages.session_link') }}</th>
+                            <th>{{ __('messages.edit_link') }}</th>
+                            <th>{{ __('messages.editor') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.receiving_date') }}</th>
+                            <th>{{ __('messages.remaining_time') }} </th>
+                            <th>{{ __('messages.note') }}</th>
                             {{-- <th>المراجعة</th> --}}
                         </tr>
                     </thead>
@@ -44,16 +44,16 @@
                                 </td>
                                 <td>
                                     @if ($session->photo_drive_link)
-                                        <a href="{{ $session->photo_drive_link }}" target="_blank">فتح</a>
+                                        <a href="{{ $session->photo_drive_link }}" target="_blank">{{ __('messages.open') }}</a>
                                     @else
-                                        <span class="text-muted">لا يوجد</span>
+                                        <span class="text-muted">{{ __('messages.N/A') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     <span class="d-flex align-items-center justify-content-between">
                                         @if ($session->drive_link)
-                                            <a href="{{ $session->drive_link }}" target="_blank">فتح</a>
-                                            <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
+                                            <a href="{{ $session->drive_link }}" target="_blank">{{ __('messages.open') }}</a>
+                                            <button class="btn btn-sm" style="padding: 0 4px;" title="{{ __('messages.edit') }}"
                                                 data-bs-toggle="modal" data-bs-target="#uploadDriveModal"
                                                 data-reference="{{ $session->reference }}"
                                                 data-receiving-date="{{ $session->receiving_date }}"
@@ -66,7 +66,7 @@
                                                 data-reference="{{ $session->reference }}"
                                                 data-receiving-date="{{ $session->receiving_date }}"
                                                 data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
-                                                رفع لينك
+                                                {{ __('messages.upload') }} 
                                             </button>
                                         @endif
                                     </span>
@@ -76,7 +76,7 @@
                                     @if ($session->user_id)
                                         <span class="d-flex align-items-center justify-content-between">
                                             {{ \App\Models\User::find($session->user_id)?->name ?? '---' }}
-                                            <button class="btn btn-sm" style="padding: 0 4px;" title="تعديل"
+                                            <button class="btn btn-sm" style="padding: 0 4px;" title="{{ __('messages.edit') }}"
                                                 data-bs-toggle="modal" data-bs-target="#assignEditorModal"
                                                 data-reference="{{ $session->reference }}">
                                                 <i class="fa fa-pencil"></i>
@@ -85,7 +85,7 @@
                                     @else
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
-                                            تعيين محرر
+                                            {{ __('messages.assign_editor') }} 
                                         </button>
                                     @endif
                                 </td>
@@ -138,20 +138,20 @@
                 @csrf
                 <input type="hidden" name="reference" id="driveModalReference">
                 <div class="modal-header">
-                    <h5 class="modal-title">رفع لينك درايف</h5>
+                    <h5 class="modal-title">{{ __('messages.upload_drive_link') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="url" name="drive_link" class="form-control" placeholder="ضع رابط Google Drive"
+                    <input type="url" name="drive_link" class="form-control"
                         required>
 
                     <div id="noteWrapper" style="display: none;">
-                        <label for="note">سبب التأخير:</label>
+                        <label for="note">{{ __('messages.delay_reasons') }} :</label>
                         <textarea name="note" id="noteInput" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">حفظ</button>
+                    <button type="submit" class="btn btn-success">{{ __('messages.upload') }}</button>
                 </div>
             </form>
         </div>
@@ -164,23 +164,23 @@
                 @csrf
                 <input type="hidden" name="reference" id="editorModalReference">
                 <div class="modal-header">
-                    <h5 class="modal-title">تعيين محرر</h5>
+                    <h5 class="modal-title">{{ __('messages.assign_editor') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <select name="user_id" class="form-select" required>
-                        <option value="">اختر المستخدم</option>
+                        <option value="">{{ __('messages.assign_editor') }}</option>
                         @foreach (\App\Models\User::where('role_id', 7)->get() as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
-                    <label for="receiving_date" class="form-label">تاريخ التسليم</label>
+                    <label for="receiving_date" class="form-label">{{ __('messages.receiving_date') }} </label>
                     <input type="date" name="receiving_date" class="form-control" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">تأكيد</button>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                 </div>
             </form>
         </div>
@@ -194,7 +194,7 @@
                 <!-- نخليها مصفوفة -->
                 <div id="bulkHiddenInputs"></div>
                 <div class="modal-header">
-                    <h5 class="modal-title">تعيين محرر جماعي</h5>
+                    <h5 class="modal-title">{{ __('messages.bulk_editor_assign') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -202,14 +202,14 @@
                         <div class="col">
                             <label>اختر المحرر</label>
                             <select name="user_id" class="form-select" required>
-                                <option value="">اختر المستخدم</option>
+                                <option value="">{{ __('messages.assign_editor') }} </option>
                                 @foreach (\App\Models\User::all() as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col">
-                            <label>تاريخ تسليم موحد (اختياري)</label>
+                            <label>{{ __('messages.unified_expected_delivery_date') }}</label>
                             <input type="date" name="common_date" class="form-control">
                         </div>
                     </div>
@@ -218,7 +218,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">حفظ</button>
+                    <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
                 </div>
             </form>
         </div>
@@ -240,7 +240,7 @@
                 const hasEditor = button.getAttribute('data-has-editor') === 'true'; // هنا هنستخدمها
 
                     if (!hasEditor) {
-                        alert('يجب تعيين محرر أولاً قبل رفع لينك التعديل.');
+                        alert('{{ __('messages.assign_editor_first') }}');
                         event.preventDefault(); // يمنع فتح المودال
                         return;
                     }
@@ -302,7 +302,7 @@
             // 2. ضيف الانبوتات الخاصة بالتواريخ
             individualDates.innerHTML = refs.map(ref => `
                 <div class="col">
-                    <label>تاريخ تسليم لـ: ${ref}</label>
+                    <label>{{ __('messages.expected_delivery_date') }} : ${ref}</label>
                     <input type="date" name="dates[${ref}]" class="form-control">
                 </div>
             `).join('');

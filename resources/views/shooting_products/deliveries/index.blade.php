@@ -5,24 +5,24 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <div class="d-flex justify-content-between mb-3">
-                    <h4>ملفات تسليمات التصوير</h4>
-                    <a href="{{ route('shooting-deliveries.upload.create') }}" class="btn btn-primary">رفع شيت جديد</a>
+                    <h4>{{ __('messages.shooting_delivery_file') }}</h4>
+                    <a href="{{ route('shooting-deliveries.upload.create') }}" class="btn btn-primary">{{ __('messages.upload_new_sheet') }}</a>
                 </div>
 
                 <table class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>تاريخ الرفع</th>
-                            <th>الحالة</th>
-                            <th>عدد المنتجات</th>
-                            <th>عدد الموديلات</th>
-                            <th>تم النشر</th>
-                            <th>عدد الموديلات الجديده</th>
-                            <th>عدد الموديلات القديمه</th>
-                            <th>اسم الرافع</th>
-                            <th>اسم الناشر</th>
-                            <th>تحميل</th>
-                            <th>الإجراءات</th>
+                            <th>{{ __('messages.created_at') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.number_of_products') }}</th>
+                            <th>{{ __('messages.number_of_models') }}</th>
+                            <th>{{ __('messages.published') }}</th>
+                            <th>{{ __('messages.new_models_count') }}</th>
+                            <th>{{ __('messages.old_models_count') }}</th>
+                            <th>{{ __('messages.uploaded_by') }}</th>
+                            <th>{{ __('messages.published_by') }}</th>
+                            <th>{{ __('messages.download') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,9 +59,9 @@
                                         <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
                                             class="btn btn-warning">
                                             @if ($delivery->status == 'تم ألنشر')
-                                            اعاده النشر
+                                            {{ __('messages.republish') }}
                                             @else
-                                            نشر
+                                            {{ __('messages.publish') }}
                                             @endif
                                         </a>
                                     {{-- @endif --}}

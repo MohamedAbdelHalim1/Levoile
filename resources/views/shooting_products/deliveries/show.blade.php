@@ -9,12 +9,12 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>رقم الصنف</th>
-                            <th>الوصف</th>
-                            <th>الكمية</th>
-                            <th>الوحدة</th>
-                            <th>الرقم الاساسي</th>
-                            <th>الحالة</th>
+                            <th>{{ __('messages.item_no') }}</th>
+                            <th>{{ __('messages.description') }}</th>
+                            <th>{{ __('messages.quantity') }}</th>
+                            <th>{{ __('messages.unit') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,9 +27,9 @@
                                 <td>{{ $content->primary_id }}</td>
                                 <td>
                                     @if($content->is_received == 1)
-                                        <span class="badge bg-success">تم النشر</span>
+                                        <span class="badge bg-success">{{ __('messages.published') }}</span>
                                     @else
-                                        <span class="badge bg-danger">لم يتم النشر</span>
+                                        <span class="badge bg-danger">{{ __('messages.not_published') }}</span>
                                     @endif
                                 </td>
                             </tr>
