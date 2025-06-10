@@ -227,6 +227,26 @@ return [
     'upload_only_xlsx_or_xls' => 'Upload Only Xlsx Or Xls',
     'uploading_file_in_progress_please_wait' => 'Uploading File In Progress ... Please Wait',
     'master_sheet_upload_in_progress_please_dont_close_the_page' => 'Master Sheet Upload In Progress ... Please Don\'t Close The Page',
+    'complete_product_data' => 'Complete Product Data',
+    'time_published_in_markets' => 'Time Published In Markets',
+    'print' => 'Print',
+    'matrials_stock' => 'Materials Stock',
+    'available' => 'Available',
+    'not_available' => 'Not Available',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

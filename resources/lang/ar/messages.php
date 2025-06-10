@@ -223,4 +223,21 @@ return [
     'upload_only_xlsx_or_xls' => 'اختر ملف Excel (xlsx أو xls فقط)',
     'uploading_file_in_progress_please_wait' => 'جاري تجهيز الملف... برجاء الانتظار',
     'master_sheet_upload_in_progress_please_dont_close_the_page' => 'جاري رفع الشيت، من فضلك لا تغلق الصفحة',
+    'complete_product_data' => 'اكمل بيانات المنتج',
+    'time_published_in_markets' => 'وقت النشر في الاسواق',
+    'print' => 'طباعة',
+    'matrials_stock' => 'مخزون الخامات',
+    'available' => 'متوفر',
+    'not_available' => 'غير متوفر',
+
+
+
+
+
+
+
+
+
 ];
+
+
