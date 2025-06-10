@@ -159,7 +159,7 @@
                                     <tr>
                                         <th>{{ __('messages.color') }}</th>
                                         <th>{{ __('messages.sku') }}</th>
-                                        <th>{{ __('messages.expected_delivery') }}</th>
+                                        <th>{{ __('messages.expected_delivery_date') }}</th>
                                         <th>{{ __('messages.quantity') }}</th>
                                         <th>{{ __('messages.received_quantity') }} </th>
                                         <th>{{ __('messages.status') }}</th>
@@ -275,7 +275,7 @@
 
                         <!-- Expected Delivery Date -->
                         <div id="expectedDeliveryContainer" class="mt-3 d-none">
-                            <label for="newExpectedDelivery" class="form-label">{{ __('messages.expected_delivery') }}</label>
+                            <label for="newExpectedDelivery" class="form-label">{{ __('messages.expected_delivery_date') }}</label>
                             <input type="date" id="newExpectedDelivery" name="new_expected_delivery"
                                 class="form-control">
                         </div>
