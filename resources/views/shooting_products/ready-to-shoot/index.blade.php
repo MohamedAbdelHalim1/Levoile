@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-md-3">
                         <select name="status" class="form-select" onchange="this.form.submit()">
-                            <option value="">كل الحالات</option>
+                            <option value="">{{ __('messages.all_statuses') }}</option>
                             <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>{{ __('messages.new') }}</option>
                             <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>
                                 {{ __('messages.processing') }}</option>
