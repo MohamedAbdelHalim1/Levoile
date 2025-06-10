@@ -95,10 +95,10 @@
                             <img src="{{ asset($product->photo) }}" alt="Product Image" class="product-image">
                         @endif
                         <div class="product-details">
-                            <div class="key-value"><span>{{ __('messages.code') }}:</span> <span>{{ $product->code ?? '{{ __('messages.N/A') }}' }}</span></div>
+                            <div class="key-value"><span>{{ __('messages.code') }}:</span> <span>{{ $product->code ?? __('messages.N/A') }}</span></div>
                             <div class="key-value"><span>{{ __('messages.description') }}:</span> <span>{{ $product->description }}</span></div>
-                            <div class="key-value"><span>{{ __('messages.category') }}:</span> <span>{{ $product->category->name ?? '{{ __('messages.N/A') }} ' }}</span></div>
-                            <div class="key-value"><span>{{ __('messages.season') }}:</span> <span>{{ $product->season->name ?? '{{ __('messages.N/A') }} ' }}</span></div>
+                            <div class="key-value"><span>{{ __('messages.category') }}:</span> <span>{{ $product->category->name ?? __('messages.N/A') }}</span></div>
+                            <div class="key-value"><span>{{ __('messages.season') }}:</span> <span>{{ $product->season->name ?? __('messages.N/A') }}</span></div>
                             <div class="key-value"><span>{{ __('messages.matrials_stock') }} :</span> <span>{{ $product->have_stock ? '{{ __('messages.available') }}' : '{{ __('messages.not_available') }}' }}</span></div>
                             <div class="key-value"><span>{{ __('messages.status') }}:</span> <span>{{ $product->status }}</span></div>
                         </div>
