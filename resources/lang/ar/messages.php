@@ -109,6 +109,8 @@ return [
     'color_details' => 'تفاصيل اللون',
     'create_size' => 'انشاء مقاس',
     'create_season' => 'انشاء فصل',
+    'edit_season' => 'تعديل فصل',
+    'season_details' => 'تفاصيل الفصل',
     'create_stock' => 'انشاء مخزن',
     'create_factory' => 'انشاء مصنع',
     'create_branch' => 'انشاء فرع',
@@ -294,6 +296,9 @@ return [
     'update_profile_information_text' => 'تحديث معلومات الملف الشخصي',
     'email' => 'البريد الالكتروني',
     'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
+    'variant_status' => 'حاله الوان',
+    'publish_date' => 'موعد الطرح',
+    'manufacturer_status' => 'حاله التصنيع',
 
 
 

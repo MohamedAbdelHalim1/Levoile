@@ -15,9 +15,9 @@
                 <div class="row">
                     <!-- Category Filter -->
                     <div class="col-md-4">
-                        <label for="categoryFilter">{{ __('القسم') }}</label>
+                        <label for="categoryFilter">{{ __('messages.category') }}</label>
                         <select id="categoryFilter" class="ts-filter">
-                            <option value="">{{ __('كل الفئات') }}</option>
+                            <option value="">{{ __('messages.all_categories') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.category.name')->unique()->filter() as $category)
                                 <option value="{{ $category }}">{{ $category }}</option>
                             @endforeach
@@ -26,9 +26,9 @@
 
                     <!-- Season Filter -->
                     <div class="col-md-4">
-                        <label for="seasonFilter">{{ __('الموسم') }}</label>
+                        <label for="seasonFilter">{{ __('messages.season') }}</label>
                         <select id="seasonFilter" class="ts-filter">
-                            <option value="">{{ __('كل المواسم') }}</option>
+                            <option value="">{{ __('messages.all_seasons') }}</option>
                             @foreach ($product_color_variants->pluck('productcolor.product.season.name')->unique()->filter() as $season)
                                 <option value="{{ $season }}">{{ $season }}</option>
                             @endforeach
@@ -48,52 +48,52 @@
 
                     <!-- Status Filter -->
                     <div class="col-md-4">
-                        <label for="statusFilter">{{ __('الحالة') }}</label>
+                        <label for="statusFilter">{{ __('messages.status') }}</label>
                         <select id="statusFilter" class="ts-filter">
-                            <option value="">{{ __('كل الحالات') }}</option>
-                            <option value="new">{{ __('جديد') }}</option>
-                            <option value="partial">{{ __('جزئي') }}</option>
-                            <option value="complete">{{ __('مكتمل') }}</option>
-                            <option value="processing">{{ __('قيد التصنيع') }}</option>
-                            <option value="pending">{{ __('قيد الانتظار') }}</option>
-                            <option value="stop">{{ __('متوقف') }}</option>
-                            <option value="cancel">{{ __('ملغي') }}</option>
-                            <option value="postponed">{{ __('مؤجل') }}</option>
+                            <option value="">{{ __('messages.all_statuses') }}</option>
+                            <option value="new">{{ __('messages.new') }}</option>
+                            <option value="partial">{{ __('messages.partial') }}</option>
+                            <option value="complete">{{ __('messages.complete') }}</option>
+                            <option value="processing">{{ __('messages.processing') }}</option>
+                            <option value="pending">{{ __('messages.pending') }}</option>
+                            <option value="stop">{{ __('messages.stop') }}</option>
+                            <option value="cancel">{{ __('messages.cancel') }}</option>
+                            <option value="postponed">{{ __('messages.postponed') }}</option>
                         </select>
                     </div>
 
                     <!-- Variant Status Filter -->
                     <div class="col-md-3 mt-3">
-                        <label for="variantStatusFilter">{{ __('حالة اللون') }}</label>
+                        <label for="variantStatusFilter">{{ __('messages.variant_status') }}</label>
                         <select id="variantStatusFilter" class="ts-filter">
-                            <option value="">{{ __('كل الحالات') }}</option>
-                            <option value="new">{{ __('جديد') }}</option>
-                            <option value="partial">{{ __('جزئي') }}</option>
-                            <option value="complete">{{ __('مكتمل') }}</option>
-                            <option value="processing">{{ __('قيد التصنيع') }}</option>
-                            <option value="pending">{{ __('قيد الانتظار') }}</option>
-                            <option value="stop">{{ __('متوقف') }}</option>
-                            <option value="cancel">{{ __('ملغي') }}</option>
-                            <option value="postponed">{{ __('مؤجل') }}</option>
+                            <option value="">{{ __('messages.all_statuses') }}</option>
+                            <option value="new">{{ __('messages.new') }}</option>
+                            <option value="partial">{{ __('messages.partial') }}</option>
+                            <option value="complete">{{ __('messages.complete') }}</option>
+                            <option value="processing">{{ __('messages.processing') }}</option>
+                            <option value="pending">{{ __('messages.pending') }}</option>
+                            <option value="stop">{{ __('messages.stop') }}</option>
+                            <option value="cancel">{{ __('messages.cancel') }}</option>
+                            <option value="postponed">{{ __('messages.postponed') }}</option>
                         </select>
                     </div>
 
                     <!-- Expected Delivery Date Range -->
                     <div class="col-md-6 mt-3">
-                        <label for="expectedDeliveryStart">{{ __('تاريخ التوصيل المتوقع') }}</label>
+                        <label for="expectedDeliveryStart">{{ __('messages.expected_delivery_date') }}</label>
                         <div class="input-group">
                             <input type="date" id="expectedDeliveryStart" class="form-control"
-                                placeholder="{{ __('بداية التاريخ') }}">
+                                placeholder="{{ __('messages.from_date') }}">
                             <span class="input-group-text">-</span>
                             <input type="date" id="expectedDeliveryEnd" class="form-control"
-                                placeholder="{{ __('نهاية التاريخ') }}">
+                                placeholder="{{ __('messages.to_date') }}">
                         </div>
                     </div>
 
                     <!-- Filter and Reset Buttons -->
                     <div class="col-md-3 mt-3 d-flex align-items-end">
-                        <button id="applyFilterBtn" class="btn btn-primary me-2">{{ __('عرض') }}</button>
-                        <button id="resetFilterBtn" class="btn btn-secondary">{{ __('الغاء') }}</button>
+                        <button id="applyFilterBtn" class="btn btn-primary me-2">{{ __('messages.search') }}</button>
+                        <button id="resetFilterBtn" class="btn btn-secondary">{{ __('messages.reset') }}</button>
                     </div>
                 </div>
             </div>
@@ -103,20 +103,20 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('الصورة') }}</th>
-                            <th>{{ __('اللون') }}</th>
-                            <th>{{ __('الوصف') }}</th>
-                            <th>{{ __('الكود') }}</th>
-                            <th>{{ __('القسم') }}</th>
-                            <th>{{ __('الموسم') }}</th>
-                            <th>{{ __('موعد الطرح') }}</th>
-                            <th>{{ __('المصنع') }}</th>
-                            <th>{{ __('حالة التصنيع') }}</th>
-                            <th>{{ __('حالة التسليم ') }}</th>
-                            <th>{{ __('الكمية') }}</th>
-                            <th>{{ __('الكمية المستلمة') }}</th>
-                            <th>{{ __('الرقم التسلسلي') }}</th>
-                            <th>{{ __('تاريخ التوصيل') }}</th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.color') }}</th>
+                            <th>{{ __('messages.description') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.category') }}</th>
+                            <th>{{ __('messages.season') }}</th>
+                            <th>{{ __('messages.publish_date') }}</th>
+                            <th>{{ __('messages.factory') }}</th>
+                            <th>{{ __('messages.manufacturer_status') }}</th>
+                            <th>{{ __('messages.receiving_status') }}</th>
+                            <th>{{ __('messages.quantity') }}</th>
+                            <th>{{ __('messages.receiving_quantity') }}</th>
+                            <th>{{ __('messages.sku') }}</th>
+                            <th>{{ __('messages.expected_delivery_date') }}</th>
 
                         </tr>
                     </thead>
@@ -128,62 +128,62 @@
                                         <img src="{{ asset($variant->productcolor->product->photo) }}" alt="Product Image"
                                             style="width: 100px; height: auto;">
                                     @else
-                                        {{ __('لا يتوفر صورة') }}
+                                        {{ __('messages.N/A') }}
                                     @endif
                                 </td>
-                                <td>{{ $variant->productcolor->color->name ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->description ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->code ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->category->name ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->season->name ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->productcolor->product->store_launch ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->factory->name ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->color->name ?? '-' }}</td>
+                                <td>{{ $variant->productcolor->product->description ?? '-' }}</td>
+                                <td>{{ $variant->productcolor->product->code ?? '-' }}</td>
+                                <td>{{ $variant->productcolor->product->category->name ?? '-' }}</td>
+                                <td>{{ $variant->productcolor->product->season->name ?? '-' }}</td>
+                                <td>{{ $variant->productcolor->product->store_launch ?? '-' }}</td>
+                                <td>{{ $variant->factory->name ?? '-' }}</td>
                                 <td>
                                     @if ($variant->status === 'new')
-                                        <span class="badge bg-success">{{ __('جديد ') }}</span>
+                                        <span class="badge bg-success">{{ __('messages.new') }}</span>
                                     @elseif ($variant->status === 'partial')
-                                        <span class="badge bg-warning">{{ __('جزئي') }}</span>
+                                        <span class="badge bg-warning">{{ __('messages.partial') }}</span>
                                     @elseif ($variant->status === 'processing')
-                                        <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.processing') }}</span>
                                     @elseif ($variant->status === 'complete')
-                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
+                                        <span class="badge bg-success">{{ __('messages.complete') }}</span>
                                     @elseif ($variant->status === 'cancel')
-                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                     @elseif ($variant->status === 'pending')
-                                        <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.pending') }}</span>
                                     @elseif ($variant->status === 'postponed')
-                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.postponed') }}</span>
                                     @elseif ($variant->status === 'stop')
-                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.stop') }}</span>
                                     @else
-                                        {{ $variant->status ?? __('لا يوجد') }}
+                                        {{ $variant->status ?? '-' }}
                                     @endif
                                 </td>
                                 <td>
                                     @if ($variant->receiving_status === 'new')
-                                        <span class="badge bg-success">{{ __('جديد ') }}</span>
+                                        <span class="badge bg-success">{{ __('messages.new') }}</span>
                                     @elseif ($variant->receiving_status === 'partial')
-                                        <span class="badge bg-warning">{{ __('جزئي') }}</span>
+                                        <span class="badge bg-warning">{{ __('messages.partial') }}</span>
                                     @elseif ($variant->receiving_status === 'processing')
-                                        <span class="badge bg-danger">{{ __('قيد التصنيع') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.processing') }}</span>
                                     @elseif ($variant->receiving_status === 'complete')
-                                        <span class="badge bg-success">{{ __('مكتمل') }}</span>
+                                        <span class="badge bg-success">{{ __('messages.complete') }}</span>
                                     @elseif ($variant->receiving_status === 'cancel')
-                                        <span class="badge bg-danger">{{ __('ملغي') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                     @elseif ($variant->receiving_status === 'pending')
-                                        <span class="badge bg-info">{{ __('قيد الانتظار') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.pending') }}</span>
                                     @elseif ($variant->receiving_status === 'postponed')
-                                        <span class="badge bg-info">{{ __('مؤجل') }}</span>
+                                        <span class="badge bg-info">{{ __('messages.postponed') }}</span>
                                     @elseif ($variant->receiving_status === 'stop')
-                                        <span class="badge bg-danger">{{ __('متوقف') }}</span>
+                                        <span class="badge bg-danger">{{ __('messages.stop') }}</span>
                                     @else
-                                        {{ $variant->receiving_status ?? __('لا يوجد') }}
+                                        {{ $variant->receiving_status ?? '-' }}
                                     @endif
                                 </td>
                                 <td>{{ $variant->quantity ?? 0 }}</td>
                                 <td>{{ $variant->receiving_quantity ?? 0 }}</td>
-                                <td>{{ $variant->productcolor->sku ?? __('لا يوجد') }}</td>
-                                <td>{{ $variant->expected_delivery ?? __('لا يوجد') }}</td>
+                                <td>{{ $variant->productcolor->sku ?? '-' }}</td>
+                                <td>{{ $variant->expected_delivery ?? '-' }}</td>
 
 
                             </tr>
@@ -200,7 +200,7 @@
             document.querySelectorAll(".ts-filter").forEach(select => {
                 new TomSelect(select, {
                     plugins: ['remove_button'], // Optional: Allow removing selections
-                    placeholder: 'اختر خيارًا',
+                    placeholder: '{{ __('messages.choose_option') }}',
                     allowEmptyOption: true
                 });
             });

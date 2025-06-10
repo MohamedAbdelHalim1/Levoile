@@ -7,16 +7,16 @@
             <!-- Date Range Filter -->
             <form method="GET" action="{{ route('reports.productStatusForSeason') }}" class="row mb-4">
                 <div class="col-md-4">
-                    <label>من تاريخ</label>
+                    <label>{{ __('messages.from_date') }}</label>
                     <input type="date" class="form-control" name="startDate" value="{{ request('startDate') }}">
                 </div>
                 <div class="col-md-4">
-                    <label>إلى تاريخ</label>
+                    <label>{{ __('messages.to_date') }} </label>
                     <input type="date" class="form-control" name="endDate" value="{{ request('endDate') }}">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">بحث</button>
-                    <a href="{{ route('reports.productStatusForSeason') }}" class="btn btn-secondary">إلغاء</a>
+                    <button type="submit" class="btn btn-primary me-2">{{ __('messages.search') }}</button>
+                    <a href="{{ route('reports.productStatusForSeason') }}" class="btn btn-secondary">{{ __('messages.reset') }}</a>
                 </div>
             </form>
 
@@ -25,15 +25,15 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>الموسم</th>
-                            <th>عدد المنتجات</th>
-                            <th>عدد الألوان</th>
-                            <th>جديد</th>
-                            <th>جاري التصنيع</th>
-                            <th>مؤجل</th>
-                            <th>ملغي</th>
-                            <th>استلام كامل</th>
-                            <th>استلام جزئي</th>
+                            <th>{{ __('messages.season') }}</th>
+                            <th>{{ __('messages.number_of_products') }}</th>
+                            <th>{{ __('messages.number_of_colors') }} </th>
+                            <th>{{ __('messages.new') }}</th>
+                            <th>{{ __('messages.processing') }} </th>
+                            <th>{{ __('messages.postponed') }}</th>
+                            <th>{{ __('messages.cancel') }}</th>
+                            <th>{{ __('messages.complete') }} </th>
+                            <th>{{ __('messages.partial') }} </th>
                         </tr>
                     </thead>
                     <tbody>

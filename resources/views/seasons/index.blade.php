@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة موسم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('seasons.create') }}" class="btn btn-success">
-                        {{ __('إضافة موسم') }}
+                        {{ __('messages.create_season') }}
                     </a>
                 </div>
             @endif
@@ -22,31 +22,31 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('الاسم') }}</th>
-                            <th>{{ __('الكود') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($seasons as $season)
                             <tr>
                                 <td>{{ $season->name }}</td>
-                                <td>{{ $season->code ?? 'لا يوجد' }}</td>
+                                <td>{{ $season->code ?? '-' }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض موسم'))
                                         <a href="{{ route('seasons.show', $season->id) }}"
-                                            class="btn btn-primary">{{ __('عرض') }}</a>
+                                            class="btn btn-primary">{{ __('messages.view') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل موسم'))
                                         <a href="{{ route('seasons.edit', $season->id) }}"
-                                            class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                            class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف موسم'))
                                         <form action="{{ route('seasons.destroy', $season->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الموسم؟')">
+                                            class="d-inline" onsubmit="return confirm('{{ __('messages.are_you_sure') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

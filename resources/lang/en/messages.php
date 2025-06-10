@@ -109,6 +109,8 @@ return [
     'color_details' => 'Color Details',
     'create_size' => 'Create Size',
     'create_season' => 'Create Season',
+    'edit_season' => 'Edit Season',
+    'season_details' => 'Season Details',
     'create_stock' => 'Create Stock',
     'create_factory' => 'Create Factory',
     'create_branch' => 'Create Branch',
@@ -298,7 +300,9 @@ return [
     'update_profile_information_text' => 'Update Profile Information',
     'email' => 'Email',
     'profile_updated' => 'Profile Updated Successfully',
-
+    'variant_status' => 'Variant Status',
+    'publish_date' => 'Publish Date',
+    'manufacturer_status' => 'Manufacturer Status'
 
 
 
