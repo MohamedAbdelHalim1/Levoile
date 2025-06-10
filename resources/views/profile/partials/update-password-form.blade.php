@@ -1,10 +1,10 @@
 <section>
     <header>
         <h2 class="h5 text-dark">
-            {{ __('تغيير كلمة المرور') }}
+            {{ __('messages.change_password') }}
         </h2>
         <p class="mt-2 text-muted">
-            {{ __('تغيير كلمة المرور الخاصة بحسابك') }}
+            {{ __('messages.change_password_for_account') }}
         </p>
     </header>
 
@@ -15,7 +15,7 @@
         <!-- Current Password -->
         <div class="mb-3">
             <label for="update_password_current_password" class="form-label">
-                {{ __('كلمة المرور الحالية') }}
+                {{ __('messages.current_password') }}
             </label>
             <input 
                 type="password" 
@@ -34,7 +34,7 @@
         <!-- New Password -->
         <div class="mb-3">
             <label for="update_password_password" class="form-label">
-                {{ __('كلمة المرور الجديدة') }}
+                {{ __('messages.new_password') }}
             </label>
             <input 
                 type="password" 
@@ -53,7 +53,7 @@
         <!-- Confirm Password -->
         <div class="mb-3">
             <label for="update_password_password_confirmation" class="form-label">
-                {{ __('تأكيد كلمة المرور') }}
+                {{ __('messages.confirm_password') }}
             </label>
             <input 
                 type="password" 
@@ -72,12 +72,12 @@
         <!-- Save Button -->
         <div class="d-flex align-items-center gap-3">
             <button type="submit" class="btn btn-primary">
-                {{ __('حفظ') }}
+                {{ __('messages.save') }}
             </button>
 
             @if (session('status') === 'password-updated')
             <p class="text-success small mb-0 ms-3">
-                {{ __('تم حفظ كلمة المرور.') }}
+                {{ __('messages.password_updated') }}
             </p>
             @endif
         </div>

@@ -279,12 +279,21 @@ return [
     'note_required' => 'ملاحظه مطلوبه',
     'expected_delivery_required' => 'تاريخ التوصيل المتوقع مطلوب',
     'stock_status' => 'حاله المخزون',
-
-
-
-
-
-
+    'delete_account' => 'حذف الحساب',
+    'delete_account_warning' => 'عند مسح الحساب ، جميع البيانات والبيانات الخاصة بالحساب سيتم حذفها بشكل دائم',
+    'delete_account_confirmation' => 'تاكيد مسج الحساب',
+    'delete_account_password_confirmation'  => 'من فضلك ادخل كلمة المرور لتأكيد مسح الحساب',
+    'password' => 'كلمة المرور',
+    'change_password' => 'تغيير كلمة المرور',
+    'change_password_for_account' => 'تغيير كلمة المرور الخاصة بحسابك',
+    'current_password' => 'كلمة المرور الحالية',
+    'new_password' => 'كلمة المرور الجديده',
+    'confirm_password' => 'تاكيد كلمة المرور',
+    'password_updated' => 'تم تغيير كلمة المرور بنجاح',
+    'update_profile_information' => 'تحديث معلومات الملف الشخصي',
+    'update_profile_information_text' => 'تحديث معلومات الملف الشخصي',
+    'email' => 'البريد الالكتروني',
+    'profile_updated' => 'تم تحديث الملف الشخصي بنجاح',
 
 
 

@@ -283,6 +283,21 @@ return [
     'note_required' => 'Note Required',
     'expected_delivery_required' => 'Expected Delivery Required',
     'stock_status' => 'Stock Status',
+    'delete_account' => 'Delete Account',
+    'delete_account_warning' => 'By Deleting The Account, All The Data And Data Related To The Account Will Be Permanently Deleted',
+    'delete_account_confirmation' => 'Confirm Account Deletion',
+    'delete_account_password_confirmation'  => 'Please Enter Your Password To Confirm Account Deletion',
+    'password' => 'Password',
+    'change_password' => 'Change Password',
+    'change_password_for_account' => 'Change Password For Account',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'confirm_password' => 'Confirm Password',
+    'password_updated' => 'Password Updated Successfully',
+    'update_profile_information' => 'Update Profile Information',
+    'update_profile_information_text' => 'Update Profile Information',
+    'email' => 'Email',
+    'profile_updated' => 'Profile Updated Successfully',
 
 
 

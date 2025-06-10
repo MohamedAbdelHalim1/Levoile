@@ -1,10 +1,10 @@
 <section class="mb-5">
     <header>
         <h2 class="h5 text-dark">
-            {{ __('مسح الحساب') }}
+            {{ __('messages.delete_account') }}
         </h2>
         <p class="mt-2 text-muted">
-            {{ __('عند مسح الحساب ، جميع البيانات والبيانات الخاصة بالحساب سيتم حذفها بشكل دائم') }}
+            {{ __('messages.delete_account_warning') }}
         </p>
     </header>
 
@@ -15,7 +15,7 @@
         data-bs-toggle="modal"
         data-bs-target="#confirm-user-deletion-modal"
     >
-        {{ __('مسح الحساب') }}
+        {{ __('messages.delete_account') }}
     </button>
 
     <!-- Modal -->
@@ -34,7 +34,7 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="confirmUserDeletionModalLabel">
-                            {{ __('تأكيد مسح الحساب') }}
+                            {{ __('messages.delete_account_confirmation') }}
                         </h5>
                         <button
                             type="button"
@@ -46,19 +46,19 @@
 
                     <div class="modal-body">
                         <p class="text-muted">
-                            {{ __('من فضلك ادخل كلمة المرور لتأكيد مسح الحساب') }}
+                            {{ __('messages.enter_password') }}
                         </p>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">
-                                {{ __('كلمة المرور') }}
+                                {{ __('messages.password') }}
                             </label>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
                                 class="form-control @error('password') is-invalid @enderror"
-                                placeholder="{{ __('كلمة المرور') }}"
+                                placeholder="{{ __('messages.password') }}"
                                 required
                             >
                             @error('password')
@@ -75,10 +75,10 @@
                             class="btn btn-secondary"
                             data-bs-dismiss="modal"
                         >
-                            {{ __('الغاء') }}
+                            {{ __('messages.cancel') }}
                         </button>
                         <button type="submit" class="btn btn-danger">
-                            {{ __('مسح الحساب') }}
+                            {{ __('messages.delete') }}
                         </button>
                     </div>
                 </form>
