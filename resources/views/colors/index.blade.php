@@ -31,7 +31,7 @@
                         @foreach ($colors as $color)
                             <tr>
                                 <td>{{ $color->name }}</td>
-                                <td>{{ $color->code ?? '{{ __('messages.N/A') }}' }}</td>
+                                <td>{{ $color->code ??  __('messages.N/A') }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض لون'))
                                         <a href="{{ route('colors.show', $color->id) }}"
