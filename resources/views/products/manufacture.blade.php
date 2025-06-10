@@ -177,7 +177,7 @@
                                                 data-variant-id="{{ $variant->id }}"
                                                 data-product-id="{{ $product->id }}" data-status="postponed"
                                                 data-bs-toggle="modal" data-bs-target="#statusModal">
-                                                {{ __('messages.postpone') }}
+                                                {{ __('messages.postponed') }}
                                             </button>
                                         </td>
                                     </tr>
