@@ -87,7 +87,7 @@
                 if (colorId) {
                     // Check if the color already exists in the table
                     if (document.querySelector(`[data-color-id="${colorId}"]`)) {
-                        alert("{{ __('messages.already_added_color') }}");");
+                        alert("{{ __('messages.already_added_color') }}");
                         return;
                     }
 
