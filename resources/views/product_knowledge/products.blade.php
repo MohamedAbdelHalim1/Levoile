@@ -17,14 +17,14 @@
         <div class="row justify-content-center">
             <div class="col-xl-12 col-lg-12 col-md-12">
 
-                <h4>المنتجات الخاصة بـ: {{ $subcategory->name }}</h4>
+                <h4>{{ __('messages.product_belongs_to') }}: {{ $subcategory->name }}</h4>
 
                 <form method="GET" class="mb-4 d-flex gap-2 align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                        placeholder="ابحث باستخدام الاسم - اسم الجملة - الكود">
-                    <button type="submit" class="btn btn-primary">ابحث</button>
+                        placeholder='{{ __('messages.search by name - gomla - code') }}'>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.search') }}</button>
                     <a href="{{ route('product-knowledge.products', $subcategory->id) }}"
-                        class="btn btn-secondary">العودة</a>
+                        class="btn btn-secondary">{{ __('messages.reset') }}</a>
                 </form>
 
             </div>
@@ -50,11 +50,11 @@
                         </div>
                         <div class="position-absolute top-0 start-0 ms-1 mt-1">
                             <small class="fw-semibold back-ground text-white rounded-1 p-1">{{ count($group) }}
-                                colors</small>
+                                {{ __('messages.colors') }}</small>
                         </div>
                         <div class="position-absolute bottom-0 start-0 ms-1 mb-1">
                             <small
-                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? 'لا يوجد خامه' }}</small>
+                                class="fw-semibold back-ground text-white  rounded-1 p-1">{{ $parent->material ?? '{{ __('messages.N/A') }}' }}</small>
                         </div>
                         <div class="position-absolute bottom-0 end-0 me-1 mb-1">
                             <small
@@ -103,7 +103,7 @@
                 </div>
             @empty
                 <div class="col-12">
-                    <div class="alert alert-info text-center">لا يوجد منتجات لهذه الصب كاتيجوري</div>
+                    <div class="alert alert-info text-center">{{ __('messages.N/A') }}</div>
                 </div>
 @endforelse
             <div class="d-flex justify-content-center mt-4">
@@ -326,10 +326,10 @@
                         <table class="table table-bordered text-center table-striped align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>الكود</th>
-                                    <th>المقاس</th>
-                                    <th>مخزن</th>
-                                    <th>جملة</th>
+                                    <th>{{ __('messages.code') }}</th>
+                                    <th>{{ __('messages.size') }}</th>
+                                    <th>{{ __('messages.stock') }}</th>
+                                    <th>{{ __('messages.gomla') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -465,4 +465,4 @@
     </script>
 @endsection --}}
 
-)
+

@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4>رفع شيت ماستر شيت جديد</h4>
+                <h4>{{ __('messages.upload_master_sheet') }}</h4>
 
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
@@ -13,7 +13,7 @@
                 @endif
 
                 <div class="mb-3">
-                    <label for="file" class="form-label">اختر ملف Excel (xlsx أو xls فقط)</label>
+                    <label for="file" class="form-label">{{ __('messages.upload_only_xlsx_or_xls') }}</label>
                     <input type="file" id="file" class="form-control" accept=".xlsx,.xls" required>
                 </div>
                 {{-- <div class="mb-3">
@@ -26,9 +26,9 @@
                 </div> --}}
 
 
-                <div id="preview-loader" class="alert alert-info d-none">جاري تجهيز الملف... برجاء الانتظار</div>
+                <div id="preview-loader" class="alert alert-info d-none">{{ __('messages.uploading_file_in_progress_please_wait') }}</div>
 
-                <button id="submit-btn" class="btn btn-success" disabled>رفع</button>
+                <button id="submit-btn" class="btn btn-success" disabled>{{ __('messages.upload') }}</button>
 
                 <!-- Hidden Form (not used but kept for structure) -->
                 <form id="hidden-upload-form" method="POST" action="{{ route('product-knowledge.upload.save') }}"
@@ -42,7 +42,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content text-center p-4">
                             <div class="spinner-border text-primary mb-3" role="status"></div>
-                            <h5 class="mb-3">جاري رفع الشيت، من فضلك لا تغلق الصفحة</h5>
+                            <h5 class="mb-3">{{ __('messages.master_sheet_upload_in_progress_please_dont_close_the_page') }}</h5>
                             <div class="progress w-100" style="height: 20px;">
                                 <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated"
                                     role="progressbar" style="width: 0%">0%</div>

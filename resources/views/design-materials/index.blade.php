@@ -13,7 +13,7 @@
                 <div class="row mb-4">
                     <div class="m-2">
                         <a href="{{ route('design-materials.create') }}" class="btn btn-primary">
-                            {{ __('إضافة خامة') }}
+                            {{ __('messages.create_material') }}
                         </a>
                     </div>
                 </div>
@@ -21,10 +21,10 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>اسم الخامة</th>
-                            <th>عدد الألوان</th>
-                            <th>الصورة</th>
-                            <th>إجراءات</th>
+                            <th>{{ __('messages.name') }} </th>
+                            <th>{{ __('messages.number_of_colors') }} </th>
+                            <th>{{ __('messages.image') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,23 +43,23 @@
                                 <td>
                                     <a href="{{ route('design-materials.show', $material->id) }}"
                                         class="btn btn-info btn-sm">
-                                        عرض التفاصيل
+                                        {{ __('messages.view') }} 
                                     </a>
                                     <a href="{{ route('design-materials.edit', $material->id) }}"
                                         class="btn btn-warning btn-sm">
-                                        تعديل
+                                        {{ __('messages.edit') }}
                                     </a>
                                     <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
                                         class="d-inline"
-                                        onsubmit="return confirm('هل أنت متأكد من حذف هذه الخامة وكل ألوانها؟');">
+                                        onsubmit="return confirm('{{ __('messages.confirm_delete_material') }}');">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">{{ __('messages.delete') }}</button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted">لا توجد خامات بعد</td>
+                                <td colspan="5" class="text-center text-muted">{{ __('messages.N/A') }}   </td>
                             </tr>
                         @endforelse
                     </tbody>

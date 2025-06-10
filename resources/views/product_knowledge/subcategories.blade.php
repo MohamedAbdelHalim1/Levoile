@@ -4,7 +4,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4>الصب كاتيجوريز لكاتيجوري: {{ $category->name }}</h4>
+                <h4>{{ __('messages.subcategories_belong_to') }}: {{ $category->name }}</h4>
                 <div class="row">
                     @foreach ($category->subcategories as $subcategory)
                         @php

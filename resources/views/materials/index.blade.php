@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة خامة'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('materials.create') }}" class="btn btn-success">
-                        {{ __('أضافة خامة جديدة') }}
+                        {{ __('messages.create_material') }}
                     </a>
                 </div>
             @endif
@@ -22,8 +22,8 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('أسم خامة') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.name ') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,19 +33,19 @@
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض خامة'))
                                         <a href="{{ route('materials.show', $material->id) }}"
-                                            class="btn btn-primary">{{ __('عرض') }}</a>
+                                            class="btn btn-primary">{{ __('view') }}</a>
                                     @endif
 
                                     @if (auth()->user()->hasPermission('تعديل خامة'))
                                         <a href="{{ route('materials.edit', $material->id) }}"
-                                            class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                            class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف خامة'))
                                         <form action="{{ route('materials.destroy', $material->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه خامة؟')">
+                                            class="d-inline" onsubmit="return confirm('{{ __('messages.confirm_delete_material') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

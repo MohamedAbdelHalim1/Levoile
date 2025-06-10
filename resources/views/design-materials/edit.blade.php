@@ -4,37 +4,37 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4 class="mb-4">تعديل الخامة</h4>
+                <h4 class="mb-4">{{ __('messages.edit_material') }}</h4>
                 <form action="{{ route('design-materials.update', $material->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label>اسم الخامة</label>
+                            <label>{{ __('messages.name') }} </label>
                             <input type="text" name="name" class="form-control" required
                                 value="{{ old('name', $material->name) }}">
                         </div>
                         <div class="col-md-6">
-                            <label>الصورة الحالية</label><br>
+                            <label>{{ __('messages.image') }} </label><br>
                             @if ($material->image)
-                                <img src="{{ asset($material->image) }}" alt="صورة الخامة" width="100"
+                                <img src="{{ asset($material->image) }}" alt="{{ $material->name??{{ __('messages.N/A') }} }} " width="100"
                                     class="mb-2 rounded">
                             @else
-                                <span class="text-muted">لا توجد صورة</span>
+                                <span class="text-muted">{{ __('messages.N/A') }}  </span>
                             @endif
                             <input type="file" name="image" class="form-control mt-2" accept="image/*">
                         </div>
                     </div>
                     <hr>
-                    <h5>ألوان الخامة</h5>
+                    <h5>{{ __('messages.colors_of_material') }} </h5>
                     <div id="colors-area">
                         @forelse ($material->colors as $i => $color)
                             <div class="row mb-2 color-row">
                                 <input type="hidden" name="colors[{{ $i }}][id]" value="{{ $color->id }}">
                                 <div class="col-md-2">
                                     <select name="colors[{{ $i }}][name]" class="form-control color-name-select">
-                                        <option value="">اختر اللون</option>
+                                        <option value="">{{ __('messages.choose_color') }} </option>
                                         @foreach ($colorsList as $colorOption)
                                             <option value="{{ $colorOption->name }}"
                                                 @if (old('colors.' . $i . '.name', $color->name) == $colorOption->name) selected @endif>
@@ -46,16 +46,16 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="colors[{{ $i }}][code]" class="form-control"
-                                        placeholder="كود اللون" value="{{ old('colors.' . $i . '.code', $color->code) }}">
+                                        placeholder="{{ __('messages.color_code') }} " value="{{ old('colors.' . $i . '.code', $color->code) }}">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[{{ $i }}][required_quantity]"
-                                        class="form-control" placeholder="الكمية المطلوبة"
+                                        class="form-control" placeholder="{{ __('messages.required_quantity') }} "
                                         value="{{ old('colors.' . $i . '.required_quantity', $color->required_quantity) }}">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[{{ $i }}][received_quantity]"
-                                        class="form-control" placeholder="الكمية المستلمة"
+                                        class="form-control" placeholder="{{ __('messages.received_quantity') }} "
                                         value="{{ old('colors.' . $i . '.received_quantity', $color->received_quantity) }}">
                                 </div>
                                 <div class="col-md-2">
@@ -64,43 +64,43 @@
                                         value="{{ old('colors.' . $i . '.delivery_date', $color->delivery_date) }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger remove-color">حذف</button>
+                                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
                                 </div>
                             </div>
                         @empty
                             <div class="row mb-2 color-row">
                                 <div class="col-md-2">
                                     <input type="text" name="colors[0][name]" class="form-control"
-                                        placeholder="اسم اللون">
+                                        placeholder="{{ __('messages.name') }} ">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="colors[0][code]" class="form-control"
-                                        placeholder="كود اللون">
+                                        placeholder="{{ __('messages.color_code') }} ">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][required_quantity]" class="form-control"
-                                        placeholder="الكمية المطلوبة" step="any">
+                                        placeholder="{{ __('messages.required_quantity') }} " step="any">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][received_quantity]" class="form-control"
-                                        placeholder="الكمية المستلمة" step="any">
+                                        placeholder="{{ __('messages.received_quantity') }} " step="any">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" name="colors[0][delivery_date]" class="form-control"
-                                        placeholder="تاريخ التسليم">
+                                        placeholder="{{ __('messages.delivery_date') }} ">
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-danger btn-sm remove-color">
-                                        حذف اللون
+                                        {{ __('messages.detele') }} 
                                     </button>
                                 </div>
                             </div>
                         @endforelse
                     </div>
-                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ إضافة لون</button>
+                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ {{ __('messages.add_color') }} </button>
                     <div>
-                        <button type="submit" class="btn btn-primary">تحديث الخامة</button>
-                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">إلغاء</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.edit') }} </button>
+                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                     </div>
                 </form>
             </div>
@@ -120,7 +120,7 @@
             if (!el.classList.contains('ts-hidden')) {
                 new TomSelect(el, {
                     create: false,
-                    placeholder: 'اختر اللون',
+                    placeholder: '{{ __('messages.choose_color') }}',
                 });
             }
         });
@@ -133,26 +133,26 @@
             <div class="row mb-2 color-row">
                 <div class="col-md-2">
                     <select name="colors[${colorIndex}][name]" class="form-control color-name-select">
-                        <option value="">اختر اللون</option>
+                        <option value="">{{ __('messages.choose_color') }} </option>
                         @foreach ($colorsList as $colorOption)
                             <option value="{{ $colorOption->name }}">{{ $colorOption->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون">
+                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="{{ __('messages.color_code') }} ">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة" step="any">
+                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="{{ __('messages.required_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة" step="any">
+                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="{{ __('messages.received_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
-                    <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="تاريخ التسليم">
+                    <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="{{ __('messages.delivery_date') }} ">
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger btn-sm remove-color">حذف اللون</button>
+                    <button type="button" class="btn btn-danger btn-sm remove-color">{{ __('messages.detele') }} </button>
                 </div>
             </div>
         `;
@@ -166,7 +166,7 @@
         var btn = $(this);
         var colorId = btn.closest('.color-row').find('input[name*="[id]"]').val();
 
-        if (!confirm('هل أنت متأكد من حذف هذا اللون؟')) {
+        if (!confirm('{{ __('messages.confirm_delete_color') }}')) {
             return;
         }
 
@@ -185,13 +185,13 @@
             success: function(response) {
                 if (response.success) {
                     btn.closest('.color-row').remove();
-                    alert('تم حذف اللون بنجاح');
+                    alert('{{ __('messages.deleted_successfully') }} ');
                 } else {
-                    alert('فشل في الحذف');
+                    alert('{{ __('messages.failed_to_delete') }} ');
                 }
             },
             error: function(xhr) {
-                alert('حدث خطأ أثناء الحذف');
+                alert('{{ __('messages.failed_to_delete') }} ');
             }
         });
     });

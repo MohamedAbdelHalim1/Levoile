@@ -2,21 +2,21 @@
 
 @section('content')
     <div class="container p-5">
-        <h3 class="mb-4">نتيجة رفع الشيت</h3>
+        <h3 class="mb-4">{{ __('messages.upload_result') }}</h3>
 
         <div id="reportBox" class="alert alert-info" style="display: none;"></div>
         <div id="duplicatesTable" style="display: none;">
-            <h5 class="mt-4">تفاصيل المنتجات المكررة:</h5>
+            <h5 class="mt-4">{{ __('messages.repeated_product_details') }}:</h5>
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>الكود</th>
-                        <th>الاسم</th>
-                        <th>اللون</th>
-                        <th>المقاس</th>
-                        <th>تاريخ الإضافة</th>
-                        <th>القسم</th>
-                        <th>الفئة</th>
+                        <th>{{ __('messages.code') }}</th>
+                        <th>{{ __('messages.description') }}</th>
+                        <th>{{ __('messages.color') }}</th>
+                        <th>{{ __('messages.size') }}</th>
+                        <th>{{ __('messages.added_date') }} </th>
+                        <th>{{ __('messages.division') }}</th>
+                        <th>{{ __('messages.subcategory') }}</th>
                     </tr>
                 </thead>
                 <tbody id="duplicatesBody"></tbody>
@@ -25,7 +25,7 @@
 
 
 
-        <a href="{{ route('product-knowledge.lists') }}" class="btn btn-primary mt-4">العودة إلى المنتجات</a>
+        <a href="{{ route('product-knowledge.lists') }}" class="btn btn-primary mt-4">{{ __('messages.back') }}</a>
     </div>
 
     <script>

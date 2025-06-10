@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة قسم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('categories.create') }}" class="btn btn-success">
-                        {{ __('أضافة قسم جديدة') }}
+                        {{ __('messages.create_category') }}
                     </a>
                 </div>
             @endif
@@ -22,8 +22,8 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('أسم القسم') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,19 +33,19 @@
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض قسم'))
                                         <a href="{{ route('categories.show', $category->id) }}"
-                                            class="btn btn-primary">{{ __('عرض') }}</a>
+                                            class="btn btn-primary">{{ __('messages.view') }}</a>
                                     @endif
 
                                     @if (auth()->user()->hasPermission('تعديل قسم'))
                                         <a href="{{ route('categories.edit', $category->id) }}"
-                                            class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                            class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف قسم'))
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه القسم؟')">
+                                            class="d-inline" onsubmit="return confirm('{{ __('messages.confirm_delete_category') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

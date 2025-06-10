@@ -4,26 +4,26 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4>قائمة المنتجات</h4>
+                <h4>{{ __('messages.product_list') }} </h4>
                 <a href="{{ route('product-knowledge.stock.upload') }}" class="btn btn-success mb-3">
-                    + إضافة ستوك
+                    + {{ __('messages.add_stock') }} 
                 </a>
 
                 <div class="table-responsive">
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-light">
                             <tr>
-                                <th>صورة</th>
-                                <th>كود المنتج</th>
-                                <th>اسم ديناميك</th>
-                                <th>اسم الجمله</th>
-                                <th>اسم الويبسايت</th>
-                                <th>الفئة</th>
-                                <th>الفئة الفرعية</th>
-                                <th>السعر</th>
-                                <th>الألوان</th>
-                                <th>عدد الصور المتبقية</th>
-                                <th>إجمالي الكمية</th>
+                                <th>{{ __('messages.image') }}</th>
+                                <th>{{ __('messages.code') }}</th>
+                                <th>{{ __('messages.description') }}</th>
+                                <th>{{ __('messages.gomla') }}</th>
+                                <th>{{ __('messages.website_description') }} </th>
+                                <th>{{ __('messages.category') }}</th>
+                                <th>{{ __('messages.subcategory') }} </th>
+                                <th>{{ __('messages.price') }}</th>
+                                <th>{{ __('messages.color') }}</th>
+                                <th>{{ __('messages.remaining_images') }}</th>
+                                <th>{{ __('messages.quantity') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,7 +82,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9">لا توجد منتجات</td>
+                                    <td colspan="9">{{ __('messages.N/A') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -96,23 +96,23 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تفاصيل المنتجات بدون صور</h5>
+                    <h5 class="modal-title">{{ __('messages.products_with_missing_images') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered text-center">
                         <thead>
                             <tr>
-                                <th>كود المنتج</th>
-                                <th>الوصف</th>
-                                <th>اللون</th>
+                                <th>{{ __('messages.code') }}</th>
+                                <th>{{ __('messages.description') }}</th>
+                                <th>{{ __('messages.color') }}</th>
                             </tr>
                         </thead>
                         <tbody id="missingImagesTableBody"></tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" id="uploadImagesBtn">تعديل الصور</button>
+                    <button class="btn btn-primary" id="uploadImagesBtn">{{ __('messages.edit') }}</button>
                 </div>
 
             </div>
@@ -125,7 +125,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
         <div class="modal-dialog modal-fullscreen-md-down modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تفاصيل المنتج</h5>
+                    <h5 class="modal-title">{{ __('messages.product_details') }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -136,20 +136,20 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                         </div>
                         <div class="col-md-8">
                             <h5 id="modalDescription" class="mb-2"></h5>
-                            <p><strong>Gomla:</strong> <span id="modalGomla"></span></p>
-                            <p><strong>Code:</strong> <span id="modalCode"></span></p>
-                            <p><strong>Price:</strong> <span id="modalPrice"></span></p>
-                            <p><strong>Material:</strong> <span id="modalMaterial"></span></p>
-                            <p><strong>Item Family:</strong> <span id="modalFamily"></span></p>
-                            <p><strong>Season:</strong> <span id="modalSeason"></span></p>
-                            <p><strong>Created At:</strong> <span id="modalCreated"></span></p>
-                            <p><strong>Category:</strong> <span id="modalCategory"></span></p>
-                            <p><strong>Subcategory:</strong> <span id="modalSubcategory"></span></p>
+                            <p><strong>{{ __('messages.gomla') }}:</strong> <span id="modalGomla"></span></p>
+                            <p><strong>{{ __('messages.code') }}:</strong> <span id="modalCode"></span></p>
+                            <p><strong>{{ __('messages.price') }}:</strong> <span id="modalPrice"></span></p>
+                            <p><strong>{{ __('messages.material') }}:</strong> <span id="modalMaterial"></span></p>
+                            <p><strong>{{ __('messages.item_family_code') }}:</strong> <span id="modalFamily"></span></p>
+                            <p><strong>{{ __('messages.season') }}:</strong> <span id="modalSeason"></span></p>
+                            <p><strong>{{ __('messages.created_at') }}:</strong> <span id="modalCreated"></span></p>
+                            <p><strong>{{ __('messages.category') }}:</strong> <span id="modalCategory"></span></p>
+                            <p><strong>{{ __('messages.subcategory') }}:</strong> <span id="modalSubcategory"></span></p>
                         </div>
                     </div>
 
                     <hr>
-                    <h6>Variants:</h6>
+                    <h6>{{ __('messages.variants') }}:</h6>
                     <div class="row" id="modalVariants"></div>
                 </div>
             </div>
@@ -270,10 +270,10 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                 <table class="table table-bordered text-center">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th>الكود</th>
-                                            <th>المقاس</th>
-                                            <th>مخزن</th>
-                                            <th>جملة</th>
+                                            <th>{{ __('messages.code') }}</th>
+                                            <th>{{ __('messages.size') }}</th>
+                                            <th>{{ __('messages.stock') }}</th>
+                                            <th>{{ __('messages.gomla') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -321,7 +321,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                                 btn.disabled = false;
                             })
                             .catch(() => {
-                                alert('حدث خطأ أثناء التحديث');
+                                alert('{{ __('messages.something_went_wrong') }}');
                                 btn.innerText = '✏️';
                                 btn.disabled = false;
                             });
@@ -385,7 +385,7 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
             });
 
             if (!formData.has('images[]')) {
-                alert('من فضلك اختر صورة واحدة على الأقل.');
+                alert('{{ __('messages.please_select_one_image') }}');
                 return;
             }
 
@@ -399,15 +399,15 @@ $latestGroup = $group->groupBy('color')->map(function ($items) {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert('تم رفع الصور بنجاح');
+                        alert('{{ __('messages.uploaded_successfully') }}');
                         location.reload();
                     } else {
-                        alert('فشل في رفع الصور');
+                        alert('{{ __('messages.failed_to_upload') }}');
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('حدث خطأ أثناء الرفع');
+                    alert('{{ __('messages.something_went_wrong') }}');
                 });
         });
     </script>

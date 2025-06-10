@@ -4,26 +4,26 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4 class="mb-4">إضافة خامة جديدة</h4>
+                <h4 class="mb-4">{{ __('messages.create_material') }}</h4>
                 <form action="{{ route('design-materials.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label>اسم الخامة</label>
+                            <label>{{ __('messages.name') }}</label>
                             <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
                         </div>
                         <div class="col-md-6">
-                            <label>الصورة</label>
+                            <label>{{ __('messages.image') }}</label>
                             <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
                     </div>
                     <hr>
-                    <h5>ألوان الخامة</h5>
+                    <h5>{{ __('messages.colors_of_material') }}</h5>
                     <div id="colors-area">
                         <div class="row mb-2 color-row">
                             <div class="col-md-2">
                                 <select name="colors[0][name]" class="form-control color-name-select" required>
-                                    <option value="">اختر اللون</option>
+                                    <option value="">{{ __('messages.choose_color') }}</option>
                                     @foreach ($colors as $color)
                                         <option value="{{ $color->name }}">{{ $color->name }}</option>
                                     @endforeach
@@ -31,30 +31,30 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="text" name="colors[0][code]" class="form-control"
-                                    placeholder="كود اللون">
+                                    placeholder="{{ __('messages.color_code') }}">
                                 <!-- أو استبدلها بـ <input type="color"... لو تحب -->
                             </div>
                             <div class="col-md-2">
                                 <input type="number" name="colors[0][required_quantity]" class="form-control"
-                                    placeholder="الكمية المطلوبة" step="any">
+                                    placeholder="{{ __('messages.required_quantity') }}" step="any">
                             </div>
                             <div class="col-md-2">
                                 <input type="number" name="colors[0][received_quantity]" class="form-control"
-                                    placeholder="الكمية المستلمة" step="any">
+                                    placeholder="{{ __('messages.received_quantity') }}" step="any">
                             </div>
                             <div class="col-md-2">
                                 <input type="date" name="colors[0][delivery_date]" class="form-control"
-                                    placeholder="تاريخ التسليم">
+                                    placeholder="{{ __('messages.delivery_date') }}">
                             </div>
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-danger remove-color">حذف</button>
+                                <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ إضافة لون</button>
+                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ {{ __('messages.add_color') }} </button>
                     <div>
-                        <button type="submit" class="btn btn-primary">حفظ الخامة</button>
-                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">إلغاء</a>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                     </div>
                 </form>
             </div>
@@ -74,7 +74,7 @@
             if (!el.classList.contains('ts-hidden')) {
                 new TomSelect(el, {
                     create: false,
-                    placeholder: 'اختر اللون',
+                    placeholder: "{{ __('messages.choose_color') }}",
                 });
             }
         });
@@ -94,19 +94,19 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="كود اللون">
+                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="{{ __('messages.color_code') }} ">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="الكمية المطلوبة" step="any">
+                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="{{ __('messages.required_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="الكمية المستلمة" step="any">
+                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="{{ __('messages.received_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
                     <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control">
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-color">حذف</button>
+                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
                 </div>
             </div>
         `;

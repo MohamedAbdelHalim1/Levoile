@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة مصنع'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('factories.create') }}" class="btn btn-success">
-                        {{ __('أضافة مصنع جديد') }}
+                        {{ __('messages.create_factory') }}
                     </a>
                 </div>
             @endif
@@ -22,8 +22,8 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('ألاسم') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,18 +33,18 @@
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض مصنع'))
                                         <a href="{{ route('factories.show', $factory->id) }}"
-                                            class="btn btn-primary">{{ __('عرض') }}</a>
+                                            class="btn btn-primary">{{ __('view') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل مصنع'))
                                         <a href="{{ route('factories.edit', $factory->id) }}"
-                                            class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                            class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف مصنع'))
                                         <form action="{{ route('factories.destroy', $factory->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا المصنع؟')">
+                                            class="d-inline" onsubmit="return confirm('{{ __('messages.confirm_delete_factory') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

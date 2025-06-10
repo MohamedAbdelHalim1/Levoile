@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة لون'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('colors.create') }}" class="btn btn-success">
-                        {{ __('أضافة لون جديد') }}
+                        {{ __('messages.create_color') }}
                     </a>
                 </div>
             @endif
@@ -22,31 +22,31 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>{{ __('ألاسم') }}</th>
-                            <th>{{ __('الكود') }}</th>
-                            <th>{{ __('العمليات') }}</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.code') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($colors as $color)
                             <tr>
                                 <td>{{ $color->name }}</td>
-                                <td>{{ $color->code ?? 'لا يوجد' }}</td>
+                                <td>{{ $color->code ?? '{{ __('messages.N/A') }}' }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض لون'))
                                         <a href="{{ route('colors.show', $color->id) }}"
-                                            class="btn btn-primary">{{ __('عرض') }}</a>
+                                            class="btn btn-primary">{{ __('messages.view') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل لون'))
                                         <a href="{{ route('colors.edit', $color->id) }}"
-                                            class="btn btn-secondary">{{ __('تعديل') }}</a>
+                                            class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف لون'))
                                         <form action="{{ route('colors.destroy', $color->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا اللون؟')">
+                                            class="d-inline" onsubmit="return confirm('{{ __('messages.confirm_delete_color') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('حذف') }}</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>
