@@ -258,7 +258,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="manufacturingModalLabel">{{ __('messages.start_manufacturing') }}</h5>
+                    <h5 class="modal-title" id="manufacturingModalLabel">{{ __('messages.start_manufacture') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="manufacturing-form" action="{{ route('products.update.manufacture', $product->id) }}"
