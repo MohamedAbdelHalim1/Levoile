@@ -4,24 +4,24 @@
 <div class="p-2">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div class="bg-white shadow sm:rounded-lg p-4">
-            <h4 class="mb-4">تفاصيل جلسة التصوير : {{ $reference }}</h4>
+            <h4 class="mb-4">{{ __('messages.shooting_sessions') }} : {{ $reference }}</h4>
 
             <div class="table-responsive">
                 <table class="table table-bordered text-nowrap">
                     <thead class="table-light">
                         <tr>
-                            <th>اسم المنتج</th>
-                            <th>الكود الرئيسي</th>
-                            <th>كود اللون</th>
-                            <th>نوع التصوير</th>
-                            <th>مكان التصوير</th>
-                            <th>تاريخ التصوير</th>
-                            <th>المصورين</th>
-                            <th>تاريخ التعديل</th>
-                            <th>المحررين</th>
-                            <th>تاريخ التسليم</th>
-                            <th>الحالة</th>
-                            <th>الإجراءات</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.code') }} </th>
+                            <th>{{ __('messages.sku') }} </th>
+                            <th>{{ __('messages.type_of_shooting') }} </th>
+                            <th>{{ __('messages.location') }} </th>
+                            <th>{{ __('messages.date_of_shooting') }} </th>
+                            <th>{{ __('messages.photographer') }}</th>
+                            <th>{{ __('messages.date_of_editing') }} </th>
+                            <th>{{ __('messages.editors') }}</th>
+                            <th>{{ __('messages.date_of_delivery') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,18 +56,18 @@
                                 <td>{{ $color->date_of_delivery ?? '-' }}</td>
                                 <td>
                                     @if ($color->status == 'in_progress')
-                                        <span class="badge bg-info">قيد التصوير</span>
+                                        <span class="badge bg-info">{{ __('messages.in_progress') }}</span>
                                     @elseif ($color->status == 'completed')
-                                        <span class="badge bg-success">مكتمل</span>
+                                        <span class="badge bg-success">{{ __('messages.complete') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if ($color->status != 'completed')
-                                    <form method="POST" action="{{ route('shooting-sessions.remove-color', $colorSession->id) }}" style="display:inline;" onsubmit="return confirm('هل أنت متأكد من حذف هذا اللون من الجلسة؟');">
+                                    <form method="POST" action="{{ route('shooting-sessions.remove-color', $colorSession->id) }}" style="display:inline;" onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">
-                                            حذف
+                                            {{ __('messages.delete') }}
                                         </button>
                                     </form>
                                     @else
@@ -80,7 +80,7 @@
                 </table>
             </div>
 
-            <a href="{{ route('shooting-sessions.index') }}" class="btn btn-secondary mt-3">رجوع</a>
+            <a href="{{ route('shooting-sessions.index') }}" class="btn btn-secondary mt-3">{{ __('messages.back') }}</a>
         </div>
     </div>
 </div>

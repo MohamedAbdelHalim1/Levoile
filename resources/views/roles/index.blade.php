@@ -14,7 +14,7 @@
             @if (auth()->user()->hasPermission('إضافة دور'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('roles.create') }}" class="btn btn-success">
-                        {{ __('إضافة دور') }}
+                        {{ __('messages.create_role ') }}
                     </a>
                 </div>
             @endif
@@ -23,8 +23,8 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>الاسم</th>
-                            <th>العمليات</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,21 +34,21 @@
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض دور'))
                                         <a href="{{ route('roles.show', $role->id) }}" class="btn btn-primary">
-                                            عرض المستخدمين</a>
+                                            {{ __('messages.show') }} </a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل دور'))
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-secondary">تعديل</a>
+                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-secondary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل صلاحيات مستخدم'))
                                         <a href="{{ route('roles.permissions', $role->id) }}"
-                                            class="btn btn-info">تعديل الصلاحيات</a>
+                                            class="btn btn-info">{{ __('messages.permissions') }} </a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف دور') && $role->id != 1)
                                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                            style="display: inline-block;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الدور؟');">
+                                            style="display: inline-block;" onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">حذف</button>
+                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

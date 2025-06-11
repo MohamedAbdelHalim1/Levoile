@@ -19,7 +19,7 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4 class="mb-4">📅 جدول النشر - التقويم</h4>
+                <h4 class="mb-4">📅 {{ __('messages.calendar') }}</h4>
                 <div id="calendar"></div>
             </div>
         </div>

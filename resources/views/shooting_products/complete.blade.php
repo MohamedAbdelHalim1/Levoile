@@ -10,32 +10,32 @@
                 </div>
             @endif
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h3 class="mb-4">اكمال بيانات المنتج: {{ $product->name }} - {{ $product->custom_id }}</h3>
+                <h3 class="mb-4">{{ __('messages.complete_data') }}  : {{ $product->name }} - {{ $product->custom_id }}</h3>
                 <form method="POST" action="{{ route('shooting-products.complete.save', $product->id) }}"
                     enctype="multipart/form-data">
                     @csrf
 
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
-                            <label>اسم المنتج</label>
+                            <label>{{ __('messages.name') }}</label>
                             <input type="text" name="name" value="{{ $product->name ?? '' }}" class="form-control">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>السعر</label>
+                            <label>{{ __('messages.price') }}</label>
                             <input type="text" class="form-control" value="{{ $product->price }}" name="price">
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label>الوصف</label>
+                            <label>{{ __('messages.description') }}</label>
                             <textarea name="description" class="form-control">{{ $product->description ?? '' }}</textarea>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label>الصورة الرئيسية</label>
+                            <label>{{ __('messages.image') }}</label>
                             <div class="position-relative">
                                 @if ($product->main_image && file_exists(public_path('images/shooting/' . $product->main_image)))
                                     <img src="{{ asset('images/shooting/' . $product->main_image) }}"
                                         class="img-thumbnail mb-2" width="150">
                                 @else
-                                    <span class="text-muted">لا توجد صورة حالية</span>
+                                    <span class="text-muted">{{ __('messages.N/A') }}</span>
                                 @endif
                             </div>
 
@@ -44,9 +44,9 @@
                     </div>
 
                     <hr>
-                    <h5 class="mt-4">معرض الصور</h5>
+                    <h5 class="mt-4">{{ __('messages.gallery') }}</h5>
                     <div class="mb-3">
-                        <label class="form-label">+ أضف صور جديدة</label>
+                        <label class="form-label">+ {{ __('messages.add_new_photo') }}</label>
                         <input type="file" name="gallery_images[]" class="form-control" multiple>
                     </div>
 
@@ -64,31 +64,31 @@
 
 
                     <hr>
-                    <h5>تفاصيل الألوان والمقاسات</h5>
+                    <h5>{{ __('messages.colors_and_sizes_details') }}</h5>
                     <div class="row g-4">
                         @foreach ($groupedColors as $colorCode => $colorGroup)
                             <div class="col-md-4">
                                 <div class="border p-3 mb-3 rounded bg-light">
-                                    <h6>كود اللون: {{ $colorCode }}</h6>
+                                    <h6>{{ __('messages.code') }} : {{ $colorCode }}</h6>
                                     <input type="hidden" name="colors[{{ $loop->index + 1 }}][color_code]" value="{{ $colorCode }}">
                                     <input type="hidden" name="colors[{{ $loop->index + 1 }}][ids]" value="{{ implode(',', $colorGroup->pluck('id')->toArray()) }}">
                                     
                                     <div class="mb-2">
-                                        <label>اسم اللون</label>
+                                        <label>{{ __('messages.name') }}</label>
                                         <input type="text" name="colors[{{ $loop->index + 1 }}][name]" class="form-control"
                                             value="{{ $colorGroup->first()->name }}">
                                     </div>
-                                    <h6 class="mt-3">المقاسات:</h6>
+                                    <h6 class="mt-3">{{ __('messages.sizes') }}:</h6>
                                     @foreach ($colorGroup as $size)
                                         <div class="mb-2">
-                                            <label>مقاس ({{ $size->size_code }})</label>
+                                            <label>{{ __('messages.size') }} ({{ $size->size_code }})</label>
                                             <input type="text" name="colors[{{ $loop->parent->index + 1 }}][sizes][{{ $size->id }}]" class="form-control"
                                                 value="{{ $size->size_name }}">
                                         </div>
                                     @endforeach
                                     <hr>
                                     <div class="mb-2">
-                                        <label>الصورة</label>
+                                        <label>{{ __('messages.image') }}</label>
                                         <input type="file" name="colors[{{ $loop->index + 1 }}][image]" class="form-control" accept="image/*">
                                         @if (!empty($colorGroup->first()->image) && file_exists(public_path($colorGroup->first()->image)))
                                             <img src="{{ asset($colorGroup->first()->image) }}" class="img-thumbnail mt-2" width="100">
@@ -100,8 +100,8 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary" id="saveButton" disabled>حفظ البيانات</button>
-                    <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>
+                    <button type="submit" class="btn btn-primary" id="saveButton" disabled>{{ __('messages.save') }}</button>
+                    <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">{{ __('messages.back') }}</a>
                 </form>
             </div>
         </div>
@@ -147,7 +147,7 @@
                 const id = $(this).data('id');
                 const box = $(this).closest('.col-md-3');
 
-                if (!confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+                if (!confirm('{{ __('messages.are_you_sure') }}')) return;
 
                 $.ajax({
                     url: '{{ route('gallery.delete') }}',
@@ -160,7 +160,7 @@
                         if (response.success) {
                             box.remove();
                         } else {
-                            alert('فشل في الحذف');
+                            alert('{{ __('messages.something_went_wrong') }}');
                         }
                     }
                 });

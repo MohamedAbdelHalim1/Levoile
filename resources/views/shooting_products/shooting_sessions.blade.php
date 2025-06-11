@@ -10,11 +10,11 @@
                 </div>
             @endif
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4 class="mb-4">جلسات التصوير</h4>
+                <h4 class="mb-4">{{ __('messages.shooting_sessions') }} </h4>
 
                 <div class="d-flex justify-content-end mb-3">
                     <a href="{{ route('ways-of-shooting.index') }}" class="btn btn-primary">
-                        <i class="fa fa-list"></i> طرق التصوير
+                        <i class="fa fa-list"></i> {{ __('messages.way_of_shooting') }}
                     </a>
                 </div>
 
@@ -23,21 +23,21 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>جلسة التصوير</th>
-                                <th>عدد الألوان</th>
-                                <th>الحالة</th>
-                                <th>نوع التصوير</th>
-                                <th>مكان التصوير</th>
-                                <th>المصور</th>
-                                <th>المحرر</th>
-                                <th>تاريخ التصوير</th>
-                                <th>تاريخ التسليم</th>
-                                <th>الوقت المتبقي</th>
-                                <th>الدرايف</th>
-                                <th>لينك طريقه التصوير</th>
-                                <th>طرق التصوير</th>
-                                <th>ملاحظة</th>
-                                <th>التحكم</th>
+                                <th>{{ __('messages.reference') }} </th>
+                                <th>{{ __('messages.number_of_colors') }} </th>
+                                <th>{{ __('messages.status') }}</th>
+                                <th>{{ __('messages.type_of_shooting') }} </th>
+                                <th>{{ __('messages.location') }} </th>
+                                <th>{{ __('messages.photographer') }}</th>
+                                <th>{{ __('messages.editors') }}</th>
+                                <th>{{ __('messages.date_of_shooting') }} </th>
+                                <th>{{ __('messages.date_of_delivery') }} </th>
+                                <th>{{ __('messages.remaining_time') }} </th>
+                                <th>{{ __('messages.drive_link') }}</th>
+                                <th>{{ __('messages.way_of_shooting_link') }}  </th>
+                                <th>{{ __('messages.way_of_shooting') }} </th>
+                                <th>{{ __('messages.notes') }}</th>
+                                <th>{{ __('messages.operations') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,9 +64,9 @@
 
                                     <td>
                                         @if ($allCompleted)
-                                            <span class="badge bg-success">مكتمل</span>
+                                            <span class="badge bg-success">{{ __('messages.complete') }}</span>
                                         @else
-                                            <span class="badge bg-warning">قيد التنفيذ</span>
+                                            <span class="badge bg-warning">{{ __('messages.in_progress') }} </span>
                                         @endif
                                     </td>
 
@@ -153,11 +153,11 @@
                                                 <span>-</span>
                                             @else
                                                 @if ($remaining > 0)
-                                                    <span class="badge bg-primary">{{ $remaining }} يوم متبقي</span>
+                                                    <span class="badge bg-primary">{{ $remaining }} {{ __('messages.day_remaining') }}</span>
                                                 @elseif ($remaining == 0)
-                                                    <span class="badge bg-warning">ينتهي اليوم</span>
+                                                    <span class="badge bg-warning">{{ __('messages.today') }} </span>
                                                 @else
-                                                    <span class="badge bg-danger">متأخر بـ {{ abs($remaining) }} يوم</span>
+                                                    <span class="badge bg-danger"> {{ __('messages.day_overdue') }} {{ abs($remaining) }} </span>
                                                 @endif
                                             @endif
                                         @endif
@@ -206,11 +206,11 @@
                                         <button class="btn btn-success btn-sm open-drive-link-modal"
                                             data-reference="{{ $session->reference }}"
                                             data-drive-link="{{ $firstLink }}">
-                                            إضافة لينك درايف
+                                            {{ __('messages.add_drive_link') }}
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
-                                            عرض المزيد
+                                            {{ __('messages.view') }}
                                         </a>
                                     </td>
 
@@ -229,7 +229,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">إضافة لينك درايف</h5>
+                    <h5 class="modal-title">{{ __('messages.add_drive_link') }}  </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -238,15 +238,15 @@
                         <input type="hidden" name="reference" id="drive_session_reference">
 
                         <div class="mb-3">
-                            <label class="form-label">لينك درايف</label>
+                            <label class="form-label">{{ __('messages.drive_link') }}</label>
                             <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
                         </div>
                         <div class="mb-3 d-none" id="noteWrapper">
-                            <label class="form-label">سبب التأخير</label>
+                            <label class="form-label">{{ __('messages.notes') }} </label>
                             <textarea name="note" id="noteInput" class="form-control" rows="3"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">حفظ</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                     </form>
                 </div>
             </div>
@@ -285,7 +285,7 @@
             let $row = $(this).closest("tr");
             let timeLeftText = $row.find("td:nth-child(11)").text(); // عمود الوقت المتبقي
 
-            let isLate = timeLeftText.includes("متأخر");
+            let isLate = timeLeftText.includes("{{ __('messages.day_overdue') }}");
 
             $("#drive_session_reference").val(reference);
             $("#drive_link_input").val(driveLink);
@@ -316,7 +316,7 @@
                     location.reload();
                 },
                 error: function(xhr) {
-                    alert("حدث خطأ أثناء حفظ لينك درايف");
+                    alert("{{ __('messages.something_went_wrong') }}");
                 }
             });
         });

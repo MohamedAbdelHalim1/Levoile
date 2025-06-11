@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة مستخدم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('users.create') }}" class="btn btn-success">
-                        {{ __('انشاء مستخدم') }}
+                        {{ __('messages.create_user ') }}
                     </a>
                 </div>
             @endif
@@ -22,10 +22,10 @@
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>الاسم</th>
-                            <th>البريد الالكتروني</th>
-                            <th>الدور</th>
-                            <th>العمليات</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.email') }} </th>
+                            <th>{{ __('messages.role') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,10 +33,10 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->role->name ?? 'لا يوجد' }}</td>
+                                <td>{{ $user->role->name ?? '-' }}</td>
                                 <td>
                                     @if (auth()->user()->hasPermission('تعديل مستخدم'))
-                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">تعديل</a>
+                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">{{ __('messages.edit') }}</a>
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف مستخدم'))
                                         <form action="{{ route('users.destroy', $user->id) }}" method="POST"
@@ -44,7 +44,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟')">حذف</button>
+                                                onclick="return confirm('{{ __('messages.are_you_sure') }}')">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

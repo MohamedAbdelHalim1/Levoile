@@ -15,50 +15,53 @@
                     <div class="row">
                         <!-- Text & Dropdown Filters -->
                         <div class="col-md-3">
-                            <label>اسم المنتج</label>
+                            <label>{{ __('messages.name') }}</label>
                             <input type="text" name="name" class="form-control" value="{{ request('name') }}">
                         </div>
 
                         <div class="col-md-3">
-                            <label>الحالة</label>
+                            <label>{{ __('messages.status') }}</label>
                             <select name="status" class="form-control">
-                                <option value="">كل الحالات</option>
-                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>جديد</option>
-                                <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>قيد
-                                    التنفيذ</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>مكتمل
+                                <option value="">{{ __('messages.all_statuses') }}</option>
+                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>{{ __('messages.new') }}</option>
+                                <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>
+                                    {{ __('messages.in_progress') }}</option>
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>{{ __('messages.complete') }}
                                 </option>
                             </select>
                         </div>
 
                         <div class="col-md-3">
-                            <label>نوع التصوير</label>
+                            <label>{{ __('messages.type_of_shooting') }}</label>
                             <select name="type_of_shooting" class="form-control">
-                                <option value="">الكل</option>
+                                <option value="">{{ __('messages.all_type_of_shooting') }}</option>
                                 <option value="تصوير منتج"
-                                    {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>تصوير منتج</option>
+                                    {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>{{ __('messages.product_shooting') }} </option>
                                 <option value="تصوير موديل"
-                                    {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>تصوير موديل
+                                    {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>{{ __('messages.model_shooting') }} 
+                                </option>
+                                <option value="تصوير انفلونسر"
+                                    {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>{{ __('messages.inflo_shooting') }} 
                                 </option>
                                 <option value="تعديل لون"
-                                    {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>تعديل لون</option>
+                                    {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>{{ __('messages.change_color') }}</option>
                             </select>
                         </div>
 
                         <div class="col-md-3">
-                            <label>الموقع</label>
+                            <label>{{ __('messages.location') }}</label>
                             <select name="location" class="form-control">
-                                <option value="">الكل</option>
+                                <option value="">{{ __('messages.all_locations') }}</option>
                                 <option value="تصوير بالداخل"
-                                    {{ request('location') == 'تصوير بالداخل' ? 'selected' : '' }}>تصوير بالداخل</option>
+                                    {{ request('location') == 'تصوير بالداخل' ? 'selected' : '' }}>{{ __('messages.inside_shooting') }}</option>
                                 <option value="تصوير بالخارج"
-                                    {{ request('location') == 'تصوير بالخارج' ? 'selected' : '' }}>تصوير بالخارج</option>
+                                    {{ request('location') == 'تصوير بالخارج' ? 'selected' : '' }}>{{ __('messages.outside_shooting') }}</option>
                             </select>
                         </div>
 
                         <!-- Date Range: تصوير -->
                         <div class="col-md-6 mt-3">
-                            <label>تاريخ التصوير</label>
+                            <label>{{ __('messages.date_of_shooting') }}</label>
                             <div class="input-group">
                                 <input type="date" name="date_of_shooting_start" class="form-control"
                                     value="{{ request('date_of_shooting_start') }}">
@@ -70,7 +73,7 @@
 
                         <!-- Date Range: تسليم -->
                         <div class="col-md-6 mt-3">
-                            <label>تاريخ التسليم</label>
+                            <label>{{ __('messages.date_of_delivery') }}</label>
                             <div class="input-group">
                                 <input type="date" name="date_of_delivery_start" class="form-control"
                                     value="{{ request('date_of_delivery_start') }}">
@@ -82,7 +85,7 @@
 
                         <!-- Date Range: تعديل -->
                         <div class="col-md-6 mt-3">
-                            <label>تاريخ التعديل</label>
+                            <label>{{ __('messages.date_of_editing') }}</label>
                             <div class="input-group">
                                 <input type="date" name="date_of_editing_start" class="form-control"
                                     value="{{ request('date_of_editing_start') }}">
@@ -94,8 +97,8 @@
 
                         <!-- Buttons -->
                         <div class="col-md-6 mt-4 d-flex align-items-end justify-content-start">
-                            <button type="submit" class="btn btn-primary me-2">فلتر</button>
-                            <a href="{{ route('shooting-products.index') }}" class="btn btn-success">إلغاء</a>
+                            <button type="submit" class="btn btn-primary me-2">{{ __('messages.search') }}</button>
+                            <a href="{{ route('shooting-products.index') }}" class="btn btn-success">{{ __('messages.reset') }}</a>
                         </div>
                     </div>
                 </form>
@@ -107,13 +110,13 @@
                     <div class="m-2">
                         @if (auth()->user()->hasPermission('إضافة منتج'))
                             <a href="{{ route('shooting-products.create') }}" class="btn btn-primary">
-                                {{ __('إضافة منتج') }}
+                                {{ __('messages.add_product') }}
                             </a>
                         @endif
                     </div>
                     <div class="m-2">
                         <a href="{{ route('shooting-products.manual') }}" class="btn btn-dark">
-                            التصوير اليدوي
+                            {{ __('messages.manual_shooting') }}
                         </a>
                     </div>
                     {{-- <div id="startShootingContainer" style="display: none;" class="m-2">
@@ -132,29 +135,29 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>اسم المنتج</th>
-                            <th>الحالة</th>
-                            <th>عدد الألوان</th>
-                            <th>عدد المقاسات</th>
-                            <th>عدد السيشنات</th>
-                            <th>السيشنات</th>
-                            <th>حاله السيشن</th>
-                            <th>محرري السيشن</th>
-                            <th>رابط الصور</th>
-                            <th>رابط التعديل</th>
-                            <th>حالة التعديل</th>
-                            <th>نوع التصوير</th>
-                            <th>الموقع</th>
-                            <th>تاريخ التصوير</th>
-                            <th>المصور</th>
-                            <th>تاريخ التعديل</th>
-                            <th>المحرر</th>
-                            <th>تاريخ التسليم</th>
-                            <th>الوقت المتبقي</th>
-                            <th>طريقه التصوير</th>
-                            <th>حاله البيانات</th>
-                            <th>المراجعة</th>
-                            <th>الإجراءات</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.number_of_colors') }}</th>
+                            <th>{{ __('messages.number_of_sizes') }}</th>
+                            <th>{{ __('messages.number_of_sessions') }}</th>
+                            <th>{{ __('messages.sessions') }}</th>
+                            <th>{{ __('messages.status_of_sessions') }}</th>
+                            <th>{{ __('messages.editors_of_sessions') }}</th>
+                            <th>{{ __('messages.photo_link') }}</th>
+                            <th>{{ __('messages.edit_link') }}</th>
+                            <th>{{ __('messages.status_of_edit') }}</th>
+                            <th>{{ __('messages.type_of_shooting') }}</th>
+                            <th>{{ __('messages.location') }}</th>
+                            <th>{{ __('messages.date_of_shooting') }}</th>
+                            <th>{{ __('messages.photographer') }}</th>
+                            <th>{{ __('messages.date_of_edit') }}</th>
+                            <th>{{ __('messages.editors') }}</th>
+                            <th>{{ __('messages.date_of_delivery') }} </th>
+                            <th>{{ __('messages.remaining_time') }}</th>
+                            <th>{{ __('messages.way_of_shooting') }}</th>
+                            <th>{{ __('messages.status_of_data') }}</th>
+                            <th>{{ __('messages.review') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -343,9 +346,9 @@
                                                 <div
                                                     style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
                                                     @if ($session->status == 'completed')
-                                                        <span>مكتمل</span>
+                                                        <span>{{ __('messages.complete') }}</span>
                                                     @else
-                                                        <span>جديد</span>
+                                                        <span>{{ __('messages.new') }}</span>
                                                     @endif
                                                 </div>
                                             @endif
@@ -375,7 +378,7 @@
                                                     {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}
                                                 </div>
                                             @empty
-                                                <div>لا يوجد</div>
+                                                <div>{{ __('messages.N/A') }}</div>
                                             @endforelse
                                         </div>
                                     @endforeach
@@ -399,7 +402,7 @@
                                                     <span>-</span>
                                                 @endif
                                             @empty
-                                                <span>لا يوجد</span>
+                                                <span>{{ __('messages.N/A') }}</span>
                                             @endforelse
                                         </div>
                                     @endforeach
@@ -423,7 +426,7 @@
                                                     <span>-</span>
                                                 @endif
                                             @empty
-                                                <span>لا يوجد</span>
+                                                <span>{{ __('messages.N/A') }}</span>
                                             @endforelse
                                         </div>
                                     @endforeach
@@ -443,7 +446,7 @@
                                                     {{ $edit->status }}
                                                 </span>
                                             @empty
-                                                <span class="badge bg-primary">جديد</span>
+                                                <span class="badge bg-primary">{{ __('messages.new') }}</span>
                                             @endforelse
                                         </div>
                                     @endforeach
@@ -540,11 +543,11 @@
                                                             @elseif (is_null($date))
                                                                 -
                                                             @elseif ($remaining > 0)
-                                                                {{ $remaining }} يوم متبقي
+                                                                {{ $remaining }} {{ __('messages.day_remaining') }}
                                                             @elseif ($remaining == 0)
-                                                                ينتهي اليوم
+                                                                {{ __('messages.today') }} 
                                                             @else
-                                                                متأخر بـ {{ abs($remaining) }} يوم
+                                                                 {{ __('messages.day_overdue') }} {{ abs($remaining) }} 
                                                             @endif
                                                         </span>
                                                     @break
@@ -576,15 +579,15 @@
                                 @endphp
 
                                 @if ($hasAllColorNames)
-                                    <td>البيانات مكتملة</td>
+                                    <td>{{ __('messages.data_complete') }}</td>
                                 @else
-                                    <td>البيانات غير مكتملة</td>
+                                    <td>{{ __('messages.data_incomplete') }}</td>
                                 @endif
 
 
                                 <td>
                                     @if ($product->is_reviewed)
-                                        <span class="badge bg-success">تم التكويد</span>
+                                        <span class="badge bg-success">{{ __('messages.coded') }}</span>
                                     @else
                                         <input type="checkbox" class="form-check-input review-toggle"
                                             data-id="{{ $product->id }}">
@@ -609,9 +612,9 @@
                                         data-weight="{{ $product->shootingProductColors->first()?->weight }}">
                                         @if (empty($product->shootingProductColors->first()?->size_name) &&
                                                 empty($product->shootingProductColors->first()?->weight))
-                                            إضافة مقاس ووزن
+                                            {{ __('messages.add_weight_and_size') }}
                                         @else
-                                            تعديل المقاس والوزن
+                                            {{ __('messages.edit_weight_and_size') }}
                                         @endif
                                     </button>
 
@@ -621,8 +624,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('هل انت متاكد من حذف هذا المنتج؟')">
-                                                حذف
+                                                onclick="return confirm('{{ __('messages.are_you_sure') }}')">
+                                                {{ __('messages.delete') }}
                                             </button>
                                         </form>
                                     @endif
@@ -643,18 +646,18 @@
                 @csrf
                 <input type="hidden" name="product_id" id="sizeWeightProductId">
                 <div class="modal-header">
-                    <h5 class="modal-title">إضافة مقاس ووزن</h5>
+                    <h5 class="modal-title">{{ __('messages.add_weight_and_size') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <label>المقاس</label>
+                    <label>{{ __('messages.size') }}</label>
                     <textarea name="size_name" class="form-control mb-3" required></textarea>
 
-                    <label>الوزن</label>
+                    <label>{{ __('messages.weight') }}</label>
                     <input type="text" name="weight" class="form-control" required>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">حفظ</button>
+                    <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
                 </div>
             </form>
         </div>
@@ -737,13 +740,13 @@
             });
 
             $(".next-btn").on("click", function() {
-                if ($(this).text() === "حفظ") {
+                if ($(this).text() === "{{ __('messages.save') }}") {
                     submitForm(); // Call function to submit form only on "حفظ"
                     return;
                 }
 
                 if (!validateStep()) {
-                    alert("يرجى ملء جميع الحقول المطلوبة قبل المتابعة.");
+                    alert("{{ __('messages.please_fill_all_required_fields') }}");
                     return;
                 }
 
@@ -793,7 +796,7 @@
                     $("input[name='date_of_delivery_shooting']").val();
 
                 if (!dateOfDelivery) {
-                    alert("يجب إدخال تاريخ التسليم.");
+                    alert("{{ __('messages.please_select_date_of_delivery') }}");
                     return;
                 }
 
@@ -815,7 +818,7 @@
                         location.reload();
                     },
                     error: function(xhr) {
-                        alert("خطأ أثناء بدء التصوير. حاول مرة أخرى!");
+                        alert("{{ __('messages.something_went_wrong') }}");
                         console.error(xhr.responseText);
                     }
                 });
@@ -881,7 +884,7 @@
             const checkbox = $(this);
             const productId = checkbox.data('id');
 
-            if (!confirm('هل أنت متأكد من مراجعة هذا المنتج؟')) {
+            if (!confirm('{{ __('messages.are_you_sure_you_want_to_review') }}')) {
                 checkbox.prop('checked', false);
                 return;
             }
@@ -896,15 +899,15 @@
                 success: function(response) {
                     if (response.success) {
                         checkbox.prop('checked', true).attr('disabled', true);
-                        alert('تم مراجعة المنتج وإرساله لموقع الادمن بنجاح');
+                        alert('{{ __('messages.reviewed_successfully') }}');
                         location.reload();
                     } else {
-                        alert('فشل في تنفيذ المراجعة');
+                        alert('{{ __('messages.something_went_wrong') }}');
                         checkbox.prop('checked', false);
                     }
                 },
                 error: function() {
-                    alert('حدث خطأ أثناء التنفيذ');
+                    alert('{{ __('messages.something_went_wrong') }}');
                     checkbox.prop('checked', false);
                 }
             });

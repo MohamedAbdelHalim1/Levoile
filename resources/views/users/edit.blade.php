@@ -10,12 +10,12 @@
                 @method('PUT')
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">الاسم</label>
+                    <label for="name" class="form-label">{{ __('messages.name') }}</label>
                     <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="email" class="form-label">البريد الالكتروني</label>
+                    <label for="email" class="form-label">{{ __('messages.email') }}</label>
                     <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" required>
                 </div>
 
@@ -30,7 +30,7 @@
                 </div> --}}
 
                 <div class="mb-3">
-                    <label for="role_id" class="form-label">الدور</label>
+                    <label for="role_id" class="form-label">{{ __('messages.role') }}</label>
                     <select name="role_id" id="role_id" class="form-select" required>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
@@ -40,7 +40,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">تعديل</button>
+                <button type="submit" class="btn btn-primary">{{ __('messages.edit') }}</button>
             </form>
         </div>
     </div>

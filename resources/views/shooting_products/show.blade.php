@@ -6,19 +6,19 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">تفاصيل المنتج: {{ $product->name }}</h4>
+                        <h4 class="mb-0">{{ __('messages.product_details') }} : {{ $product->name }}</h4>
                     </div>
                     <div class="card-body">
-                        <p><strong>الوصف:</strong> {{ $product->description ?? '-' }}</p>
-                        <p><strong>عدد الألوان:</strong> {{ $product->number_of_colors }}</p>
-                        <p><strong>السعر:</strong> {{ $product->price ?? '-' }}</p>
-                        <p><strong>الحالة:</strong>
+                        <p><strong>{{ __('messages.description') }}:</strong> {{ $product->description ?? '-' }}</p>
+                        <p><strong>{{ __('messages.number_of_colors') }} :</strong> {{ $product->number_of_colors }}</p>
+                        <p><strong>{{ __('messages.price') }}:</strong> {{ $product->price ?? '-' }}</p>
+                        <p><strong>{{ __('messages.status') }}:</strong>
                             @if ($product->status == 'completed')
-                                <span class="badge bg-success">مكتمل</span>
+                                <span class="badge bg-success">{{ __('messages.complete') }}</span>
                             @elseif($product->status == 'in_progress' || $product->status == 'partial')
-                                <span class="badge bg-warning text-dark">قيد التنفيذ</span>
+                                <span class="badge bg-warning text-dark">{{ __('messages.in_progress') }} </span>
                             @else
-                                <span class="badge bg-secondary">جديد</span>
+                                <span class="badge bg-secondary">{{ __('messages.new') }}</span>
                             @endif
                         </p>
                     </div>
@@ -26,7 +26,7 @@
 
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h5 class="mb-0">تفاصيل الألوان وجلسات التصوير</h5>
+                        <h5 class="mb-0">{{ __('messages.colors') }}</h5>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -34,19 +34,19 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>اللون</th>
-                                        <th>الكود</th>
-                                        <th>الحالة</th>
-                                        <th>كود اللون</th> {{-- ✅ Color Code --}}
-                                        <th>كود المقاس</th> {{-- ✅ Size Code --}}
-                                        <th>اسم المقاس</th> {{-- ✅ Size Name --}}
-                                        <th>الموقع</th>
-                                        <th>تاريخ التصوير</th>
-                                        <th>المصور</th>
-                                        <th>تاريخ التعديل</th>
-                                        <th>المحرر</th>
-                                        <th>تاريخ التسليم</th>
-                                        <th>الجلسات</th>
+                                        <th>{{ __('messages.name') }}</th>
+                                        <th>{{ __('messages.code') }}</th>
+                                        <th>{{ __('messages.status') }}</th>
+                                        <th>{{ __('messages.color_code') }} </th> {{-- ✅ Color Code --}}
+                                        <th>{{ __('messages.size_code') }} </th> {{-- ✅ Size Code --}}
+                                        <th>{{ __('messages.size') }} </th> {{-- ✅ Size Name --}}
+                                        <th>{{ __('messages.location') }}</th>
+                                        <th>{{ __('messages.date_of_shooting') }} </th>
+                                        <th>{{ __('messages.photographer') }}</th>
+                                        <th>{{ __('messages.date_of_editing') }} </th>
+                                        <th>{{ __('messages.editors') }}</th>
+                                        <th>{{ __('messages.date_of_delivery') }} </th>
+                                        <th>{{ __('messages.sessions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,7 +63,7 @@
                                                         : ($color->status == 'in_progress'
                                                             ? 'bg-warning text-dark'
                                                             : 'bg-secondary') }}">
-                                                    {{ $color->status == 'completed' ? 'مكتمل' : ($color->status == 'in_progress' ? 'قيد التصوير' : 'جديد') }}
+                                                    {{ $color->status == 'completed' ? __('messages.complete') : ($color->status == 'in_progress' ? __('messages.in_progress') : __('messages.new')) }}
                                                 </span>
                                             </td>
 
@@ -106,26 +106,26 @@
                                                 @if ($color->sessions->count())
                                                     @foreach ($color->sessions as $session)
                                                         <div class="mb-1 border rounded p-1">
-                                                            <div><strong>السيشن:</strong> {{ $session->reference }}</div>
+                                                            <div><strong>{{ __('messages.reference') }}:</strong> {{ $session->reference }}</div>
                                                             <div>
-                                                                <strong>الحالة:</strong>
+                                                                <strong>{{ __('messages.status') }}:</strong>
                                                                 <span
                                                                     class="badge {{ $session->status == 'completed' ? 'bg-success' : 'bg-warning text-dark' }}">
-                                                                    {{ $session->status == 'completed' ? 'مكتمل' : 'جديد' }}
+                                                                    {{ $session->status == 'completed' ? __('messages.complete') : __('messages.in_progress') }}
                                                                 </span>
                                                             </div>
                                                             @if ($session->drive_link)
                                                                 <div>
                                                                     <a href="{{ $session->drive_link }}" target="_blank"
                                                                         class="text-decoration-underline text-primary">
-                                                                        رابط الجلسة
+                                                                        {{ __('messages.drive_link') }}
                                                                     </a>
                                                                 </div>
                                                             @endif
                                                         </div>
                                                     @endforeach
                                                 @else
-                                                    <span class="text-muted">لا يوجد</span>
+                                                    <span class="text-muted">{{ __('messages.N/A') }}</span>
                                                 @endif
                                             </td>
                                         </tr>

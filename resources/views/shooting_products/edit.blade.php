@@ -4,54 +4,54 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h2 class="text-lg font-bold mb-4">تعديل منتج جديد</h2>
+                <h2 class="text-lg font-bold mb-4">{{ __('messages.edit_product') }}</h2>
 
                 <form action="{{ route('shooting-products.update' , $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label class="form-label">اسم المنتج</label>
+                        <label class="form-label">{{ __('messages.name') }}</label>
                         <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">الكود التعريفي (Primary ID)</label>
+                        <label class="form-label">{{ __('messages.code') }}  (Primary ID)</label>
                         <input type="number" name="custom_id" class="form-control" value="{{ $product->custom_id }}" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">عدد الألوان</label>
+                        <label class="form-label">{{ __('messages.number_of_colors') }}</label>
                         <input type="number" name="number_of_colors" value="{{ $product->number_of_colors }}" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">السعر</label>
+                        <label class="form-label">{{ __('messages.price') }}</label>
                         <input type="number" step="0.01" name="price" class="form-control" value="{{ $product->price }}" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">ألكميه</label>
+                        <label class="form-label">{{ __('messages.quantity') }}</label>
                         <input type="number" name="quantity" class="form-control" value="{{ $product->quantity }}" min="1">
                     </div>
                     
 
                     <div class="mb-3">
-                        <label class="form-label">الصورة الرئيسية</label>
+                        <label class="form-label">{{ __('messages.image') }}</label>
                         <input type="file" name="main_image" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">الصورة الحالية</label><br>
+                        <label class="form-label">{{ __('messages.current_image') }}</label><br>
                         @if($product->main_image)
                             <img src="{{ asset('images/shooting/' . $product->main_image) }}" width="100">
                         @else
-                            <span>لا توجد صورة</span>
+                            <span>{{ __('messages.N/A') }}</span>
                         @endif
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">معرض الصور</label>
+                        <label class="form-label">{{ __('messages.gallery') }}</label>
                         <input type="file" name="gallery_images[]" class="form-control" multiple>
                     </div>
                     
@@ -68,7 +68,7 @@
                     @endif
                     
 
-                    <button type="submit" class="btn btn-primary">تعديل المنتج</button>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                 </form>
             </div>
         </div>
@@ -80,7 +80,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.delete-image').forEach(button => {
             button.addEventListener('click', function () {
-                if (!confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+                if (!confirm('{{ __('messages.are_you_sure') }}')) return;
 
                 const imageId = this.dataset.id;
                 const imageBox = this.closest('.col-md-3');
@@ -98,7 +98,7 @@
                     if (data.success) {
                         imageBox.remove();
                     } else {
-                        alert('حدث خطأ أثناء الحذف');
+                        alert('{{ __('messages.something_went_wrong') }}');
                     }
                 });
             });

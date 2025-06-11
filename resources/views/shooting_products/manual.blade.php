@@ -7,10 +7,10 @@
             {{-- النص اليمين: إدخال الكود --}}
             <div class="col-md-6">
                 <div class="card p-4 shadow">
-                    <h5 class="mb-3">إدخال كود اللون</h5>
+                    <h5 class="mb-3">{{ __('messages.enter_color_code') }} </h5>
 
                     <input type="text" id="colorCodeInput" class="form-control mb-3"
-                        placeholder="ادخل كود اللون واضغط Enter">
+                        placeholder="{{ __('messages.enter_color_code_and_press_enter') }}">
 
                     <div id="colorResult"></div>
 
@@ -22,9 +22,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>كود اللون</th>
-                                    <th>اسم المنتج</th>
-                                    <th>حذف</th>
+                                    <th>{{ __('messages.code') }}</th>
+                                    <th>{{ __('messages.product') }}</th>
+                                    <th>{{ __('messages.delete') }}</th>
                                 </tr>
                             </thead>
                             <tbody id="colorsTableBody">
@@ -38,43 +38,43 @@
             {{-- النص الشمال: إعدادات التصوير --}}
             <div class="col-md-6">
                 <div class="card p-4 shadow">
-                    <h5 class="mb-3">إعدادات التصوير</h5>
+                    <h5 class="mb-3">{{ __('messages.shooting_settings') }}</h5>
 
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label>نوع التصوير</label>
+                            <label>{{ __('messages.type_of_shooting') }}</label>
                             <select name="type_of_shooting" id="shootingType" class="form-control" required
                                 form="manualShootingForm">
-                                <option value="">اختر</option>
-                                <option value="تصوير منتج">تصوير منتج</option>
-                                <option value="تصوير موديل">تصوير موديل</option>
-                                <option value="تصوير انفلونسر">تصوير انفلونسر</option>
-                                <option value="تعديل لون">تعديل لون</option>
+                                <option value="">{{ __('messages.all_type_of_shooting') }}</option>
+                                <option value="تصوير منتج">{{ __('messages.product_shooting') }} </option>
+                                <option value="تصوير موديل">{{ __('messages.model_shooting') }} </option>
+                                <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }} </option>
+                                <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                             </select>
                         </div>
 
                         <div class="col-md-12 mb-3 d-none" id="locationWrapper">
-                            <label>مكان التصوير</label>
+                            <label>{{ __('messages.location') }} </label>
                             <select name="location" class="form-control" form="manualShootingForm">
-                                <option value="">اختر</option>
-                                <option value="تصوير بالداخل">تصوير بالداخل</option>
-                                <option value="تصوير بالخارج">تصوير بالخارج</option>
+                                <option value="">{{ __('messages.all_locations') }}</option>
+                                <option value="تصوير بالداخل">{{ __('messages.inside_shooting') }} </option>
+                                <option value="تصوير بالخارج">{{ __('messages.outside_shooting') }} </option>
                             </select>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label>تاريخ التصوير</label>
+                            <label>{{ __('messages.date_of_shooting') }} </label>
                             <input type="date" name="date_of_shooting" class="form-control" form="manualShootingForm">
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label>تاريخ التسليم</label>
+                            <label>{{ __('messages.date_of_delivery') }} </label>
                             <input type="date" name="date_of_delivery" class="form-control" required
                                 form="manualShootingForm">
                         </div>
 
                         <div class="col-md-12 mb-3 d-none" id="photographerWrapper">
-                            <label>المصورين</label>
+                            <label>{{ __('messages.photographers') }}</label>
                             <select name="photographer[]" class="form-control" multiple form="manualShootingForm">
                                 @foreach ($photographers as $photographer)
                                     <option value="{{ $photographer->id }}">{{ $photographer->name }}</option>
@@ -83,7 +83,7 @@
                         </div>
 
                         <div class="col-md-12 mb-3 d-none" id="editorWrapper">
-                            <label>المحررين</label>
+                            <label>{{ __('messages.editors') }}</label>
                             <select name="editor[]" class="form-control" multiple form="manualShootingForm">
                                 @foreach ($editors as $editor)
                                     <option value="{{ $editor->id }}">{{ $editor->name }}</option>
@@ -92,11 +92,11 @@
                         </div>
 
                         <div class="col-md-12 mb-3 d-none" id="methodWrapper">
-                            <label>طريقة التصوير / لينك</label>
+                            <label>{{ __('messages.way_of_shooting') }}</label>
                             <input type="text" name="shooting_method" class="form-control" form="manualShootingForm">
                         </div>
                         <div class="col-md-12 mt-3 d-none" id="shootingWaySection">
-                            <label>طرق التصوير</label>
+                            <label>{{ __('messages.way_of_shooting') }}</label>
                             <select name="way_of_shooting_ids[]" class="form-control tom-select" multiple>
                                 @foreach ($waysOfShooting as $way)
                                     <option value="{{ $way->id }}">{{ $way->name }}</option>
@@ -105,8 +105,8 @@
                         </div>
 
                         <div class="col-md-12">
-                            <button type="submit" form="manualShootingForm" class="btn btn-success">حفظ التصوير</button>
-                            <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">رجوع</a>
+                            <button type="submit" form="manualShootingForm" class="btn btn-success">{{ __('messages.save') }}</button>
+                            <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                         </div>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                     success: function(res) {
                         if (!res.found) {
                             $('#colorResult').html(
-                                `<div class="alert alert-danger">لم يتم العثور على اللون بهذا الكود</div>`
+                                `<div class="alert alert-danger">{{ __('messages.color_not_found') }}</div>`
                             );
                             return;
                         }

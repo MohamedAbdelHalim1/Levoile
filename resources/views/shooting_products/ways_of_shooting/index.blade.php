@@ -3,9 +3,9 @@
 @section('content')
     <div class="p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">طرق التصوير</h4>
+            <h4 class="mb-0">{{ __('messages.way_of_shooting') }}</h4>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addWayModal">
-                <i class="fa fa-plus"></i> إضافة طريقة تصوير
+                <i class="fa fa-plus"></i> {{ __('messages.add_shooting_way') }}
             </button>
         </div>
 
@@ -15,9 +15,9 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>اسم الطريقة</th>
-                            <th>تاريخ الإضافة</th>
-                            <th>التحكم</th>
+                            <th>{{ __('messages.way_of_shooting') }}</th>
+                            <th>{{ __('messages.created_at') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,20 +30,20 @@
                                     <button class="btn btn-sm btn-warning edit-btn" data-id="{{ $way->id }}"
                                         data-name="{{ $way->name }}" data-bs-toggle="modal"
                                         data-bs-target="#editWayModal">
-                                        تعديل
+                                        {{ __('messages.edit') }}
                                     </button>
 
                                     <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $way->id }}"
                                         data-name="{{ $way->name }}" data-bs-toggle="modal"
                                         data-bs-target="#deleteWayModal">
-                                        حذف
+                                        {{ __('messages.delete') }}
                                     </button>
                                 </td>
 
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3">لا توجد طرق تصوير مضافة بعد.</td>
+                                <td colspan="3">{{ __('messages.N/A') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -59,17 +59,17 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addWayModalLabel">إضافة طريقة تصوير</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                        <h5 class="modal-title" id="addWayModalLabel">{{ __('messages.add_shooting_way') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="form-label">اسم الطريقة</label>
+                            <label for="name" class="form-label">{{ __('messages.way_of_shooting') }}</label>
                             <input type="text" name="name" class="form-control" id="name" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">حفظ</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </form>
@@ -83,18 +83,18 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">تعديل طريقة التصوير</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                        <h5 class="modal-title">{{ __('messages.edit_shooting_way') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="id" id="edit_way_id">
                         <div class="mb-3">
-                            <label class="form-label">الاسم</label>
+                            <label class="form-label">{{ __('messages.way_of_shooting') }}</label>
                             <input type="text" name="name" id="edit_way_name" class="form-control" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">تحديث</button>
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                     </div>
                 </div>
             </form>
@@ -108,15 +108,15 @@
                 @method('DELETE')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">حذف طريقة تصوير</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                        <h5 class="modal-title">{{ __('messages.delete_shooting_way') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
                     </div>
                     <div class="modal-body">
-                        <p>هل أنت واثق من حذف طريقة التصوير <strong id="delete_way_name"></strong>؟</p>
+                        <p>{{ __('messages.are_you_sure_you_want_to_delete_this_shooting_way') }} <strong id="delete_way_name"></strong></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-danger">نعم، احذف</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
                     </div>
                 </div>
             </form>

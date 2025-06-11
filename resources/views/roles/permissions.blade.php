@@ -6,12 +6,12 @@
         <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
             <form method="POST" action="{{ route('roles.updatePermissions', $role->id) }}">
                 @csrf
-                <h3>ادخال صلاحيات دور: {{ $role->name }}</h3>
+                <h3>{{ __('messages.permissions') }}  : {{ $role->name }}</h3>
                 <table class="table table-bordered mt-4">
                     <thead>
                         <tr>
-                            <th>اسم الصلاحيات</th>
-                            <th>عرض</th>
+                            <th>{{ __('messages.name') }} </th>
+                            <th>{{ __('messages.view') }}</th>
                             {{-- <th>إضافة</th>
                             <th>تعديل</th>
                             <th>حذف</th> --}}
@@ -50,7 +50,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <button type="submit" class="btn btn-primary mt-4">تعديل</button>
+                <button type="submit" class="btn btn-primary mt-4">{{ __('messages.edit') }}</button>
             </form>
         </div>
     </div>
