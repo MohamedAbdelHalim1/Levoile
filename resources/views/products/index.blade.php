@@ -130,7 +130,7 @@
 
                         <!-- Expected Delivery Date Range -->
                         <div class="col-md-4 mt-3">
-                            <label for="expectedDeliveryStart">{{ __('messages.expected_delivery_date ') }}</label>
+                            <label for="expectedDeliveryStart">{{ __('messages.expected_delivery_date') }}</label>
                             <div class="input-group">
                                 <input type="date" name="expected_delivery_start" id="expectedDeliveryStart"
                                     class="form-control" value="{{ request('expected_delivery_start') }}">

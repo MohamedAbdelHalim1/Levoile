@@ -34,7 +34,7 @@
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض دور'))
                                         <a href="{{ route('roles.show', $role->id) }}" class="btn btn-primary">
-                                            {{ __('messages.show') }} </a>
+                                            {{ __('messages.view') }} </a>
                                     @endif
                                     @if (auth()->user()->hasPermission('تعديل دور'))
                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-secondary">{{ __('messages.edit') }}</a>
