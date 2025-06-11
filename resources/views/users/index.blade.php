@@ -13,7 +13,7 @@
             @if (auth()->user()->hasPermission('إضافة مستخدم'))
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('users.create') }}" class="btn btn-success">
-                        {{ __('messages.create_user ') }}
+                        {{ __('messages.create_user') }}
                     </a>
                 </div>
             @endif
