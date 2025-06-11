@@ -449,7 +449,8 @@ class BranchOrderController extends Controller
             ]);
         }
 
-        return back()->with('success', 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.');
+        return back()->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم رفع ملف التحضير ومعالجة البيانات بنجاح.' : 'Order prepared successfully');
     }
 
 

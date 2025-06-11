@@ -66,7 +66,8 @@ class DesignSampleController extends Controller
             }
         }
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة العينة بنجاح');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم إضافة العينة بنجاح' : 'Sample added successfully');
     }
 
     public function show($id)
@@ -99,7 +100,8 @@ class DesignSampleController extends Controller
 
         DesignComment::create($data);
 
-        return back()->with('success', 'تم إضافة التعليق بنجاح');
+        return back()->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم إضافة التعليق بنجاح' : 'Comment added successfully');
     }
 
 
@@ -139,7 +141,8 @@ class DesignSampleController extends Controller
             'image' => $sample->image, // هتفضل زي ما هي لو مفيش صورة جديدة
         ]);
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
 
     public function destroy($id)
@@ -147,7 +150,8 @@ class DesignSampleController extends Controller
         $sample = DesignSample::findOrFail($id);
         $sample->delete();
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم الحذف بنجاح');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
     }
 
     public function attachMaterials(Request $request, $id)
@@ -173,7 +177,8 @@ class DesignSampleController extends Controller
         $sample->status = 'تم اضافة الخامات';
         $sample->save();
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم تحديث الخامات بنجاح');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم تحديث الخامات بنجاح' : 'Materials updated successfully');
     }
 
     public function assignPatternest(Request $request, $id)
@@ -187,7 +192,8 @@ class DesignSampleController extends Controller
         $sample->status = 'تم التوزيع';
         $sample->save();
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم تعيين الباترنيست بنجاح.');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم تعيين الباترنيست بنجاح' : 'Patternest assigned successfully');
     }
 
     public function addMarker(Request $request, $id)
@@ -218,7 +224,8 @@ class DesignSampleController extends Controller
             'delivery_date' => $request->delivery_date,
         ]);
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة الماركر بنجاح.');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم إضافة الماركر بنجاح' : 'Marker added successfully.');
     }
 
     public function reviewSample(Request $request, $id)
@@ -254,7 +261,8 @@ class DesignSampleController extends Controller
             }
         
             return redirect()->route('design-sample-products.index')
-                ->with('success', 'تم تحديث حالة العينة وحفظ الملاحظات.');
+                ->with('success',
+                auth()->user()->current_lang == 'ar' ? 'تم تحديث حالة العينة وحفظ الملاحظات.' : 'Sample status updated and comments saved.');
         } catch(\Exception $e){
             dd($e);
         }
@@ -280,6 +288,7 @@ class DesignSampleController extends Controller
             'status' => 'تم اضافة التيكنيكال'
         ]);
 
-        return redirect()->route('design-sample-products.index')->with('success', 'تم إضافة التيكنيكال شيت بنجاح.');
+        return redirect()->route('design-sample-products.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم إضافة التيكنيكال شيت بنجاح.' : 'Technical sheet added successfully.');
     }
 }

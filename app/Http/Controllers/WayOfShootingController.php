@@ -39,19 +39,22 @@ class WayOfShootingController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('ways-of-shooting.index')->with('success', 'تمت إضافة طريقة التصوير بنجاح');
+        return redirect()->route('ways-of-shooting.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تمت إضافة طريقة التصوير بنجاح' : 'Way of shooting added successfully');
     }
 
     public function update(Request $request, $id)
     {
         $request->validate(['name' => 'required|string|max:255']);
         WayOfShooting::findOrFail($id)->update(['name' => $request->name]);
-        return redirect()->back()->with('success', 'تم تحديث طريقة التصوير بنجاح');
+        return redirect()->back()->with('success', 
+        auth()->user()->current_lang == 'ar' ? 'تم تحديث طريقة التصوير بنجاح' : 'Way of shooting updated successfully');
     }
 
     public function destroy($id)
     {
         WayOfShooting::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'تم حذف طريقة التصوير');
+        return redirect()->back()->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم حذف طريقة التصوير بنجاح' : 'Way of shooting deleted successfully');
     }
 }

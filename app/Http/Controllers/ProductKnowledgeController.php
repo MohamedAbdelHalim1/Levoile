@@ -548,7 +548,8 @@ class ProductKnowledgeController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', "تم تحديث الكمية لـ $updated منتج بنجاح.");
+            return redirect()->back()->with('success',
+            auth()->user()->current_lang == 'ar' ? "تم تحديث الكمية لـ $updated منتج بنجاح." : "Updated quantity for $updated products successfully.");
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حدث خطأ أثناء رفع الملف: ' . $e->getMessage());
         }
@@ -560,7 +561,8 @@ class ProductKnowledgeController extends Controller
         $codes = $request->input('no_codes');
 
         if (!$files || !$codes) {
-            return response()->json(['success' => false, 'message' => 'بيانات غير مكتملة']);
+            return response()->json(['success' => false, 'message' =>
+            auth()->user()->current_lang == 'ar' ? 'بيانات غير مكتملة' : 'Incomplete data']);
         }
 
         foreach ($files as $index => $file) {

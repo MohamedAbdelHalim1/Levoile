@@ -30,7 +30,8 @@ class EditSessionController extends Controller
                 'receiving_date' => $request->receiving_date,
             ]);
 
-        return redirect()->back()->with('success', 'تم تعيين المحرر بنجاح');
+        return redirect()->back()->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully');
     }
 
 
@@ -65,7 +66,8 @@ class EditSessionController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع');
+        return redirect()->back()->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع' : 'Drive link uploaded successfully and product sent to website admin');
     }
 
 
@@ -125,7 +127,8 @@ class EditSessionController extends Controller
                 $session->save();
             }
 
-            return redirect()->back()->with('success', 'تم تعيين المحرر للجلسات المختارة بنجاح');
+            return redirect()->back()->with('success',
+            auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر للجلسات المختارة بنجاح' : 'Editors assigned successfully');
         } catch (\Exception $e) {
             dd($e);
         }

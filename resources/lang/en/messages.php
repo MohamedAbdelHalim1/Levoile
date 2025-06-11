@@ -422,6 +422,16 @@ return [
     'create_permission' => 'Create Permission',
     'edit_permission' => 'Edit Permission',
     'users_in_role' => 'Users In Role',
+    'website_admin_products' => 'Website Admin Products',
+    'published_at' => 'Published At',
+    'yesterday' => 'Yesterday',
+    'tomorrow' => 'Tomorrow',
+    'at' => 'At',
+    'reopen' => 'Reopen',
+    'confirm_publish' => 'Confirm Publish',
+    'are_you_sure_to_publish' => 'Are You Sure To Publish?',
+    'reopen_product' => 'Reopen Product',
+    'are_you_sure_to_reopen' => 'Are You Sure To Reopen?',
 
 
 

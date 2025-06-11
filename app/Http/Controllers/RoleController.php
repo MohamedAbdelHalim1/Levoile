@@ -28,7 +28,8 @@ class RoleController extends Controller
 
         Role::create($validated);
 
-        return redirect()->route('roles.index')->with('success', 'تم الإضافة بنجاح');
+        return redirect()->route('roles.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully');
     }
     public function show(Role $role)
     {
@@ -49,14 +50,16 @@ class RoleController extends Controller
 
         $role->update($validated);
 
-        return redirect()->route('roles.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('roles.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
 
     public function destroy(Role $role)
     {
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'تم الحذف بنجاح');
+        return redirect()->route('roles.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
     }
 
     public function editPermissions(Role $role)
@@ -100,7 +103,8 @@ class RoleController extends Controller
             ]);
         }
     
-        return redirect()->route('roles.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('roles.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
     
     

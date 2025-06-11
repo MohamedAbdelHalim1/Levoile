@@ -22,7 +22,8 @@ class ColorController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255', 'code' => 'nullable|string|max:255']);
         Color::create($request->all());
-        return redirect()->route('colors.index')->with('success', 'تم الإضافة بنجاح');
+        return redirect()->route('colors.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully');
     }
 
     public function show(Color $color)
@@ -39,12 +40,14 @@ class ColorController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255', 'code' => 'nullable|string|max:255']);
         $color->update($request->all());
-        return redirect()->route('colors.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('colors.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
 
     public function destroy(Color $color)
     {
         $color->delete();
-        return redirect()->route('colors.index')->with('success', 'تم الحذف بنجاح');
+        return redirect()->route('colors.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
     }
 }

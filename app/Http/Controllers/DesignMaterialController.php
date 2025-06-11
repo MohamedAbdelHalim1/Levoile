@@ -77,7 +77,8 @@ class DesignMaterialController extends Controller
 
 
             DB::commit();
-            return redirect()->route('design-materials.index')->with('success', 'تم إضافة الخامة بنجاح');
+            return redirect()->route('design-materials.index')->with('success',
+            auth()->user()->current_lang == 'ar' ? 'تم إضافة الخامة بنجاح' : 'Material added successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
@@ -160,7 +161,8 @@ class DesignMaterialController extends Controller
             ->delete();
 
         return redirect()->route('design-materials.index')
-            ->with('success', 'تم تحديث الخامة بنجاح');
+            ->with('success',
+            auth()->user()->current_lang == 'ar' ? 'تم تحديث الخامة بنجاح' : 'Material updated successfully');
     }
 
 
@@ -169,7 +171,8 @@ class DesignMaterialController extends Controller
     {
         $material = DesignMaterial::findOrFail($id);
         $material->delete();
-        return redirect()->route('design-materials.index')->with('success', 'تم حذف الخامة بنجاح');
+        return redirect()->route('design-materials.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم حذف الخامة بنجاح' : 'Material deleted successfully');
     }
 
     // حذف لون واحد (AJAX)
@@ -184,6 +187,7 @@ class DesignMaterialController extends Controller
         }
 
         // غير كده redirect عادي
-        return redirect()->back()->with('success', 'تم حذف اللون بنجاح');
+        return redirect()->back()->with('success', 
+       auth()->user()->current_lang == 'ar' ? 'تم حذف اللون بنجاح' : 'Color deleted successfully');
     }
 }

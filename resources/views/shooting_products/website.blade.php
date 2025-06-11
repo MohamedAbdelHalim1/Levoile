@@ -4,18 +4,18 @@
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white shadow sm:rounded-lg p-4">
-                <h4>منتجات مسؤول الموقع</h4>
+                <h4>{{ __('messages.website_admin_products') }}</h4>
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>اسم المنتج</th>
-                            <th>الحالة</th>
-                            <th>الالوان</th>
-                            <th>لينك الدرايف</th>
-                            <th>تاريخ النشر</th>
-                            <th>الملاحظات</th>
-                            <th>الإجراء</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.number_of_colors') }}</th>
+                            <th>{{ __('messages.drive_link') }}</th>
+                            <th>{{ __('messages.published_at') }}</th>
+                            <th>{{ __('messages.note') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,7 +24,7 @@
                                 <td>{{ $item->name }}</td>
                                 <td>
                                     <span class="badge bg-{{ $item->status == 'done' ? 'success' : 'warning' }}">
-                                        {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
+                                        {{ $item->status == 'done' ? __('messages.published') : __('messages.new') }}
                                     </span>
                                 </td>
                                 <td>{{ $item->shootingProduct->number_of_colors }}</td>
@@ -46,13 +46,13 @@
                                         @endphp
                                 
                                         @if ($published->isToday())
-                                            اليوم الساعة {{ $published->format('h:i A') }}
+                                           {{ __('messages.today') }} {{ $published->format('h:i A') }}
                                         @elseif ($published->isYesterday())
-                                            أمس الساعة {{ $published->format('h:i A') }}
+                                            {{ __('messages.yesterday') }} {{ $published->format('h:i A') }}
                                         @elseif ($published->isTomorrow())
-                                            غدًا الساعة {{ $published->format('h:i A') }}
+                                            {{ __('messages.tomorrow') }} {{ $published->format('h:i A') }}
                                         @else
-                                            {{ $published->translatedFormat('l d M Y') }} الساعة {{ $published->format('h:i A') }}
+                                            {{ $published->translatedFormat('l d M Y') }} {{ __('messages.at') }} {{ $published->format('h:i A') }}
                                         @endif
                                     @else
                                         -
@@ -71,10 +71,10 @@
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#reopenModal" data-id="{{ $item->id }}"
                                                 data-name="{{ $item->name }}">
-                                                إعادة الفتح
+                                                {{ __('messages.reopen') }}
                                             </button>
                                         @else
-                                            <span class="badge bg-success">تم النشر</span>
+                                            <span class="badge bg-success">{{ __('messages.published') }}</span>
                                         @endif
                                     @endif
                                 </td>
@@ -95,23 +95,23 @@
                 <input type="hidden" name="id" id="modal_product_id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">تأكيد النشر</h5>
+                        <h5 class="modal-title">{{ __('messages.confirm_publish') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>هل أنت متأكد أنك تريد نشر المنتج <strong id="modal_product_name"></strong>؟</p>
+                        <p>{{ __('messages.are_you_sure_to_publish') }}<strong id="modal_product_name"></strong></p>
                         <div class="mb-3">
-                            <label>تاريخ ووقت النشر</label>
+                            <label>{{ __('messages.published_at') }}</label>
                             <input type="datetime-local" name="published_at" class="form-control" required>
                         </div>                        
                         <div class="mb-3">
-                            <label>ملاحظات</label>
+                            <label>{{ __('messages.note') }}</label>
                             <textarea name="note" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">تأكيد</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.publish') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </div>
             </form>
@@ -126,15 +126,15 @@
                 <input type="hidden" name="id" id="reopen_product_id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">تأكيد إعادة الفتح</h5>
+                        <h5 class="modal-title">{{ __('messages.reopen_product') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>هل أنت متأكد أنك تريد إعادة فتح المنتج <strong id="reopen_product_name"></strong>؟</p>
+                        <p>{{ __('messages.are_you_sure_to_reopen') }}<strong id="reopen_product_name"></strong></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-warning">تأكيد</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-warning">{{ __('messages.reopen') }}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </div>
             </form>

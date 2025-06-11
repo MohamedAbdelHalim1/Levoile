@@ -42,7 +42,8 @@ class UserController extends Controller
                 'role_id' => $validated['role_id'],
             ]);
 
-            return redirect()->route('users.index')->with('success', 'تم الإضافة بنجاح');
+            return redirect()->route('users.index')->with('success',
+            auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully');
         } catch (\Exception $e) {
             dd($e);
         }
@@ -76,12 +77,14 @@ class UserController extends Controller
             'role_id' => $validated['role_id'],
         ]);
 
-        return redirect()->route('users.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('users.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'تم الحذف بنجاح');
+        return redirect()->route('users.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
     }
 }

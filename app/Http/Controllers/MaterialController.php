@@ -38,7 +38,8 @@ class MaterialController extends Controller
 
         $material->save();
 
-        return redirect()->route('materials.index')->with('success', 'تم الإضافة بنجاح');
+        return redirect()->route('materials.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully');
     }
 
     /**
@@ -70,7 +71,8 @@ class MaterialController extends Controller
 
         $material->save();
 
-        return redirect()->route('materials.index')->with('success', 'تم التعديل بنجاح');
+        return redirect()->route('materials.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
     }
 
     /**
@@ -79,6 +81,7 @@ class MaterialController extends Controller
     public function destroy(Material $material)
     {
         $material->delete();
-        return redirect()->route('materials.index')->with('success', 'تم الحذف بنجاح');
+        return redirect()->route('materials.index')->with('success',
+        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
     }
 }

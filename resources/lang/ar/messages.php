@@ -418,6 +418,16 @@ return [
     'create_permission' => 'انشاء صلاحية',
     'edit_permission' => 'تعديل الصلاحية',
     'users_in_role' => 'المستخدمين في الدور',
+    'website_admin_products' => 'منتجات مسئول الموقع',
+    'published_at' => 'تاريخ النشر',
+    'yesterday' => 'اليوم الماضي',
+    'tomorrow' => 'اليوم القادم',
+    'at' => 'الساعه',
+    'reopen' => 'اعادة الفتح',
+    'confirm_publish' => 'تاكيد النشر',
+    'are_you_sure_to_publish' => 'هل انت متاكد من النشر؟',
+    'reopen_product' => 'اعادة فتح المنتج',
+    'are_you_sure_to_reopen' => 'هل انت متاكد من اعادة فتح المنتج؟',
 
 
 
