@@ -64,7 +64,7 @@
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#confirmModal" data-id="{{ $item->id }}"
                                             data-name="{{ $item->name }}">
-                                            نشر
+                                            {{ __('messages.publish') }}
                                         </button>
                                     @elseif ($item->status == 'done')
                                         @if (auth()->user()->role->name == 'admin')

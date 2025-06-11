@@ -428,7 +428,18 @@ return [
     'are_you_sure_to_publish' => 'هل انت متاكد من النشر؟',
     'reopen_product' => 'اعادة فتح المنتج',
     'are_you_sure_to_reopen' => 'هل انت متاكد من اعادة فتح المنتج؟',
-
+    'social_media_products' => 'منتجات الوسائل الاجتماعية',
+    'posting_plan' => 'خطة النشر',
+    'platforms' => 'المنصات',
+    'platform' => 'منصة',
+    'post_date' => 'تاريخ المنشور',
+    'post_type' => 'نوع النشر',
+    'post' => 'منشور',
+    'story' => 'ستوري',
+    'reel' => 'ريل',
+    'today_at' => 'اليوم الساعة',
+    'yesterday_at' => 'أمس الساعة',
+    'tomorrow_at' => 'غدًا الساعة',
 
 
 

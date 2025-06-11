@@ -12,18 +12,19 @@
                 @endif
 
 
-                <h4>منتجات السوشيال ميديا</h4>
+                <h4>{{ __('messages.social_media_products') }}</h4>
                 <div class="mb-3 text-end">
-                    <a href="{{ route('social-media.calendar') }}" class="btn btn-secondary">عرض البوستينج بلان</a>
+                    <a href="{{ route('social-media.calendar') }}"
+                        class="btn btn-secondary">{{ __('messages.posting_plan') }}</a>
                 </div>
 
                 <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                     <thead>
                         <tr>
-                            <th>اسم المنتج</th>
-                            <th>الحالة</th>
-                            <th>المنصات</th>
-                            <th>الإجراء</th>
+                            <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.platforms') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +33,7 @@
                                 <td>{{ $item->websiteAdminProduct->name ?? '-' }}</td>
                                 <td>
                                     <span class="badge bg-{{ $item->status == 'done' ? 'success' : 'warning' }}">
-                                        {{ $item->status == 'done' ? 'تم النشر' : 'جديد' }}
+                                        {{ $item->status == 'done' ? __('messages.published') : __('messages.new') }}
                                     </span>
                                 </td>
 
@@ -41,7 +42,7 @@
                                     @if ($platformCount)
                                         <a href="#" class="badge bg-info" data-bs-toggle="modal"
                                             data-bs-target="#platformsModal" data-product-id="{{ $item->id }}">
-                                            {{ $platformCount }} منصة
+                                            {{ $platformCount }} {{ __('messages.platforms') }}
                                         </a>
                                     @else
                                         -
@@ -53,7 +54,7 @@
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#publishModal" data-id="{{ $item->id }}"
                                             data-name="{{ $item->websiteAdminProduct->name }}">
-                                            نشر
+                                            {{ __('messages.publish') }}
                                         </button>
                                     @elseif ($item->status == 'done')
                                         @if (auth()->user()->role->name === 'admin')
@@ -62,11 +63,11 @@
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{ $item->id }}">
                                                 <button type="submit" class="btn btn-sm btn-warning"
-                                                    onclick="return confirm('هل أنت متأكد من إعادة الفتح؟')">إعادة
-                                                    الفتح</button>
+                                                    onclick="return confirm('{{ __('messages.are_you_sure') }}')">
+                                                    {{ __('messages.reopen') }}</button>
                                             </form>
                                         @else
-                                            <span class="badge bg-success">تم</span>
+                                            <span class="badge bg-success">{{ __('messages.published') }}</span>
                                         @endif
                                     @endif
                                 </td>
@@ -87,11 +88,11 @@
                 <input type="hidden" name="id" id="modal_product_id">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">تأكيد النشر</h5>
+                        <h5 class="modal-title">{{ __('messages.publish') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>هل أنت متأكد من نشر المنتج <strong id="modal_product_name"></strong>؟</p>
+                        <p>{{ __('messages.are_you_sure_to_publish') }}<strong id="modal_product_name"></strong></p>
 
                         {{-- Platform: Facebook --}}
                         <div class="mb-2">
@@ -99,14 +100,14 @@
                             <label for="facebook_cb">Facebook</label>
 
                             <div class="mt-2 platform-options d-none" id="facebook_options">
-                                <label>تاريخ النشر</label>
+                                <label> {{ __('messages.published_at') }}</label>
                                 <input type="datetime-local" name="platforms[facebook][publish_date]" class="form-control">
 
-                                <label class="mt-2">نوع المنشور</label>
+                                <label class="mt-2">{{ __('messages.post_type') }}</label>
                                 <select name="platforms[facebook][type]" class="form-select">
-                                    <option value="post">منشور</option>
-                                    <option value="story">قصة</option>
-                                    <option value="reel">ريل</option>
+                                    <option value="post">{{ __('messages.post') }}</option>
+                                    <option value="story">{{ __('messages.story') }}</option>
+                                    <option value="reel">{{ __('messages.reel') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -117,14 +118,14 @@
                             <label for="instagram_cb">Instagram</label>
 
                             <div class="mt-2 platform-options d-none" id="instagram_options">
-                                <label>تاريخ النشر</label>
+                                <label>{{ __('messages.published_at') }}</label>
                                 <input type="datetime-local" name="platforms[instagram][publish_date]" class="form-control">
 
-                                <label class="mt-2">نوع المنشور</label>
+                                <label class="mt-2">{{ __('messages.post_type') }} </label>
                                 <select name="platforms[instagram][type]" class="form-select">
-                                    <option value="post">منشور</option>
-                                    <option value="story">قصة</option>
-                                    <option value="reel">ريل</option>
+                                    <option value="post">{{ __('messages.post') }}</option>
+                                    <option value="story">{{ __('messages.story') }}</option>
+                                    <option value="reel">{{ __('messages.reel') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -135,22 +136,23 @@
                             <label for="tiktok_cb">TikTok</label>
 
                             <div class="mt-2 platform-options d-none" id="tiktok_options">
-                                <label>تاريخ النشر</label>
+                                <label>{{ __('messages.published_at') }} </label>
                                 <input type="datetime-local" name="platforms[tiktok][publish_date]" class="form-control">
 
-                                <label class="mt-2">نوع المنشور</label>
+                                <label class="mt-2">{{ __('messages.post_type') }} </label>
                                 <select name="platforms[tiktok][type]" class="form-select">
-                                    <option value="post">منشور</option>
-                                    <option value="story">قصة</option>
-                                    <option value="reel">ريل</option>
+                                    <option value="post">{{ __('messages.post') }}</option>
+                                    <option value="story">{{ __('messages.story') }}</option>
+                                    <option value="reel">{{ __('messages.reel') }}</option>
                                 </select>
                             </div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">تأكيد</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-success">{{ __('messages.publish') }}</button>
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
                     </div>
                 </div>
             </form>
@@ -163,16 +165,16 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تفاصيل المنصات</h5>
+                    <h5 class="modal-title">{{ __('messages.platforms') }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>المنصة</th>
-                                <th>نوع المنشور</th>
-                                <th>تاريخ النشر</th>
+                                <th>{{ __('messages.platform') }}</th>
+                                <th>{{ __('messages.post_date') }} </th>
+                                <th>{{ __('messages.published_at') }} </th>
                             </tr>
                         </thead>
                         <tbody id="platformsTableBody">
@@ -231,8 +233,77 @@
             document.getElementById('modal_product_name').textContent = name;
         });
     </script>
+    <script>
+        const translations = {
+            today: "{{ __('messages.today_at') }}",
+            yesterday: "{{ __('messages.yesterday_at') }}",
+            tomorrow: "{{ __('messages.tomorrow_at') }}",
+            at: "{{ __('messages.at') }}"
+        };
+
+        const currentLang = "{{ auth()->user()->current_lang }}";
+    </script>
 
     <script>
+        const allPlatforms = @json($platforms);
+
+        const platformsModal = document.getElementById('platformsModal');
+        platformsModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const productId = button.getAttribute('data-product-id');
+            const productPlatforms = allPlatforms[productId] || [];
+
+            const tableBody = document.getElementById('platformsTableBody');
+            tableBody.innerHTML = '';
+
+            productPlatforms.forEach(platform => {
+                const publishDate = new Date(platform.publish_date);
+                const now = new Date();
+
+                const publishDateMidnight = new Date(publishDate);
+                publishDateMidnight.setHours(0, 0, 0, 0);
+
+                const nowMidnight = new Date(now);
+                nowMidnight.setHours(0, 0, 0, 0);
+
+                const diff = publishDateMidnight - nowMidnight;
+
+                const time = publishDate.toLocaleTimeString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                let dateText = '';
+                if (diff === 0) {
+                    dateText = `${translations.today} ${time}`;
+                } else if (diff === -86400000) {
+                    dateText = `${translations.yesterday} ${time}`;
+                } else if (diff === 86400000) {
+                    dateText = `${translations.tomorrow} ${time}`;
+                } else {
+                    dateText = `${publishDate.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                })} ${translations.at} ${time}`;
+                }
+
+                tableBody.innerHTML += `
+                <tr>
+                    <td>${platform.platform}</td>
+                    <td>${platform.type}</td>
+                    <td>${dateText}</td>
+                </tr>
+            `;
+            });
+        });
+    </script>
+
+
+
+    {{-- <script>
         const allPlatforms = @json($platforms);
 
         const platformsModal = document.getElementById('platformsModal');
@@ -274,5 +345,5 @@
             `;
             });
         });
-    </script>
+    </script> --}}
 @endsection
