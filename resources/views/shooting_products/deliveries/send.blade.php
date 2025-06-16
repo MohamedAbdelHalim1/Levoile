@@ -21,9 +21,10 @@
                     </div> --}}
 
                     <div class="mb-3">
-                        <input type="checkbox" id="checkAllNew"> <label for="checkAllNew">{{ __('messages.check_all_new') }}</label>
+                        <input type="checkbox" id="checkAllNew"> <label
+                            for="checkAllNew">{{ __('messages.check_all_new') }}</label>
                     </div>
-                    
+
 
                     <div class="table-responsive">
                         <table class="table table-bordered text-center">
@@ -39,8 +40,16 @@
                             </thead>
                             <tbody>
                                 @php
-                                    $itemNos = array_count_values(array_column($rows, 'A'));
+                                    $itemNos = array_count_values(
+                                        array_filter(
+                                            array_map(
+                                                fn($r) => is_scalar($r['A'] ?? null) ? (string) $r['A'] : null,
+                                                $rows,
+                                            ),
+                                        ),
+                                    );
                                 @endphp
+
 
                                 @foreach ($rows as $index => $row)
                                     @php
@@ -55,9 +64,8 @@
                                             {{-- <input type="checkbox" name="selected_rows[]" value="{{ $index }}"> --}}
                                             {{-- @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
                                                 @if ($content->status === 'new') --}}
-                                                    <input type="checkbox" name="selected_rows[]"
-                                                        value="{{ $index }}">
-                                                {{-- @endif
+                                            <input type="checkbox" name="selected_rows[]" value="{{ $index }}">
+                                            {{-- @endif
                                             @endif --}}
 
                                             <input type="hidden" name="rows[{{ $index }}][item_no]"
@@ -74,7 +82,7 @@
                                         <td>{{ $primaryId }}</td>
                                         <td>
                                             @if ($content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)->where('item_no', $itemNo)->first())
-                                                 @if($content->status === 'new')
+                                                @if ($content->status === 'new')
                                                     <span class="badge bg-success">{{ __('messages.new') }}</span>
                                                 @elseif($content->status === 'old')
                                                     <span class="badge bg-warning">{{ __('messages.old') }}</span>
@@ -88,7 +96,8 @@
                     </div>
 
                     <button type="submit" class="btn btn-success mt-3">{{ __('messages.publish') }}</button>
-                    <a href="{{ route('shooting-deliveries.index') }}" class="btn btn-secondary mt-3">{{ __('messages.cancel') }}</a>
+                    <a href="{{ route('shooting-deliveries.index') }}"
+                        class="btn btn-secondary mt-3">{{ __('messages.cancel') }}</a>
                 </form>
 
             </div>
@@ -99,7 +108,7 @@
 @section('scripts')
     <script>
         // تحديد كل العناصر الجديدة فقط
-        document.getElementById('checkAllNew').addEventListener('change', function () {
+        document.getElementById('checkAllNew').addEventListener('change', function() {
             document.querySelectorAll('input[name="selected_rows[]"]').forEach(checkbox => {
                 checkbox.checked = false;
             });
@@ -112,7 +121,7 @@
         });
 
         // تحقق قبل الإرسال
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.querySelector('form').addEventListener('submit', function(e) {
             const selected = document.querySelectorAll('input[name="selected_rows[]"]:checked').length;
             if (selected == 0) {
                 e.preventDefault();
@@ -121,4 +130,3 @@
         });
     </script>
 @endsection
-
