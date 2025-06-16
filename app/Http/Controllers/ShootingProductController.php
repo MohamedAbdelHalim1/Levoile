@@ -1078,13 +1078,26 @@ class ShootingProductController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('excel'), $filename);
 
-            $filePath = public_path('excel/' . $filename);
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
-            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-            $totalRecords = count(array_filter(array_slice($rows, 1), function ($row) {
+            $filePath = public_path('excel/' . $filename);
+
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
+            $rowsRaw = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+            // افصل الهيدر (أول صف)
+            $header = $rowsRaw[0];
+
+            // فلتر باقي الصفوف (اللي فعلاً فيها item no)
+            $dataRows = array_filter(array_slice($rowsRaw, 1), function ($row) {
                 return !empty($row['A']);
-            }));
+            });
+
+            // لو محتاج الهيدر، رجّعه مع البيانات
+            $rows = array_merge([$header], $dataRows);
+
+            // العدد الصح للريكوردات
+            $totalRecords = count($dataRows);
+
 
             // إنشاء سجل الشحن بدون new/old records مؤقتًا
             $delivery = ShootingDelivery::create([
