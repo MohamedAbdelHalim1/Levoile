@@ -75,8 +75,7 @@
                                             <input type="hidden" name="rows[{{ $index }}][quantity]"
                                                 value="{{ $quantity }}">
                                         </td>
-                                        <td @if ($itemNos[$itemNo] > 1) style="color:red" @endif>{{ $itemNo }}
-                                        </td>
+                                        <td @if (!empty($itemNo) && ($itemNos[$itemNo] ?? 0) > 1) style="color:red" @endif>{{ $itemNo }}</td>
                                         <td>{{ $description }}</td>
                                         <td>{{ $quantity }}</td>
                                         <td>{{ $primaryId }}</td>
