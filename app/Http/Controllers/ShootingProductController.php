@@ -1176,9 +1176,8 @@ class ShootingProductController extends Controller
         $filePath = public_path('excel/' . $delivery->filename);
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
         $rawRows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-
-        // ربط كل صف بمحتواه من جدول shooting_delivery_contents
         $rows = collect(array_slice($rawRows, 1))
+            ->filter(fn($row) => !empty($row['A'])) // ✅ تصفية الصفوف اللي مفيهاش Item No
             ->map(function ($row) use ($delivery) {
                 $itemNo = $row['A'];
                 $content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
@@ -1193,6 +1192,24 @@ class ShootingProductController extends Controller
             ->sortBy('is_received')
             ->values()
             ->toArray();
+
+
+        // ربط كل صف بمحتواه من جدول shooting_delivery_contents
+        // $rows = collect(array_slice($rawRows, 1))
+        //     ->map(function ($row) use ($delivery) {
+        //         $itemNo = $row['A'];
+        //         $content = \App\Models\ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+        //             ->where('item_no', $itemNo)
+        //             ->first();
+
+        //         return array_merge($row, [
+        //             'is_received' => $content?->is_received ?? 0,
+        //             'status' => $content?->status ?? null,
+        //         ]);
+        //     })
+        //     ->sortBy('is_received')
+        //     ->values()
+        //     ->toArray();
 
         return view('shooting_products.deliveries.send', compact('rows', 'delivery'));
     }
