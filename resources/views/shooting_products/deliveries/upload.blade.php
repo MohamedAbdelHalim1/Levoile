@@ -88,6 +88,7 @@
 
                 rows.forEach(row => {
                     const itemNo = row['Item No.']?.toString() || '';
+                    if (!itemNo) return;
                     const description = row['Description'] || '';
                     const quantity = row['Quantity'] || '';
                     const unit = row['Unit of Measure Code'] || '';
