@@ -961,8 +961,21 @@ class ShootingProductController extends Controller
                 $query->whereNotNull('item_no'); // ✅ يحسب بس الصفوف اللي فيها item_no
             },
         ])
-            ->latest()
-            ->get();
+        ->latest()
+        ->get();
+
+        // حساب عدد الموديلات المتكررة
+        foreach ($deliveries as $delivery) {
+            $duplicates = $delivery->contents
+                ->groupBy('item_no')
+                ->filter(function ($group) {
+                    return $group->count() > 1;
+                })
+                ->count();
+
+            $delivery->repeated_items = $duplicates;
+        }
+
 
         return view('shooting_products.deliveries.index', compact('deliveries'));
     }

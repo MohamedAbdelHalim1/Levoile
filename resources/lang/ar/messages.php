@@ -440,6 +440,7 @@ return [
     'today_at' => 'اليوم الساعة',
     'yesterday_at' => 'أمس الساعة',
     'tomorrow_at' => 'غدًا الساعة',
+    'number_of_repeated_models' => 'عدد الموديلات المكررة',
 
 
 

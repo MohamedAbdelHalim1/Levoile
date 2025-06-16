@@ -16,6 +16,7 @@
                             <th>{{ __('messages.status') }}</th>
                             <th>{{ __('messages.number_of_products') }}</th>
                             <th>{{ __('messages.number_of_models') }}</th>
+                            <th>{{ __('messages.number_of_repeated_models') }}</th>
                             <th>{{ __('messages.published') }}</th>
                             <th>{{ __('messages.new_models_count') }}</th>
                             <th>{{ __('messages.old_models_count') }}</th>
@@ -35,6 +36,7 @@
                                 </td>
                                 <td>{{ $delivery->unique_products }}</td>
                                 <td>{{ $delivery->actual_rows }}</td>
+                                <td>{{ $delivery->repeated_items ?? 0 }}</td>
                                 @php
                                     $receivedCount = $delivery->contents()->where('is_received', 1)->count();
                                 @endphp

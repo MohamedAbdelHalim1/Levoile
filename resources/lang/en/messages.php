@@ -444,6 +444,7 @@ return [
     'today_at' => 'Today at',
     'yesterday_at' => 'Yesterday at',
     'tomorrow_at' => 'Tomorrow at',
+    'number_of_repeated_models' => 'Number Of Repeated Models',
 
 
 
