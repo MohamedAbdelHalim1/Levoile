@@ -1084,19 +1084,24 @@ class ShootingProductController extends Controller
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
             $rowsRaw = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-            // افصل الهيدر (أول صف)
-            $header = $rowsRaw[0];
+            // تأكد إن الملف مش فاضي
+            if (empty($rowsRaw) || !is_array($rowsRaw)) {
+                return redirect()->back()->with('error', 'الملف فارغ أو غير قابل للقراءة.');
+            }
 
-            // فلتر باقي الصفوف (اللي فعلاً فيها item no)
-            $dataRows = array_filter(array_slice($rowsRaw, 1), function ($row) {
+            // تأكد إن أول صف موجود وفيه عمود A
+            $firstRow = reset($rowsRaw);
+            if (!isset($firstRow['A'])) {
+                return redirect()->back()->with('error', 'الملف لا يحتوي على العمود A (Item No.).');
+            }
+
+            // فلترة الصفوف اللي فيها item no فعليًا
+            $dataRows = array_filter($rowsRaw, function ($row) {
                 return !empty($row['A']);
             });
 
-            // لو محتاج الهيدر، رجّعه مع البيانات
-            $rows = array_merge([$header], $dataRows);
-
-            // العدد الصح للريكوردات
-            $totalRecords = count($dataRows);
+            $rows = $dataRows;
+            $totalRecords = count($rows);
 
 
             // إنشاء سجل الشحن بدون new/old records مؤقتًا
