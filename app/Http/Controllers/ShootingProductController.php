@@ -956,7 +956,10 @@ class ShootingProductController extends Controller
         $deliveries = ShootingDelivery::withCount([
             'contents as unique_products' => function ($query) {
                 $query->select(\DB::raw('COUNT(DISTINCT primary_id)'));
-            }
+            },
+            'contents as actual_rows' => function ($query) {
+                $query->whereNotNull('item_no'); // ✅ يحسب بس الصفوف اللي فيها item_no
+            },
         ])
             ->latest()
             ->get();

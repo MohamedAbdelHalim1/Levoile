@@ -34,7 +34,7 @@
                                         class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
                                 </td>
                                 <td>{{ $delivery->unique_products }}</td>
-                                <td>{{ $delivery->total_records }}</td>
+                                <td>{{ $delivery->actual_rows }}</td>
                                 @php
                                     $receivedCount = $delivery->contents()->where('is_received', 1)->count();
                                 @endphp
