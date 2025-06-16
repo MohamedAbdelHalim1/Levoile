@@ -113,8 +113,10 @@ class ShootingProductController extends Controller
                 'weight'    => $request->weight,
             ]);
 
-        return back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم تحديث المقاس والوزن بنجاح' : 'Size and weight updated successfully');
+        return back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم تحديث المقاس والوزن بنجاح' : 'Size and weight updated successfully'
+        );
     }
 
 
@@ -369,8 +371,10 @@ class ShootingProductController extends Controller
                 }
             });
 
-            return redirect()->route('shooting-sessions.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم بدء التصوير بنجاح' : 'Started shooting successfully');
+            return redirect()->route('shooting-sessions.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم بدء التصوير بنجاح' : 'Started shooting successfully'
+            );
         } catch (\Exception $e) {
             dd($e);
         }
@@ -568,8 +572,10 @@ class ShootingProductController extends Controller
             }
         });
 
-        return redirect()->route('shooting-sessions.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم بدء التصوير اليدوي بنجاح' : 'Started manual shooting successfully');
+        return redirect()->route('shooting-sessions.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم بدء التصوير اليدوي بنجاح' : 'Started manual shooting successfully'
+        );
     }
 
     public function show($id)
@@ -619,8 +625,10 @@ class ShootingProductController extends Controller
             }
         }
 
-        return redirect()->route('shooting-products.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم إضافة المنتج بنجاح' : 'Product added successfully');
+        return redirect()->route('shooting-products.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم إضافة المنتج بنجاح' : 'Product added successfully'
+        );
     }
 
 
@@ -690,8 +698,10 @@ class ShootingProductController extends Controller
         }
 
 
-        return redirect()->route('shooting-products.complete.page', $originalProductId)->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم حفظ بيانات المنتج بنجاح' : 'Product data saved successfully');
+        return redirect()->route('shooting-products.complete.page', $originalProductId)->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم حفظ بيانات المنتج بنجاح' : 'Product data saved successfully'
+        );
     }
 
 
@@ -741,8 +751,10 @@ class ShootingProductController extends Controller
                 }
             }
 
-            return redirect()->route('shooting-products.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم تحديث المنتج بنجاح' : 'Product updated successfully');
+            return redirect()->route('shooting-products.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم تحديث المنتج بنجاح' : 'Product updated successfully'
+            );
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -754,8 +766,10 @@ class ShootingProductController extends Controller
         $product = ShootingProduct::findOrFail($id);
         $product->delete();
 
-        return redirect()->route('shooting-products.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم حذف المنتج بنجاح' : 'Product deleted successfully');
+        return redirect()->route('shooting-products.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم حذف المنتج بنجاح' : 'Product deleted successfully'
+        );
     }
 
     public function deleteGallery(Request $request)
@@ -814,8 +828,10 @@ class ShootingProductController extends Controller
         $product->published_at = $request->published_at;
         $product->save();
 
-        return redirect()->route('website-admin.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم نشر المنتج بنجاح' : 'Product published successfully');
+        return redirect()->route('website-admin.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم نشر المنتج بنجاح' : 'Product published successfully'
+        );
     }
 
 
@@ -826,8 +842,10 @@ class ShootingProductController extends Controller
         $product->note = null;
         $product->save();
 
-        return redirect()->route('website-admin.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تمت إعادة فتح المنتج بنجاح' : 'Product reopened successfully');
+        return redirect()->route('website-admin.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تمت إعادة فتح المنتج بنجاح' : 'Product reopened successfully'
+        );
     }
 
     public function indexSocial()
@@ -885,8 +903,10 @@ class ShootingProductController extends Controller
                 $product->save();
             });
 
-            return redirect()->route('social-media.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم جدولة النشر بنجاح' : 'Scheduled successfully');
+            return redirect()->route('social-media.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم جدولة النشر بنجاح' : 'Scheduled successfully'
+            );
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -903,8 +923,10 @@ class ShootingProductController extends Controller
         $product->platforms()->delete(); // remove old publishing schedule
         $product->save();
 
-        return redirect()->route('social-media.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم إعادة فتح المنتج للنشر.' : 'Product reopened for scheduling.');
+        return redirect()->route('social-media.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم إعادة فتح المنتج للنشر.' : 'Product reopened for scheduling.'
+        );
     }
 
     public function calendar()
@@ -1079,6 +1101,9 @@ class ShootingProductController extends Controller
 
             foreach (array_slice($rows, 1) as $row) {
                 $itemNo = $row['A'];
+                if (empty($itemNo)) {
+                    continue;
+                }
                 $status = isset($existingItemNos[$itemNo]) ? 'old' : 'new';
 
                 // زيادة العدادات
@@ -1106,8 +1131,10 @@ class ShootingProductController extends Controller
                 'old_records' => $oldCount,
             ]);
 
-            return redirect()->route('shooting-deliveries.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم رفع الشيت بنجاح' : 'File uploaded successfully');
+            return redirect()->route('shooting-deliveries.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم رفع الشيت بنجاح' : 'File uploaded successfully'
+            );
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء رفع الشيت: ' . $e->getMessage());
         }
@@ -1437,8 +1464,10 @@ class ShootingProductController extends Controller
                 ]);
             });
 
-            return redirect()->route('shooting-deliveries.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم نشر البيانات الجديدة بنجاح' : 'New data published successfully');
+            return redirect()->route('shooting-deliveries.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم نشر البيانات الجديدة بنجاح' : 'New data published successfully'
+            );
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'حصل خطأ أثناء النشر: ' . $e->getMessage());
         }
@@ -1482,8 +1511,10 @@ class ShootingProductController extends Controller
             $color->update(['status' => 'new']);
         }
 
-        return back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم حذف اللون من الجلسة وإعادة حالته إلى جديد.' : 'Color removed from session and status changed to new.');
+        return back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم حذف اللون من الجلسة وإعادة حالته إلى جديد.' : 'Color removed from session and status changed to new.'
+        );
     }
 
 
@@ -1527,8 +1558,10 @@ class ShootingProductController extends Controller
                 'type_of_shooting' => $request->type_of_shooting
             ]);
 
-        return redirect()->back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم تعيين نوع التصوير بنجاح' : 'Type of shooting assigned successfully');
+        return redirect()->back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم تعيين نوع التصوير بنجاح' : 'Type of shooting assigned successfully'
+        );
     }
 
     public function bulkAssignType(Request $request)
@@ -1546,8 +1579,10 @@ class ShootingProductController extends Controller
                 'updated_at' => now(),
             ]);
 
-        return redirect()->back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم تعيين نوع التصوير بنجاح للمنتجات المحددة' : 'Type of shooting assigned successfully for the selected products');
+        return redirect()->back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم تعيين نوع التصوير بنجاح للمنتجات المحددة' : 'Type of shooting assigned successfully for the selected products'
+        );
     }
 
     public function refreshVariants(Request $request)
