@@ -1082,7 +1082,9 @@ class ShootingProductController extends Controller
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filePath);
             $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-            $totalRecords = count($rows) - 1;
+            $totalRecords = count(array_filter(array_slice($rows, 1), function ($row) {
+                return !empty($row['A']);
+            }));
 
             // إنشاء سجل الشحن بدون new/old records مؤقتًا
             $delivery = ShootingDelivery::create([
