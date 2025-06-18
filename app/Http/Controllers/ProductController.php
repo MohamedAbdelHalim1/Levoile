@@ -208,8 +208,10 @@ class ProductController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('products.manufacture', ['id' => $product->id])->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم تحديث التصنيع بنجاح.' : 'Manufacture updated successfully.');
+            return redirect()->route('products.manufacture', ['id' => $product->id])->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم تحديث التصنيع بنجاح.' : 'Manufacture updated successfully.'
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'حدث خطأ أثناء تحديث التصنيع: ' . $e->getMessage());
@@ -293,8 +295,10 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('products.manufacture', $product->id)->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم تحديث التصنيع بنجاح.' : 'Manufacture updated successfully.');
+            return redirect()->route('products.manufacture', $product->id)->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم تحديث التصنيع بنجاح.' : 'Manufacture updated successfully.'
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e); // ✅ Debugging: Dump error for debugging
@@ -802,7 +806,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' =>auth()->user()->current_lang == 'ar' ? 'تم تفعيل المنتج بنجاح.' : 'Product activated successfully.',
+                'message' => auth()->user()->current_lang == 'ar' ? 'تم تفعيل المنتج بنجاح.' : 'Product activated successfully.',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -867,8 +871,10 @@ class ProductController extends Controller
             // ✅ Commit transaction
             DB::commit();
 
-            return redirect()->route('products.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم اكتمال البيانات بنجاح.' : 'Data completed successfully.');
+            return redirect()->route('products.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم اكتمال البيانات بنجاح.' : 'Data completed successfully.'
+            );
         } catch (\Exception $e) {
             // ❌ Rollback transaction on error
             DB::rollBack();
@@ -913,8 +919,23 @@ class ProductController extends Controller
 
             // Generate the product code
             $seasonCode = Season::findOrFail($request->season_id)->code;
-            $existingCodesCount = Product::where('season_id', $request->season_id)->count();
-            $newCode = $seasonCode . '-' . str_pad($existingCodesCount + 1, 3, '0', STR_PAD_LEFT);
+            // $existingCodesCount = Product::where('season_id', $request->season_id)->count();
+            // $newCode = $seasonCode . '-' . str_pad($existingCodesCount + 1, 3, '0', STR_PAD_LEFT);
+            $lastCode = Product::where('season_id', $request->season_id)
+                ->where('code', 'LIKE', $seasonCode . '-%')
+                ->orderByDesc('code')
+                ->pluck('code')
+                ->first();
+
+            if ($lastCode) {
+                $lastNumber = (int) substr($lastCode, strpos($lastCode, '-') + 1);
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+            }
+
+            $newCode = $seasonCode . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
 
             // Determine the product status
             // $status = $request->have_stock ? 'New' : 'Pending';
@@ -962,8 +983,10 @@ class ProductController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('products.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم  الاضافه بنجاح.' : 'Added successfully.');
+            return redirect()->route('products.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم  الاضافه بنجاح.' : 'Added successfully.'
+            );
         } catch (\Exception $e) {
             // Rollback the transaction on error
             DB::rollBack();
@@ -1088,8 +1111,10 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('products.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح.' : 'Updated successfully.');
+            return redirect()->route('products.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح.' : 'Updated successfully.'
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);
@@ -1114,8 +1139,10 @@ class ProductController extends Controller
             // Delete the product from the database
             $product->delete();
 
-            return redirect()->route('products.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
+            return redirect()->route('products.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully'
+            );
         } catch (\Exception $e) {
             dd($e);
         }
