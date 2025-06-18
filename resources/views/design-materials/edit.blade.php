@@ -64,7 +64,7 @@
                                         value="{{ old('colors.' . $i . '.delivery_date', $color->delivery_date) }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
+                                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                                 </div>
                             </div>
                         @empty
