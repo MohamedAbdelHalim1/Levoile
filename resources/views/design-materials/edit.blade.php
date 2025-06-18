@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-danger btn-sm remove-color">
-                                        {{ __('messages.detele') }} 
+                                        {{ __('messages.delete') }} 
                                     </button>
                                 </div>
                             </div>
