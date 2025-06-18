@@ -18,7 +18,7 @@
                         <div class="col-md-6">
                             <label>{{ __('messages.image') }} </label><br>
                             @if ($material->image)
-                                <img src="{{ asset($material->image) }}" alt="{{ $material->name??{{ __('messages.N/A') }} }} " width="100"
+                                <img src="{{ asset($material->image) }}" alt="{{ $material->name?? __('messages.N/A')  }} " width="100"
                                     class="mb-2 rounded">
                             @else
                                 <span class="text-muted">{{ __('messages.N/A') }}  </span>
