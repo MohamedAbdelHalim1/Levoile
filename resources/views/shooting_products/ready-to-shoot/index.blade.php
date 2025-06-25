@@ -56,6 +56,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="checkAllStartShooting"></th>
                                     <th>{{ __('messages.product') }}</th>
+                                    <th>{{ __('messages.code') }} </th>
                                     <th>{{ __('messages.number_of_colors') }} </th>
                                     <th>{{ __('messages.status') }}</th>
                                     <th>{{ __('messages.type_of_shooting') }} </th>
@@ -93,6 +94,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $product->name }}</td>
+                                        <td>{{ $product->custom_id }}</td>
                                         <td>
                                             <span class="badge bg-primary" tabindex="0" data-bs-toggle="popover"
                                                 data-bs-trigger="hover focus" data-bs-html="true"
