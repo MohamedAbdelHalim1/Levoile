@@ -27,7 +27,7 @@
                             <th>{{ __('messages.status') }}</th>
                             <th>{{ __('messages.receiving_date') }}</th>
                             <th>{{ __('messages.remaining_time') }} </th>
-                            <th>{{ __('messages.note') }}</th>
+                            <th>{{ __('messages.notes') }}</th>
                             {{-- <th>المراجعة</th> --}}
                         </tr>
                     </thead>
