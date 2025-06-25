@@ -146,6 +146,7 @@ return [
     'sessions' => 'السيشنات',
     'status_of_sessions' => 'حالة السيشنات',
     'editors_of_sessions' => 'محرري السيشنات',
+    'editors' => 'المحررين',
     'create_sample_product' => 'انشاء عينة منتج',
     'edit_sample_product' => 'تعديل عينة منتج',
     'choose_category' => 'اختر التصنيف',

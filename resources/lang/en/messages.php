@@ -388,6 +388,7 @@ return [
     'sessions' => 'Sessions',
     'status_of_sessions' => 'Status Of Sessions',
     'editors_of_sessions' => 'Editors Of Sessions',
+    'editors' => 'Editors',
     'status_of_edit' => 'Status Of Edit',
     'photographer' => 'Photographer',
     'status_of_data' => 'Status Of Data',
