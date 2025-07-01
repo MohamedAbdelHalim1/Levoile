@@ -99,7 +99,8 @@
                                 <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="new" {{ request('receiving_status') == 'new' ? 'selected' : '' }}>
                                     {{ __('messages.new') }}</option>
-                                <option value="processing" {{ request('receiving_status') == 'processing' ? 'selected' : '' }}>
+                                <option value="processing"
+                                    {{ request('receiving_status') == 'processing' ? 'selected' : '' }}>
                                     {{ __('messages.processing') }}</option>
                                 <option value="pending" {{ request('receiving_status') == 'pending' ? 'selected' : '' }}>
                                     {{ __('messages.pending') }}</option>
@@ -145,7 +146,8 @@
                         <!-- Filter and Reset Buttons -->
                         <div class="col-md-3 mt-3 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">{{ __('messages.filter') }}</button>
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">{{ __('messages.reset') }}</a>
+                            <a href="{{ route('products.index') }}"
+                                class="btn btn-secondary">{{ __('messages.reset') }}</a>
                         </div>
                     </div>
                 </form>
@@ -181,7 +183,25 @@
                                 <td>{{ $product->id }}</td>
                                 <td>
                                     <div class="d-flex flex-column align-items-center">
-                                        <span class="fw-bold">{{ $product->code ?? __('messages.N/A') }}</span>
+                                        @php
+                                            $firstSku = null;
+
+                                            foreach ($product->productColors as $color) {
+                                                foreach ($color->productcolorvariants as $variant) {
+                                                    if (!empty($variant->sku)) {
+                                                        $firstSku = $variant->sku;
+                                                        break 2;
+                                                    }
+                                                }
+                                            }
+
+                                            $skuSubstring =
+                                                $firstSku && strlen($firstSku) >= 8 ? substr($firstSku, 2, 6) : null;
+                                        @endphp
+
+                                        <span class="fw-bold">
+                                            {{ $skuSubstring ?? __('messages.N/A') }}
+                                        </span>
 
                                         @if ($product->photo && file_exists(public_path($product->photo)))
                                             <a href="{{ asset($product->photo) }}" target="_blank">
@@ -193,6 +213,21 @@
                                         @endif
                                     </div>
                                 </td>
+
+                                {{-- <td>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <span class="fw-bold">{{ $product->code ?? __('messages.N/A') }}</span>
+
+                                        @if ($product->photo && file_exists(public_path($product->photo)))
+                                            <a href="{{ asset($product->photo) }}" target="_blank">
+                                                <img src="{{ asset($product->photo) }}" alt="Product Image"
+                                                    style="width: 200px; height: auto;" class="mt-2">
+                                            </a>
+                                        @else
+                                            <p class="text-muted mt-2">{{ __('messages.N/A') }}</p>
+                                        @endif
+                                    </div>
+                                </td> --}}
                                 <td>{{ $product->description }}</td>
                                 <td>{{ $product->category->name ?? __('messages.N/A') }}</td>
                                 <td>{{ $product->season->name ?? __('messages.N/A') }}</td>
@@ -317,14 +352,15 @@
                                                             <span>-</span>
                                                         @elseif ($variant->receiving_status === 'pending')
                                                             @if ($remainingDays > 0)
-                                                                <span class="badge bg-danger">{{ $remainingDays }} 
+                                                                <span class="badge bg-danger">{{ $remainingDays }}
                                                                     {{ __('messages.day_overdue') }}</span>
                                                             @elseif ($remainingDays === 0)
-                                                                <span class="badge bg-warning">{{ __('messages.today') }}</span>
+                                                                <span
+                                                                    class="badge bg-warning">{{ __('messages.today') }}</span>
                                                             @else
                                                                 <span class="badge bg-success">{{ abs($remainingDays) }}
                                                                     {{ __('messages.day_remaining') }}
-                                                                    </span>
+                                                                </span>
                                                             @endif
                                                         @elseif ($variant->receiving_status === 'complete')
                                                             <span
@@ -388,7 +424,7 @@
                                             <a href="{{ route('products.completeData', $product->id) }}"
                                                 class="btn btn-info w-100">
                                                 @if (empty($product->name))
-                                                    {{ __('messages.complete_data') }} 
+                                                    {{ __('messages.complete_data') }}
                                                 @else
                                                     {{ __('messages.edit_date') }}
                                                 @endif
