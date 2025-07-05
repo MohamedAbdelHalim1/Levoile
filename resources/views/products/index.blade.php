@@ -300,7 +300,7 @@
                                                 <tr>
                                                     <!-- Color Name -->
                                                     <td>{{ $productColor->color->name }}</td>
-                                                    <td>{{ $variant->sku }}</td>
+                                                    <td>{{ $variant->sku ?? '-' }}</td>
 
                                                     <!-- Manufacturing Status -->
                                                     <td>
