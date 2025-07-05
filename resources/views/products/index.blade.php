@@ -352,26 +352,28 @@
                                                                 )->diffInDays(now(), false)
                                                                 : null;
                                                         @endphp
-
-                                                        @if ($variant->receiving_status === 'new')
-                                                            <span>-</span>
-                                                        @elseif ($variant->receiving_status === 'pending')
-                                                            @if ($remainingDays > 0)
-                                                                <span class="badge bg-danger">{{ $remainingDays }}
-                                                                    {{ __('messages.day_overdue') }}</span>
-                                                            @elseif ($remainingDays === 0)
+                                                        @if ($variant)
+                                                            @if ($variant->receiving_status === 'new')
+                                                                <span>-</span>
+                                                            @elseif ($variant->receiving_status === 'pending')
+                                                                @if ($remainingDays > 0)
+                                                                    <span class="badge bg-danger">{{ $remainingDays }}
+                                                                        {{ __('messages.day_overdue') }}</span>
+                                                                @elseif ($remainingDays === 0)
+                                                                    <span
+                                                                        class="badge bg-warning">{{ __('messages.today') }}</span>
+                                                                @else
+                                                                    <span
+                                                                        class="badge bg-success">{{ abs($remainingDays) }}
+                                                                        {{ __('messages.day_remaining') }}
+                                                                    </span>
+                                                                @endif
+                                                            @elseif ($variant->receiving_status === 'complete')
                                                                 <span
-                                                                    class="badge bg-warning">{{ __('messages.today') }}</span>
-                                                            @else
-                                                                <span class="badge bg-success">{{ abs($remainingDays) }}
-                                                                    {{ __('messages.day_remaining') }}
-                                                                </span>
+                                                                    class="badge bg-danger">{{ __('messages.received_completely') }}</span>
+                                                            @elseif ($variant->receiving_status === 'postponed')
+                                                                <span>-</span>
                                                             @endif
-                                                        @elseif ($variant->receiving_status === 'complete')
-                                                            <span
-                                                                class="badge bg-danger">{{ __('messages.received_completely') }}</span>
-                                                        @elseif ($variant->receiving_status === 'postponed')
-                                                            <span>-</span>
                                                         @endif
                                                     </td>
 
