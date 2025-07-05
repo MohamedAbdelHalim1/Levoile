@@ -281,6 +281,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($product->productColors as $productColor)
+                                            @if ($productColor->productcolorvariants->isNotEmpty())
                                                 @php
                                                     $variant = $productColor->productcolorvariants->last();
                                                     $remainingDays = $variant
@@ -381,6 +382,7 @@
                                                     <td>{{ $totalExpectedQuantity ?? 0 }}</td>
                                                     <td>{{ $totalReceivedQuantity ?? 0 }}</td>
                                                 </tr>
+                                            @endif
                                             @endforeach
                                         </tbody>
                                     </table>

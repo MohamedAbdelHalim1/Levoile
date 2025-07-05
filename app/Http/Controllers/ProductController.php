@@ -1190,7 +1190,14 @@ class ProductController extends Controller
     public function destroyVariant(ProductColorVariant $variant)
     {
         try {
+            $productColor = $variant->productcolor;
+
             $variant->delete();
+
+            // لو ده آخر variant في الـ product color → امسح الـ product color كمان
+            if ($productColor->productcolorvariants()->count() === 0) {
+                $productColor->delete();
+            }
 
             return response()->json([
                 'status' => 'success',
