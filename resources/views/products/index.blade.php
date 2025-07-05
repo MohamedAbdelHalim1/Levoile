@@ -174,7 +174,7 @@
                             <th>{{ __('messages.manufacturing_in_progress') }}</th>
                             <th>{{ __('messages.colors') }}</th>
                             <th>{{ __('messages.final_receiving_status') }}</th>
-                            <th>{{ __('messages.expected_delivery_date') }}</th>
+                            <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -414,12 +414,7 @@
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-primary w-100">{{ __('messages.view') }}</a>
                                         @endif
-                                        @if (auth()->user()->hasPermission('تعديل منتج') &&
-                                                $product->productColors->every(function ($color) {
-                                                    return $color->productcolorvariants->every(function ($variant) {
-                                                        return $variant->status === 'new';
-                                                    });
-                                                }))
+                                        @if (auth()->user()->hasPermission('تعديل منتج'))
                                             <a href="{{ route('products.edit', $product->id) }}"
                                                 class="btn btn-secondary w-100">{{ __('messages.edit') }}</a>
                                         @endif
