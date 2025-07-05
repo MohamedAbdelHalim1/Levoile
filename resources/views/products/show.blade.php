@@ -39,7 +39,7 @@
                                 <p class="text-muted"><i>{{ __('messages.N/A') }}</i></p>
                             @endif
                         </div>
-                    
+
                         <!-- Product Details -->
                         <div class="col-md-6">
                             <h3 class="mb-4 text-center">{{ __('messages.product_details') }}</h3>
@@ -62,7 +62,7 @@
                                             <th class="text-end">{{ __('messages.season') }}:</th>
                                             <td style="font-weight: bold;">{{ $product->season->name ?? 'لا يوجد' }}</td>
                                         </tr>
-                         
+
                                         <tr>
                                             <th class="text-end">{{ __('messages.stock_status') }}:</th>
                                             <td style="font-weight: bold;">
@@ -72,7 +72,8 @@
                                         <tr>
                                             <th class="text-end">الحالة:</th>
                                             <td style="font-weight: bold;">
-                                                <span class="badge 
+                                                <span
+                                                    class="badge 
                                                     @if ($product->status === 'new') bg-primary 
                                                     @elseif ($product->status === 'complete') bg-success 
                                                     @elseif ($product->status === 'partial') bg-warning 
@@ -82,15 +83,25 @@
                                                     @elseif ($product->status === 'stop') bg-danger
                                                     @elseif ($product->status === 'postponed') bg-info
                                                     @else bg-secondary @endif">
-                                                @if ($product->status === 'new') {{ __('messages.new') }} 
-                                                @elseif ($product->status === 'complete') {{ __('messages.complete') }} 
-                                                @elseif ($product->status === 'partial') {{ __('messages.partial') }} 
-                                                @elseif ($product->status === 'pending') {{ __('messages.pending') }}
-                                                @elseif ($product->status === 'processing') {{ __('messages.processing') }} 
-                                                @elseif ($product->status === 'cancel') {{ __('messages.cancel') }}
-                                                @elseif ($product->status === 'stop') {{ __('messages.stop') }}
-                                                @elseif ($product->status === 'postponed') {{ __('messages.postponed') }}
-                                                @else {{ __('messages.N/A') }} @endif
+                                                    @if ($product->status === 'new')
+                                                        {{ __('messages.new') }}
+                                                    @elseif ($product->status === 'complete')
+                                                        {{ __('messages.complete') }}
+                                                    @elseif ($product->status === 'partial')
+                                                        {{ __('messages.partial') }}
+                                                    @elseif ($product->status === 'pending')
+                                                        {{ __('messages.pending') }}
+                                                    @elseif ($product->status === 'processing')
+                                                        {{ __('messages.processing') }}
+                                                    @elseif ($product->status === 'cancel')
+                                                        {{ __('messages.cancel') }}
+                                                    @elseif ($product->status === 'stop')
+                                                        {{ __('messages.stop') }}
+                                                    @elseif ($product->status === 'postponed')
+                                                        {{ __('messages.postponed') }}
+                                                    @else
+                                                        {{ __('messages.N/A') }}
+                                                    @endif
                                                 </span>
                                             </td>
                                         </tr>
@@ -99,7 +110,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr>
 
                     <h2>{{ __('messages.colors') }}</h2>
@@ -115,6 +126,7 @@
                                         <th>{{ __('messages.quantity') }}</th>
                                         <th>{{ __('messages.status') }}</th>
                                         <th>{{ __('messages.notes') }}</th>
+                                        <th>{{ __('messages.operations') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,6 +171,12 @@
                                                     @endswitch
                                                 </td>
                                                 <td>{{ $variant->note ?? '-' }}</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm delete-variant-btn"
+                                                        data-id="{{ $variant->id }}">
+                                                        <i class="fa fa-trash"></i> {{ __('messages.delete') }}
+                                                    </button>
+                                                </td>
                                             </tr>
                                             @if ($variant->children && $variant->children->isNotEmpty())
                                                 @foreach ($variant->children as $child)
@@ -193,6 +211,12 @@
                                                                 {{ __('messages.pending ') }}
                                                             @endif
                                                         </td>
+                                                        <td>
+                                                            <button class="btn btn-danger btn-sm delete-variant-btn"
+                                                                data-id="{{ $child->id }}">
+                                                                <i class="fa fa-trash"></i> {{ __('messages.delete') }}
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -210,4 +234,35 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).on('click', '.delete-variant-btn', function() {
+            var variantId = $(this).data('id');
+            var $row = $(this).closest('tr');
+
+            if (confirm('Are you sure you want to delete this variant?')) {
+                $.ajax({
+                    url: '/product-color-variant/' + variantId,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $row.fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert(xhr.responseJSON.message || 'An error occurred.');
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

@@ -1186,4 +1186,21 @@ class ProductController extends Controller
 
         return view('products.history', compact('product', 'history'));
     }
+
+    public function destroyVariant(ProductColorVariant $variant)
+    {
+        try {
+            $variant->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Variant deleted successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
 }
