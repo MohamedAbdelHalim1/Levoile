@@ -300,43 +300,48 @@
                                                 <tr>
                                                     <!-- Color Name -->
                                                     <td>{{ $productColor->color->name }}</td>
-                                                    <td>{{ $variant->sku ?? '-' }}</td>
+                                                    @if ($variant)
+                                                        <td>{{ $variant->sku ?? '-' }}</td>
+                                                        <!-- Manufacturing Status -->
+                                                        <td>
+                                                            @switch($variant->status)
+                                                                @case('new')
+                                                                    {{ __('messages.not_started') }}
+                                                                @break
 
-                                                    <!-- Manufacturing Status -->
-                                                    <td>
-                                                        @switch($variant->status)
-                                                            @case('new')
-                                                                {{ __('messages.not_started') }}
-                                                            @break
+                                                                @case('processing')
+                                                                    {{ __('messages.processing') }}
+                                                                @break
 
-                                                            @case('processing')
-                                                                {{ __('messages.processing') }}
-                                                            @break
+                                                                @case('postponed')
+                                                                    {{ __('messages.postponed') }}
+                                                                @break
 
-                                                            @case('postponed')
-                                                                {{ __('messages.postponed') }}
-                                                            @break
+                                                                @case('partial')
+                                                                    {{ __('messages.partial') }}
+                                                                @break
 
-                                                            @case('partial')
-                                                                {{ __('messages.partial') }}
-                                                            @break
+                                                                @case('complete')
+                                                                    {{ __('messages.complete') }}
+                                                                @break
 
-                                                            @case('complete')
-                                                                {{ __('messages.complete') }}
-                                                            @break
+                                                                @case('cancel')
+                                                                    {{ __('messages.cancel') }}
+                                                                @break
 
-                                                            @case('cancel')
-                                                                {{ __('messages.cancel') }}
-                                                            @break
+                                                                @case('stop')
+                                                                    {{ __('messages.stop') }}
+                                                                @break
 
-                                                            @case('stop')
-                                                                {{ __('messages.stop') }}
-                                                            @break
-
-                                                            @default
-                                                                {{ __('messages.unknown') }}
-                                                        @endswitch
-                                                    </td>
+                                                                @default
+                                                                    {{ __('messages.unknown') }}
+                                                            @endswitch
+                                                        </td>
+                                                    @else
+                                                        <td colspan="6" class="text-center text-muted">
+                                                            {{ __('messages.N/A') }}
+                                                        </td>
+                                                    @endif
 
                                                     <!-- Receiving Status with Remaining/Overdue Days -->
                                                     <td>
