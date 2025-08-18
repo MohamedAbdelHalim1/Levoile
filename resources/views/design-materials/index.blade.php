@@ -43,23 +43,35 @@
                                 <td>
                                     <a href="{{ route('design-materials.show', $material->id) }}"
                                         class="btn btn-info btn-sm">
-                                        {{ __('messages.view') }} 
+                                        {{ __('messages.view') }}
                                     </a>
                                     <a href="{{ route('design-materials.edit', $material->id) }}"
                                         class="btn btn-warning btn-sm">
                                         {{ __('messages.edit') }}
                                     </a>
+                                    <a href="{{ route('design-materials.request.form', $material->id) }}"
+                                        class="btn btn-success btn-sm">
+                                        {{ __('messages.request_qty') }}
+                                    </a>
+
+                                    <a href="{{ route('design-materials.receive.form', $material->id) }}"
+                                        class="btn btn-primary btn-sm">
+                                        {{ __('messages.receive_qty') }}
+                                    </a>
+
                                     <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
                                         class="d-inline"
                                         onsubmit="return confirm('{{ __('messages.confirm_delete_material') }}');">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">{{ __('messages.delete') }}</button>
+                                        <button type="submit"
+                                            class="btn btn-danger btn-sm">{{ __('messages.delete') }}</button>
                                     </form>
+
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted">{{ __('messages.N/A') }}   </td>
+                                <td colspan="5" class="text-center text-muted">{{ __('messages.N/A') }} </td>
                             </tr>
                         @endforelse
                     </tbody>

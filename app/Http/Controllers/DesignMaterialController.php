@@ -27,7 +27,7 @@ class DesignMaterialController extends Controller
     public function create()
     {
         $colors = \App\Models\Color::all();
-        return view('design-materials.create' , compact('colors'));
+        return view('design-materials.create', compact('colors'));
     }
 
     // حفظ خامة جديدة وكل ألوانها
@@ -75,8 +75,10 @@ class DesignMaterialController extends Controller
 
 
             DB::commit();
-            return redirect()->route('design-materials.index')->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم إضافة الخامة بنجاح' : 'Material added successfully');
+            return redirect()->route('design-materials.index')->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم إضافة الخامة بنجاح' : 'Material added successfully'
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $e->getMessage());
@@ -89,7 +91,7 @@ class DesignMaterialController extends Controller
     {
         $material = DesignMaterial::with('colors')->findOrFail($id);
         $colorsList = \App\Models\Color::all();
-        return view('design-materials.edit', compact('material' , 'colorsList'));
+        return view('design-materials.edit', compact('material', 'colorsList'));
     }
 
     // تعديل خامة وكل ألوانها (إضافة، تحديث، حذف)
@@ -134,7 +136,7 @@ class DesignMaterialController extends Controller
                         'code' => $colorData['code'] ?? null,
                         'current_quantity' => $colorData['current_quantity'] ?? 0,
                         'unit_of_current_quantity' => $colorData['unit'] ?? null
-                        
+
                     ]);
                     $colorIdsInRequest[] = $color->id;
                 }
@@ -157,8 +159,10 @@ class DesignMaterialController extends Controller
             ->delete();
 
         return redirect()->route('design-materials.index')
-            ->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم تحديث الخامة بنجاح' : 'Material updated successfully');
+            ->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم تحديث الخامة بنجاح' : 'Material updated successfully'
+            );
     }
 
 
@@ -167,8 +171,10 @@ class DesignMaterialController extends Controller
     {
         $material = DesignMaterial::findOrFail($id);
         $material->delete();
-        return redirect()->route('design-materials.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم حذف الخامة بنجاح' : 'Material deleted successfully');
+        return redirect()->route('design-materials.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم حذف الخامة بنجاح' : 'Material deleted successfully'
+        );
     }
 
     // حذف لون واحد (AJAX)
@@ -183,7 +189,96 @@ class DesignMaterialController extends Controller
         }
 
         // غير كده redirect عادي
-        return redirect()->back()->with('success', 
-       auth()->user()->current_lang == 'ar' ? 'تم حذف اللون بنجاح' : 'Color deleted successfully');
+        return redirect()->back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم حذف اللون بنجاح' : 'Color deleted successfully'
+        );
+    }
+
+
+    public function requestForm(DesignMaterial $material)
+    {
+        $material->load('colors');
+        return view('design_materials.request', compact('material'));
+    }
+
+    public function requestStore(Request $request, DesignMaterial $material)
+    {
+        $data = $request->validate([
+            'colors' => ['required', 'array'],
+            'colors.*.id' => ['required', 'integer', 'exists:design_material_colors,id'],
+            'colors.*.required_quantity' => ['nullable', 'numeric'],
+            'colors.*.unit_of_required_quantity' => ['nullable', 'in:kg,meter'],
+            'colors.*.delivery_date' => ['nullable', 'date'],
+        ]);
+
+        foreach ($data['colors'] as $row) {
+            /** @var DesignMaterialColor $color */
+            $color = DesignMaterialColor::where('design_material_id', $material->id)
+                ->findOrFail($row['id']);
+
+            $color->required_quantity = $row['required_quantity'] ?? null;
+            $color->unit_of_required_quantity = $row['unit_of_required_quantity'] ?? null;
+            $color->delivery_date = $row['delivery_date'] ?? null;
+            $color->save();
+        }
+
+        return redirect()
+            ->route('design-materials.index')
+            ->with('success', __('messages.saved_successfully'));
+    }
+
+    // ---------- استلام كمية ----------
+    public function receiveForm(DesignMaterial $material)
+    {
+        $material->load('colors');
+        return view('design_materials.receive', compact('material'));
+    }
+
+    public function receiveStore(Request $request, DesignMaterial $material)
+    {
+        $data = $request->validate([
+            'colors' => ['required', 'array'],
+            'colors.*.id' => ['required', 'integer', 'exists:design_material_colors,id'],
+            'colors.*.received_quantity' => ['nullable', 'numeric'],
+            'colors.*.unit_of_received_quantity' => ['nullable', 'in:kg,meter'],
+            // اختياري: تاريخ الاستلام
+            'colors.*.received_at' => ['nullable', 'date'],
+            // اختياري: تزود الكمية الحالية تلقائيًا
+            'increase_current' => ['sometimes', 'boolean'],
+        ]);
+
+        foreach ($data['colors'] as $row) {
+            $color = DesignMaterialColor::where('design_material_id', $material->id)
+                ->findOrFail($row['id']);
+
+            $color->received_quantity = $row['received_quantity'] ?? null;
+            $color->unit_of_received_quantity = $row['unit_of_received_quantity'] ?? null;
+
+            // لو عاوز تزود current_quantity تلقائيًا (بنفس الوحدة)
+            if (!empty($data['increase_current']) && isset($row['received_quantity'])) {
+                // لو مفيش وحدة حالية، خُد وحدة الاستلام
+                if (!$color->unit_of_current_quantity && !empty($row['unit_of_received_quantity'])) {
+                    $color->unit_of_current_quantity = $row['unit_of_received_quantity'];
+                }
+
+                // نزود بس لما الوحدتين يبقوا نفس النوع علشان متحولش وحدات بدون لوجيك
+                if ($color->unit_of_current_quantity === ($row['unit_of_received_quantity'] ?? null)) {
+                    $color->current_quantity = (float)($color->current_quantity ?? 0) + (float)$row['received_quantity'];
+                }
+            }
+
+            // اختياري: save received_at لو عايزه
+            if (!empty($row['received_at'])) {
+                // لو عندك عمود received_at أضفه في $fillable وخزّنه هنا
+                // $color->received_at = $row['received_at'];
+            }
+
+            $color->save();
+        }
+
+        return redirect()
+            ->route('design-materials.index')
+            ->with('success', __('messages.saved_successfully'));
     }
 }

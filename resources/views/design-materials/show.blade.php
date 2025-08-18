@@ -45,7 +45,10 @@
                                     <td>{{ $color->current_quantity ?? '-' }}{{ $color->unit_of_current_quantity }}</td>
                                     <td>{{ $color->required_quantity ?? '-' }}</td>
                                     <td>{{ $color->received_quantity ?? '-' }}</td>
-                                    <td>{{ $color->required_quantity - $color->received_quantity ?? '-' }}</td>
+                                    <td>{{ is_numeric($color->required_quantity) && is_numeric($color->received_quantity)
+                                        ? $color->required_quantity - $color->received_quantity
+                                        : '-' }}
+                                    </td>
                                     <td>{{ $color->delivery_date ?? '-' }}</td>
                                 </tr>
                             @empty
@@ -56,7 +59,8 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="{{ route('design-materials.index') }}" class="btn btn-secondary mt-4">{{ __('messages.back') }}</a>
+                <a href="{{ route('design-materials.index') }}"
+                    class="btn btn-secondary mt-4">{{ __('messages.back') }}</a>
             </div>
         </div>
     </div>
