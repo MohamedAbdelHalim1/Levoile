@@ -12,7 +12,7 @@ class DesignMaterialController extends Controller
     // قائمة كل الخامات
     public function index()
     {
-        $materials = DesignMaterial::with('colors')->get();
+        $materials = DesignMaterial::with('colors')->orderBy('id', 'desc')->get();
         return view('design-materials.index', compact('materials'));
     }
 
@@ -56,9 +56,7 @@ class DesignMaterialController extends Controller
                     if (
                         empty($color['name']) &&
                         empty($color['code']) &&
-                        empty($color['required_quantity']) &&
-                        empty($color['received_quantity']) &&
-                        empty($color['delivery_date'])
+                        empty($color['current_quantity'])
                     ) {
                         continue;
                     }
@@ -66,9 +64,7 @@ class DesignMaterialController extends Controller
                         'design_material_id'   => $material->id,
                         'name'                 => $color['name'] ?? null,
                         'code'                 => $color['code'] ?? null,
-                        'required_quantity'    => $color['required_quantity'] ?? null,
-                        'received_quantity'    => $color['received_quantity'] ?? null,
-                        'delivery_date'        => $color['delivery_date'] ?? null,
+                        'current_quantity'    => $color['current_quantity'] ?? null,
                     ];
                     DesignMaterialColor::create($colorData);
                     $colorCount++;
@@ -122,9 +118,7 @@ class DesignMaterialController extends Controller
             if (
                 empty($colorData['name']) &&
                 empty($colorData['code']) &&
-                empty($colorData['required_quantity']) &&
-                empty($colorData['received_quantity']) &&
-                empty($colorData['delivery_date'])
+                empty($colorData['current_quantity'])
             ) {
                 continue;
             }
@@ -135,9 +129,8 @@ class DesignMaterialController extends Controller
                     $color->update([
                         'name' => $colorData['name'] ?? null,
                         'code' => $colorData['code'] ?? null,
-                        'required_quantity' => $colorData['required_quantity'] ?? 0,
-                        'received_quantity' => $colorData['received_quantity'] ?? 0,
-                        'delivery_date' => $colorData['delivery_date'] ?? null,
+                        'current_quantity' => $colorData['current_quantity'] ?? 0,
+                        
                     ]);
                     $colorIdsInRequest[] = $color->id;
                 }
@@ -146,9 +139,8 @@ class DesignMaterialController extends Controller
                 $newColor = $material->colors()->create([
                     'name' => $colorData['name'] ?? null,
                     'code' => $colorData['code'] ?? null,
-                    'required_quantity' => $colorData['required_quantity'] ?? 0,
-                    'received_quantity' => $colorData['received_quantity'] ?? 0,
-                    'delivery_date' => $colorData['delivery_date'] ?? null,
+                    'current_quantity' => $colorData['current_quantity'] ?? 0,
+                   
                 ]);
                 $colorIdsInRequest[] = $newColor->id;
             }

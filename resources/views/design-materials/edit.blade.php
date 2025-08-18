@@ -78,17 +78,17 @@
                                         placeholder="{{ __('messages.color_code') }} ">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" name="colors[0][required_quantity]" class="form-control"
-                                        placeholder="{{ __('messages.required_quantity') }} " step="any">
+                                    <input type="number" name="colors[0][current_quantity]" class="form-control"
+                                        placeholder="{{ __('messages.current_quantity') }} " step="any">
                                 </div>
-                                <div class="col-md-2">
+                                {{-- <div class="col-md-2">
                                     <input type="number" name="colors[0][received_quantity]" class="form-control"
                                         placeholder="{{ __('messages.received_quantity') }} " step="any">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" name="colors[0][delivery_date]" class="form-control"
                                         placeholder="{{ __('messages.delivery_date') }} ">
-                                </div>
+                                </div> --}}
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-danger btn-sm remove-color">
                                         {{ __('messages.delete') }} 
@@ -143,13 +143,7 @@
                     <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="{{ __('messages.color_code') }} ">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][required_quantity]" class="form-control" placeholder="{{ __('messages.required_quantity') }} " step="any">
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][received_quantity]" class="form-control" placeholder="{{ __('messages.received_quantity') }} " step="any">
-                </div>
-                <div class="col-md-2">
-                    <input type="date" name="colors[${colorIndex}][delivery_date]" class="form-control" placeholder="{{ __('messages.delivery_date') }} ">
+                    <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-danger btn-sm remove-color">{{ __('messages.detele') }} </button>

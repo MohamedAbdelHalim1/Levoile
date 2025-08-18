@@ -27,6 +27,7 @@
                                 <th>#</th>
                                 <th>{{ __('messages.name') }}</th>
                                 <th>{{ __('messages.color_code') }}</th>
+                                <th>{{ __('messages.current_quantity') }}</th>
                                 <th>{{ __('messages.required_quantity') }}</th>
                                 <th>{{ __('messages.received_quantity') }}</th>
                                 <th>{{ __('messages.remaining_quantity') }}</th>
@@ -41,6 +42,7 @@
                                     <td>
                                         {{ $color->code ?? '-' }}
                                     </td>
+                                    <td>{{ $color->current_quantity ?? '-' }}</td>
                                     <td>{{ $color->required_quantity ?? '-' }}</td>
                                     <td>{{ $color->received_quantity ?? '-' }}</td>
                                     <td>{{ $color->required_quantity - $color->received_quantity ?? '-' }}</td>
