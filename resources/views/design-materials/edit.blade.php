@@ -56,29 +56,14 @@
                                 {{-- dropdown contain two values represnent messsearing units kg and meter --}}
                                 <div class="col-md-2">
                                     <select name="colors[{{ $i }}][unit]" class="form-control">
-                                        <option value="kg" @if (old('colors.' . $i . '.unit', $color->unit) == 'kg') selected @endif>
+                                        <option value="kg" @if (old('colors.' . $i . '.unit', $color->unit_of_current_quantity) == 'kg') selected @endif>
                                             {{ __('messages.kg') }}
                                         </option>
-                                        <option value="meter" @if (old('colors.' . $i . '.unit', $color->unit) == 'meter') selected @endif>
+                                        <option value="meter" @if (old('colors.' . $i . '.unit', $color->ununit_of_current_quantityit) == 'meter') selected @endif>
                                             {{ __('messages.meter') }}
                                         </option>
                                     </select>
                                 </div>
-                                {{-- <div class="col-md-2">
-                                    <input type="number" name="colors[{{ $i }}][required_quantity]"
-                                        class="form-control" placeholder="{{ __('messages.required_quantity') }} "
-                                        value="{{ old('colors.' . $i . '.required_quantity', $color->required_quantity) }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" name="colors[{{ $i }}][received_quantity]"
-                                        class="form-control" placeholder="{{ __('messages.received_quantity') }} "
-                                        value="{{ old('colors.' . $i . '.received_quantity', $color->received_quantity) }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="date" name="colors[{{ $i }}][delivery_date]"
-                                        class="form-control"
-                                        value="{{ old('colors.' . $i . '.delivery_date', $color->delivery_date) }}">
-                                </div> --}}
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                                 </div>
