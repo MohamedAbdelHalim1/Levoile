@@ -66,7 +66,8 @@ class DesignMaterialController extends Controller
                         'name'                 => $color['name'] ?? null,
                         'code'                 => $color['code'] ?? null,
                         'current_quantity'    => $color['current_quantity'] ?? null,
-                        'unit_of_current_quantity'    => $color['unit'] ?? null
+                        'unit_of_current_quantity'    => $color['unit'] ?? null,
+                        'status'               => 'new',
                     ];
                     DesignMaterialColor::create($colorData);
                     $colorCount++;
@@ -220,6 +221,7 @@ class DesignMaterialController extends Controller
             $color->required_quantity = $row['required_quantity'] ?? null;
             $color->unit_of_required_quantity = $row['unit_of_required_quantity'] ?? null;
             $color->delivery_date = $row['delivery_date'] ?? null;
+            $color->status = "ask_for_quantity";
             $color->save();
         }
 
@@ -242,35 +244,56 @@ class DesignMaterialController extends Controller
             'colors.*.id' => ['required', 'integer', 'exists:design_material_colors,id'],
             'colors.*.received_quantity' => ['nullable', 'numeric'],
             'colors.*.unit_of_received_quantity' => ['nullable', 'in:kg,meter'],
-            // اختياري: تاريخ الاستلام
             'colors.*.received_at' => ['nullable', 'date'],
-            // اختياري: تزود الكمية الحالية تلقائيًا
-            'increase_current' => ['sometimes', 'boolean'],
+            'increase_current' => ['nullable', 'boolean'],
         ]);
 
         foreach ($data['colors'] as $row) {
             $color = DesignMaterialColor::where('design_material_id', $material->id)
                 ->findOrFail($row['id']);
 
-            $color->received_quantity = $row['received_quantity'] ?? null;
-            $color->unit_of_received_quantity = $row['unit_of_received_quantity'] ?? null;
+            $rec = isset($row['received_quantity']) ? (float)$row['received_quantity'] : null;
+            $rec_unit = $row['unit_of_received_quantity'] ?? null;
 
-            // لو عاوز تزود current_quantity تلقائيًا (بنفس الوحدة)
-            if (!empty($data['increase_current']) && isset($row['received_quantity'])) {
-                // لو مفيش وحدة حالية، خُد وحدة الاستلام
-                if (!$color->unit_of_current_quantity && !empty($row['unit_of_received_quantity'])) {
-                    $color->unit_of_current_quantity = $row['unit_of_received_quantity'];
+            // حفظ بيانات الاستلام
+            $color->received_quantity = $rec;
+            $color->unit_of_received_quantity = $rec_unit;
+
+            // تحديث current_quantity تلقائيًا لو تم تفعيل الزيادة
+            if (!empty($data['increase_current']) && $rec !== null && $rec > 0) {
+                if (!$color->unit_of_current_quantity && $rec_unit) {
+                    $color->unit_of_current_quantity = $rec_unit;
                 }
 
-                // نزود بس لما الوحدتين يبقوا نفس النوع علشان متحولش وحدات بدون لوجيك
-                if ($color->unit_of_current_quantity === ($row['unit_of_received_quantity'] ?? null)) {
-                    $color->current_quantity = (float)($color->current_quantity ?? 0) + (float)$row['received_quantity'];
+                if ($color->unit_of_current_quantity === $rec_unit) {
+                    $color->current_quantity = (float)($color->current_quantity ?? 0) + $rec;
                 }
             }
 
-            // اختياري: save received_at لو عايزه
+            // تحديد status
+            $req = isset($color->required_quantity) ? (float)$color->required_quantity : null;
+            $req_unit = $color->unit_of_required_quantity;
+
+            if ($rec !== null && $rec > 0) {
+                // تطابق الوحدات أو غير معرفة
+                $units_match = !$req_unit || !$rec_unit || $req_unit === $rec_unit;
+
+                if ($units_match) {
+                    if ($req !== null && $req > 0) {
+                        if ($rec >= $req) {
+                            $color->status = 'complete_receive';
+                        } else {
+                            $color->status = 'partial_receive';
+                        }
+                    } else {
+                        // مفيش مطلوب ولكن فيه استلام
+                        $color->status = 'complete_receive';
+                    }
+                }
+            }
+
+            // لو حابب تضيف تاريخ استلام
             if (!empty($row['received_at'])) {
-                // لو عندك عمود received_at أضفه في $fillable وخزّنه هنا
                 // $color->received_at = $row['received_at'];
             }
 

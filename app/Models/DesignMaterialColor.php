@@ -17,6 +17,7 @@ class DesignMaterialColor extends Model
         'unit_of_current_quantity',
         'unit_of_required_quantity',
         'unit_of_received_quantity',
+        'status',
     ];
 
     public function material()
