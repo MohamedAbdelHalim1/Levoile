@@ -20,6 +20,59 @@
                             </a>
                         </div>
                     @endif
+                    <form method="GET" action="{{ route('design-sample-products.index') }}" class="mb-4">
+                        <div class="row g-3 align-items-end">
+
+                            <div class="col-md-3">
+                                <label for="season_id" class="form-label">{{ __('messages.season') }}</label>
+                                <select name="season_id" id="season_id" class="form-control">
+                                    <option value="">{{ __('messages.all') }}</option>
+                                    @foreach ($seasons as $season)
+                                        <option value="{{ $season->id }}"
+                                            {{ ($filters['season_id'] ?? '') == $season->id ? 'selected' : '' }}>
+                                            {{ $season->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="category_id" class="form-label">{{ __('messages.category') }}</label>
+                                <select name="category_id" id="category_id" class="form-control">
+                                    <option value="">{{ __('messages.all') }}</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ ($filters['category_id'] ?? '') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="status" class="form-label">{{ __('messages.status') }}</label>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">{{ __('messages.all') }}</option>
+                                    @foreach (['جديد', 'تم التوزيع', 'قيد المراجعه', 'تم المراجعه', 'تأجيل', 'الغاء', 'تعديل', 'تم اضافة الخامات', 'تم اضافة التيكنيكال'] as $status)
+                                        <option value="{{ $status }}"
+                                            {{ ($filters['status'] ?? '') == $status ? 'selected' : '' }}>
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i> {{ __('messages.search') }}
+                                </button>
+                                <a href="{{ route('design-sample-products.index') }}" class="btn btn-secondary">
+                                    <i class="fa fa-times"></i> {{ __('messages.reset') }}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
                     <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
                         <thead class="table-dark">
                             <tr>
@@ -57,7 +110,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title"
-                                                            id="materialsModalLabel{{ $sample->id }}"> 
+                                                            id="materialsModalLabel{{ $sample->id }}">
                                                             {{ __('messages.materials_of_product') }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -70,7 +123,9 @@
                                                                             href="{{ route('design-materials.show', $m->material->id) }}">(
                                                                             {{ $m->material->colors->count() }} )</a></li>
                                                                 @else
-                                                                    <li class="text-danger">{{ __('messages.unknown_or_deleted_materials') }}</li>
+                                                                    <li class="text-danger">
+                                                                        {{ __('messages.unknown_or_deleted_materials') }}
+                                                                    </li>
                                                                 @endif
                                                             @endforeach
 
@@ -90,7 +145,8 @@
                                         @elseif($sample->status === 'تم المراجعه')
                                             <span class="badge bg-info text-dark">{{ __('messages.reviewed') }} </span>
                                         @elseif($sample->status === 'تأجيل')
-                                            <span class="badge bg-secondary text-dark">{{ __('messages.postponed') }}</span>
+                                            <span
+                                                class="badge bg-secondary text-dark">{{ __('messages.postponed') }}</span>
                                         @elseif($sample->status === 'الغاء')
                                             <span class="badge bg-danger">{{ __('messages.cancel') }}</span>
                                         @elseif($sample->status === 'تعديل')
@@ -98,7 +154,9 @@
                                         @elseif($sample->status === 'تم اضافة الخامات')
                                             <span class="badge bg-secondary">{{ __('messages.added_materials') }}</span>
                                         @elseif($sample->status === 'تم اضافة التيكنيكال')
-                                            <span class="badge bg-dark text-white">{{ __('messages.added_technical_file') }} </span>
+                                            <span
+                                                class="badge bg-dark text-white">{{ __('messages.added_technical_file') }}
+                                            </span>
                                         @else
                                             <span class="badge bg-secondary">{{ __($sample->status) }}</span>
                                         @endif
@@ -107,7 +165,8 @@
 
                                     <td>
                                         @if ($sample->image)
-                                            <img src="{{ asset($sample->image) }}" alt="{{ __('messages.image') }}" width="50">
+                                            <img src="{{ asset($sample->image) }}" alt="{{ __('messages.image') }}"
+                                                width="50">
                                         @endif
                                     </td>
                                     <td>
@@ -122,8 +181,8 @@
                                         {{-- صورة الماركر --}}
                                         @if ($sample->marker_image)
                                             <a href="{{ asset($sample->marker_image) }}" target="_blank">
-                                                <img src="{{ asset($sample->marker_image) }}" alt="{{ __('messages.marker_image') }}"
-                                                    width="40" height="40"
+                                                <img src="{{ asset($sample->marker_image) }}"
+                                                    alt="{{ __('messages.marker_image') }}" width="40" height="40"
                                                     style="object-fit:cover; border-radius:5px;">
                                             </a>
                                         @else
@@ -160,14 +219,14 @@
                                         <button type="button" class="btn btn-dark btn-sm"
                                             data-bs-target="#addMaterialsModal{{ $sample->id }}"
                                             data-action="addMaterials" data-status="{{ $sample->status }}">
-                                            {{ __('messages.add_materials') }} 
+                                            {{ __('messages.add_materials') }}
                                         </button>
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة تيكنيكال شيت -->
                                             <button type="button" class="btn btn-info btn-sm"
                                                 data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
                                                 data-action="addTechnical" data-status="{{ $sample->status }}">
-                                                {{ __('messages.add_technical_file') }}  
+                                                {{ __('messages.add_technical_file') }}
                                             </button>
                                         @endif
 
@@ -175,14 +234,14 @@
                                         <button type="button" class="btn btn-primary btn-sm"
                                             data-bs-target="#assignPatternestModal{{ $sample->id }}"
                                             data-action="assignPatternest" data-status="{{ $sample->status }}">
-                                            {{ __('messages.assign_patternest') }} 
+                                            {{ __('messages.assign_patternest') }}
                                         </button>
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة ماركر -->
                                             <button type="button" class="btn btn-secondary btn-sm"
-                                                data-bs-target="#addMarkerModal{{ $sample->id }}" data-action="addMarker"
-                                                data-status="{{ $sample->status }}">
-                                                {{ __('messages.add_marker') }} 
+                                                data-bs-target="#addMarkerModal{{ $sample->id }}"
+                                                data-action="addMarker" data-status="{{ $sample->status }}">
+                                                {{ __('messages.add_marker') }}
                                             </button>
                                         @endif
                                         <!-- زر مراجعة -->
@@ -203,7 +262,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
-                                                                id="addMaterialsLabel{{ $sample->id }}"> 
+                                                                id="addMaterialsLabel{{ $sample->id }}">
                                                                 {{ __('messages.add_materials') }}</h5>
                                                             <button type="button" class="btn-close"
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
@@ -223,7 +282,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">{{ __('messages.save') }}</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -252,7 +312,8 @@
                                                             <label>{{ __('messages.patternest') }}</label>
                                                             <select class="form-control patternest-select"
                                                                 name="patternest_id" required>
-                                                                <option value="">{{ __('messages.select_patternest') }}</option>
+                                                                <option value="">
+                                                                    {{ __('messages.select_patternest') }}</option>
                                                                 @foreach ($patternests as $user)
                                                                     <option value="{{ $user->id }}"
                                                                         @if ($sample->patternest_id == $user->id) selected @endif>
@@ -264,7 +325,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">{{ __('messages.save') }}</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -286,7 +348,8 @@
                                                                 id="addMarkerModalLabel{{ $sample->id }}">
                                                                 {{ __('messages.add_marker') }}</h5>
                                                             <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="{{ __('messages.close') }}"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
@@ -308,9 +371,12 @@
                                                                 <div class="col-3 mb-3">
                                                                     <label>{{ __('messages.unit') }}</label>
                                                                     <select name="marker_unit" class="form-control">
-                                                                        <option value="">{{ __('messages.select_unit') }}</option>
-                                                                        <option value="كيلوجرام">{{ __('messages.kg') }}</option>
-                                                                        <option value="متر">{{ __('messages.meter') }}</option>
+                                                                        <option value="">
+                                                                            {{ __('messages.select_unit') }}</option>
+                                                                        <option value="كيلوجرام">{{ __('messages.kg') }}
+                                                                        </option>
+                                                                        <option value="متر">{{ __('messages.meter') }}
+                                                                        </option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -323,7 +389,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">{{ __('messages.save') }}</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -345,7 +412,8 @@
                                                                 id="addTechnicalSheetLabel{{ $sample->id }}">
                                                                 {{ __('messages.add_technical_sheet') }} </h5>
                                                             <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="{{ __('messages.close') }}"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
@@ -357,7 +425,8 @@
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">{{ __('messages.save') }}</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -375,17 +444,20 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
                                                                 id="reviewModalLabel{{ $sample->id }}">
-                                                                {{ __('messages.review') }} 
+                                                                {{ __('messages.review') }}
                                                             </h5>
                                                             <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="{{ __('messages.close') }}"></button>
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="{{ __('messages.close') }}"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="mb-2 d-block">{{ __('messages.status') }}:</label>
+                                                                <label
+                                                                    class="mb-2 d-block">{{ __('messages.status') }}:</label>
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="status" value="{{ __('messages.reviewed') }} "
+                                                                        name="status"
+                                                                        value="{{ __('messages.reviewed') }} "
                                                                         id="status1-{{ $sample->id }}" checked>
                                                                     <label class="form-check-label"
                                                                         for="status1-{{ $sample->id }}">
@@ -393,14 +465,16 @@
                                                                 </div>
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="status" value="{{ __('messages.postponed') }}"
+                                                                        name="status"
+                                                                        value="{{ __('messages.postponed') }}"
                                                                         id="status2-{{ $sample->id }}">
                                                                     <label class="form-check-label"
                                                                         for="status2-{{ $sample->id }}">{{ __('messages.postponed') }}</label>
                                                                 </div>
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="radio"
-                                                                        name="status" value="{{ __('messages.cancel') }}"
+                                                                        name="status"
+                                                                        value="{{ __('messages.cancel') }}"
                                                                         id="status3-{{ $sample->id }}">
                                                                     <label class="form-check-label"
                                                                         for="status3-{{ $sample->id }}">{{ __('messages.cancel') }}</label>
@@ -418,21 +492,24 @@
                                                                     for="comment_content_{{ $sample->id }}">{{ __('messages.comment') }}:</label>
                                                                 <input type="text" class="form-control"
                                                                     id="comment_content_{{ $sample->id }}"
-                                                                    name="content" placeholder="{{ __('messages.add_comment') }} ">
+                                                                    name="content"
+                                                                    placeholder="{{ __('messages.add_comment') }} ">
                                                             </div>
                                                             <div class="mb-3">
-                                                                <label for="comment_image_{{ $sample->id }}"> {{ __('messages.image') }}
+                                                                <label for="comment_image_{{ $sample->id }}">
+                                                                    {{ __('messages.image') }}
                                                                     ({{ __('messages.optional') }})
                                                                     :</label>
                                                                 <input type="file" class="form-control"
-                                                                    id="comment_image_{{ $sample->id }}" name="image"
-                                                                    accept="image/*">
+                                                                    id="comment_image_{{ $sample->id }}"
+                                                                    name="image" accept="image/*">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                                                            <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
+                                                            <button type="submit"
+                                                                class="btn btn-success">{{ __('messages.save') }}</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -487,6 +564,10 @@
                 placeholder: "{{ __('messages.select_patternest') }}"
             });
         });
+
+        new TomSelect('#season_id');
+        new TomSelect('#category_id');
+        new TomSelect('#status');
     </script>
 
     <script>
@@ -504,10 +585,18 @@
                     'قيد المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
                         'review'
                     ],
-                    'تم المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
-                    'تأجيل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
-                    'الغاء': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
-                    'تعديل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker','review'],
+                    'تم المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
+                    'تأجيل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
+                    'الغاء': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
+                    'تعديل': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                        'review'
+                    ],
                 };
 
                 const messages = {
