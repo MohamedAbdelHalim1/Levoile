@@ -62,7 +62,7 @@
                                         <option value="kg" @if (old('colors.' . $i . '.unit', $color->unit_of_current_quantity) == 'kg') selected @endif>
                                             {{ __('messages.kg') }}
                                         </option>
-                                        <option value="meter" @if (old('colors.' . $i . '.unit', $color->ununit_of_current_quantityit) == 'meter') selected @endif>
+                                        <option value="meter" @if (old('colors.' . $i . '.unit', $color->unit_of_current_quantity) == 'meter') selected @endif>
                                             {{ __('messages.meter') }}
                                         </option>
                                     </select>
