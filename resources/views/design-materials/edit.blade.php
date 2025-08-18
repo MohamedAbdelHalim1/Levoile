@@ -49,6 +49,22 @@
                                         placeholder="{{ __('messages.color_code') }} " value="{{ old('colors.' . $i . '.code', $color->code) }}">
                                 </div>
                                 <div class="col-md-2">
+                                    <input type="number" name="colors[{{ $i }}][current_quantity]"
+                                        class="form-control" placeholder="{{ __('messages.current_quantity') }} "
+                                        value="{{ old('colors.' . $i . '.current_quantity', $color->current_quantity) }}">
+                                </div>
+                                {{-- dropdown contain two values represnent messsearing units kg and meter --}}
+                                <div class="col-md-2">
+                                    <select name="colors[{{ $i }}][unit]" class="form-control">
+                                        <option value="kg" @if (old('colors.' . $i . '.unit', $color->unit) == 'kg') selected @endif>
+                                            {{ __('messages.kg') }}
+                                        </option>
+                                        <option value="meter" @if (old('colors.' . $i . '.unit', $color->unit) == 'meter') selected @endif>
+                                            {{ __('messages.meter') }}
+                                        </option>
+                                    </select>
+                                </div>
+                                {{-- <div class="col-md-2">
                                     <input type="number" name="colors[{{ $i }}][required_quantity]"
                                         class="form-control" placeholder="{{ __('messages.required_quantity') }} "
                                         value="{{ old('colors.' . $i . '.required_quantity', $color->required_quantity) }}">
@@ -62,7 +78,7 @@
                                     <input type="date" name="colors[{{ $i }}][delivery_date]"
                                         class="form-control"
                                         value="{{ old('colors.' . $i . '.delivery_date', $color->delivery_date) }}">
-                                </div>
+                                </div> --}}
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                                 </div>
@@ -80,6 +96,16 @@
                                 <div class="col-md-2">
                                     <input type="number" name="colors[0][current_quantity]" class="form-control"
                                         placeholder="{{ __('messages.current_quantity') }} " step="any">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="colors[0][unit]" class="form-control">
+                                        <option value="kg">{{ __('messages.kg') }}</option>
+                                        <option value="meter">{{ __('messages.meter') }}</option>
+                                    </select>
+                                </div>
+                                {{-- <div class="col-md-2">
+                                    <input type="number" name="colors[0][required_quantity]" class="form-control"
+                                        placeholder="{{ __('messages.required_quantity') }} " step="any">
                                 </div>
                                 {{-- <div class="col-md-2">
                                     <input type="number" name="colors[0][received_quantity]" class="form-control"
@@ -144,6 +170,12 @@
                 </div>
                 <div class="col-md-2">
                     <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
+                </div>
+                <div class="col-md-2">
+                    <select name="colors[${colorIndex}][unit]" class="form-control">
+                        <option value="kg">{{ __('messages.kg') }}</option>\
+                        <option value="meter">{{ __('messages.meter') }}</option>
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-danger btn-sm remove-color">{{ __('messages.delete') }} </button>

@@ -56,7 +56,8 @@ class DesignMaterialController extends Controller
                     if (
                         empty($color['name']) &&
                         empty($color['code']) &&
-                        empty($color['current_quantity'])
+                        empty($color['current_quantity']) &&
+                        empty($color['unit'])
                     ) {
                         continue;
                     }
@@ -65,6 +66,7 @@ class DesignMaterialController extends Controller
                         'name'                 => $color['name'] ?? null,
                         'code'                 => $color['code'] ?? null,
                         'current_quantity'    => $color['current_quantity'] ?? null,
+                        'unit_of_current_quantity'    => $color['unit'] ?? null
                     ];
                     DesignMaterialColor::create($colorData);
                     $colorCount++;
@@ -118,7 +120,8 @@ class DesignMaterialController extends Controller
             if (
                 empty($colorData['name']) &&
                 empty($colorData['code']) &&
-                empty($colorData['current_quantity'])
+                empty($colorData['current_quantity']) &&
+                empty($colorData['unit'])
             ) {
                 continue;
             }
@@ -130,6 +133,7 @@ class DesignMaterialController extends Controller
                         'name' => $colorData['name'] ?? null,
                         'code' => $colorData['code'] ?? null,
                         'current_quantity' => $colorData['current_quantity'] ?? 0,
+                        'unit_of_current_quantity' => $colorData['unit'] ?? null
                         
                     ]);
                     $colorIdsInRequest[] = $color->id;
@@ -140,7 +144,7 @@ class DesignMaterialController extends Controller
                     'name' => $colorData['name'] ?? null,
                     'code' => $colorData['code'] ?? null,
                     'current_quantity' => $colorData['current_quantity'] ?? 0,
-                   
+                    'unit_of_current_quantity' => $colorData['unit'] ?? null
                 ]);
                 $colorIdsInRequest[] = $newColor->id;
             }

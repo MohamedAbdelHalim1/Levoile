@@ -38,6 +38,13 @@
                                 <input type="number" name="colors[0][current_quantity]" class="form-control"
                                     placeholder="{{ __('messages.current_quantity') }}" step="any">
                             </div>
+                            {{-- dropdown contain two values represnent messsearing units kg and meter --}}
+                            <div class="col-md-2">
+                                <select name="colors[0][unit]" class="form-control">
+                                    <option value="kg">{{ __('messages.kg') }}</option>
+                                    <option value="meter">{{ __('messages.meter') }}</option>
+                                </select>
+                            </div>
                             {{-- <div class="col-md-2">
                                 <input type="number" name="colors[0][received_quantity]" class="form-control"
                                     placeholder="{{ __('messages.received_quantity') }}" step="any">
@@ -98,6 +105,12 @@
                 </div>
                 <div class="col-md-2">
                     <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
+                </div>
+                <div class="col-md-2">
+                    <select name="colors[${colorIndex}][unit]" class="form-control">
+                        <option value="kg">{{ __('messages.kg') }}</option>
+                        <option value="meter">{{ __('messages.meter') }}</option>
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
