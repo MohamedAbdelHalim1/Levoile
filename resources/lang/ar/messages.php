@@ -442,7 +442,7 @@ return [
     'yesterday_at' => 'أمس الساعة',
     'tomorrow_at' => 'غدًا الساعة',
     'number_of_repeated_models' => 'عدد الموديلات المكررة',
-
+    'current_quantity' => 'الكمية الحالية',
 
 
 

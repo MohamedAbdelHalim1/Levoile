@@ -146,7 +146,7 @@
                     <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger btn-sm remove-color">{{ __('messages.detele') }} </button>
+                    <button type="button" class="btn btn-danger btn-sm remove-color">{{ __('messages.delete') }} </button>
                 </div>
             </div>
         `;

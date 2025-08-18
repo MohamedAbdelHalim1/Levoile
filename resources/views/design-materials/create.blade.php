@@ -47,7 +47,7 @@
                                     placeholder="{{ __('messages.delivery_date') }}">
                             </div> --}}
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
+                                <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                     <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.detele') }}</button>
+                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                 </div>
             </div>
         `;
