@@ -45,16 +45,19 @@
 
                                 </div>
                                 <div class="col-md-2">
+                                    <label for="color_code">{{ (__('messages.color_code')) }}</label>
                                     <input type="text" name="colors[{{ $i }}][code]" class="form-control"
                                         placeholder="{{ __('messages.color_code') }} " value="{{ old('colors.' . $i . '.code', $color->code) }}">
                                 </div>
                                 <div class="col-md-2">
+                                    <label for="current_quantity">{{ (__('messages.current_quantity')) }}</label>
                                     <input type="number" name="colors[{{ $i }}][current_quantity]"
                                         class="form-control" placeholder="{{ __('messages.current_quantity') }} "
                                         value="{{ old('colors.' . $i . '.current_quantity', $color->current_quantity) }}">
                                 </div>
                                 {{-- dropdown contain two values represnent messsearing units kg and meter --}}
                                 <div class="col-md-2">
+                                    <label for="unit">{{ (__('messages.unit')) }}</label>
                                     <select name="colors[{{ $i }}][unit]" class="form-control">
                                         <option value="kg" @if (old('colors.' . $i . '.unit', $color->unit_of_current_quantity) == 'kg') selected @endif>
                                             {{ __('messages.kg') }}
