@@ -42,7 +42,7 @@
                                     <td>
                                         {{ $color->code ?? '-' }}
                                     </td>
-                                    <td>{{ $color->current_quantity ?? '-' }}</td>
+                                    <td>{{ $color->current_quantity ?? '-' }}{{ $color->unit_of_current_quantity }}</td>
                                     <td>{{ $color->required_quantity ?? '-' }}</td>
                                     <td>{{ $color->received_quantity ?? '-' }}</td>
                                     <td>{{ $color->required_quantity - $color->received_quantity ?? '-' }}</td>
