@@ -51,12 +51,12 @@
                                     </a>
                                     <a href="{{ route('design-materials.request.form', $material->id) }}"
                                         class="btn btn-success btn-sm">
-                                        {{ __('messages.request_qty') }}
+                                        {{ __('messages.required_quantity') }}
                                     </a>
 
                                     <a href="{{ route('design-materials.receive.form', $material->id) }}"
                                         class="btn btn-primary btn-sm">
-                                        {{ __('messages.receive_qty') }}
+                                        {{ __('messages.received_quantity') }}
                                     </a>
 
                                     <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
