@@ -44,7 +44,7 @@
                   <input type="hidden" name="colors[{{ $index }}][id]" value="{{ $color->id }}">
                   <input type="number" step="any" class="form-control"
                          name="colors[{{ $index }}][received_quantity]"
-                         value="{{ old('colors.'.$index.'.received_quantity', $color->received_quantity ?? 0) }}">
+                         value="{{ old('colors.'.$index.'.received_quantity', $color->received_quantity }}">
                 </td>
 
                 <td style="min-width:130px">
