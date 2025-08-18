@@ -443,7 +443,10 @@ return [
     'tomorrow_at' => 'غدًا الساعة',
     'number_of_repeated_models' => 'عدد الموديلات المكررة',
     'current_quantity' => 'الكمية الحالية',
-
+    'increase_current_quantity_automatically' => 'زيادة الكمية الحالية بشكل تلقائي',
+    'complete_receive' => 'اكمال الاستلام',
+    'partial_receive' => 'استلام جزئي',
+    'ask_for_quantity' => 'طلب الكمية',
 
 
 

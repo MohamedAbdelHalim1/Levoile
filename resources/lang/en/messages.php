@@ -447,6 +447,10 @@ return [
     'tomorrow_at' => 'Tomorrow at',
     'number_of_repeated_models' => 'Number Of Repeated Models',
     'current_quantity' => 'Current Quantity',
+    'increase_current_quantity_automatically' => 'Increase Current Quantity Automatically',
+    'complete_receive' => 'Complete Receive',
+    'partial_receive' => 'Partial Receive',
+    'ask_for_quantity' => 'Ask For Quantity',
 
 
 
