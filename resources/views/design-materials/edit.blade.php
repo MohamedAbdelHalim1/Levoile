@@ -68,7 +68,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-2 mb-2">
                                     <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                                 </div>
                             </div>
