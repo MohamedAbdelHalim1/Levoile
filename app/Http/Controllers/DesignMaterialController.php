@@ -199,7 +199,7 @@ class DesignMaterialController extends Controller
     public function requestForm(DesignMaterial $material)
     {
         $material->load('colors');
-        return view('design_materials.request', compact('material'));
+        return view('design-materials.request', compact('material'));
     }
 
     public function requestStore(Request $request, DesignMaterial $material)
@@ -232,7 +232,7 @@ class DesignMaterialController extends Controller
     public function receiveForm(DesignMaterial $material)
     {
         $material->load('colors');
-        return view('design_materials.receive', compact('material'));
+        return view('design-materials.receive', compact('material'));
     }
 
     public function receiveStore(Request $request, DesignMaterial $material)
