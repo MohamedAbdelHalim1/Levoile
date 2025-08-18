@@ -4,7 +4,7 @@
 <div class="p-2">
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
     <div class="bg-white shadow sm:rounded-lg p-4">
-      <h4 class="mb-4">{{ __('messages.request_qty_for') }} : {{ $material->name }}</h4>
+      <h4 class="mb-4">{{ __('messages.required_quantity') }} : {{ $material->name }}</h4>
 
       <form action="{{ route('design-materials.request.store', $material->id) }}" method="POST">
         @csrf
