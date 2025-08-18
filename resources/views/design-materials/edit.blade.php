@@ -33,6 +33,7 @@
                             <div class="row mb-2 color-row">
                                 <input type="hidden" name="colors[{{ $i }}][id]" value="{{ $color->id }}">
                                 <div class="col-md-2">
+                                    <label for="color_name">{{ (__('messages.choose_color')) }} </label>
                                     <select name="colors[{{ $i }}][name]" class="form-control color-name-select">
                                         <option value="">{{ __('messages.choose_color') }} </option>
                                         @foreach ($colorsList as $colorOption)
