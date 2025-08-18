@@ -73,6 +73,11 @@
                                                                         class="badge bg-info text-dark">{{ __('messages.ask_for_quantity') }}</span>
                                                                 @break
 
+                                                                @case('new')
+                                                                    <span
+                                                                        class="badge bg-info text-dark">{{ __('messages.new') }}</span>
+                                                                @break
+
                                                                 @default
                                                                     <span
                                                                         class="badge bg-secondary">{{ __('messages.unknown_status') }}</span>
