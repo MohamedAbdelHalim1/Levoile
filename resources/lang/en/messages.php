@@ -451,7 +451,7 @@ return [
     'complete_receive' => 'Complete Receive',
     'partial_receive' => 'Partial Receive',
     'ask_for_quantity' => 'Ask For Quantity',
-
+    'all' => 'All',
 
 
 

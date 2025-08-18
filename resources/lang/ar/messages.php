@@ -447,7 +447,7 @@ return [
     'complete_receive' => 'اكمال الاستلام',
     'partial_receive' => 'استلام جزئي',
     'ask_for_quantity' => 'طلب الكمية',
-
+    'all' => 'الكل',
 
 
 
