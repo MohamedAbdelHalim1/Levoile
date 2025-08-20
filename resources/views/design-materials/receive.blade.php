@@ -9,16 +9,16 @@
                 <form action="{{ route('design-materials.receive.store', $material->id) }}" method="POST">
                     @csrf
 
-                    <div class="form-check mb-3 d-flex">
-                        <div>
+                    <div class="form-check mb-3">
+                      
                             <input class="form-check-input" type="checkbox" value="1" id="increase_current"
                                 name="increase_current">
-                        </div>
-                        <div>
+                 
+                     
                             <label class="form-check-label" for="increase_current">
                                 {{ __('messages.increase_current_quantity_automatically') }}
                             </label>
-                        </div>
+                     
                     </div>
 
                     <div class="table-responsive">
