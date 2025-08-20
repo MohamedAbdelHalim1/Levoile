@@ -449,6 +449,12 @@ return [
     'ask_for_quantity' => 'طلب الكمية',
     'all' => 'الكل',
     'material_history' => 'مراجعة المواد',
+    'created' => 'تم الانشاء',
+    'updated' => 'تم التعديل',
+    'deleted' => 'تم الحذف',
+    'color_created' => 'تم انشاء اللون',
+    'color_updated' => 'تم تعديل اللون',
+    'color_deleted' => 'تم حذف اللون',
 
 
 ];
