@@ -117,6 +117,11 @@
                                         class="btn btn-primary btn-sm">
                                         {{ __('messages.received_quantity') }}
                                     </a>
+                                    <a href="{{ route('design-materials.activities', $material->id) }}"
+                                        class="btn btn-secondary btn-sm">
+                                        {{ __('messages.material_history') ?? 'مراجعة الخامة' }}
+                                    </a>
+
 
                                     <form action="{{ route('design-materials.destroy', $material->id) }}" method="POST"
                                         class="d-inline"

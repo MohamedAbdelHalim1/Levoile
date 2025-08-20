@@ -448,7 +448,7 @@ return [
     'partial_receive' => 'استلام جزئي',
     'ask_for_quantity' => 'طلب الكمية',
     'all' => 'الكل',
-
+    'material_history' => 'مراجعة المواد',
 
 
 ];

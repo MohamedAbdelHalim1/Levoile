@@ -452,6 +452,7 @@ return [
     'partial_receive' => 'Partial Receive',
     'ask_for_quantity' => 'Ask For Quantity',
     'all' => 'All',
+    'material_history' => 'Material History',
 
 
 

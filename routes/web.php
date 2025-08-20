@@ -242,7 +242,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('design-materials', DesignMaterialController::class);
     // حذف لون مفرد من الخامة أثناء التعديل (AJAX)
     Route::delete('design-materials/colors/{id}', [DesignMaterialController::class, 'deleteColor'])->name('design-materials.colors.destroy');
-        // طلب كمية
+    // طلب كمية
     Route::get('design-materials/{material}/request', [DesignMaterialController::class, 'requestForm'])
         ->name('design-materials.request.form');
     Route::post('design-materials/{material}/request', [DesignMaterialController::class, 'requestStore'])
@@ -252,6 +252,9 @@ Route::middleware('auth')->group(function () {
         ->name('design-materials.receive.form');
     Route::post('design-materials/{material}/receive', [DesignMaterialController::class, 'receiveStore'])
         ->name('design-materials.receive.store');
+
+    Route::get('design-materials/{material}/activities', [DesignMaterialController::class, 'activities'])
+        ->name('design-materials.activities');
     Route::resource('design-sample-products', DesignSampleController::class);
     Route::post('design-sample-products/{id}/attach-materials', [DesignSampleController::class, 'attachMaterials'])->name('design-sample-products.attach-materials');
     Route::post('design-sample-products/{id}/assign-patternest', [DesignSampleController::class, 'assignPatternest'])->name('design-sample-products.assign-patternest');
