@@ -31,6 +31,16 @@ class DesignMaterialController extends Controller
         return view('design-materials.create', compact('colors'));
     }
 
+
+    public function activities(DesignMaterial $material)
+    {
+        $activities = MaterialActivity::with(['user', 'color'])
+            ->where('design_material_id', $material->id)
+            ->orderByDesc('id')
+            ->paginate(30);
+
+        return view('design-materials.activities', compact('material', 'activities'));
+    }
     // حفظ خامة جديدة وكل ألوانها
     public function store(Request $request)
     {
@@ -80,7 +90,7 @@ class DesignMaterialController extends Controller
                         "تمت إضافة لون جديد",
                         $newColor->id,
                         null,
-                        $newColor->only(['id','name','code','current_quantity','unit_of_current_quantity','status'])
+                        $newColor->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status'])
                     );
                 }
             }
@@ -92,7 +102,7 @@ class DesignMaterialController extends Controller
                 "تم إنشاء خامة جديدة وبها {$colorCount} لون",
                 null,
                 null,
-                $material->only(['id','name','image'])
+                $material->only(['id', 'name', 'image'])
             );
 
             DB::commit();
@@ -119,7 +129,7 @@ class DesignMaterialController extends Controller
     public function update(Request $request, $id)
     {
         $material = DesignMaterial::with('colors')->findOrFail($id);
-        $materialBefore = $material->only(['id','name','image']);
+        $materialBefore = $material->only(['id', 'name', 'image']);
 
         // تحديث بيانات الخامة الأساسية
         $material->name = $request->input('name');
@@ -152,7 +162,7 @@ class DesignMaterialController extends Controller
             if (!empty($colorData['id'])) {
                 $color = $material->colors()->find($colorData['id']);
                 if ($color) {
-                    $colorBefore = $color->only(['id','name','code','current_quantity','unit_of_current_quantity','status']);
+                    $colorBefore = $color->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status']);
 
                     $color->update([
                         'name'                     => $colorData['name'] ?? null,
@@ -163,7 +173,7 @@ class DesignMaterialController extends Controller
 
                     $colorIdsInRequest[] = $color->id;
 
-                    $colorAfter = $color->only(['id','name','code','current_quantity','unit_of_current_quantity','status']);
+                    $colorAfter = $color->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status']);
 
                     // لو حصل تغيير فعلي، سجّل
                     if ($colorAfter != $colorBefore) {
@@ -194,7 +204,7 @@ class DesignMaterialController extends Controller
                     "تمت إضافة لون جديد",
                     $newColor->id,
                     null,
-                    $newColor->only(['id','name','code','current_quantity','unit_of_current_quantity','status'])
+                    $newColor->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status'])
                 );
             }
         }
@@ -204,7 +214,7 @@ class DesignMaterialController extends Controller
         if (!empty($deletedIds)) {
             $deletedColors = $material->colors()->whereIn('id', $deletedIds)->get();
             foreach ($deletedColors as $del) {
-                $before = $del->only(['id','name','code','current_quantity','unit_of_current_quantity','status']);
+                $before = $del->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status']);
                 $del->delete();
 
                 $this->logActivity(
@@ -218,7 +228,7 @@ class DesignMaterialController extends Controller
             }
         }
 
-        $materialAfter = $material->only(['id','name','image']);
+        $materialAfter = $material->only(['id', 'name', 'image']);
         if ($materialAfter != $materialBefore) {
             $this->logActivity(
                 $material->id,
@@ -243,8 +253,8 @@ class DesignMaterialController extends Controller
         $material = DesignMaterial::with('colors')->findOrFail($id);
 
         $snapshot = [
-            'material' => $material->only(['id','name','image']),
-            'colors'   => $material->colors->map->only(['id','name','code','current_quantity','unit_of_current_quantity','status'])->values()->all(),
+            'material' => $material->only(['id', 'name', 'image']),
+            'colors'   => $material->colors->map->only(['id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status'])->values()->all(),
         ];
 
         $material->delete();
@@ -269,7 +279,7 @@ class DesignMaterialController extends Controller
     public function deleteColor($id)
     {
         $color = DesignMaterialColor::findOrFail($id);
-        $before = $color->only(['id','design_material_id','name','code','current_quantity','unit_of_current_quantity','status']);
+        $before = $color->only(['id', 'design_material_id', 'name', 'code', 'current_quantity', 'unit_of_current_quantity', 'status']);
         $materialId = (int) $color->design_material_id;
 
         $color->delete();
@@ -317,8 +327,12 @@ class DesignMaterialController extends Controller
                 ->findOrFail($row['id']);
 
             $before = $color->only([
-                'id','name','code',
-                'required_quantity','unit_of_required_quantity','delivery_date',
+                'id',
+                'name',
+                'code',
+                'required_quantity',
+                'unit_of_required_quantity',
+                'delivery_date',
                 'status'
             ]);
 
@@ -329,8 +343,12 @@ class DesignMaterialController extends Controller
             $color->save();
 
             $after = $color->only([
-                'id','name','code',
-                'required_quantity','unit_of_required_quantity','delivery_date',
+                'id',
+                'name',
+                'code',
+                'required_quantity',
+                'unit_of_required_quantity',
+                'delivery_date',
                 'status'
             ]);
 
@@ -372,10 +390,15 @@ class DesignMaterialController extends Controller
                 ->findOrFail($row['id']);
 
             $before = $color->only([
-                'id','name','code',
-                'received_quantity','unit_of_received_quantity',
-                'current_quantity','unit_of_current_quantity',
-                'required_quantity','unit_of_required_quantity',
+                'id',
+                'name',
+                'code',
+                'received_quantity',
+                'unit_of_received_quantity',
+                'current_quantity',
+                'unit_of_current_quantity',
+                'required_quantity',
+                'unit_of_required_quantity',
                 'status'
             ]);
 
@@ -421,10 +444,15 @@ class DesignMaterialController extends Controller
             $color->save();
 
             $after = $color->only([
-                'id','name','code',
-                'received_quantity','unit_of_received_quantity',
-                'current_quantity','unit_of_current_quantity',
-                'required_quantity','unit_of_required_quantity',
+                'id',
+                'name',
+                'code',
+                'received_quantity',
+                'unit_of_received_quantity',
+                'current_quantity',
+                'unit_of_current_quantity',
+                'required_quantity',
+                'unit_of_required_quantity',
                 'status'
             ]);
 
