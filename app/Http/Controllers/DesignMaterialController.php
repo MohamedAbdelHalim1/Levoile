@@ -36,7 +36,7 @@ class DesignMaterialController extends Controller
     {
         $activities = MaterialActivity::with(['user', 'color'])
             ->where('design_material_id', $material->id)
-            ->orderByAsc('id')
+            ->orderby('id','asc')
             ->paginate(30);
 
         return view('design-materials.activities', compact('material', 'activities'));
