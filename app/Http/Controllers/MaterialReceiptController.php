@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DesignMaterialColor;
 use App\Models\MaterialRequest;
 use App\Models\MaterialReceipt;
 use App\Models\MaterialReceiptItem;
@@ -15,7 +14,6 @@ class MaterialReceiptController extends Controller
     public function create(MaterialRequest $request)
     {
         $request->load(['material','items.color','items.receiptItems']);
-        // هنحسب لكل بند: المستلم حتى الآن (= SUM(receiptItems.quantity))
         return view('receipts.create', ['req' => $request]);
     }
 
@@ -32,12 +30,12 @@ class MaterialReceiptController extends Controller
 
         DB::beginTransaction();
         try {
-            // هيدر الاستلام الواحد
             $receipt = MaterialReceipt::create([
                 'request_id' => $request->id,
                 'user_id' => optional(auth()->user())->id,
                 'increase_current' => !empty($data['increase_current']),
                 'notes' => $data['notes'] ?? null,
+                // received_at له default في الـDB
             ]);
 
             $createdCount = 0;
@@ -45,13 +43,11 @@ class MaterialReceiptController extends Controller
             foreach ($data['items'] as $row) {
                 $qty  = isset($row['received_quantity']) ? (float)$row['received_quantity'] : null;
                 $unit = $row['unit'] ?? null;
-
                 if ($qty === null || $qty <= 0 || !$unit) continue;
 
-                $item = $request->items()->with('color')->findOrFail($row['id']);
+                $item  = $request->items()->with('color')->findOrFail($row['id']);
                 $color = $item->color;
 
-                // سطر الاستلام
                 $recItem = MaterialReceiptItem::create([
                     'receipt_id' => $receipt->id,
                     'request_item_id' => $item->id,
@@ -61,7 +57,6 @@ class MaterialReceiptController extends Controller
                 ]);
                 $createdCount++;
 
-                // زيادة المخزون لو مطلوبة والوحدة متوافقة
                 if ($receipt->increase_current) {
                     if (!$color->unit_of_current_quantity && $unit) {
                         $color->unit_of_current_quantity = $unit;
@@ -72,16 +67,15 @@ class MaterialReceiptController extends Controller
                     }
                 }
 
-                // تحديث حالة بند الطلب (pending/partial/complete)
-                $sumReceived = $item->receiptItems()->sum('quantity'); // بعد الإدراج الأخير
+                $sumReceived = $item->receiptItems()->sum('quantity'); // بعد الإدراج
                 if ($item->required_quantity !== null && $item->required_quantity > 0) {
                     if ($sumReceived >= $item->required_quantity) {
                         $item->status = 'complete';
                     } elseif ($sumReceived > 0) {
                         $item->status = 'partial';
                     }
+                    $item->save();
                 }
-                $item->save();
 
                 $this->logActivity(
                     $request->material->id,
@@ -99,7 +93,6 @@ class MaterialReceiptController extends Controller
                 return back()->with('error', __('messages.N/A'));
             }
 
-            // تحديث حالة الطلب ككل
             $counts = $request->items()->selectRaw("
                 SUM(CASE WHEN status='complete' THEN 1 ELSE 0 END) as completed,
                 COUNT(*) as total,

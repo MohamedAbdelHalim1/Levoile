@@ -453,13 +453,13 @@ return [
     'ask_for_quantity' => 'Ask For Quantity',
     'all' => 'All',
     'material_history' => 'Material History',
-    'created'=>'Created',
-    'updated'=>'Updated',
-    'deleted'=>'Deleted',
-    'color_created'=>'Color Created',
-    'color_updated'=>'Color Updated',
-    'color_deleted'=>'Color Deleted',
-
+    'created' => 'Created',
+    'updated' => 'Updated',
+    'deleted' => 'Deleted',
+    'color_created' => 'Color Created',
+    'color_updated' => 'Color Updated',
+    'color_deleted' => 'Color Deleted',
+    'my_requests' => 'My Requests',
 
 
 
