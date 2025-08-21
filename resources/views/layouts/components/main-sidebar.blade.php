@@ -107,7 +107,9 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.master_sheet_products') }}</a></li>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.master_sheet_products') }}</a>
+                                                </li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.index') }}"
                                                         class="slide-item">{{ __('messages.product_presentation') }}</a>
@@ -118,7 +120,8 @@
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('product-knowledge.upload') }}"
-                                                        class="slide-item">{{ __('messages.upload_master_sheet') }} </a>
+                                                        class="slide-item">{{ __('messages.upload_master_sheet') }}
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -137,18 +140,25 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-feather"></i><span
-                                class="side-menu__label">{{ __('messages.design') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.design') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.design') }}</a>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.design') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('design-materials.index') }}"
                                                         class="slide-item">{{ __('messages.material_samples') }}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('requests.index') }}" class="slide-item">
+                                                        {{ __('messages.my_requests') }}
+                                                    </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('design-sample-products.index') }}"
@@ -179,16 +189,18 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-bubble-chart-line"></i><span
-                                class="side-menu__label">{{ __('messages.products') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.products') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.products') }}</a>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.products') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('products.index') }}" class="slide-item"> 
+                                                <li><a href="{{ route('products.index') }}" class="slide-item">
                                                         {{ __('messages.all_products') }}</a></li>
                                             </ul>
                                         </div>
@@ -227,7 +239,8 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-database-2-line"></i><span
-                                class="side-menu__label">{{ __('messages.settings') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.settings') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
@@ -267,14 +280,16 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon ri-bar-chart-line"></i><span
-                                class="side-menu__label">{{ __('messages.reports') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.reports') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.reports') }}</a>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.reports') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('reports.receive') }}" class="slide-item">
                                                         {{ __('messages.receiving_reports') }}</a></li>
@@ -342,26 +357,30 @@
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon fe fe-camera"></i><span
-                                class="side-menu__label">{{ __('messages.shooting') }}</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__label">{{ __('messages.shooting') }}</span><i
+                                class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">{{ __('messages.shooting') }}</a>
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.shooting') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('shooting-products.index') }}"
-                                                        class="slide-item">{{ __('messages.shooting_products') }}</a></li>
+                                                        class="slide-item">{{ __('messages.shooting_products') }}</a>
+                                                </li>
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
-                                                        class="slide-item">{{ __('messages.shooting_sessions') }}</a></li>
+                                                        class="slide-item">{{ __('messages.shooting_sessions') }}</a>
+                                                </li>
                                                 <li>
-                                                    <a href="{{ route('ready-to-shoot.index') }}"
-                                                        class="slide-item"> {{ __('messages.ready_to_shoot') }}</a>
+                                                    <a href="{{ route('ready-to-shoot.index') }}" class="slide-item">
+                                                        {{ __('messages.ready_to_shoot') }}</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ route('edit-sessions.index') }}" class="slide-item">
-                                                        {{ __('messages.edit_sessions') }} 
+                                                        {{ __('messages.edit_sessions') }}
                                                     </a>
                                                 </li>
                                                 <li>
@@ -396,8 +415,7 @@
                                                 <li class="side-menu-label1"><a href="javascript:void(0)">
                                                         {{ __('messages.website_admin') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('website-admin.index') }}"
-                                                        class="slide-item">
+                                                <li><a href="{{ route('website-admin.index') }}" class="slide-item">
                                                         {{ __('messages.website_admin') }}</a></li>
 
                                             </ul>
@@ -425,7 +443,7 @@
                                             <ul class="sidemenu-list">
                                                 <li class="side-menu-label1"><a href="javascript:void(0)">
                                                         {{ __('messages.social_media_specialist') }}
-                                                        </a></li>
+                                                    </a></li>
                                                 <li><a href="{{ route('social-media.index') }}"
                                                         class="slide-item">{{ __('messages.social_media') }}</a></li>
                                             </ul>
