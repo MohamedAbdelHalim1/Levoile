@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class MaterialRequest extends Model
 {
-    protected $fillable = ['design_material_id','user_id','requested_at','notes','status'];
+    protected $fillable = ['design_material_id', 'user_id', 'requested_at', 'notes', 'status'];
+
+    // App\Models\MaterialRequest
+    protected $casts = [
+        'requested_at' => 'datetime',
+    ];
 
     public function material()
     {
