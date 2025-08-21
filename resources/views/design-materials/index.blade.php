@@ -94,10 +94,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('design-materials.show', $material->id) }}"
+                                    {{-- <a href="{{ route('design-materials.show', $material->id) }}"
                                         class="btn btn-info btn-sm">
                                         {{ __('messages.view') }}
-                                    </a>
+                                    </a> --}}
                                     <a href="{{ route('design-materials.edit', $material->id) }}"
                                         class="btn btn-warning btn-sm">
                                         {{ __('messages.edit') }}
