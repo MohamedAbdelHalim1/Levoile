@@ -41,7 +41,7 @@
 
                 <div class="table-responsive">
                     <table class="table table-bordered text-nowrap">
-                        <thead class="table-light">
+                        <thead class="table-dark">
                             <tr>
                                 <th>#</th>
                                 <th>الخامة</th>
