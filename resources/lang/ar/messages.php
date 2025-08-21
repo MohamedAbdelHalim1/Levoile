@@ -73,7 +73,7 @@ return [
     'description' => 'الوصف',
     'price' => 'السعر',
     'quantity' => 'الكمية',
-    'required_quantity' => 'الكمية المطلوبة',
+    'required_quantity' => 'اطلب كمية',
     'received_quantity' => 'الكمية المستلمة',
     'remaining_quantity' => 'الكمية المتبقية',
     'total' => 'المجموع',

@@ -39,10 +39,7 @@
                                                 <tr>
                                                     <th>{{ __('messages.name') }}</th>
                                                     <th>{{ __('messages.color_code') }}</th>
-                                                    <th>{{ __('messages.required_quantity') }}</th>
-                                                    <th>{{ __('messages.received_quantity') }}</th>
                                                     <th>{{ __('messages.current_quantity') }}</th>
-                                                    <th>{{ __('messages.status') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -50,13 +47,10 @@
                                                     <tr>
                                                         <td>{{ $color->name }}</td>
                                                         <td>{{ $color->code ?? '-' }}</td>
-                                                        <td>{{ $color->required_quantity ?? '-' }}
-                                                            {{ $color->unit_of_required_quantity }}</td>
-                                                        <td>{{ $color->received_quantity ?? '-' }}
-                                                            {{ $color->unit_of_received_quantity }}</td>
+                                                        
                                                         <td>{{ $color->current_quantity ?? '-' }}
                                                             {{ $color->unit_of_current_quantity }}</td>
-                                                        <td>
+                                                        {{-- <td>
                                                             @switch($color->status)
                                                                 @case('complete_receive')
                                                                     <span
@@ -82,7 +76,7 @@
                                                                     <span
                                                                         class="badge bg-secondary">{{ __('messages.unknown_status') }}</span>
                                                             @endswitch
-                                                        </td>
+                                                        </td> --}}
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -108,15 +102,15 @@
                                         class="btn btn-warning btn-sm">
                                         {{ __('messages.edit') }}
                                     </a>
-                                    <a href="{{ route('design-materials.request.form', $material->id) }}"
+                                    <a href="{{ route('design-materials.requests.create', $material->id) }}"
                                         class="btn btn-success btn-sm">
                                         {{ __('messages.required_quantity') }}
                                     </a>
 
-                                    <a href="{{ route('design-materials.receive.form', $material->id) }}"
+                                    {{-- <a href="{{ route('design-materials.receive.form', $material->id) }}"
                                         class="btn btn-primary btn-sm">
                                         {{ __('messages.received_quantity') }}
-                                    </a>
+                                    </a> --}}
                                     <a href="{{ route('design-materials.activities', $material->id) }}"
                                         class="btn btn-secondary btn-sm">
                                         {{ __('messages.material_history') ?? 'مراجعة الخامة' }}

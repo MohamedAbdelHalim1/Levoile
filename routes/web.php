@@ -141,7 +141,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
-
+use App\Http\Controllers\MaterialRequestController;
+use App\Http\Controllers\MaterialReceiptController;
 
 
 
@@ -255,6 +256,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get('design-materials/{material}/activities', [DesignMaterialController::class, 'activities'])
         ->name('design-materials.activities');
+
+    // صفحة طلباتي (كل الطلبات)
+    Route::get('/requests', [MaterialRequestController::class, 'index'])->name('requests.index');
+
+    // إنشاء طلب جديد لخامة معيّنة
+    Route::get('/design-materials/{material}/requests/create', [MaterialRequestController::class, 'create'])->name('design-materials.requests.create');
+    Route::post('/design-materials/{material}/requests', [MaterialRequestController::class, 'store'])->name('design-materials.requests.store');
+
+    // استلام على طلب محدّد
+    Route::get('/requests/{request}/receive', [MaterialReceiptController::class, 'create'])->name('requests.receive.form');
+    Route::post('/requests/{request}/receive', [MaterialReceiptController::class, 'store'])->name('requests.receive.store');
+
     Route::resource('design-sample-products', DesignSampleController::class);
     Route::post('design-sample-products/{id}/attach-materials', [DesignSampleController::class, 'attachMaterials'])->name('design-sample-products.attach-materials');
     Route::post('design-sample-products/{id}/assign-patternest', [DesignSampleController::class, 'assignPatternest'])->name('design-sample-products.assign-patternest');

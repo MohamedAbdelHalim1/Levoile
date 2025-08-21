@@ -9,8 +9,8 @@ class DesignMaterialColor extends Model
     protected $fillable = [
         'design_material_id',
         'name',
-        'code',     
-        'required_quantity',   
+        'code',
+        'required_quantity',
         'received_quantity',
         'delivery_date',
         'current_quantity',
@@ -23,5 +23,15 @@ class DesignMaterialColor extends Model
     public function material()
     {
         return $this->belongsTo(DesignMaterial::class, 'design_material_id');
+    }
+
+    public function requestItems()
+    {
+        return $this->hasMany(MaterialRequestItem::class, 'design_material_color_id');
+    }
+
+    public function receiptItems()
+    {
+        return $this->hasMany(MaterialReceiptItem::class, 'design_material_color_id');
     }
 }

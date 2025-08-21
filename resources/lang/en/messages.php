@@ -73,7 +73,7 @@ return [
     'description' => 'Description',
     'price' => 'Price',
     'quantity' => 'Quantity',
-    'required_quantity' => 'Required Quantity',
+    'required_quantity' => 'Require Quantity',
     'received_quantity' => 'Received Quantity',
     'remaining_quantity' => 'Remaining Quantity',
     'total' => 'Total',
