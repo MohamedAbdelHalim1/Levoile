@@ -22,9 +22,9 @@
                 <form action="{{ route('design-materials.requests.store', $material->id) }}" method="POST">
                     @csrf
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <textarea class="form-control" name="notes" rows="2" placeholder="{{ __('messages.notes') }}">{{ old('notes') }}</textarea>
-                    </div>
+                    </div> --}}
 
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle text-center">

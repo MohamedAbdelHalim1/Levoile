@@ -25,14 +25,14 @@
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" value="1" id="increase_current"
                             name="increase_current">
-                        <label class="form-check-label" for="increase_current">
+                        <label class="form-check-label" for="increase_current" @if(app()->getLocale() == 'ar') style="margin-right: -1.5em;" @endif">
                             {{ __('messages.increase_current_quantity_automatically') }}
                         </label>
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <textarea class="form-control" name="notes" rows="2" placeholder="{{ __('messages.notes') }}">{{ old('notes') }}</textarea>
-                    </div>
+                    </div> --}}
 
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle text-center">
