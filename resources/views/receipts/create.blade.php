@@ -25,7 +25,7 @@
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" value="1" id="increase_current"
                             name="increase_current">
-                        <label class="form-check-label" for="increase_current" @if(app()->getLocale() == 'ar') style="margin-left: -1.5em;" @endif">
+                        <label class="form-check-label" for="increase_current" @if(app()->getLocale() == 'ar') style="margin-left: -2.5em;" @endif">
                             {{ __('messages.increase_current_quantity_automatically') }}
                         </label>
                     </div>
