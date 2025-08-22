@@ -25,7 +25,7 @@
                     <div class="form-check {{ app()->getLocale() == 'ar' ? 'form-check-reverse' : '' }} mb-3">
                         <input class="form-check-input" type="checkbox" value="1" id="increase_current"
                             name="increase_current">
-                        <label class="form-check-label mb-0" for="increase_current">
+                        <label class="form-check-label mb-0 {{ app()->getLocale()=='ar' ? 'me-2' : 'ms-2' }}" for="increase_current">
                             {{ __('messages.increase_current_quantity_automatically') }}
                         </label>
                     </div>
