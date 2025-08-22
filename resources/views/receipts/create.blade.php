@@ -22,13 +22,15 @@
                 <form action="{{ route('requests.receive.store', $req->id) }}" method="POST">
                     @csrf
 
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" value="1" id="increase_current"
+                    <div
+                        class="d-flex align-items-center gap-2 mb-3 {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                        <input class="form-check-input m-0" type="checkbox" value="1" id="increase_current"
                             name="increase_current">
-                        <label class="form-check-label" for="increase_current" @if(app()->getLocale() == 'ar') style="margin-left: -2.5em;" @endif">
+                        <label class="form-check-label m-0" for="increase_current">
                             {{ __('messages.increase_current_quantity_automatically') }}
                         </label>
                     </div>
+
 
                     {{-- <div class="mb-3">
                         <textarea class="form-control" name="notes" rows="2" placeholder="{{ __('messages.notes') }}">{{ old('notes') }}</textarea>
