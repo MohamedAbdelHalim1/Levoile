@@ -65,18 +65,49 @@
                                                 value="{{ $item->id }}">
                                             <input type="number" step="any" class="form-control"
                                                 name="items[{{ $index }}][received_quantity]"
-                                                value="{{ old('items.' . $index . '.received_quantity') }}" placeholder="0.00">
+                                                value="{{ old('items.' . $index . '.received_quantity') }}"
+                                                placeholder="0.00">
                                         </td>
 
                                         <td style="min-width:130px">
-                                            <select class="form-control" name="items[{{ $index }}][unit]">
-                                                <option value="" @selected(old('items.' . $index . '.unit') == '')>-</option>
-                                                <option value="kg" @selected(old('items.' . $index . '.unit') == 'kg')>{{ __('messages.kg') }}
-                                                </option>
-                                                <option value="meter" @selected(old('items.' . $index . '.unit') == 'meter')>
-                                                    {{ __('messages.meter') }}</option>
-                                            </select>
+                                            @php
+                                                // الوحدة القادمة من بند الطلب
+                                                $fixedUnit =
+                                                    $item->unit ?: $item->color->unit_of_current_quantity ?? null;
+                                                $unitLabel =
+                                                    $fixedUnit === 'kg'
+                                                        ? __('messages.kg')
+                                                        : ($fixedUnit === 'meter'
+                                                            ? __('messages.meter')
+                                                            : '-');
+                                            @endphp
+
+                                            @if ($fixedUnit)
+                                                {{-- نرسل القيمة في POST --}}
+                                                <input type="hidden" name="items[{{ $index }}][unit]"
+                                                    value="{{ $fixedUnit }}">
+                                                {{-- نعرضها بشكل غير قابل للتغيير --}}
+                                                <select class="form-control" disabled>
+                                                    <option value="kg" @selected($fixedUnit === 'kg')>
+                                                        {{ __('messages.kg') }}</option>
+                                                    <option value="meter" @selected($fixedUnit === 'meter')>
+                                                        {{ __('messages.meter') }}</option>
+                                                </select>
+                                                {{-- بديل لو عايز شكل أبسط:
+                                                    <input type="text" class="form-control" value="{{ $unitLabel }}" disabled>
+                                                    --}}
+                                            @else
+                                                {{-- في الحالات القديمة اللي مافيهاش وحدة محفوظة، سيب المستخدم يختار --}}
+                                                <select class="form-control" name="items[{{ $index }}][unit]">
+                                                    <option value="" @selected(old('items.' . $index . '.unit') == '')>-</option>
+                                                    <option value="kg" @selected(old('items.' . $index . '.unit') == 'kg')>
+                                                        {{ __('messages.kg') }}</option>
+                                                    <option value="meter" @selected(old('items.' . $index . '.unit') == 'meter')>
+                                                        {{ __('messages.meter') }}</option>
+                                                </select>
+                                            @endif
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>

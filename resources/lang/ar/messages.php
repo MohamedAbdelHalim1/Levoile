@@ -455,7 +455,7 @@ return [
     'color_created' => 'تم انشاء اللون',
     'color_updated' => 'تم تعديل اللون',
     'color_deleted' => 'تم حذف اللون',
-    'my_requests' => 'طلباتي',
+    'my_requests' => 'طلبات الخامات',
 
 
 ];
