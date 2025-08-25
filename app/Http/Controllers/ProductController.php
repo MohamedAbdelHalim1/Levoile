@@ -97,7 +97,7 @@ class ProductController extends Controller
         }
 
         // Fetch the filtered products
-        $products = $query->orderBy('created_at', 'desc')->get();
+        $products = $query->orderBy('id', 'desc')->get();
 
         return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors', 'materials'));
     }
