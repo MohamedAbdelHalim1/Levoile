@@ -51,7 +51,7 @@
                                         <td style="min-width:140px">
                                             <input type="hidden" name="colors[{{ $index }}][id]"
                                                 value="{{ $color->id }}">
-                                            <input type="number" step="any" class="form-control"
+                                            <input type="number" step="any" class="form-control js-qty"
                                                 name="colors[{{ $index }}][required_quantity]"
                                                 value="{{ old('colors.' . $index . '.required_quantity') }}"
                                                 placeholder="0.00">
@@ -66,11 +66,15 @@
                                                 <option value="meter" @selected(old("colors.$index.unit", $defaultUnit) == 'meter')>
                                                     {{ __('messages.meter') }}</option>
                                             </select>
+                                            {{-- مهم: لأن الـselect disabled مش هيتبعت --}}
+                                            <input type="hidden" name="colors[{{ $index }}][unit]"
+                                                value="{{ $defaultUnit }}">
+
 
                                         </td>
 
                                         <td style="min-width:160px">
-                                            <input type="date" class="form-control" required
+                                            <input type="date" class="form-control js-date"
                                                 name="colors[{{ $index }}][delivery_date]"
                                                 value="{{ old('colors.' . $index . '.delivery_date') }}">
                                         </td>
@@ -89,4 +93,45 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1) toggle required للتاريخ حسب الكمية
+            document.querySelectorAll('tr').forEach(function(row) {
+                const qty = row.querySelector('.js-qty');
+                const date = row.querySelector('.js-date');
+                if (!qty || !date) return;
+
+                function sync() {
+                    const v = parseFloat(qty.value || '0');
+                    date.required = v > 0;
+                    if (v <= 0) date.value = '';
+                }
+                qty.addEventListener('input', sync);
+                sync();
+            });
+
+            // 2) تأكيد وجود بند واحد على الأقل قبل الإرسال
+            const form = document.querySelector('form[action*="requests/store"]');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const rows = [...form.querySelectorAll('tr')];
+                    const anyValid = rows.some(row => {
+                        const qty = row.querySelector('.js-qty');
+                        const date = row.querySelector('.js-date');
+                        if (!qty || !date || qty.disabled) return false;
+                        const v = parseFloat(qty.value || '0');
+                        // لو فيه كمية مفروض يبقى فيه تاريخ (الـrequired هيضمن ده، بس بنأكد)
+                        return v > 0 && (date.value || !date.required);
+                    });
+
+                    if (!anyValid) {
+                        e.preventDefault();
+                        alert('من فضلك أدخل كمية لبند واحد على الأقل.');
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
