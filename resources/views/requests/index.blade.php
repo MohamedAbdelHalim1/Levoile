@@ -72,11 +72,16 @@
 
                                     <!-- تاريخ بأسلوب diffForHumans + tooltip للتاريخ الكامل -->
                                     <td>
-                                        <span
-                                            title="{{ optional($req->requested_at ?? $req->created_at)->format('Y-m-d H:i') }}">
-                                            {{ optional($req->requested_at ?? $req->created_at)->diffForHumans() }}
+                                        @php
+                                            $dt = $req->requested_at ?: $req->created_at; // اختار المتاح
+                                            $local = optional($dt)->copy()->tz(config('app.timezone')); // حوّله لتايم زون التطبيق
+                                        @endphp
+
+                                        <span title="{{ optional($local)->format('Y-m-d H:i') }}">
+                                            {{ optional($local)->diffForHumans() }}
                                         </span>
                                     </td>
+
 
                                     <td>
                                         @if ($req->status === 'complete')
