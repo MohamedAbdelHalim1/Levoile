@@ -79,9 +79,19 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('requests.receive.form', $req->id) }}"
-                                            class="btn btn-sm btn-primary">استلام</a>
+                                        @if ($req->status === 'complete')
+                                            <a href="{{ route('requests.show', $req->id) }}"
+                                                class="btn btn-sm btn-outline-secondary">
+                                                عرض
+                                            </a>
+                                        @else
+                                            <a href="{{ route('requests.receive.form', $req->id) }}"
+                                                class="btn btn-sm btn-primary">
+                                                استلام
+                                            </a>
+                                        @endif
                                     </td>
+
                                 </tr>
 
                                 @if ($req->items->count())

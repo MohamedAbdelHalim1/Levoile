@@ -263,7 +263,8 @@ Route::middleware('auth')->group(function () {
     // إنشاء طلب جديد لخامة معيّنة
     Route::get('/design-materials/{material}/requests/create', [MaterialRequestController::class, 'create'])->name('design-materials.requests.create');
     Route::post('/design-materials/{material}/requests', [MaterialRequestController::class, 'store'])->name('design-materials.requests.store');
-
+    Route::get('/requests/{request}', [MaterialRequestController::class, 'show'])
+        ->name('requests.show');
     // استلام على طلب محدّد
     Route::get('/requests/{request}/receive', [MaterialReceiptController::class, 'create'])->name('requests.receive.form');
     Route::post('/requests/{request}/receive', [MaterialReceiptController::class, 'store'])->name('requests.receive.store');

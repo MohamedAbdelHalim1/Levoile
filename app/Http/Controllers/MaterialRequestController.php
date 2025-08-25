@@ -14,7 +14,7 @@ class MaterialRequestController extends Controller
 {
     public function index()
     {
-        $requests = MaterialRequest::with(['material','items.color','items.receiptItems'])
+        $requests = MaterialRequest::with(['material', 'items.color', 'items.receiptItems'])
             ->orderByDesc('id')
             ->paginate(30);
 
@@ -30,12 +30,12 @@ class MaterialRequestController extends Controller
     public function store(Request $request, DesignMaterial $material)
     {
         $data = $request->validate([
-            'colors' => ['required','array'],
-            'colors.*.id' => ['required','integer','exists:design_material_colors,id'],
-            'colors.*.required_quantity' => ['nullable','numeric','min:0.0001'],
-            'colors.*.unit' => ['nullable','in:kg,meter'],
-            'colors.*.delivery_date' => ['nullable','date'],
-            'notes' => ['nullable','string','max:500'],
+            'colors' => ['required', 'array'],
+            'colors.*.id' => ['required', 'integer', 'exists:design_material_colors,id'],
+            'colors.*.required_quantity' => ['nullable', 'numeric', 'min:0.0001'],
+            'colors.*.unit' => ['nullable', 'in:kg,meter'],
+            'colors.*.delivery_date' => ['nullable', 'date'],
+            'notes' => ['nullable', 'string', 'max:500'],
         ]);
 
         // نظّف الصفوف: لازم كمية > 0 ووحدة (أو fallback)
@@ -88,24 +88,24 @@ class MaterialRequestController extends Controller
                     'تم إنشاء بند طلب كمية',
                     $item->design_material_color_id,
                     null,
-                    $item->only(['id','required_quantity','unit','delivery_date','status'])
+                    $item->only(['id', 'required_quantity', 'unit', 'delivery_date', 'status'])
                 );
             }
 
             $this->logActivity(
                 $material->id,
                 'request_created',
-                "تم إنشاء طلب جديد به ".count($cleanRows)." بند",
+                "تم إنشاء طلب جديد به " . count($cleanRows) . " بند",
                 null,
                 null,
-                $req->only(['id','notes','status'])
+                $req->only(['id', 'notes', 'status'])
             );
 
             DB::commit();
             return redirect()->route('requests.index')->with('success', __('messages.saved_successfully'));
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()->with('error', 'خطأ أثناء إنشاء الطلب: '.$e->getMessage());
+            return back()->with('error', 'خطأ أثناء إنشاء الطلب: ' . $e->getMessage());
         }
     }
 
@@ -119,6 +119,34 @@ class MaterialRequestController extends Controller
             'notes'                    => $notes,
             'before'                   => $before,
             'after'                    => $after,
+        ]);
+    }
+
+    public function show(\App\Models\MaterialRequest $request)
+    {
+        $request->load([
+            'material',
+            'items.color',
+            'items.receiptItems',
+            'receipts.items.color',
+        ]);
+
+        $totRequired  = $request->items->sum('required_quantity');
+        $totReceived  = $request->items->reduce(function ($carry, $it) {
+            return $carry + $it->receiptItems->sum('quantity');
+        }, 0);
+        $totRemaining = max($totRequired - $totReceived, 0);
+
+        $completedCount = $request->items->where('status', 'complete')->count();
+        $totalItems     = $request->items->count();
+
+        return view('requests.show', [
+            'req'            => $request,
+            'totRequired'    => $totRequired,
+            'totReceived'    => $totReceived,
+            'totRemaining'   => $totRemaining,
+            'completedCount' => $completedCount,
+            'totalItems'     => $totalItems,
         ]);
     }
 }
