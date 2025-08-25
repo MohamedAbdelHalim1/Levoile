@@ -140,54 +140,53 @@
                     </div>
                 </div>
 
-                @push('scripts')
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const form = document.getElementById('receive-form');
-                            const partialPolicyInput = document.getElementById('partial_policy');
-                            let modalInstance = null;
 
-                            form.addEventListener('submit', function(e) {
-                                // لو سبق واخترنا سياسة، سيب الفورم يكمل
-                                if (partialPolicyInput.value) return;
-
-                                // اجمع البنود اللي فيها استلام < المتبقي و > 0
-                                const rows = Array.from(form.querySelectorAll('tr.js-row'));
-                                const partialRows = rows.filter(row => {
-                                    const remaining = parseFloat(row.querySelector('.js-remaining-val').value ||
-                                        '0');
-                                    const input = row.querySelector('.js-received-input');
-                                    if (!input || input.disabled) return false;
-                                    const val = parseFloat(input.value || '0');
-                                    return (val > 0) && (val < remaining);
-                                });
-
-                                if (partialRows.length > 0) {
-                                    e.preventDefault();
-                                    const modalEl = document.getElementById('partialConfirmModal');
-                                    // Bootstrap Modal
-                                    modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-                                    modalInstance.show();
-
-                                    document.getElementById('btn-partial-complete').onclick = () => {
-                                        partialPolicyInput.value = 'complete'; // اعتبر الكل مكتمل
-                                        modalInstance.hide();
-                                        form.submit();
-                                    };
-                                    document.getElementById('btn-partial-split').onclick = () => {
-                                        partialPolicyInput.value = 'split'; // اعمل بنود جديدة للباقي
-                                        modalInstance.hide();
-                                        form.submit();
-                                    };
-                                }
-                            }, {
-                                passive: false
-                            });
-                        });
-                    </script>
-                @endpush
 
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('receive-form');
+            const partialPolicyInput = document.getElementById('partial_policy');
+            let modalInstance = null;
+
+            form.addEventListener('submit', function(e) {
+                // لو سبق واخترنا سياسة، سيب الفورم يكمل
+                if (partialPolicyInput.value) return;
+
+                // اجمع البنود اللي فيها استلام < المتبقي و > 0
+                const rows = Array.from(form.querySelectorAll('tr.js-row'));
+                const partialRows = rows.filter(row => {
+                    const remaining = parseFloat(row.querySelector('.js-remaining-val').value ||
+                        '0');
+                    const input = row.querySelector('.js-received-input');
+                    if (!input || input.disabled) return false;
+                    const val = parseFloat(input.value || '0');
+                    return (val > 0) && (val < remaining);
+                });
+
+                if (partialRows.length > 0) {
+                    e.preventDefault();
+                    const modalEl = document.getElementById('partialConfirmModal');
+                    // Bootstrap Modal
+                    modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modalInstance.show();
+
+                    document.getElementById('btn-partial-complete').onclick = () => {
+                        partialPolicyInput.value = 'complete'; // اعتبر الكل مكتمل
+                        modalInstance.hide();
+                        form.submit();
+                    };
+                    document.getElementById('btn-partial-split').onclick = () => {
+                        partialPolicyInput.value = 'split'; // اعمل بنود جديدة للباقي
+                        modalInstance.hide();
+                        form.submit();
+                    };
+                }
+            }, {
+                passive: false
+            });
+        });
+    </script>
 @endsection
