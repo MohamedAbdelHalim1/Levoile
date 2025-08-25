@@ -59,7 +59,7 @@
 
                                         <td style="min-width:130px">
                                             @php $defaultUnit = $color->unit_of_current_quantity; @endphp
-                                            <select name="colors[{{ $index }}][unit]" class="form-control">
+                                            <select name="colors[{{ $index }}][unit]" class="form-control" disabled>
                                                 <option value="" @selected(old("colors.$index.unit") === '')>-</option>
                                                 <option value="kg" @selected(old("colors.$index.unit", $defaultUnit) == 'kg')>{{ __('messages.kg') }}
                                                 </option>
@@ -70,7 +70,7 @@
                                         </td>
 
                                         <td style="min-width:160px">
-                                            <input type="date" class="form-control"
+                                            <input type="date" class="form-control" required
                                                 name="colors[{{ $index }}][delivery_date]"
                                                 value="{{ old('colors.' . $index . '.delivery_date') }}">
                                         </td>
