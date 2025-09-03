@@ -239,7 +239,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">{{ __('messages.drive_link') }}</label>
-                            <input type="url" name="drive_link" id="drive_link_input" class="form-control" required>
+                            <input type="text" name="drive_link" id="drive_link_input" class="form-control" required>
                         </div>
                         <div class="mb-3 d-none" id="noteWrapper">
                             <label class="form-label">{{ __('messages.notes') }} </label>

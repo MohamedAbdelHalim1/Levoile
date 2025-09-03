@@ -389,7 +389,7 @@ class ShootingProductController extends Controller
         try {
             $request->validate([
                 'reference' => 'required|string',
-                'drive_link' => 'required|url',
+                'drive_link' => 'required|string',
             ]);
 
             // جيب كل السيشنات اللي ليها نفس الreference
