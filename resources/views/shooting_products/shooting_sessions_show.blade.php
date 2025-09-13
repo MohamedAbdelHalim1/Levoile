@@ -117,8 +117,18 @@
                     </form>
                 </div>
 
-                @push('scripts')
-                    <script>
+         
+
+
+                <a href="{{ route('shooting-sessions.index') }}"
+                    class="btn btn-secondary mt-3">{{ __('messages.back') }}</a>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+           <script>
                         (function() {
                             const selectAll = document.getElementById('selectAll');
                             const checks = Array.from(document.querySelectorAll('.row-check'));
@@ -142,12 +152,5 @@
                             refreshButton();
                         })();
                     </script>
-                @endpush
 
-
-                <a href="{{ route('shooting-sessions.index') }}"
-                    class="btn btn-secondary mt-3">{{ __('messages.back') }}</a>
-            </div>
-        </div>
-    </div>
 @endsection

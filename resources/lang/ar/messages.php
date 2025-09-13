@@ -402,7 +402,7 @@ return [
     'shooting_settings' => 'اعدادات التصوير',
     'color_not_found' => 'لا يوجد لون مطابق لهذا الكود',
     'multi_start' => 'بدء التصوير للمنتجات المحددة',
-    'shooting_method' => 'طريقة التصوير',
+    'shooting_method' => 'لينك ريفرينس التصوير',
     'selected_products' => 'المنتجات المحددة',
     'start' => 'بدء',
     'select_at_least_one_color' => 'حدد على الاقل لون واحد',
