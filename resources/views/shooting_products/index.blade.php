@@ -166,7 +166,7 @@
                             <th>{{ __('messages.way_of_shooting') }}</th>
                             <th>{{ __('messages.status_of_data') }}</th>
                             <th>{{ __('messages.review') }}</th>
-                            <th>{{ __('messages.product_drive_link') }}</th>
+                            {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
                             <th>{{ __('messages.product_drive_link') }}</th>
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
@@ -596,7 +596,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     @php
                                         $allSessions = $product->shootingProductColors->flatMap(
                                             fn($c) => $c->sessions ?? collect(),
@@ -627,7 +627,7 @@
                                         </button>
                                     @endif
 
-                                </td>
+                                </td> --}}
 
                                 <td>
                                     @php
