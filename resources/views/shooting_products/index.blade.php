@@ -151,21 +151,22 @@
                             <th>{{ __('messages.number_of_sessions') }}</th>
                             <th>{{ __('messages.sessions') }}</th>
                             <th>{{ __('messages.status_of_sessions') }}</th>
-                            <th>{{ __('messages.editors_of_sessions') }}</th>
+                            {{-- <th>{{ __('messages.editors_of_sessions') }}</th> --}}
                             <th>{{ __('messages.photo_link') }}</th>
-                            <th>{{ __('messages.edit_link') }}</th>
-                            <th>{{ __('messages.status_of_edit') }}</th>
+                            {{-- <th>{{ __('messages.edit_link') }}</th> --}}
+                            {{-- <th>{{ __('messages.status_of_edit') }}</th> --}}
                             <th>{{ __('messages.type_of_shooting') }}</th>
                             <th>{{ __('messages.location') }}</th>
                             <th>{{ __('messages.date_of_shooting') }}</th>
                             <th>{{ __('messages.photographer') }}</th>
-                            <th>{{ __('messages.date_of_edit') }}</th>
-                            <th>{{ __('messages.editors') }}</th>
+                            {{-- <th>{{ __('messages.date_of_edit') }}</th> --}}
+                            {{-- <th>{{ __('messages.editors') }}</th> --}}
                             <th>{{ __('messages.date_of_delivery') }} </th>
                             <th>{{ __('messages.remaining_time') }}</th>
                             <th>{{ __('messages.way_of_shooting') }}</th>
                             <th>{{ __('messages.status_of_data') }}</th>
                             <th>{{ __('messages.review') }}</th>
+                            <th>{{ __('messages.product_drive_link') }}</th>
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
@@ -179,15 +180,7 @@
                                         {{ $product->name }}
                                     </a>
                                 </td>
-                                {{-- <td>
-                                    @if ($product->status == 'new')
-                                        <span class="badge bg-warning">جديد</span>
-                                    @elseif ($product->status == 'partial' || $product->status == 'in_progress')
-                                        <span class="badge bg-secondary text-white">جزئي</span>
-                                    @elseif ($product->status == 'completed')
-                                        <span class="badge bg-success">مكتمل</span>
-                                    @endif
-                                </td> --}}
+
                                 <td>
                                     @php
                                         $tooltipContent =
@@ -374,7 +367,7 @@
                                     }
                                 @endphp
 
-                                <td>
+                                {{-- <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -391,7 +384,7 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td>
+                                </td> --}}
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
@@ -417,7 +410,7 @@
                                     @endforeach
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -439,9 +432,9 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td>
+                                </td> --}}
 
-                                <td>
+                                {{-- <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -459,7 +452,7 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td>
+                                </td> --}}
 
 
 
@@ -507,11 +500,11 @@
                                                         @endif
                                                     @break
 
-                                                    @case('date_of_editing')
+                                                    {{-- @case('date_of_editing')
                                                         <span class="d-block">{{ $firstColor?->date_of_editing ?? '-' }}</span>
-                                                    @break
+                                                    @break --}}
 
-                                                    @case('editor')
+                                                    {{-- @case('editor')
                                                         @php $editors = json_decode($firstColor?->editor, true); @endphp
                                                         @if (is_array($editors))
                                                             <span class="d-block">
@@ -521,516 +514,547 @@
                                                             </span>
                                                         @else
                                                             <span class="d-block">-</span>
-                                                        @endif
-                                                    @break
+                                                        @endif --}}
+                                                {{-- @break --}}
 
-                                                    @case('date_of_delivery')
-                                                        <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
-                                                    @break
+                                                @case('date_of_delivery')
+                                                    <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
+                                                @break
 
-                                                    @case('time_left')
-                                                        @php
-                                                            $date = $firstColor?->date_of_delivery
-                                                                ? \Carbon\Carbon::parse($firstColor->date_of_delivery)
-                                                                : null;
-                                                            $remaining = $date
-                                                                ? \Carbon\Carbon::now()->diffInDays($date, false)
-                                                                : null;
+                                                @case('time_left')
+                                                    @php
+                                                        $date = $firstColor?->date_of_delivery
+                                                            ? \Carbon\Carbon::parse($firstColor->date_of_delivery)
+                                                            : null;
+                                                        $remaining = $date
+                                                            ? \Carbon\Carbon::now()->diffInDays($date, false)
+                                                            : null;
 
-                                                            // نجيب السيشنات ونشوف لو كلهم مكتملين
-                                                            $sessionRefs = collect($colors)
-                                                                ->flatMap(fn($c) => $c->sessions)
-                                                                ->pluck('status');
-                                                            $allSessionsCompleted =
-                                                                $sessionRefs->count() > 0 &&
-                                                                $sessionRefs->every(fn($s) => $s === 'completed');
-                                                        @endphp
+                                                        // نجيب السيشنات ونشوف لو كلهم مكتملين
+                                                        $sessionRefs = collect($colors)
+                                                            ->flatMap(fn($c) => $c->sessions)
+                                                            ->pluck('status');
+                                                        $allSessionsCompleted =
+                                                            $sessionRefs->count() > 0 &&
+                                                            $sessionRefs->every(fn($s) => $s === 'completed');
+                                                    @endphp
 
-                                                        <span class="d-block">
-                                                            @if ($allSessionsCompleted)
-                                                                -
-                                                            @elseif (is_null($date))
-                                                                -
-                                                            @elseif ($remaining > 0)
-                                                                {{ $remaining }} {{ __('messages.day_remaining') }}
-                                                            @elseif ($remaining == 0)
-                                                                {{ __('messages.today') }}
-                                                            @else
-                                                                {{ __('messages.day_overdue') }} {{ abs($remaining) }}
-                                                            @endif
-                                                        </span>
-                                                    @break
-
-                                                    @case('shooting_method')
-                                                        @if (!empty($firstColor?->shooting_method))
-                                                            <a href="{{ $firstColor->shooting_method }}" target="_blank"
-                                                                class="d-block text-success">
-                                                                <i class="fe fe-link"></i>
-                                                            </a>
+                                                    <span class="d-block">
+                                                        @if ($allSessionsCompleted)
+                                                            -
+                                                        @elseif (is_null($date))
+                                                            -
+                                                        @elseif ($remaining > 0)
+                                                            {{ $remaining }} {{ __('messages.day_remaining') }}
+                                                        @elseif ($remaining == 0)
+                                                            {{ __('messages.today') }}
                                                         @else
-                                                            <span class="d-block">-</span>
+                                                            {{ __('messages.day_overdue') }} {{ abs($remaining) }}
                                                         @endif
-                                                    @break
-                                                @endswitch
-                                            </div>
-                                        @endforeach
-                                    </td>
-                                @endforeach
+                                                    </span>
+                                                @break
 
+                                                @case('shooting_method')
+                                                    @if (!empty($firstColor?->shooting_method))
+                                                        <a href="{{ $firstColor->shooting_method }}" target="_blank"
+                                                            class="d-block text-success">
+                                                            <i class="fe fe-link"></i>
+                                                        </a>
+                                                    @else
+                                                        <span class="d-block">-</span>
+                                                    @endif
+                                                @break
+                                            @endswitch
+                                        </div>
+                                    @endforeach
+                                </td>
+                            @endforeach
+
+                            @php
+                                $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
+                                    return !is_null($color->size_name) &&
+                                        $color->size_name !== '' &&
+                                        !is_null($color->weight) &&
+                                        $color->weight !== '';
+                                });
+
+                            @endphp
+
+                            @if ($hasAllColorNames)
+                                <td>{{ __('messages.data_complete') }}</td>
+                            @else
+                                <td>{{ __('messages.data_incomplete') }}</td>
+                            @endif
+
+
+                            <td>
+                                @if ($product->is_reviewed)
+                                    <span class="badge bg-success">{{ __('messages.coded') }}</span>
+                                @else
+                                    <input type="checkbox" class="form-check-input review-toggle"
+                                        data-id="{{ $product->id }}">
+                                @endif
+                            </td>
+
+                            <td>
                                 @php
-                                    $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
-                                        return !is_null($color->size_name) &&
-                                            $color->size_name !== '' &&
-                                            !is_null($color->weight) &&
-                                            $color->weight !== '';
-                                    });
+                                    $allSessions = $product->shootingProductColors->flatMap(
+                                        fn($c) => $c->sessions ?? collect(),
+                                    );
+                                    $productHasSessions = $allSessions->isNotEmpty();
 
+                                    // [{ reference, drive_link? }]
+                                    $refs = $allSessions->pluck('reference')->unique()->values();
+
+                                    // خريطة موجود فيها اللينكات الحالية للمنتج لكل reference
+                                    $linksMap = $product->productSessionLinks->keyBy('reference');
+                                    $payload = $refs
+                                        ->map(function ($r) use ($linksMap) {
+                                            return [
+                                                'reference' => $r,
+                                                'drive_link' => optional($linksMap->get($r))->drive_link,
+                                            ];
+                                        })
+                                        ->values();
                                 @endphp
 
-                                @if ($hasAllColorNames)
-                                    <td>{{ __('messages.data_complete') }}</td>
-                                @else
-                                    <td>{{ __('messages.data_incomplete') }}</td>
+                                @if ($productHasSessions)
+                                    <button type="button"
+                                        class="btn btn-outline-success mb-1 open-product-session-link-modal"
+                                        data-product-id="{{ $product->id }}"
+                                        data-sessions='@json($payload)'>
+                                        {{ __('messages.add_product_drive_link') }}
+                                    </button>
                                 @endif
 
-
-                                <td>
-                                    @if ($product->is_reviewed)
-                                        <span class="badge bg-success">{{ __('messages.coded') }}</span>
-                                    @else
-                                        <input type="checkbox" class="form-check-input review-toggle"
-                                            data-id="{{ $product->id }}">
-                                    @endif
-                                </td>
+                            </td>
 
 
-                                <td>
-                                    {{-- <a href="{{ route('shooting-products.complete.page', $product->id) }}"
+                            <td>
+                                {{-- <a href="{{ route('shooting-products.complete.page', $product->id) }}"
                                         class="btn btn-warning">
                                         اكمال البيانات
                                     </a> --}}
 
-                                    <!-- edit btn and delete form -->
-                                    {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
+                                <!-- edit btn and delete form -->
+                                {{-- <a href="{{ route('shooting-products.edit', $product->id) }}"
                                             class="btn btn-secondary">
                                             تعديل
                                         </a> --}}
-                                    <button class="btn btn-info mb-1" data-bs-toggle="modal"
-                                        data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
-                                        data-size="{{ $product->shootingProductColors->first()?->size_name }}"
-                                        data-weight="{{ $product->shootingProductColors->first()?->weight }}">
-                                        @if (empty($product->shootingProductColors->first()?->size_name) &&
-                                                empty($product->shootingProductColors->first()?->weight))
-                                            {{ __('messages.add_weight_and_size') }}
-                                        @else
-                                            {{ __('messages.edit_weight_and_size') }}
-                                        @endif
-                                    </button>
+                                <button class="btn btn-info mb-1" data-bs-toggle="modal"
+                                    data-bs-target="#sizeWeightModal" data-id="{{ $product->id }}"
+                                    data-size="{{ $product->shootingProductColors->first()?->size_name }}"
+                                    data-weight="{{ $product->shootingProductColors->first()?->weight }}">
+                                    @if (empty($product->shootingProductColors->first()?->size_name) &&
+                                            empty($product->shootingProductColors->first()?->weight))
+                                        {{ __('messages.add_weight_and_size') }}
+                                    @else
+                                        {{ __('messages.edit_weight_and_size') }}
+                                    @endif
+                                </button>
 
-                                    @php
-                                        $productSessions = $product->shootingProductColors->flatMap(
-                                            fn($c) => $c->sessions ?? collect(),
-                                        );
-                                        $productHasSessions = $productSessions->isNotEmpty();
-                                        $hasProductLink = !empty($product->product_drive_link);
-                                    @endphp
 
-                                    @if ($productHasSessions)
-                                        <button type="button"
-                                            class="btn btn-outline-success mb-1 open-product-link-modal"
-                                            data-product-id="{{ $product->id }}"
-                                            data-product-link="{{ $product->product_drive_link }}">
-                                            {{ $hasProductLink ? __('messages.edit_product_drive_link') : __('messages.add_product_drive_link') }}
+
+                                @if (auth()->user()->role->name == 'admin')
+                                    <form action="{{ route('shooting-products.destroy', $product->id) }}"
+                                        method="POST" style="display: inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('{{ __('messages.are_you_sure') }}')">
+                                            {{ __('messages.delete') }}
                                         </button>
-                                    @endif
+                                    </form>
+                                @endif
 
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-                                    @if (auth()->user()->role->name == 'admin')
-                                        <form action="{{ route('shooting-products.destroy', $product->id) }}"
-                                            method="POST" style="display: inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('{{ __('messages.are_you_sure') }}')">
-                                                {{ __('messages.delete') }}
-                                            </button>
-                                        </form>
-                                    @endif
+<!-- Modal -->
+<div class="modal fade" id="sizeWeightModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{{ route('shooting-products.save-size-weight') }}" class="modal-content">
+            @csrf
+            <input type="hidden" name="product_id" id="sizeWeightProductId">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('messages.add_weight_and_size') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>{{ __('messages.size') }}</label>
+                <textarea name="size_name" class="form-control mb-3" required></textarea>
 
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <label>{{ __('messages.weight') }}</label>
+                <input type="text" name="weight" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Product Drive Link (at product level) -->
+<div class="modal fade" id="productSessionLinkModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('messages.add_product_drive_link') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productSessionLinkForm">
+                    @csrf
+                    <input type="hidden" id="pslProductId">
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.sessions') }}</label>
+                        <select id="pslRefSelect" class="form-control" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.drive_link') }}</label>
+                        <input type="text" id="pslLinkInput" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                </form>
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="sizeWeightModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('shooting-products.save-size-weight') }}" class="modal-content">
-                @csrf
-                <input type="hidden" name="product_id" id="sizeWeightProductId">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('messages.add_weight_and_size') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <label>{{ __('messages.size') }}</label>
-                    <textarea name="size_name" class="form-control mb-3" required></textarea>
-
-                    <label>{{ __('messages.weight') }}</label>
-                    <input type="text" name="weight" class="form-control" required>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Product Drive Link (at product level) -->
-    <div class="modal fade" id="productLinkModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('messages.add_product_drive_link') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="productLinkForm">
-                        @csrf
-                        <input type="hidden" id="plProductId">
-
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('messages.drive_link') }}</label>
-                            <input type="text" id="plLinkInput" class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
 
 
 
-    <style>
-        .session-link {
-            display: block;
-            border: 1px solid #bce0fd;
-            border-radius: 6px;
-            padding: 4px;
-            margin-bottom: 6px;
-            text-decoration: none;
-            color: #000;
-            transition: 0.3s ease;
-        }
+<style>
+    .session-link {
+        display: block;
+        border: 1px solid #bce0fd;
+        border-radius: 6px;
+        padding: 4px;
+        margin-bottom: 6px;
+        text-decoration: none;
+        color: #000;
+        transition: 0.3s ease;
+    }
 
-        .session-link:hover {
-            background-color: #bce0fd;
-            color: white;
-        }
-    </style>
+    .session-link:hover {
+        background-color: #bce0fd;
+        color: white;
+    }
+</style>
 @endsection
 
 @section('scripts')
-    <!-- SELECT2 JS -->
-    <script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
-    @vite('resources/assets/js/select2.js')
+<!-- SELECT2 JS -->
+<script src="{{ asset('build/assets/plugins/select2/select2.full.min.js') }}"></script>
+@vite('resources/assets/js/select2.js')
 
-    <!-- DATA TABLE JS -->
-    <script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
-    @vite('resources/assets/js/table-data.js')
+<!-- DATA TABLE JS -->
+<script src="{{ asset('build/assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/dataTables.bootstrap5.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/jszip.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
+@vite('resources/assets/js/table-data.js')
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            popoverTriggerList.forEach(function(popoverTriggerEl) {
-                new bootstrap.Popover(popoverTriggerEl, {
-                    html: true,
-                    sanitize: false, // ضروري عشان HTML زي الجدول يشتغل
-                    trigger: 'hover focus'
-                });
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.forEach(function(popoverTriggerEl) {
+            new bootstrap.Popover(popoverTriggerEl, {
+                html: true,
+                sanitize: false, // ضروري عشان HTML زي الجدول يشتغل
+                trigger: 'hover focus'
             });
         });
-    </script>
+    });
+</script>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let step = 1;
-            let selectedType = "";
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let step = 1;
+        let selectedType = "";
 
-            // Initialize Tom Select
-            $(".tom-select").each(function() {
-                new TomSelect(this, {
-                    plugins: ["remove_button"]
-                });
+        // Initialize Tom Select
+        $(".tom-select").each(function() {
+            new TomSelect(this, {
+                plugins: ["remove_button"]
             });
-
-            $(".start-shooting").on("click", function() {
-                $("#product_id").val($(this).data("id"));
-                $("#shootingModal").modal("show");
-            });
-
-            $(".shooting-type").on("change", function() {
-                $(".next-btn").prop("disabled", false);
-                selectedType = $("input[name='type_of_shooting']:checked").val();
-            });
-
-            $(".next-btn").on("click", function() {
-                if ($(this).text() === "{{ __('messages.save') }}") {
-                    submitForm(); // Call function to submit form only on "حفظ"
-                    return;
-                }
-
-                if (!validateStep()) {
-                    alert("{{ __('messages.please_fill_all_required_fields') }}");
-                    return;
-                }
-
-                $(".step").addClass("d-none");
-
-                if (step === 1) {
-                    if (selectedType === "تصوير منتج" || selectedType === "تصوير موديل") {
-                        $(".step-2").removeClass("d-none");
-                    } else {
-                        $(".step-4").removeClass("d-none");
-                        $(".next-btn").text("حفظ");
-                    }
-                } else if (step === 2) {
-                    $(".step-3").removeClass("d-none");
-                    $(".next-btn").text("حفظ");
-                }
-
-                step++;
-                $(".prev-btn").prop("disabled", false);
-            });
-
-            $(".prev-btn").on("click", function() {
-                clearInputs(step);
-
-                step--;
-                $(".step").addClass("d-none");
-
-                if (step === 1) {
-                    $(".step-1").removeClass("d-none");
-                    $(".next-btn").text("التالي");
-                } else if (step === 2) {
-                    $(".step-2").removeClass("d-none");
-                    $(".next-btn").text("التالي");
-                } else if (step === 3) {
-                    $(".step-3").removeClass("d-none");
-                    $(".next-btn").text("حفظ");
-                }
-
-                if (step === 1) $(".prev-btn").prop("disabled", true);
-            });
-
-            function submitForm() {
-                let formData = $("#shootingForm").serializeArray(); // Converts to array format
-
-                let dateOfDelivery = selectedType === "تعديل لون" ?
-                    $("input[name='date_of_delivery_editing']").val() :
-                    $("input[name='date_of_delivery_shooting']").val();
-
-                if (!dateOfDelivery) {
-                    alert("{{ __('messages.please_select_date_of_delivery') }}");
-                    return;
-                }
-
-
-                // Ensure date_of_delivery is included
-                formData.push({
-                    name: "date_of_delivery",
-                    value: dateOfDelivery
-                });
-
-
-                $.ajax({
-                    url: "{{ route('shooting-products.start') }}",
-                    type: "POST",
-                    data: formData, // No need for $.param()
-                    success: function(response) {
-                        alert(response.message);
-                        $("#shootingModal").modal("hide");
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert("{{ __('messages.something_went_wrong') }}");
-                        console.error(xhr.responseText);
-                    }
-                });
-            }
-
-
-            function validateStep() {
-                let valid = true;
-
-                // فقط تحقق من الحقول الظاهرة حاليًا
-                $(".step:visible .required-input").each(function() {
-                    if (!$(this).val()) {
-                        valid = false;
-                    }
-                });
-
-                return valid;
-            }
-
-
-            function clearInputs(currentStep) {
-                $(".step-" + currentStep + " input, .step-" + currentStep + " select").val("").trigger("change");
-            }
-        });
-    </script>
-
-
-
-    <script>
-        $('#checkAll').on('change', function() {
-            const isChecked = $(this).is(':checked');
-
-            // حدد فقط العناصر الظاهرة حاليًا في الصفحة
-            $('#file-datatable')
-                .find('tbody tr:visible input[name="selected_products[]"]')
-                .prop('checked', isChecked);
-
-            toggleStartButton(); // حدث زر بدء التصوير
         });
 
-        $('input[name="selected_products[]"]').on('change', function() {
-            toggleStartButton();
+        $(".start-shooting").on("click", function() {
+            $("#product_id").val($(this).data("id"));
+            $("#shootingModal").modal("show");
         });
 
-        function toggleStartButton() {
-            const selected = $('input[name="selected_products[]"]:checked').length;
-            if (selected > 0) {
-                $('#startShootingContainer').show();
-            } else {
-                $('#startShootingContainer').hide();
-            }
+        $(".shooting-type").on("change", function() {
+            $(".next-btn").prop("disabled", false);
+            selectedType = $("input[name='type_of_shooting']:checked").val();
+        });
 
-            let selectedProducts = [];
-            $('input[name="selected_products[]"]:checked').each(function() {
-                selectedProducts.push($(this).val());
-            });
-            $('#selectedProducts').val(selectedProducts.join(','));
-        }
-    </script>
-
-    <script>
-        $(document).on('change', '.review-toggle', function() {
-            const checkbox = $(this);
-            const productId = checkbox.data('id');
-
-            if (!confirm('{{ __('messages.are_you_sure_you_want_to_review') }}')) {
-                checkbox.prop('checked', false);
+        $(".next-btn").on("click", function() {
+            if ($(this).text() === "{{ __('messages.save') }}") {
+                submitForm(); // Call function to submit form only on "حفظ"
                 return;
             }
 
+            if (!validateStep()) {
+                alert("{{ __('messages.please_fill_all_required_fields') }}");
+                return;
+            }
+
+            $(".step").addClass("d-none");
+
+            if (step === 1) {
+                if (selectedType === "تصوير منتج" || selectedType === "تصوير موديل") {
+                    $(".step-2").removeClass("d-none");
+                } else {
+                    $(".step-4").removeClass("d-none");
+                    $(".next-btn").text("حفظ");
+                }
+            } else if (step === 2) {
+                $(".step-3").removeClass("d-none");
+                $(".next-btn").text("حفظ");
+            }
+
+            step++;
+            $(".prev-btn").prop("disabled", false);
+        });
+
+        $(".prev-btn").on("click", function() {
+            clearInputs(step);
+
+            step--;
+            $(".step").addClass("d-none");
+
+            if (step === 1) {
+                $(".step-1").removeClass("d-none");
+                $(".next-btn").text("التالي");
+            } else if (step === 2) {
+                $(".step-2").removeClass("d-none");
+                $(".next-btn").text("التالي");
+            } else if (step === 3) {
+                $(".step-3").removeClass("d-none");
+                $(".next-btn").text("حفظ");
+            }
+
+            if (step === 1) $(".prev-btn").prop("disabled", true);
+        });
+
+        function submitForm() {
+            let formData = $("#shootingForm").serializeArray(); // Converts to array format
+
+            let dateOfDelivery = selectedType === "تعديل لون" ?
+                $("input[name='date_of_delivery_editing']").val() :
+                $("input[name='date_of_delivery_shooting']").val();
+
+            if (!dateOfDelivery) {
+                alert("{{ __('messages.please_select_date_of_delivery') }}");
+                return;
+            }
+
+
+            // Ensure date_of_delivery is included
+            formData.push({
+                name: "date_of_delivery",
+                value: dateOfDelivery
+            });
+
+
             $.ajax({
-                url: "{{ route('shooting-products.review') }}",
-                method: "POST",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: productId,
-                },
+                url: "{{ route('shooting-products.start') }}",
+                type: "POST",
+                data: formData, // No need for $.param()
                 success: function(response) {
-                    if (response.success) {
-                        checkbox.prop('checked', true).attr('disabled', true);
-                        alert('{{ __('messages.reviewed_successfully') }}');
-                        location.reload();
-                    } else {
-                        alert('{{ __('messages.something_went_wrong') }}');
-                        checkbox.prop('checked', false);
-                    }
+                    alert(response.message);
+                    $("#shootingModal").modal("hide");
+                    location.reload();
                 },
-                error: function() {
+                error: function(xhr) {
+                    alert("{{ __('messages.something_went_wrong') }}");
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+
+        function validateStep() {
+            let valid = true;
+
+            // فقط تحقق من الحقول الظاهرة حاليًا
+            $(".step:visible .required-input").each(function() {
+                if (!$(this).val()) {
+                    valid = false;
+                }
+            });
+
+            return valid;
+        }
+
+
+        function clearInputs(currentStep) {
+            $(".step-" + currentStep + " input, .step-" + currentStep + " select").val("").trigger("change");
+        }
+    });
+</script>
+
+
+
+<script>
+    $('#checkAll').on('change', function() {
+        const isChecked = $(this).is(':checked');
+
+        // حدد فقط العناصر الظاهرة حاليًا في الصفحة
+        $('#file-datatable')
+            .find('tbody tr:visible input[name="selected_products[]"]')
+            .prop('checked', isChecked);
+
+        toggleStartButton(); // حدث زر بدء التصوير
+    });
+
+    $('input[name="selected_products[]"]').on('change', function() {
+        toggleStartButton();
+    });
+
+    function toggleStartButton() {
+        const selected = $('input[name="selected_products[]"]:checked').length;
+        if (selected > 0) {
+            $('#startShootingContainer').show();
+        } else {
+            $('#startShootingContainer').hide();
+        }
+
+        let selectedProducts = [];
+        $('input[name="selected_products[]"]:checked').each(function() {
+            selectedProducts.push($(this).val());
+        });
+        $('#selectedProducts').val(selectedProducts.join(','));
+    }
+</script>
+
+<script>
+    $(document).on('change', '.review-toggle', function() {
+        const checkbox = $(this);
+        const productId = checkbox.data('id');
+
+        if (!confirm('{{ __('messages.are_you_sure_you_want_to_review') }}')) {
+            checkbox.prop('checked', false);
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('shooting-products.review') }}",
+            method: "POST",
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: productId,
+            },
+            success: function(response) {
+                if (response.success) {
+                    checkbox.prop('checked', true).attr('disabled', true);
+                    alert('{{ __('messages.reviewed_successfully') }}');
+                    location.reload();
+                } else {
                     alert('{{ __('messages.something_went_wrong') }}');
                     checkbox.prop('checked', false);
                 }
+            },
+            error: function() {
+                alert('{{ __('messages.something_went_wrong') }}');
+                checkbox.prop('checked', false);
+            }
+        });
+    });
+</script>
+
+<script>
+    const sizeWeightModal = document.getElementById('sizeWeightModal');
+    sizeWeightModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        document.getElementById('sizeWeightProductId').value = button.getAttribute('data-id');
+
+        // تعبئة الحقول
+        const size = button.getAttribute('data-size') || '';
+        const weight = button.getAttribute('data-weight') || '';
+        document.querySelector('textarea[name="size_name"]').value = size;
+        document.querySelector('input[name="weight"]').value = weight;
+    });
+</script>
+
+<script>
+    (function() {
+        const modalEl = document.getElementById('productSessionLinkModal');
+        const productIdInput = document.getElementById('pslProductId');
+        const refSelect = document.getElementById('pslRefSelect');
+        const linkInput = document.getElementById('pslLinkInput');
+        let currentSessions = []; // [{reference, drive_link}]
+
+        // افتح المودال واملأ المراجع + اللينكات
+        $(document).on('click', '.open-product-session-link-modal', function() {
+            const pid = $(this).data('product-id');
+            const sessions = $(this).data('sessions') || [];
+            currentSessions = sessions;
+
+            productIdInput.value = pid;
+            refSelect.innerHTML = '';
+            sessions.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.reference;
+                opt.textContent = s.reference + (s.drive_link ? ' (has link)' : '');
+                refSelect.appendChild(opt);
+            });
+
+            // اختَر أول مرجع واملأ اللينك لو موجود
+            if (sessions.length) {
+                linkInput.value = sessions[0].drive_link || '';
+            } else {
+                linkInput.value = '';
+            }
+
+            modalEl.querySelector('.modal-title').textContent =
+                sessions.some(s => s.drive_link) ?
+                "{{ __('messages.edit_product_drive_link') }}" :
+                "{{ __('messages.add_product_drive_link') }}";
+
+            new bootstrap.Modal(modalEl).show();
+        });
+
+        // لما يغيّر الـ reference
+        refSelect.addEventListener('change', function() {
+            const selected = currentSessions.find(s => s.reference === this.value);
+            linkInput.value = selected && selected.drive_link ? selected.drive_link : '';
+        });
+
+        // حفظ
+        $('#productSessionLinkForm').on('submit', function(e) {
+            e.preventDefault();
+
+            $.post("{{ route('shooting-products.productDriveLink.save') }}", {
+                _token: '{{ csrf_token() }}',
+                product_id: productIdInput.value,
+                reference: refSelect.value,
+                drive_link: linkInput.value.trim()
+            }).done(function(resp) {
+                alert(resp.message || 'Saved');
+                bootstrap.Modal.getInstance(modalEl).hide();
+                location.reload();
+            }).fail(function() {
+                alert("{{ __('messages.something_went_wrong') }}");
             });
         });
-    </script>
-
-    <script>
-        const sizeWeightModal = document.getElementById('sizeWeightModal');
-        sizeWeightModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            document.getElementById('sizeWeightProductId').value = button.getAttribute('data-id');
-
-            // تعبئة الحقول
-            const size = button.getAttribute('data-size') || '';
-            const weight = button.getAttribute('data-weight') || '';
-            document.querySelector('textarea[name="size_name"]').value = size;
-            document.querySelector('input[name="weight"]').value = weight;
-        });
-    </script>
-
-    <script>
-        (function() {
-            const modalEl = document.getElementById('productLinkModal');
-            const productIdInput = document.getElementById('plProductId');
-            const linkInput = document.getElementById('plLinkInput');
-
-            // افتح المودال واملأ البيانات
-            $(document).on('click', '.open-product-link-modal', function() {
-                const pid = $(this).data('product-id');
-                const link = $(this).data('product-link') || '';
-
-                productIdInput.value = pid;
-                linkInput.value = link;
-
-                // عدّل العنوان حسب وجود لينك
-                modalEl.querySelector('.modal-title').textContent =
-                    link ? "{{ __('messages.edit_product_drive_link') }}" :
-                    "{{ __('messages.add_product_drive_link') }}";
-
-                new bootstrap.Modal(modalEl).show();
-            });
-
-            // حفظ
-            $('#productLinkForm').on('submit', function(e) {
-                e.preventDefault();
-
-                const product_id = productIdInput.value;
-                const drive_link = linkInput.value.trim();
-
-                if (!product_id || !drive_link) return;
-
-                $.ajax({
-                    url: "{{ route('shooting-products.updateDriveLink') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        product_id,
-                        drive_link
-                    },
-                    success: function(resp) {
-                        alert(resp.message || 'Saved');
-                        bootstrap.Modal.getInstance(modalEl).hide();
-                        location.reload();
-                    },
-                    error: function() {
-                        alert("{{ __('messages.something_went_wrong') }}");
-                    }
-                });
-            });
-        })();
-    </script>
+    })();
+</script>
 @endsection

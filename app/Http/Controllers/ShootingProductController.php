@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EditSession;
+use App\Models\ProductSessionDriveLink;
 use App\Models\ReadyToShoot;
 use App\Models\ShootingDelivery;
 use App\Models\ShootingDeliveryContent;
@@ -30,6 +31,7 @@ class ShootingProductController extends Controller
         $query = ShootingProduct::with([
             'shootingProductColors.sessions.editSessions',  // eager load
             'shootingProductColors',
+            'productSessionLinks',
         ]);
         // Filters
         if ($request->filled('name')) {
@@ -452,49 +454,63 @@ class ShootingProductController extends Controller
 
 
 
-    public function updateProductDriveLink(Request $request)
+    public function saveProductDriveLinkForSession(Request $request)
     {
         $data = $request->validate([
             'product_id' => 'required|integer|exists:shooting_products,id',
-            'drive_link' => 'required|string', // أو 'url'
+            'reference'  => 'required|string',
+            'drive_link' => 'required|string', // خليه 'url' لو عايز
         ]);
 
         DB::transaction(function () use ($data) {
-            // 1) خزّن اللينك على مستوى المنتج
-            $product = ShootingProduct::findOrFail($data['product_id']);
-            $product->product_drive_link = $data['drive_link'];
-            $product->save();
 
-            // كل ألوان المنتج
-            $colorIds = $product->shootingProductColors()->pluck('id');
+            $product = ShootingProduct::with('shootingProductColors.sessions')->findOrFail($data['product_id']);
 
-            // 2) كمّل عناصر المنتج داخل أي سيشن (الخاصة بألوانه)
-            ShootingSession::whereIn('shooting_product_color_id', $colorIds)
+            // تأكد إن المنتج ده موجود فعلاً في السيشن دي
+            $colorIds = $product->shootingProductColors->pluck('id');
+            $exists = ShootingSession::whereIn('shooting_product_color_id', $colorIds)
+                ->where('reference', $data['reference'])
+                ->exists();
+
+            if (!$exists) {
+                abort(422, 'This product is not part of the given session reference.');
+            }
+
+            // upsert في جدول الروابط
+            ProductSessionDriveLink::updateOrCreate(
+                ['product_id' => $product->id, 'reference' => $data['reference']],
+                ['drive_link' => $data['drive_link']]
+            );
+
+            // كمّل السيشنات الخاصة بألوان المنتج داخل نفس الreference
+            $colorsInThisRef = ShootingSession::whereIn('shooting_product_color_id', $colorIds)
+                ->where('reference', $data['reference'])
+                ->pluck('shooting_product_color_id')
+                ->unique();
+
+            ShootingSession::whereIn('shooting_product_color_id', $colorsInThisRef)
+                ->where('reference', $data['reference'])
                 ->where('status', '!=', 'completed')
-                ->update([
-                    'status'     => 'completed',
-                    'updated_at' => now(),
-                ]);
+                ->update(['status' => 'completed', 'updated_at' => now()]);
 
-            // 3) كمّل حالات الألوان نفسها
-            ShootingProductColor::whereIn('id', $colorIds)
+            // كمّل حالات الألوان المستخدمة في نفس الreference
+            ShootingProductColor::whereIn('id', $colorsInThisRef)
                 ->where('status', '!=', 'completed')
-                ->update([
-                    'status'     => 'completed',
-                    'updated_at' => now(),
-                ]);
+                ->update(['status' => 'completed', 'updated_at' => now()]);
 
-            // حدّث حالة المنتج نفسه (بما إن كل ألوانه بقت completed)
-            $product->status = 'completed';
-            $product->save();
-            // أو لو حابب تستخدم طريقتك:
-            // $product->unsetRelation('shootingProductColors');
-            // $product->refreshStatusBasedOnColors();
+            // لو كل ألوان المنتج بقت completed فعلاً، كمّل المنتج
+            $stillNotCompleted = ShootingProductColor::where('shooting_product_id', $product->id)
+                ->where('status', '!=', 'completed')
+                ->exists();
+            if (!$stillNotCompleted) {
+                $product->status = 'completed';
+                $product->save();
+            }
         });
 
         return response()->json([
             'success' => true,
-            'message' => 'Product drive link saved. Related sessions & colors marked as completed.',
+            'message' => 'Drive link saved for this product in the selected session, and related items marked completed.',
         ]);
     }
 

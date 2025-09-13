@@ -395,8 +395,8 @@ return [
     'date_of_delivery' => 'تاريخ الاستلام',
     'date_of_editing' => 'تاريخ التعديل',
     'manual_shooting' => 'تصوير يدوي',
-    'add_weight_and_sizes' => 'اضافة الوزن والمقاسات',
-    'edit_weight_and_sizes' => 'تعديل الوزن والمقاسات',
+    'add_weight_and_size' => 'اضافة الوزن والمقاسات',
+    'edit_weight_and_size' => 'تعديل الوزن والمقاسات',
     'enter_color_code' => 'ادخل كود اللون',
     'enter_product_name_and_press_enter' => 'ادخل اسم اللون واضغط enter',
     'shooting_settings' => 'اعدادات التصوير',
@@ -459,5 +459,7 @@ return [
     'reels_shooting' => 'تصوير رييلز',
     'sara_shooting' => 'تصوير ساره',
     'delete_selected' => 'حذف المحدد',
+    'product_drive_link' => 'رابط المنتج',
+    'add_product_drive_link' => 'اضافة رابط المنتج',
 
 ];

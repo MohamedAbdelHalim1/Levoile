@@ -463,6 +463,8 @@ return [
     'reels_shooting' => 'Reels Shooting',
     'sara_shooting' => 'Sara Shooting',
     'delete_selected' => 'Delete Selected',
+    'product_drive_link' => 'Product Drive Link',
+    'add_product_drive_link' => 'Add Product Drive Link',
 
 
 

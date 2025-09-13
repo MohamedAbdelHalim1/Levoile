@@ -29,7 +29,6 @@ class ShootingProduct extends Model
         'custom_id',
         'shooting_method',
         'is_reviewed',
-        'product_drive_link',
     ];
 
     public function shootingProductColors()
@@ -60,5 +59,10 @@ class ShootingProduct extends Model
     public function readyToShoot()
     {
         return $this->hasMany(ReadyToShoot::class, 'shooting_product_id');
+    }
+
+    public function productSessionLinks()
+    {
+        return $this->hasMany(ProductSessionDriveLink::class, 'product_id');
     }
 }

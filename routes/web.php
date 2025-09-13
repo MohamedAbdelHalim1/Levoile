@@ -338,9 +338,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-products/save-size-weight', [ShootingProductController::class, 'saveSizeWeight'])
         ->name('shooting-products.save-size-weight');
     Route::post(
-        '/shooting-products/update-drive-link',
-        [ShootingProductController::class, 'updateProductDriveLink']
-    )->name('shooting-products.updateDriveLink');
+        '/shooting-products/product-drive-link',
+        [ShootingProductController::class, 'saveProductDriveLinkForSession']
+    )->name('shooting-products.productDriveLink.save');
+
 
 
 

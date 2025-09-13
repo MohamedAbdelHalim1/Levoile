@@ -373,13 +373,15 @@
                                                         class="slide-item">{{ __('messages.shooting_deliveries') }}</a>
                                                 </li>
                                                 
-                                                <li><a href="{{ route('shooting-sessions.index') }}"
-                                                        class="slide-item">{{ __('messages.shooting_sessions') }}</a>
-                                                </li>
                                                 <li>
                                                     <a href="{{ route('ready-to-shoot.index') }}" class="slide-item">
                                                         {{ __('messages.ready_to_shoot') }}</a>
                                                 </li>
+                                                
+                                                <li><a href="{{ route('shooting-sessions.index') }}"
+                                                        class="slide-item">{{ __('messages.shooting_sessions') }}</a>
+                                                </li>
+                                                
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_products') }}</a>
                                                 </li>
