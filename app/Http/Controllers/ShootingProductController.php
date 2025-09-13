@@ -450,6 +450,22 @@ class ShootingProductController extends Controller
         }
     }
 
+       public function updateDriveLinkIndex(Request $request)
+    {
+        $data = $request->validate([
+            'reference'  => 'required|string',
+            'drive_link' => 'required|string', // لو عايز: 'url'
+        ]);
+
+        ShootingSession::where('reference', $data['reference'])->update([
+            'drive_link' => $data['drive_link'],
+            'status'     => 'completed',
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['message' => 'Drive link saved and session marked completed.']);
+    }
+
 
 
     public function manual()

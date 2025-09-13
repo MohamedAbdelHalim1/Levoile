@@ -458,6 +458,6 @@ return [
     'my_requests' => 'طلبات الخامات',
     'reels_shooting' => 'تصوير رييلز',
     'sara_shooting' => 'تصوير ساره',
-
+    'delete_selected' => 'حذف المحدد',
 
 ];

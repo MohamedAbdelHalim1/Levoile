@@ -23,10 +23,12 @@
                             <label>{{ __('messages.status') }}</label>
                             <select name="status" class="form-control">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>{{ __('messages.new') }}</option>
+                                <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>
+                                    {{ __('messages.new') }}</option>
                                 <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>
                                     {{ __('messages.in_progress') }}</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>{{ __('messages.complete') }}
+                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                                    {{ __('messages.complete') }}
                                 </option>
                             </select>
                         </div>
@@ -36,15 +38,19 @@
                             <select name="type_of_shooting" class="form-control">
                                 <option value="">{{ __('messages.all_type_of_shooting') }}</option>
                                 <option value="تصوير منتج"
-                                    {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>{{ __('messages.product_shooting') }} </option>
+                                    {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>
+                                    {{ __('messages.product_shooting') }} </option>
                                 <option value="تصوير موديل"
-                                    {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>{{ __('messages.model_shooting') }} 
+                                    {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>
+                                    {{ __('messages.model_shooting') }}
                                 </option>
                                 <option value="تصوير انفلونسر"
-                                    {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>{{ __('messages.inflo_shooting') }} 
+                                    {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>
+                                    {{ __('messages.inflo_shooting') }}
                                 </option>
                                 <option value="تعديل لون"
-                                    {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>{{ __('messages.change_color') }}</option>
+                                    {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>
+                                    {{ __('messages.change_color') }}</option>
                             </select>
                         </div>
 
@@ -53,9 +59,11 @@
                             <select name="location" class="form-control">
                                 <option value="">{{ __('messages.all_locations') }}</option>
                                 <option value="تصوير بالداخل"
-                                    {{ request('location') == 'تصوير بالداخل' ? 'selected' : '' }}>{{ __('messages.inside_shooting') }}</option>
+                                    {{ request('location') == 'تصوير بالداخل' ? 'selected' : '' }}>
+                                    {{ __('messages.inside_shooting') }}</option>
                                 <option value="تصوير بالخارج"
-                                    {{ request('location') == 'تصوير بالخارج' ? 'selected' : '' }}>{{ __('messages.outside_shooting') }}</option>
+                                    {{ request('location') == 'تصوير بالخارج' ? 'selected' : '' }}>
+                                    {{ __('messages.outside_shooting') }}</option>
                             </select>
                         </div>
 
@@ -98,7 +106,8 @@
                         <!-- Buttons -->
                         <div class="col-md-6 mt-4 d-flex align-items-end justify-content-start">
                             <button type="submit" class="btn btn-primary me-2">{{ __('messages.search') }}</button>
-                            <a href="{{ route('shooting-products.index') }}" class="btn btn-success">{{ __('messages.reset') }}</a>
+                            <a href="{{ route('shooting-products.index') }}"
+                                class="btn btn-success">{{ __('messages.reset') }}</a>
                         </div>
                     </div>
                 </form>
@@ -545,9 +554,9 @@
                                                             @elseif ($remaining > 0)
                                                                 {{ $remaining }} {{ __('messages.day_remaining') }}
                                                             @elseif ($remaining == 0)
-                                                                {{ __('messages.today') }} 
+                                                                {{ __('messages.today') }}
                                                             @else
-                                                                 {{ __('messages.day_overdue') }} {{ abs($remaining) }} 
+                                                                {{ __('messages.day_overdue') }} {{ abs($remaining) }}
                                                             @endif
                                                         </span>
                                                     @break
@@ -618,6 +627,39 @@
                                         @endif
                                     </button>
 
+                                    @php
+                                        // كل السيشنات لهذا المنتج
+                                        $allSessions = $product->shootingProductColors->flatMap(
+                                            fn($c) => $c->sessions ?? collect(),
+                                        );
+
+                                        $sessionRefs = $allSessions->pluck('reference')->unique()->values();
+                                        $hasSessions = $sessionRefs->isNotEmpty();
+
+                                        // هل فيه أي سيشن عليه لينك؟
+                                        $hasAnyDriveLink = $allSessions->contains(fn($s) => !empty($s->drive_link));
+
+                                        // حضّر داتا (reference + drive_link) فريدة للزر
+                                        $sessionsPayload = $allSessions
+                                            ->map(
+                                                fn($s) => [
+                                                    'reference' => $s->reference,
+                                                    'drive_link' => $s->drive_link,
+                                                ],
+                                            )
+                                            ->unique('reference')
+                                            ->values();
+                                    @endphp
+
+                                    @if ($hasSessions)
+                                        <button type="button" class="btn btn-success mb-1 open-drive-link-modal"
+                                            data-product-id="{{ $product->id }}"
+                                            data-sessions='@json($sessionsPayload)'>
+                                            {{ $hasAnyDriveLink ? __('messages.edit_drive_link') : __('messages.add_drive_link') }}
+                                        </button>
+                                    @endif
+
+
                                     @if (auth()->user()->role->name == 'admin')
                                         <form action="{{ route('shooting-products.destroy', $product->id) }}"
                                             method="POST" style="display: inline-block">
@@ -662,6 +704,35 @@
             </form>
         </div>
     </div>
+
+    <!-- Drive Link Modal -->
+    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('messages.add_drive_link') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="driveLinkForm">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('messages.sessions') }}</label>
+                            <select id="driveRefSelect" class="form-control" required></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('messages.drive_link') }}</label>
+                            <input type="text" id="driveLinkInput" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <style>
@@ -926,5 +997,78 @@
             document.querySelector('textarea[name="size_name"]').value = size;
             document.querySelector('input[name="weight"]').value = weight;
         });
+    </script>
+
+    <script>
+        (function() {
+            let currentSessions = []; // [{reference, drive_link}]
+            const modalEl = document.getElementById('driveLinkModal');
+            const refSelect = document.getElementById('driveRefSelect');
+            const linkInput = document.getElementById('driveLinkInput');
+
+            // افتح المودال + املأ السيشنات
+            $(document).on('click', '.open-drive-link-modal', function() {
+                const sessions = $(this).data('sessions') || [];
+                currentSessions = sessions;
+
+                // املا السليكت
+                refSelect.innerHTML = '';
+                sessions.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.reference;
+                    opt.textContent = s.reference + (s.drive_link ? ' (has link)' : '');
+                    refSelect.appendChild(opt);
+                });
+
+                // اختَر أول عنصر واملأ اللينك الحالي (إن وُجد)
+                if (sessions.length) {
+                    linkInput.value = sessions[0].drive_link || '';
+                } else {
+                    linkInput.value = '';
+                }
+
+                // غيّر عنوان المودال حسب وجود لينك
+                const anyHasLink = sessions.some(s => s.drive_link);
+                modalEl.querySelector('.modal-title').textContent =
+                    anyHasLink ? "{{ __('messages.edit_drive_link') }}" :
+                    "{{ __('messages.add_drive_link') }}";
+
+                const bsModal = new bootstrap.Modal(modalEl);
+                bsModal.show();
+            });
+
+            // عند تغيير الـ reference، حدّث قيمة حقل اللينك لو موجود
+            refSelect.addEventListener('change', function() {
+                const selected = currentSessions.find(s => s.reference === this.value);
+                linkInput.value = (selected && selected.drive_link) ? selected.drive_link : '';
+            });
+
+            // حفظ
+            $('#driveLinkForm').on('submit', function(e) {
+                e.preventDefault();
+                const reference = refSelect.value;
+                const drive_link = linkInput.value.trim();
+                if (!reference || !drive_link) return;
+
+                $.ajax({
+                    url: "{{ route('shooting-sessions.updateDriveLink.index') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        reference: reference,
+                        drive_link: drive_link
+                    },
+                    success: function(resp) {
+                        alert(resp.message || 'Saved');
+                        // اقفل المودال وحدث الصفحة
+                        bootstrap.Modal.getInstance(modalEl).hide();
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("{{ __('messages.something_went_wrong') }}");
+                    }
+                });
+            });
+        })();
     </script>
 @endsection

@@ -462,7 +462,7 @@ return [
     'my_requests' => 'My Requests',
     'reels_shooting' => 'Reels Shooting',
     'sara_shooting' => 'Sara Shooting',
-
+    'delete_selected' => 'Delete Selected',
 
 
 

@@ -337,6 +337,10 @@ Route::middleware('auth')->group(function () {
     //Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
     Route::post('/shooting-products/save-size-weight', [ShootingProductController::class, 'saveSizeWeight'])
         ->name('shooting-products.save-size-weight');
+    Route::post(
+        '/shooting-sessions/update-drive-link',
+        [ShootingProductController::class, 'updateDriveLinkIndex']
+    )->name('shooting-sessions.updateDriveLink.index');
 
 
 
