@@ -465,7 +465,8 @@ return [
     'delete_selected' => 'Delete Selected',
     'product_drive_link' => 'Product Drive Link',
     'add_product_drive_link' => 'Add Product Drive Link',
-
+    'edit_product_drive_link' => 'Edit Product Drive Link',
+    
 
 
 

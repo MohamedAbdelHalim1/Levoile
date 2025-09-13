@@ -461,5 +461,7 @@ return [
     'delete_selected' => 'حذف المحدد',
     'product_drive_link' => 'رابط المنتج',
     'add_product_drive_link' => 'اضافة رابط المنتج',
+    'edit_product_drive_link' => 'تعديل رابط المنتج',
+
 
 ];
