@@ -628,34 +628,19 @@
                                     </button>
 
                                     @php
-                                        // كل السيشنات لهذا المنتج
-                                        $allSessions = $product->shootingProductColors->flatMap(
+                                        $productSessions = $product->shootingProductColors->flatMap(
                                             fn($c) => $c->sessions ?? collect(),
                                         );
-
-                                        $sessionRefs = $allSessions->pluck('reference')->unique()->values();
-                                        $hasSessions = $sessionRefs->isNotEmpty();
-
-                                        // هل فيه أي سيشن عليه لينك؟
-                                        $hasAnyDriveLink = $allSessions->contains(fn($s) => !empty($s->drive_link));
-
-                                        // حضّر داتا (reference + drive_link) فريدة للزر
-                                        $sessionsPayload = $allSessions
-                                            ->map(
-                                                fn($s) => [
-                                                    'reference' => $s->reference,
-                                                    'drive_link' => $s->drive_link,
-                                                ],
-                                            )
-                                            ->unique('reference')
-                                            ->values();
+                                        $productHasSessions = $productSessions->isNotEmpty();
+                                        $hasProductLink = !empty($product->product_drive_link);
                                     @endphp
 
-                                    @if ($hasSessions)
-                                        <button type="button" class="btn btn-success mb-1 open-drive-link-modal"
+                                    @if ($productHasSessions)
+                                        <button type="button"
+                                            class="btn btn-outline-success mb-1 open-product-link-modal"
                                             data-product-id="{{ $product->id }}"
-                                            data-sessions='@json($sessionsPayload)'>
-                                            {{ $hasAnyDriveLink ? __('messages.edit_drive_link') : __('messages.add_drive_link') }}
+                                            data-product-link="{{ $product->product_drive_link }}">
+                                            {{ $hasProductLink ? __('messages.edit_product_drive_link') : __('messages.add_product_drive_link') }}
                                         </button>
                                     @endif
 
@@ -705,25 +690,22 @@
         </div>
     </div>
 
-    <!-- Drive Link Modal -->
-    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-hidden="true">
+    <!-- Product Drive Link (at product level) -->
+    <div class="modal fade" id="productLinkModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('messages.add_drive_link') }}</h5>
+                    <h5 class="modal-title">{{ __('messages.add_product_drive_link') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="driveLinkForm">
+                    <form id="productLinkForm">
                         @csrf
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('messages.sessions') }}</label>
-                            <select id="driveRefSelect" class="form-control" required></select>
-                        </div>
+                        <input type="hidden" id="plProductId">
 
                         <div class="mb-3">
                             <label class="form-label">{{ __('messages.drive_link') }}</label>
-                            <input type="text" id="driveLinkInput" class="form-control" required>
+                            <input type="text" id="plLinkInput" class="form-control" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
@@ -732,6 +714,7 @@
             </div>
         </div>
     </div>
+
 
 
 
@@ -1001,66 +984,45 @@
 
     <script>
         (function() {
-            let currentSessions = []; // [{reference, drive_link}]
-            const modalEl = document.getElementById('driveLinkModal');
-            const refSelect = document.getElementById('driveRefSelect');
-            const linkInput = document.getElementById('driveLinkInput');
+            const modalEl = document.getElementById('productLinkModal');
+            const productIdInput = document.getElementById('plProductId');
+            const linkInput = document.getElementById('plLinkInput');
 
-            // افتح المودال + املأ السيشنات
-            $(document).on('click', '.open-drive-link-modal', function() {
-                const sessions = $(this).data('sessions') || [];
-                currentSessions = sessions;
+            // افتح المودال واملأ البيانات
+            $(document).on('click', '.open-product-link-modal', function() {
+                const pid = $(this).data('product-id');
+                const link = $(this).data('product-link') || '';
 
-                // املا السليكت
-                refSelect.innerHTML = '';
-                sessions.forEach(s => {
-                    const opt = document.createElement('option');
-                    opt.value = s.reference;
-                    opt.textContent = s.reference + (s.drive_link ? ' (has link)' : '');
-                    refSelect.appendChild(opt);
-                });
+                productIdInput.value = pid;
+                linkInput.value = link;
 
-                // اختَر أول عنصر واملأ اللينك الحالي (إن وُجد)
-                if (sessions.length) {
-                    linkInput.value = sessions[0].drive_link || '';
-                } else {
-                    linkInput.value = '';
-                }
-
-                // غيّر عنوان المودال حسب وجود لينك
-                const anyHasLink = sessions.some(s => s.drive_link);
+                // عدّل العنوان حسب وجود لينك
                 modalEl.querySelector('.modal-title').textContent =
-                    anyHasLink ? "{{ __('messages.edit_drive_link') }}" :
-                    "{{ __('messages.add_drive_link') }}";
+                    link ? "{{ __('messages.edit_product_drive_link') }}" :
+                    "{{ __('messages.add_product_drive_link') }}";
 
-                const bsModal = new bootstrap.Modal(modalEl);
-                bsModal.show();
-            });
-
-            // عند تغيير الـ reference، حدّث قيمة حقل اللينك لو موجود
-            refSelect.addEventListener('change', function() {
-                const selected = currentSessions.find(s => s.reference === this.value);
-                linkInput.value = (selected && selected.drive_link) ? selected.drive_link : '';
+                new bootstrap.Modal(modalEl).show();
             });
 
             // حفظ
-            $('#driveLinkForm').on('submit', function(e) {
+            $('#productLinkForm').on('submit', function(e) {
                 e.preventDefault();
-                const reference = refSelect.value;
+
+                const product_id = productIdInput.value;
                 const drive_link = linkInput.value.trim();
-                if (!reference || !drive_link) return;
+
+                if (!product_id || !drive_link) return;
 
                 $.ajax({
-                    url: "{{ route('shooting-sessions.updateDriveLink.index') }}",
+                    url: "{{ route('shooting-products.updateDriveLink') }}",
                     type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        reference: reference,
-                        drive_link: drive_link
+                        product_id,
+                        drive_link
                     },
                     success: function(resp) {
                         alert(resp.message || 'Saved');
-                        // اقفل المودال وحدث الصفحة
                         bootstrap.Modal.getInstance(modalEl).hide();
                         location.reload();
                     },

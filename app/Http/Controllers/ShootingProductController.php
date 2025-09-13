@@ -450,20 +450,32 @@ class ShootingProductController extends Controller
         }
     }
 
-       public function updateDriveLinkIndex(Request $request)
+    public function updateProductDriveLink(Request $request)
     {
         $data = $request->validate([
-            'reference'  => 'required|string',
-            'drive_link' => 'required|string', // لو عايز: 'url'
+            'product_id' => 'required|integer|exists:shooting_products,id',
+            'drive_link' => 'required|string', // خليه 'url' لو تحب
         ]);
 
-        ShootingSession::where('reference', $data['reference'])->update([
-            'drive_link' => $data['drive_link'],
-            'status'     => 'completed',
-            'updated_at' => now(),
-        ]);
+        // 1) خزّن اللينك على مستوى المنتج
+        $product = ShootingProduct::findOrFail($data['product_id']);
+        $product->product_drive_link = $data['drive_link'];
+        $product->save();
 
-        return response()->json(['message' => 'Drive link saved and session marked completed.']);
+        // 2) كمّل عناصر المنتج داخل أي سيشن (الخاصة بألوانه) لو مش مكتملة
+        $colorIds = $product->shootingProductColors()->pluck('id');
+
+        ShootingSession::whereIn('shooting_product_color_id', $colorIds)
+            ->where('status', '!=', 'completed')
+            ->update([
+                'status'     => 'completed',
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product drive link saved. Related items marked as completed.',
+        ]);
     }
 
 

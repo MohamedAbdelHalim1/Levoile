@@ -29,6 +29,7 @@ class ShootingProduct extends Model
         'custom_id',
         'shooting_method',
         'is_reviewed',
+        'product_drive_link',
     ];
 
     public function shootingProductColors()
