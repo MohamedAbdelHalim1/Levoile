@@ -450,31 +450,51 @@ class ShootingProductController extends Controller
         }
     }
 
+
+
     public function updateProductDriveLink(Request $request)
     {
         $data = $request->validate([
             'product_id' => 'required|integer|exists:shooting_products,id',
-            'drive_link' => 'required|string', // خليه 'url' لو تحب
+            'drive_link' => 'required|string', // أو 'url'
         ]);
 
-        // 1) خزّن اللينك على مستوى المنتج
-        $product = ShootingProduct::findOrFail($data['product_id']);
-        $product->product_drive_link = $data['drive_link'];
-        $product->save();
+        DB::transaction(function () use ($data) {
+            // 1) خزّن اللينك على مستوى المنتج
+            $product = ShootingProduct::findOrFail($data['product_id']);
+            $product->product_drive_link = $data['drive_link'];
+            $product->save();
 
-        // 2) كمّل عناصر المنتج داخل أي سيشن (الخاصة بألوانه) لو مش مكتملة
-        $colorIds = $product->shootingProductColors()->pluck('id');
+            // كل ألوان المنتج
+            $colorIds = $product->shootingProductColors()->pluck('id');
 
-        ShootingSession::whereIn('shooting_product_color_id', $colorIds)
-            ->where('status', '!=', 'completed')
-            ->update([
-                'status'     => 'completed',
-                'updated_at' => now(),
-            ]);
+            // 2) كمّل عناصر المنتج داخل أي سيشن (الخاصة بألوانه)
+            ShootingSession::whereIn('shooting_product_color_id', $colorIds)
+                ->where('status', '!=', 'completed')
+                ->update([
+                    'status'     => 'completed',
+                    'updated_at' => now(),
+                ]);
+
+            // 3) كمّل حالات الألوان نفسها
+            ShootingProductColor::whereIn('id', $colorIds)
+                ->where('status', '!=', 'completed')
+                ->update([
+                    'status'     => 'completed',
+                    'updated_at' => now(),
+                ]);
+
+            // حدّث حالة المنتج نفسه (بما إن كل ألوانه بقت completed)
+            $product->status = 'completed';
+            $product->save();
+            // أو لو حابب تستخدم طريقتك:
+            // $product->unsetRelation('shootingProductColors');
+            // $product->refreshStatusBasedOnColors();
+        });
 
         return response()->json([
             'success' => true,
-            'message' => 'Product drive link saved. Related items marked as completed.',
+            'message' => 'Product drive link saved. Related sessions & colors marked as completed.',
         ]);
     }
 
