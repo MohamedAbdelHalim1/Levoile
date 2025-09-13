@@ -398,7 +398,7 @@ return [
     'add_weight_and_sizes' => 'اضافة الوزن والمقاسات',
     'edit_weight_and_sizes' => 'تعديل الوزن والمقاسات',
     'enter_color_code' => 'ادخل كود اللون',
-    'enter_color_code_and_press_enter' => 'ادخل كود اللون واضغط enter',
+    'enter_product_name_and_press_enter' => 'ادخل اسم اللون واضغط enter',
     'shooting_settings' => 'اعدادات التصوير',
     'color_not_found' => 'لا يوجد لون مطابق لهذا الكود',
     'multi_start' => 'بدء التصوير للمنتجات المحددة',
@@ -456,6 +456,8 @@ return [
     'color_updated' => 'تم تعديل اللون',
     'color_deleted' => 'تم حذف اللون',
     'my_requests' => 'طلبات الخامات',
+    'reels_shooting' => 'تصوير رييلز',
+    'sara_shooting' => 'تصوير ساره',
 
 
 ];

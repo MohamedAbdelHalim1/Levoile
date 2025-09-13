@@ -23,6 +23,8 @@
                             <option value="تصوير انفلونسر"
                                 {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>{{ __('messages.inflo_shooting') }} 
                             </option>
+                            <option value="تصوير ريلز" {{ request('type_of_shooting') == 'تصوير ريلز' ? 'selected' : '' }}>{{ __('messages.reels_shooting') }} </option>
+                            <option value="تصوير ساره" {{ request('type_of_shooting') == 'تصوير ساره' ? 'selected' : '' }}>{{ __('messages.sara_shooting') }} </option>
                             <option value="تعديل لون" {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>
                                 {{ __('messages.change_color') }} </option>
                         </select>
@@ -177,6 +179,8 @@
                             <option value="تصوير منتج">{{ __('messages.product_shooting') }}</option>
                             <option value="تصوير موديل">{{ __('messages.model_shooting') }}</option>
                             <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }}</option>
+                            <option value="تصوير ريلز">{{ __('messages.reels_shooting') }} </option>
+                            <option value="تصوير ساره">{{ __('messages.sara_shooting') }} </option>
                             <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                         </select>
                     </div>
@@ -206,6 +210,8 @@
                             <option value="تصوير منتج">{{ __('messages.product_shooting') }}</option>
                             <option value="تصوير موديل">{{ __('messages.model_shooting') }} </option>
                             <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }}</option>
+                            <option value="تصوير ريلز">{{ __('messages.reels_shooting') }} </option>
+                            <option value="تصوير ساره">{{ __('messages.sara_shooting') }} </option>
                             <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                         </select>
                     </div>

@@ -43,8 +43,8 @@
                                         <th>{{ __('messages.location') }}</th>
                                         <th>{{ __('messages.date_of_shooting') }} </th>
                                         <th>{{ __('messages.photographer') }}</th>
-                                        <th>{{ __('messages.date_of_editing') }} </th>
-                                        <th>{{ __('messages.editors') }}</th>
+                                        {{-- <th>{{ __('messages.date_of_editing') }} </th>
+                                        <th>{{ __('messages.editors') }}</th> --}}
                                         <th>{{ __('messages.date_of_delivery') }} </th>
                                         <th>{{ __('messages.sessions') }}</th>
                                     </tr>
@@ -89,7 +89,7 @@
                                                     -
                                                 @endif
                                             </td>
-                                            <td>{{ $color->date_of_editing ?? '-' }}</td>
+                                            {{-- <td>{{ $color->date_of_editing ?? '-' }}</td>
                                             <td>
                                                 @if ($color->editor)
                                                     @foreach (json_decode($color->editor) as $id)
@@ -100,7 +100,7 @@
                                                 @else
                                                     -
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td>{{ $color->date_of_delivery ?? '-' }}</td>
                                             <td>
                                                 @if ($color->sessions->count())

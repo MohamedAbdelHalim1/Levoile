@@ -330,7 +330,11 @@ Route::middleware('auth')->group(function () {
         ->name('shooting-sessions.updateDriveLink');
     Route::get('/shooting-product/manual', [ShootingProductController::class, 'manual'])->name('shooting-products.manual');
     Route::post('/shooting-product/manual/save', [ShootingProductController::class, 'manualSave'])->name('shooting-products.manual.save');
-    Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
+    Route::post(
+        '/shooting-products/manual/find-color-by-name',
+        [ShootingProductController::class, 'findColorsByName']
+    )->name('shooting-products.manual.findColorByName');
+    //Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
     Route::post('/shooting-products/save-size-weight', [ShootingProductController::class, 'saveSizeWeight'])
         ->name('shooting-products.save-size-weight');
 
@@ -365,7 +369,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/shooting-sessions/{reference}', [ShootingProductController::class, 'showShootingSession'])->name('shooting-sessions.show');
     Route::post('/shooting-products/review', [ShootingProductController::class, 'markReviewed'])->name('shooting-products.review');
     Route::delete('shooting-sessions/{session}/remove-color', [ShootingProductController::class, 'removeColor'])->name('shooting-sessions.remove-color');
-
+    Route::delete(
+        '/shooting-sessions/{reference}/bulk-remove',
+        [ShootingProductController::class, 'bulkRemoveColors']
+    )->name('shooting-sessions.bulk-remove');
     Route::get('/edit-sessions', [EditSessionController::class, 'index'])->name('edit-sessions.index');
     Route::post('/edit-sessions/assign-editor', [EditSessionController::class, 'assignEditor'])->name('edit-sessions.assign-editor');
     Route::post('/edit-sessions/upload-drive-link', [EditSessionController::class, 'uploadDriveLink'])->name('edit-sessions.upload-drive-link');

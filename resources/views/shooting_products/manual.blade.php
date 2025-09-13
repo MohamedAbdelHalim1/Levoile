@@ -10,7 +10,7 @@
                     <h5 class="mb-3">{{ __('messages.enter_color_code') }} </h5>
 
                     <input type="text" id="colorCodeInput" class="form-control mb-3"
-                        placeholder="{{ __('messages.enter_color_code_and_press_enter') }}">
+                        placeholder="{{ __('messages.enter_product_name_and_press_enter') }}">
 
                     <div id="colorResult"></div>
 
@@ -49,6 +49,9 @@
                                 <option value="تصوير منتج">{{ __('messages.product_shooting') }} </option>
                                 <option value="تصوير موديل">{{ __('messages.model_shooting') }} </option>
                                 <option value="تصوير انفلونسر">{{ __('messages.inflo_shooting') }} </option>
+                                {{-- هنضيف تصوير ريلز + تصوير ساره --}}
+                                <option value="تصوير ريلز">{{ __('messages.reels_shooting') }} </option>
+                                <option value="تصوير ساره">{{ __('messages.sara_shooting') }} </option>
                                 <option value="تعديل لون">{{ __('messages.change_color') }} </option>
                             </select>
                         </div>
@@ -105,8 +108,10 @@
                         </div>
 
                         <div class="col-md-12">
-                            <button type="submit" form="manualShootingForm" class="btn btn-success">{{ __('messages.save') }}</button>
-                            <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
+                            <button type="submit" form="manualShootingForm"
+                                class="btn btn-success">{{ __('messages.save') }}</button>
+                            <a href="{{ route('shooting-products.index') }}"
+                                class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                         </div>
                     </div>
                 </div>
@@ -124,9 +129,11 @@
         $('#shootingType').on('change', function() {
             let type = $(this).val();
 
-            $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper , #shootingWaySection').addClass('d-none');
+            $('#locationWrapper, #photographerWrapper, #editorWrapper, #methodWrapper , #shootingWaySection')
+                .addClass('d-none');
 
-            if (type === 'تصوير منتج' || type === 'تصوير موديل' || type === 'تصوير انفلونسر') {
+            if (type === 'تصوير منتج' || type === 'تصوير موديل' || type === 'تصوير انفلونسر' || type ===
+                'تصوير ريلز' || type === 'تصوير ساره') {
                 $('#locationWrapper, #photographerWrapper, #methodWrapper, #shootingWaySection').removeClass(
                     'd-none');
             } else if (type === 'تعديل لون') {
@@ -138,20 +145,20 @@
             if (e.which === 13) {
                 e.preventDefault();
 
-                let code = $(this).val().trim();
-                if (!code) return;
+                const name = $(this).val().trim();
+                if (!name) return;
 
                 $.ajax({
-                    url: "{{ route('shooting-products.manual.findColor') }}",
+                    url: "{{ route('shooting-products.manual.findColorByName') }}",
                     type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        code: code
+                        name: name
                     },
                     success: function(res) {
                         if (!res.found) {
                             $('#colorResult').html(
-                                `<div class="alert alert-danger">{{ __('messages.color_not_found') }}</div>`
+                                `<div class="alert alert-danger">{{ __('messages.product_or_variants_not_found') }}</div>`
                             );
                             return;
                         }
@@ -159,19 +166,41 @@
                         $('#colorResult').html('');
                         $('#selectedColorsTable').removeClass('d-none');
 
-                        const row = `
+                        // تجنّب التكرار: هنجمع القيم الحالية
+                        const existingIds = new Set(
+                            Array.from(document.querySelectorAll('input[name="selected_colors[]"]'))
+                            .map(i => i.value)
+                        );
+
+                        let rows = '';
+                        res.colors.forEach(item => {
+                            if (existingIds.has(String(item.id))) return; // متضاف قبل كده
+
+                            rows += `
                             <tr>
                                 <td>${counter++}</td>
-                                <td>${res.code}</td>
-                                <td>${res.product}</td>
+                                <td>${item.code ?? '-'}</td>
+                                <td>${item.product} ${(item.color_name ? ' - ' + item.color_name : '')}</td>
                                 <td><button type="button" class="btn btn-sm btn-danger remove-row">X</button></td>
-                                <input type="hidden" name="selected_colors[]" value="${res.id}">
+                                <input type="hidden" name="selected_colors[]" value="${item.id}">
                             </tr>
                         `;
+                        });
 
+                        if (rows === '') {
+                            $('#colorResult').html(
+                                `<div class="alert alert-info">{{ __('messages.already_added_all_variants') }}</div>`
+                            );
+                            return;
+                        }
 
-                        $('#colorsTableBody').append(row);
+                        $('#colorsTableBody').append(rows);
                         $('#colorCodeInput').val('').focus();
+                    },
+                    error: function() {
+                        $('#colorResult').html(
+                            `<div class="alert alert-danger">{{ __('messages.something_went_wrong') }}</div>`
+                        );
                     }
                 });
             }

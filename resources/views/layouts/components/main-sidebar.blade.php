@@ -365,8 +365,9 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a
-                                                        href="javascript:void(0)">{{ __('messages.shooting') }}</a>
+                                                <li>
+                                                    <a href="{{ route('shooting-deliveries.index') }}"
+                                                        class="slide-item">{{ __('messages.shooting_deliveries') }}</a>
                                                 </li>
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_products') }}</a>
@@ -378,15 +379,15 @@
                                                     <a href="{{ route('ready-to-shoot.index') }}" class="slide-item">
                                                         {{ __('messages.ready_to_shoot') }}</a>
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a href="{{ route('edit-sessions.index') }}" class="slide-item">
                                                         {{ __('messages.edit_sessions') }}
                                                     </a>
+                                                </li> --}}
+                                                <li class="side-menu-label1"><a
+                                                        href="javascript:void(0)">{{ __('messages.shooting') }}</a>
                                                 </li>
-                                                <li>
-                                                    <a href="{{ route('shooting-deliveries.index') }}"
-                                                        class="slide-item">{{ __('messages.shooting_deliveries') }}</a>
-                                                </li>
+                                                
                                             </ul>
                                         </div>
                                     </div>

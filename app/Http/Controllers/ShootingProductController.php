@@ -461,25 +461,60 @@ class ShootingProductController extends Controller
         return view('shooting_products.manual', compact('photographers', 'editors', 'waysOfShooting'));
     }
 
-    public function findColorByCode(Request $request)
+    public function findColorsByName(Request $request)
     {
         $request->validate([
-            'code' => 'required|string'
+            'name' => 'required|string',
         ]);
 
-        $color = ShootingProductColor::with('shootingProduct')->where('code', $request->code)->first();
+        // جيب المنتجات المطابقة بالاسم ومعاها كل الألوان
+        $products = ShootingProduct::with(['shootingProductColors' => function ($q) {
+            $q->select('id', 'shooting_product_id', 'code', 'name'); // code + اسم اللون
+        }])
+            ->where('name', 'LIKE', '%' . $request->name . '%')
+            ->get(['id', 'name']); // بس الأعمدة المطلوبة
 
-        if (!$color) {
+        // جمع كل الألوان في Array واحدة
+        $colors = $products->flatMap(function ($product) {
+            return $product->shootingProductColors->map(function ($color) use ($product) {
+                return [
+                    'id'         => $color->id,
+                    'code'       => $color->code,        // كود اللون/الفاريانت
+                    'color_name' => $color->name,        // اسم اللون
+                    'product'    => $product->name,      // اسم المنتج
+                ];
+            });
+        })->values();
+
+        if ($colors->isEmpty()) {
             return response()->json(['found' => false]);
         }
 
         return response()->json([
-            'found' => true,
-            'id' => $color->id,
-            'code' => $color->code,
-            'product' => $color->shootingProduct->name
+            'found'  => true,
+            'colors' => $colors,
         ]);
     }
+
+    // public function findColorByCode(Request $request)
+    // {
+    //     $request->validate([
+    //         'code' => 'required|string'
+    //     ]);
+
+    //     $color = ShootingProductColor::with('shootingProduct')->where('code', $request->code)->first();
+
+    //     if (!$color) {
+    //         return response()->json(['found' => false]);
+    //     }
+
+    //     return response()->json([
+    //         'found' => true,
+    //         'id' => $color->id,
+    //         'code' => $color->code,
+    //         'product' => $color->shootingProduct->name
+    //     ]);
+    // }
 
     public function manualSave(Request $request)
     {
@@ -505,7 +540,7 @@ class ShootingProductController extends Controller
                     $color->shooting_method = $request->shooting_method;
 
 
-                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل', 'تصوير ريلز', 'تصوير ساره'])) {
                         $color->location = $request->location;
                         $color->date_of_shooting = $request->date_of_shooting;
                         $color->photographer = json_encode($request->photographer);
@@ -523,7 +558,7 @@ class ShootingProductController extends Controller
                     $newColor->date_of_delivery = $request->date_of_delivery;
                     $newColor->shooting_method = $request->shooting_method;
 
-                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل'])) {
+                    if (in_array($request->type_of_shooting, ['تصوير انفلونسر', 'تصوير منتج', 'تصوير موديل', 'تصوير ريلز', 'تصوير ساره'])) {
                         $newColor->location = $request->location;
                         $newColor->date_of_shooting = $request->date_of_shooting;
                         $newColor->photographer = json_encode($request->photographer);
@@ -961,8 +996,8 @@ class ShootingProductController extends Controller
                 $query->whereNotNull('item_no'); // ✅ يحسب بس الصفوف اللي فيها item_no
             },
         ])
-        ->latest()
-        ->get();
+            ->latest()
+            ->get();
 
         // حساب عدد الموديلات المتكررة
         foreach ($deliveries as $delivery) {
@@ -1666,5 +1701,43 @@ class ShootingProductController extends Controller
             'message' => auth()->user()->current_lang == 'ar' ? 'تم استرجاع المنتجات المشابهة بنجاح' : 'Similar products restored successfully',
             'added_count' => $newVariants->count()
         ]);
+    }
+
+    public function bulkRemoveColors(Request $request, $reference)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids) || !is_array($ids)) {
+            return back()->with('error', __('messages.select_at_least_one'));
+        }
+
+        // تأكيد إن السجلات المطلوبة بتتبع نفس الـ reference
+        $sessions = ShootingSession::whereIn('id', $ids)
+            ->where('reference', $reference)
+            ->get();
+
+        if ($sessions->isEmpty()) {
+            return back()->with('error', __('messages.not_found'));
+        }
+
+        // المسموح مسحه فقط اللي مش completed
+        $blocked = $sessions->where('status', 'completed')->pluck('id')->all();
+        $deletable = $sessions->where('status', '!=', 'completed')->pluck('id')->all();
+
+        if (!empty($deletable)) {
+            ShootingSession::whereIn('id', $deletable)->delete();
+        }
+
+        $msgParts = [];
+        if (count($deletable)) {
+            $msgParts[] = __('messages.deleted_count', ['count' => count($deletable)]);
+        }
+        if (count($blocked)) {
+            $msgParts[] = __('messages.skipped_completed_count', ['count' => count($blocked)]);
+        }
+
+        $message = $msgParts ? implode(' - ', $msgParts) : __('messages.nothing_to_delete');
+
+        return back()->with('success', $message);
     }
 }

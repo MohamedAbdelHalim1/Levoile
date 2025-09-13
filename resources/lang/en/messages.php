@@ -398,7 +398,7 @@ return [
     'add_weight_and_size' => 'Add Weight And Size',
     'edit_weight_and_size' => 'Edit Weight And Size',
     'enter_color_code' => 'Enter Color Code',
-    'enter_color_code_and_press_enter' => 'Enter Color Code And Press Enter',
+    'enter_product_name_and_press_enter' => 'Enter Color Name And Press Enter',
     'shooting_settings' => 'Shooting Settings',
     'photographers' => 'Photographers',
     'color_not_found' => 'No color found with this code',
@@ -460,6 +460,8 @@ return [
     'color_updated' => 'Color Updated',
     'color_deleted' => 'Color Deleted',
     'my_requests' => 'My Requests',
+    'reels_shooting' => 'Reels Shooting',
+    'sara_shooting' => 'Sara Shooting',
 
 
 

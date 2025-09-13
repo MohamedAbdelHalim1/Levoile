@@ -168,7 +168,7 @@
             const selectedType = "{{ $type }}";
 
             if (selectedType === 'تصوير منتج' || selectedType === 'تصوير موديل' || selectedType ===
-                'تصوير انفلونسر') {
+                'تصوير انفلونسر' || selectedType === 'تصوير ريلز' || selectedType === 'تصوير ساره') {
                 $('#shootingLocation').parent().show();
                 $('#photographerSection').removeClass('d-none');
                 $('#editorSection').addClass('d-none');
