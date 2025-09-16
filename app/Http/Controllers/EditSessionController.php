@@ -40,37 +40,63 @@ class EditSessionController extends Controller
     public function uploadDriveLink(Request $request)
     {
         $request->validate([
-            'reference' => 'required|string|exists:edit_sessions,reference',
+            'reference'  => 'required|string|exists:edit_sessions,reference',
             'drive_link' => 'required|url',
-            'note' => 'nullable|string',
+            'note'       => 'nullable|string',
         ]);
 
-        // 1. تحديث الـ edit session
-        EditSession::where('reference', $request->reference)
-            ->update([
-                'drive_link' => $request->drive_link,
-                'status' => 'تم التعديل',
-                'note' => $request->note,
-            ]);
+        DB::transaction(function () use ($request) {
 
-        // 2. جلب السيشن
-        $shootingSession = \App\Models\ShootingSession::where('reference', $request->reference)->first();
+            // 1) حدِّث سجل الـ EditSession
+            EditSession::where('reference', $request->reference)
+                ->update([
+                    'drive_link' => $request->drive_link,
+                    'status'     => 'تم التعديل',
+                    'note'       => $request->note,
+                ]);
 
-        if ($shootingSession && $shootingSession->color && $shootingSession->color->shootingProduct) {
-            $shootingProduct = $shootingSession->color->shootingProduct;
+            // 2) هات كل السيشنات اللي ليها نفس الـ reference ومعاها المنتج
+            $sessions = ShootingSession::with('color.shootingProduct')
+                ->where('reference', $request->reference)
+                ->get();
 
-            // 3. إنشاء سجل في جدول مسؤول الموقع لو مش موجود
-            \App\Models\WebsiteAdminProduct::firstOrCreate([
-                'shooting_product_id' => $shootingProduct->id,
-            ], [
-                'name' => $shootingProduct->name,
-                'status' => 'new', // عدّلها لو في منطق معين
-            ]);
-        }
+            // IDs المنتجات المشاركة في الـ reference
+            $productIds = $sessions->pluck('color.shootingProduct.id')
+                ->filter()
+                ->unique()
+                ->values();
 
-        return redirect()->back()->with(
+            // (اختياري لكن مُستحب) علِّم السيشنات والألوان لنفس الـ reference completed
+            ShootingSession::where('reference', $request->reference)
+                ->update(['status' => 'completed', 'updated_at' => now()]);
+
+            $colorIdsInRef = $sessions->pluck('shooting_product_color_id')->unique();
+            ShootingProductColor::whereIn('id', $colorIdsInRef)
+                ->update(['status' => 'completed', 'updated_at' => now()]);
+
+            // 3) علِّم المنتجات نفسها completed
+            if ($productIds->isNotEmpty()) {
+                ShootingProduct::whereIn('id', $productIds)
+                    ->update(['status' => 'completed', 'updated_at' => now()]);
+            }
+
+            // 4) ابعت المنتجات لمسؤول الموقع (لو مش موجودة)
+            foreach ($productIds as $pid) {
+                $product = ShootingProduct::find($pid);
+                if (!$product) continue;
+
+                WebsiteAdminProduct::firstOrCreate(
+                    ['shooting_product_id' => $product->id],
+                    ['name' => $product->name, 'status' => 'new']
+                );
+            }
+        });
+
+        return back()->with(
             'success',
-            auth()->user()->current_lang == 'ar' ? 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع' : 'Drive link uploaded successfully and product sent to website admin'
+            auth()->user()->current_lang == 'ar'
+                ? 'تم رفع لينك درايف، وتم إنهاء المنتجات الخاصة بهذه الجلسة'
+                : 'Drive link uploaded; related products marked completed'
         );
     }
 
