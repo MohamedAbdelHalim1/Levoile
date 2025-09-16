@@ -347,6 +347,10 @@ Route::middleware('auth')->group(function () {
         [EditSessionController::class, 'assignFromShooting']
     )->name('shooting-sessions.assign-editor');
 
+    Route::post('/edit-sessions/assign-from-shooting', [EditSessionController::class, 'assignFromShooting'])
+    ->name('edit-sessions.assign-from-shooting');
+
+
 
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');
     Route::post('shooting-products/{id}/complete', [ShootingProductController::class, 'saveCompleteData'])->name('shooting-products.complete.save');
