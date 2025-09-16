@@ -21,13 +21,13 @@
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
                             <th>{{ __('messages.reference') }}</th>
-                            <th>{{ __('messages.session_link') }}</th>
+                            {{-- <th>{{ __('messages.session_link') }}</th> --}}
                             <th>{{ __('messages.edit_link') }}</th>
                             <th>{{ __('messages.editor') }}</th>
                             <th>{{ __('messages.status') }}</th>
                             <th>{{ __('messages.receiving_date') }}</th>
                             <th>{{ __('messages.remaining_time') }} </th>
-                            <th>{{ __('messages.notes') }}</th>
+                            {{-- <th>{{ __('messages.notes') }}</th> --}}
                             {{-- <th>المراجعة</th> --}}
                         </tr>
                     </thead>
@@ -42,13 +42,13 @@
                                         {{ $session->reference }}
                                     </a>
                                 </td>
-                                <td>
+                                {{-- <td>
                                     @if ($session->photo_drive_link)
                                         <a href="{{ $session->photo_drive_link }}" target="_blank">{{ __('messages.open') }}</a>
                                     @else
                                         <span class="text-muted">{{ __('messages.N/A') }}</span>
                                     @endif
-                                </td>
+                                </td> --}}
                                 <td>
                                     <span class="d-flex align-items-center justify-content-between">
                                         @if ($session->drive_link)
@@ -120,7 +120,7 @@
                                         -
                                     @endif
                                 </td>
-                                <td>{{ $session->note ?? '-' }}</td>
+                                {{-- <td>{{ $session->note ?? '-' }}</td> --}}
                                
 
                             </tr>
