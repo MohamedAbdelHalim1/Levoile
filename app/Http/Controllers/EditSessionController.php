@@ -4,6 +4,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\EditSession;
+use App\Models\ShootingProduct;
+use App\Models\ShootingProductColor;
+use App\Models\ShootingSession;
+use App\Models\WebsiteAdminProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
