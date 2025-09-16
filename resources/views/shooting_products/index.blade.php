@@ -619,7 +619,8 @@
                                                     'reference' => $r,
                                                     'editor_name' => optional(optional($es)->user)->name,
                                                     'has_editor' => (bool) optional($es)->user_id,
-                                                    'date' => optional($es)->receiving_date?->format('Y-m-d'),
+                                                   'date' => optional($es->receiving_date)->format('Y-m-d'),
+
                                                 ];
                                             })
                                             ->values();

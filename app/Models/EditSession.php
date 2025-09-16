@@ -19,5 +19,11 @@ class EditSession extends Model
         'note',
     ];
 
+    protected $casts = [
+        'receiving_date' => 'date',      // <-- أضف دي
+        'created_at'     => 'datetime',
+        'updated_at'     => 'datetime',
+    ];
+
     public $timestamps = true;
 }
