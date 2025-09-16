@@ -167,7 +167,8 @@
                             <th>{{ __('messages.status_of_data') }}</th>
                             <th>{{ __('messages.review') }}</th>
                             {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
-                            <th>{{ __('messages.product_drive_link') }}</th>
+                            {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
+                            <th>{{ __('messages.assign_editor') }}</th>
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
@@ -517,6 +518,7 @@
                                                             <span class="d-block">-</span>
                                                         @endif
                                                     @break
+
                                                     @case('date_of_delivery')
                                                         <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
                                                     @break
@@ -629,7 +631,7 @@
 
                                 </td> --}}
 
-                                <td>
+                                {{-- <td>
                                     @php
                                         // كل مراجع السيشن للمنتج
                                         $allSessions = $product->shootingProductColors->flatMap(
@@ -653,7 +655,6 @@
                                         $hasAnyLink = $payload->contains(fn($i) => !empty($i['drive_link']));
                                     @endphp
 
-                                    {{-- عرض سريع: لكل سيشن ref، لو فيه لينك للمنتج اظهر أيقونة لينك --}}
                                     @forelse ($refs as $ref)
                                         <div class="d-flex align-items-center mb-1" style="gap:6px;">
                                             <span class="badge bg-light text-dark">{{ $ref }}</span>
@@ -670,13 +671,68 @@
                                         <span class="text-muted">{{ __('messages.N/A') }}</span>
                                     @endforelse
 
-                                    {{-- زر الإضافة/التعديل (يفتح مودال اختيار الـreference + إدخال اللينك) --}}
                                     @if ($refs->isNotEmpty())
                                         <button type="button"
                                             class="btn btn-outline-success btn-sm mt-1 open-product-session-link-modal"
                                             data-product-id="{{ $product->id }}"
                                             data-sessions='@json($payload)'>
                                             {{ $hasAnyLink ? __('messages.edit_product_drive_link') : __('messages.add_product_drive_link') }}
+                                        </button>
+                                    @endif
+                                </td> --}}
+                                <td>
+                                    @php
+                                        // كل مراجع السيشن للمنتج
+                                        $allSessions = $product->shootingProductColors->flatMap(
+                                            fn($c) => $c->sessions ?? collect(),
+                                        );
+                                        $refs = $allSessions->pluck('reference')->unique()->values();
+
+                                        // لو فيه EditSession على أي ref نعرض اسمه
+                                        $editSessionsMap = \App\Models\EditSession::whereIn('reference', $refs)
+                                            ->get()
+                                            ->keyBy('reference');
+
+                                        // payload للمودال (reference + editor name لو موجود)
+                                        $payloadEditors = $refs
+                                            ->map(function ($r) use ($editSessionsMap) {
+                                                $es = $editSessionsMap->get($r);
+                                                return [
+                                                    'reference' => $r,
+                                                    'editor_name' => optional(optional($es)->user)->name,
+                                                    'has_editor' => (bool) optional($es)->user_id,
+                                                    'date' => optional($es)->receiving_date?->format('Y-m-d'),
+                                                ];
+                                            })
+                                            ->values();
+
+                                        $hasAnyEditor = $payloadEditors->contains(fn($i) => $i['has_editor']);
+                                    @endphp
+
+                                    {{-- عرض سريع لحالة كل Reference --}}
+                                    @forelse ($payloadEditors as $it)
+                                        <div class="d-flex align-items-center mb-1" style="gap:6px;">
+                                            <span class="badge bg-light text-dark">{{ $it['reference'] }}</span>
+                                            @if ($it['has_editor'])
+                                                <span
+                                                    class="badge bg-success">{{ $it['editor_name'] ?? __('messages.editor') }}</span>
+                                                @if (!empty($it['date']))
+                                                    <span class="badge bg-info">{{ $it['date'] }}</span>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </div>
+                                    @empty
+                                        <span class="text-muted">{{ __('messages.N/A') }}</span>
+                                    @endforelse
+
+                                    {{-- زر التعيين/التعديل --}}
+                                    @if ($refs->isNotEmpty())
+                                        <button type="button"
+                                            class="btn btn-outline-primary btn-sm mt-1 open-product-assign-editor-modal"
+                                            data-sessions='@json($payloadEditors)'>
+                                            {{ $hasAnyEditor ? __('messages.edit') : __('messages.assign_editor') }}
                                         </button>
                                     @endif
                                 </td>
@@ -754,7 +810,7 @@
     </div>
 
     <!-- Product Drive Link (at product level) -->
-    <div class="modal fade" id="productSessionLinkModal" tabindex="-1" aria-hidden="true">
+    {{-- <div class="modal fade" id="productSessionLinkModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -778,8 +834,45 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
+
+    <!-- Product Assign Editor (at product level) -->
+    <div class="modal fade" id="productAssignEditorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('edit-sessions.assign-from-shooting') }}" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('messages.assign_editor') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.sessions') }}</label>
+                        <select name="reference" id="paeRefSelect" class="form-control" required></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.editor') }}</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">{{ __('messages.assign_editor') }}</option>
+                            @foreach (\App\Models\User::where('role_id', 7)->orderBy('name')->get() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.receiving_date') }}</label>
+                        <input type="date" name="receiving_date" id="paeDateInput" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 
@@ -1107,6 +1200,46 @@
                 }).fail(function() {
                     alert("{{ __('messages.something_went_wrong') }}");
                 });
+            });
+        })();
+    </script>
+    <script>
+        (function() {
+            const modalEl = document.getElementById('productAssignEditorModal');
+            const refSelect = document.getElementById('paeRefSelect');
+            const dateInput = document.getElementById('paeDateInput');
+            let current = []; // [{reference, editor_name?, has_editor?, date?}]
+
+            // افتح المودال واملأ الريفرنسات + التاريخ الافتراضي لو موجود
+            $(document).on('click', '.open-product-assign-editor-modal', function() {
+                current = $(this).data('sessions') || [];
+
+                refSelect.innerHTML = '';
+                current.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.reference;
+                    opt.textContent = s.reference + (s.has_editor ? ` ({{ __('messages.editor') }})` :
+                        '');
+                    refSelect.appendChild(opt);
+                });
+
+                // Default: اختار أول ref واملأ التاريخ لو موجود
+                if (current.length) {
+                    const first = current[0];
+                    dateInput.value = first.date || '';
+                } else {
+                    dateInput.value = '';
+                }
+
+                // غيّر التاريخ حسب الـ ref المختار
+                refSelect.addEventListener('change', function() {
+                    const pick = current.find(s => s.reference === this.value);
+                    dateInput.value = pick && pick.date ? pick.date : '';
+                }, {
+                    once: true
+                });
+
+                new bootstrap.Modal(modalEl).show();
             });
         })();
     </script>
