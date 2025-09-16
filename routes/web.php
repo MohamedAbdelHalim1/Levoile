@@ -342,7 +342,10 @@ Route::middleware('auth')->group(function () {
         [ShootingProductController::class, 'saveProductDriveLinkForSession']
     )->name('shooting-products.productDriveLink.save');
 
-
+    Route::post(
+        '/shooting-sessions/assign-editor',
+        [EditSessionController::class, 'assignFromShooting']
+    )->name('shooting-sessions.assign-editor');
 
 
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');

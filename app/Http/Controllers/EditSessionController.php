@@ -30,8 +30,10 @@ class EditSessionController extends Controller
                 'receiving_date' => $request->receiving_date,
             ]);
 
-        return redirect()->back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully');
+        return redirect()->back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully'
+        );
     }
 
 
@@ -66,8 +68,10 @@ class EditSessionController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع' : 'Drive link uploaded successfully and product sent to website admin');
+        return redirect()->back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم رفع لينك درايف بنجاح وتم إرسال المنتج لمسؤول الموقع' : 'Drive link uploaded successfully and product sent to website admin'
+        );
     }
 
 
@@ -127,10 +131,38 @@ class EditSessionController extends Controller
                 $session->save();
             }
 
-            return redirect()->back()->with('success',
-            auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر للجلسات المختارة بنجاح' : 'Editors assigned successfully');
+            return redirect()->back()->with(
+                'success',
+                auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر للجلسات المختارة بنجاح' : 'Editors assigned successfully'
+            );
         } catch (\Exception $e) {
             dd($e);
         }
+    }
+
+    public function assignFromShooting(Request $request)
+    {
+        $data = $request->validate([
+            'reference'      => 'required|string|exists:shooting_sessions,reference',
+            'user_id'        => 'required|exists:users,id',
+            'receiving_date' => 'required|date',
+        ]);
+
+        // لو الـ reference ملوش EditSession، انشئه
+        \App\Models\EditSession::updateOrCreate(
+            ['reference' => $data['reference']],
+            [
+                'user_id'        => $data['user_id'],
+                'receiving_date' => $data['receiving_date'],
+                'status'         => 'جديد', // سيبه “جديد” لحد ما المحرر يرفع اللينك
+            ]
+        );
+
+        return back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar'
+                ? 'تم تعيين المحرر بنجاح'
+                : 'Editor assigned successfully'
+        );
     }
 }

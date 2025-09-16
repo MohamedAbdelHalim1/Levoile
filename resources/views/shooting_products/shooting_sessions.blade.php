@@ -34,7 +34,7 @@
                                 <th>{{ __('messages.date_of_delivery') }} </th>
                                 <th>{{ __('messages.remaining_time') }} </th>
                                 <th>{{ __('messages.drive_link') }}</th>
-                                <th>{{ __('messages.way_of_shooting_link') }}  </th>
+                                <th>{{ __('messages.way_of_shooting_link') }} </th>
                                 <th>{{ __('messages.way_of_shooting') }} </th>
                                 <th>{{ __('messages.notes') }}</th>
                                 <th>{{ __('messages.operations') }}</th>
@@ -153,11 +153,13 @@
                                                 <span>-</span>
                                             @else
                                                 @if ($remaining > 0)
-                                                    <span class="badge bg-primary">{{ $remaining }} {{ __('messages.day_remaining') }}</span>
+                                                    <span class="badge bg-primary">{{ $remaining }}
+                                                        {{ __('messages.day_remaining') }}</span>
                                                 @elseif ($remaining == 0)
                                                     <span class="badge bg-warning">{{ __('messages.today') }} </span>
                                                 @else
-                                                    <span class="badge bg-danger"> {{ __('messages.day_overdue') }} {{ abs($remaining) }} </span>
+                                                    <span class="badge bg-danger"> {{ __('messages.day_overdue') }}
+                                                        {{ abs($remaining) }} </span>
                                                 @endif
                                             @endif
                                         @endif
@@ -203,10 +205,9 @@
 
 
                                     <td>
-                                        <button class="btn btn-success btn-sm open-drive-link-modal"
-                                            data-reference="{{ $session->reference }}"
-                                            data-drive-link="{{ $firstLink }}">
-                                            {{ __('messages.add_drive_link') }}
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
+                                            {{ __('messages.assign_editor') }}
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
@@ -224,34 +225,41 @@
             </div>
         </div>
     </div>
-    <!-- Drive Link Modal -->
-    <div class="modal fade" id="driveLinkModal" tabindex="-1" aria-labelledby="driveLinkModalLabel" aria-hidden="true">
+    <!-- Modal: تعيين محرر (صفحة جلسات التصوير) -->
+    <div class="modal fade" id="assignEditorModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <form method="POST" action="{{ route('shooting-sessions.assign-editor') }}" class="modal-content">
+                @csrf
+                <input type="hidden" name="reference" id="editorModalReference">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('messages.add_drive_link') }}  </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">{{ __('messages.assign_editor') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <form id="driveLinkForm">
-                        @csrf
-                        <input type="hidden" name="reference" id="drive_session_reference">
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.assign_editor') }}</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">{{ __('messages.assign_editor') }}</option>
+                            @foreach (\App\Models\User::where('role_id', 7)->orderBy('name')->get() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">{{ __('messages.drive_link') }}</label>
-                            <input type="text" name="drive_link" id="drive_link_input" class="form-control" required>
-                        </div>
-                        <div class="mb-3 d-none" id="noteWrapper">
-                            <label class="form-label">{{ __('messages.notes') }} </label>
-                            <textarea name="note" id="noteInput" class="form-control" rows="3"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </form>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.receiving_date') }}</label>
+                        <input type="date" name="receiving_date" class="form-control" required>
+                    </div>
                 </div>
-            </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                </div>
+            </form>
         </div>
     </div>
+
 @endsection
 
 
@@ -320,5 +328,12 @@
                 }
             });
         });
+    </script>
+    <script>
+        document.getElementById('assignEditorModal')
+            .addEventListener('show.bs.modal', function(e) {
+                const btn = e.relatedTarget;
+                document.getElementById('editorModalReference').value = btn.getAttribute('data-reference');
+            });
     </script>
 @endsection
