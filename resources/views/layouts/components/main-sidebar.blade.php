@@ -385,11 +385,11 @@
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_products') }}</a>
                                                 </li>
-                                                {{-- <li>
+                                                <li>
                                                     <a href="{{ route('edit-sessions.index') }}" class="slide-item">
                                                         {{ __('messages.edit_sessions') }}
                                                     </a>
-                                                </li> --}}
+                                                </li>
                                                 
                                                 
                                             </ul>

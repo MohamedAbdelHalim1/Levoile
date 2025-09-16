@@ -29,7 +29,7 @@
                                 <th>{{ __('messages.type_of_shooting') }} </th>
                                 <th>{{ __('messages.location') }} </th>
                                 <th>{{ __('messages.photographer') }}</th>
-                                {{-- <th>{{ __('messages.editors') }}</th> --}}
+                                <th>{{ __('messages.editors') }}</th>
                                 <th>{{ __('messages.date_of_shooting') }} </th>
                                 <th>{{ __('messages.date_of_delivery') }} </th>
                                 <th>{{ __('messages.remaining_time') }} </th>
@@ -97,7 +97,7 @@
                                     </td>
 
                                     {{-- المحرر --}}
-                                    {{-- <td>
+                                    <td>
                                         @php
                                             $editors = json_decode($firstColor?->editor, true);
                                         @endphp
@@ -111,7 +111,7 @@
                                         @else
                                             <span>-</span>
                                         @endif
-                                    </td> --}}
+                                    </td>
 
                                     <td>
                                         {{ $colors->first()->color->date_of_shooting ?? '-' }}

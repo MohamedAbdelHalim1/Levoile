@@ -151,16 +151,16 @@
                             <th>{{ __('messages.number_of_sessions') }}</th>
                             <th>{{ __('messages.sessions') }}</th>
                             <th>{{ __('messages.status_of_sessions') }}</th>
-                            {{-- <th>{{ __('messages.editors_of_sessions') }}</th> --}}
+                            <th>{{ __('messages.editors_of_sessions') }}</th>
                             <th>{{ __('messages.photo_link') }}</th>
-                            {{-- <th>{{ __('messages.edit_link') }}</th> --}}
-                            {{-- <th>{{ __('messages.status_of_edit') }}</th> --}}
+                            <th>{{ __('messages.edit_link') }}</th>
+                            <th>{{ __('messages.status_of_edit') }}</th>
                             <th>{{ __('messages.type_of_shooting') }}</th>
                             <th>{{ __('messages.location') }}</th>
                             <th>{{ __('messages.date_of_shooting') }}</th>
                             <th>{{ __('messages.photographer') }}</th>
-                            {{-- <th>{{ __('messages.date_of_edit') }}</th> --}}
-                            {{-- <th>{{ __('messages.editors') }}</th> --}}
+                            <th>{{ __('messages.date_of_edit') }}</th>
+                            <th>{{ __('messages.editors') }}</th>
                             <th>{{ __('messages.date_of_delivery') }} </th>
                             <th>{{ __('messages.remaining_time') }}</th>
                             <th>{{ __('messages.way_of_shooting') }}</th>
@@ -368,7 +368,7 @@
                                     }
                                 @endphp
 
-                                {{-- <td>
+                                <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -385,7 +385,7 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td> --}}
+                                </td>
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
@@ -411,7 +411,7 @@
                                     @endforeach
                                 </td>
 
-                                {{-- <td>
+                                <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -433,9 +433,9 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td> --}}
+                                </td>
 
-                                {{-- <td>
+                                <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -453,7 +453,7 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td> --}}
+                                </td>
 
 
 
@@ -467,7 +467,7 @@
                                     }
                                 @endphp
 
-                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_delivery', 'time_left', 'shooting_method'] as $field)
+                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_delivery', 'time_left', 'shooting_method', 'date_of_editing', 'editor'] as $field)
                                     <td>
                                         @foreach ($sessionsGrouped as $ref => $colors)
                                             @php
@@ -501,11 +501,11 @@
                                                         @endif
                                                     @break
 
-                                                    {{-- @case('date_of_editing')
+                                                    @case('date_of_editing')
                                                         <span class="d-block">{{ $firstColor?->date_of_editing ?? '-' }}</span>
-                                                    @break --}}
+                                                    @break
 
-                                                    {{-- @case('editor')
+                                                    @case('editor')
                                                         @php $editors = json_decode($firstColor?->editor, true); @endphp
                                                         @if (is_array($editors))
                                                             <span class="d-block">
@@ -515,8 +515,8 @@
                                                             </span>
                                                         @else
                                                             <span class="d-block">-</span>
-                                                        @endif --}}
-                                                    {{-- @break --}}
+                                                        @endif
+                                                    @break
                                                     @case('date_of_delivery')
                                                         <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
                                                     @break
