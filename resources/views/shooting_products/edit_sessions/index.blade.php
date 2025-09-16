@@ -13,8 +13,8 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
 
                 <h3>{{ __('messages.ready_to_edit_sessions') }}</h3>
-                <button id="bulkAssignBtn" class="btn btn-warning mb-3 d-none" data-bs-toggle="modal"
-                    data-bs-target="#bulkAssignModal">{{ __('messages.bulk_editor_assign') }}</button>
+                {{-- <button id="bulkAssignBtn" class="btn btn-warning mb-3 d-none" data-bs-toggle="modal"
+                    data-bs-target="#bulkAssignModal">{{ __('messages.bulk_editor_assign') }}</button> --}}
 
                 <table class="table table-bordered align-middle">
                     <thead>
