@@ -19,7 +19,7 @@
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAll"></th>
+                            {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                             <th>{{ __('messages.reference') }}</th>
                             {{-- <th>{{ __('messages.session_link') }}</th> --}}
                             <th>{{ __('messages.edit_link') }}</th>
@@ -34,7 +34,7 @@
                     <tbody>
                         @foreach ($sessions as $session)
                             <tr>
-                                <td><input type="checkbox" class="session-checkbox" value="{{ $session->reference }}"></td>
+                                {{-- <td><input type="checkbox" class="session-checkbox" value="{{ $session->reference }}"></td> --}}
 
                                 <td>
                                     <a href="{{ route('shooting-sessions.show', $session->reference) }}"
