@@ -620,6 +620,7 @@
                                                     'editor_name' => optional(optional($es)->user)->name,
                                                     'has_editor' => (bool) optional($es)->user_id,
                                                     'date' => optional(optional($es)->receiving_date)->format('Y-m-d'),
+                                                    'link' => optional($es)->drive_link, // <--- الجديد
                                                 ];
                                             })
                                             ->values();
@@ -628,12 +629,26 @@
                                     @endphp
 
                                     {{-- عرض سريع لحالة كل Reference --}}
+                                    {{-- عرض سريع لحالة كل Reference --}}
                                     @forelse ($payloadEditors as $it)
                                         <div class="d-flex align-items-center mb-1" style="gap:6px;">
                                             <span class="badge bg-light text-dark">{{ $it['reference'] }}</span>
+
                                             @if ($it['has_editor'])
-                                                <span
-                                                    class="badge bg-success">{{ $it['editor_name'] ?? __('messages.editor') }}</span>
+                                                @if (!empty($it['link']))
+                                                    {{-- لو فيه لينك: خليه هو اللي ظاهر بدل "محرر" --}}
+                                                    <a href="{{ $it['link'] }}" target="_blank"
+                                                        class="badge bg-success text-decoration-none">
+                                                        <i class="fe fe-link-2"></i>
+                                                        {{ __('messages.edit_link') }}
+                                                    </a>
+                                                @else
+                                                    {{-- مفيش لينك: رجّع العرض القديم (اسم المحرر/كلمة محرر) --}}
+                                                    <span class="badge bg-success">
+                                                        {{ $it['editor_name'] ?? __('messages.editor') }}
+                                                    </span>
+                                                @endif
+
                                                 @if (!empty($it['date']))
                                                     <span class="badge bg-info">{{ $it['date'] }}</span>
                                                 @endif
@@ -644,6 +659,7 @@
                                     @empty
                                         <span class="text-muted">{{ __('messages.N/A') }}</span>
                                     @endforelse
+
 
                                     {{-- زر التعيين/التعديل --}}
                                     @if ($refs->isNotEmpty())
