@@ -1633,14 +1633,25 @@ class ShootingProductController extends Controller
 
     public function shootingSessions()
     {
+        // كل السيشنات مجمّعة بالـ reference
         $sessions = ShootingSession::select('reference')
             ->groupBy('reference')
-            ->latest()
+            // رتبهم بأحدث created_at داخل الجروب (اختياري)
+            ->orderByDesc(DB::raw('MAX(created_at)'))
             ->get();
 
-        return view('shooting_products.shooting_sessions', compact('sessions'));
+        // هنجمع المراجع ونسحب edit_sessions لها مرة واحدة
+        $refs = $sessions->pluck('reference')->unique()->values();
+
+        $editsByRef = EditSession::whereIn('reference', $refs)
+            ->select('reference', 'user_id', 'drive_link', 'receiving_date')
+            ->get()
+            ->groupBy('reference');  // => Collection keyed by reference
+
+        return view('shooting_products.shooting_sessions', compact('sessions', 'editsByRef'));
     }
 
+    
     public function showShootingSession($reference)
     {
         $colors = ShootingSession::where('reference', $reference)
