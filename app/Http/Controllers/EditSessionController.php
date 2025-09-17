@@ -22,14 +22,14 @@ class EditSessionController extends Controller
 
         $refs = $sessions->pluck('reference')->unique()->values();
 
-        // نجمع أسماء المنتجات لكل reference عبر العلاقات الموجودة: color -> product
         $sessionProductsByRef = ShootingSession::with(['color.shootingProduct:id,name'])
             ->whereIn('reference', $refs)
             ->get()
             ->groupBy('reference')
             ->map(function ($group) {
                 return $group->map(function ($ss) {
-                    return optional(optional($ss->color)->product)->name;
+                    // <-- هنا التعديل: shootingProduct بدل product
+                    return optional(optional($ss->color)->shootingProduct)->name;
                 })
                     ->filter()
                     ->unique()
@@ -41,6 +41,7 @@ class EditSessionController extends Controller
             compact('sessions', 'sessionProductsByRef')
         );
     }
+
 
     public function assignEditor(Request $request)
     {
