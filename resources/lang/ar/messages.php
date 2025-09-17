@@ -463,7 +463,9 @@ return [
     'add_product_drive_link' => 'اضافة رابط المنتج',
     'edit_product_drive_link' => 'تعديل رابط المنتج',
     'session_scope' => 'منتجات السيشن',
-
-
+    'duplicate_color_codes' => 'كود لون مكرر',
+    'occurrences' => 'التكرارات',
+    'details' => 'التفاصيل',
+    
 
 ];

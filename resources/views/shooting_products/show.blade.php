@@ -34,7 +34,6 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>{{ __('messages.name') }}</th>
                                         <th>{{ __('messages.code') }}</th>
                                         <th>{{ __('messages.status') }}</th>
                                         <th>{{ __('messages.color_code') }} </th> {{-- ✅ Color Code --}}
@@ -53,7 +52,6 @@
                                     @foreach ($distinctColorRows as $index => $color)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $color->name ?? '-' }}</td>
                                             <td>{{ $color->code ?? '-' }}</td>
                                             <td>
                                                 <span
@@ -149,7 +147,6 @@
                                                         <table class="table table-sm table-bordered mb-0">
                                                             <thead class="table-light">
                                                                 <tr>
-                                                                    <th>{{ __('messages.name') }}</th>
                                                                     <th>{{ __('messages.code') }}</th>
                                                                     <th>{{ __('messages.size_code') }}</th>
                                                                     <th>{{ __('messages.size') }}</th>
@@ -162,7 +159,6 @@
                                                             <tbody>
                                                                 @foreach ($group as $dup)
                                                                     <tr>
-                                                                        <td>{{ $dup->name ?? '-' }}</td>
                                                                         <td>{{ $dup->code ?? '-' }}</td>
                                                                         <td>{{ $dup->size_code ?? '-' }}</td>
                                                                         <td>{{ $dup->size_name ?? '-' }}</td>

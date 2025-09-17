@@ -467,7 +467,9 @@ return [
     'add_product_drive_link' => 'Add Product Drive Link',
     'edit_product_drive_link' => 'Edit Product Drive Link',
     'session_scope' => 'نطاق السيشن',
-
+    'duplicate_color_codes' => 'Duplicate Color Codes',
+    'occurrences' => 'Occurrences',
+    'details' => 'Details',
     
 
 
