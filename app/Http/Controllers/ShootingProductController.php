@@ -680,8 +680,22 @@ class ShootingProductController extends Controller
     public function show($id)
     {
         $product = ShootingProduct::with(['shootingProductColors.sessions'])->findOrFail($id);
-        return view('shooting_products.show', compact('product'));
+
+        // نجمع الألوان حسب color_code
+        $grouped = $product->shootingProductColors->groupBy('color_code');
+
+        // صف مميز لكل كود (أول صف في كل مجموعة)
+        $distinctColorRows = $grouped->map->first()->values();
+
+        // المكرر: المجموعات اللي عددها > 1
+        $duplicateGroups = $grouped->filter(fn($g) => $g->count() > 1);
+
+        return view(
+            'shooting_products.show',
+            compact('product', 'distinctColorRows', 'duplicateGroups')
+        );
     }
+
 
 
 
@@ -1651,7 +1665,7 @@ class ShootingProductController extends Controller
         return view('shooting_products.shooting_sessions', compact('sessions', 'editsByRef'));
     }
 
-    
+
     public function showShootingSession($reference)
     {
         $colors = ShootingSession::where('reference', $reference)

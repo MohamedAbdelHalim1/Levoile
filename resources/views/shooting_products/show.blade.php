@@ -50,63 +50,46 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($product->shootingProductColors as $index => $color)
+                                    @foreach ($distinctColorRows as $index => $color)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $color->name ?? '-' }}</td>
                                             <td>{{ $color->code ?? '-' }}</td>
                                             <td>
                                                 <span
-                                                    class="badge 
-                                                    {{ $color->status == 'completed'
-                                                        ? 'bg-success'
-                                                        : ($color->status == 'in_progress'
-                                                            ? 'bg-warning text-dark'
-                                                            : 'bg-secondary') }}">
+                                                    class="badge {{ $color->status == 'completed' ? 'bg-success' : ($color->status == 'in_progress' ? 'bg-warning text-dark' : 'bg-secondary') }}">
                                                     {{ $color->status == 'completed' ? __('messages.complete') : ($color->status == 'in_progress' ? __('messages.in_progress') : __('messages.new')) }}
                                                 </span>
                                             </td>
 
-                                            {{-- ✅ Color Code --}}
+                                            {{-- Color Code / Size Code / Size Name --}}
                                             <td>{{ $color->color_code ?? '-' }}</td>
-
-                                            {{-- ✅ Size Code --}}
                                             <td>{{ $color->size_code ?? '-' }}</td>
-
-                                            {{-- ✅ Size Name --}}
                                             <td>{{ $color->size_name ?? '-' }}</td>
 
                                             <td>{{ $color->location ?? '-' }}</td>
                                             <td>{{ $color->date_of_shooting ?? '-' }}</td>
+
+                                            {{-- المصور --}}
                                             <td>
                                                 @if ($color->photographer)
-                                                    @foreach (json_decode($color->photographer) as $id)
-                                                        <span class="badge bg-primary">
-                                                            {{ optional(\App\Models\User::find($id))->name ?? '-' }}
-                                                        </span>
+                                                    @foreach (json_decode($color->photographer, true) as $id)
+                                                        <span
+                                                            class="badge bg-primary">{{ optional(\App\Models\User::find($id))->name ?? '-' }}</span>
                                                     @endforeach
                                                 @else
                                                     -
                                                 @endif
                                             </td>
-                                            {{-- <td>{{ $color->date_of_editing ?? '-' }}</td>
-                                            <td>
-                                                @if ($color->editor)
-                                                    @foreach (json_decode($color->editor) as $id)
-                                                        <span class="badge bg-dark">
-                                                            {{ optional(\App\Models\User::find($id))->name ?? '-' }}
-                                                        </span>
-                                                    @endforeach
-                                                @else
-                                                    -
-                                                @endif
-                                            </td> --}}
+
                                             <td>{{ $color->date_of_delivery ?? '-' }}</td>
+
                                             <td>
                                                 @if ($color->sessions->count())
                                                     @foreach ($color->sessions as $session)
                                                         <div class="mb-1 border rounded p-1">
-                                                            <div><strong>{{ __('messages.reference') }}:</strong> {{ $session->reference }}</div>
+                                                            <div><strong>{{ __('messages.reference') }}:</strong>
+                                                                {{ $session->reference }}</div>
                                                             <div>
                                                                 <strong>{{ __('messages.status') }}:</strong>
                                                                 <span
@@ -132,8 +115,83 @@
                                     @endforeach
                                 </tbody>
 
+
                             </table>
-                        </div>
+                        </div> {{-- نهاية table-responsive للجدول الأساسي --}}
+
+                        <hr class="my-4">
+
+                        <h5 class="mb-3">{{ __('messages.duplicate_color_codes') ?? 'كود لون مكرر' }}</h5>
+
+                        @if ($duplicateGroups->isEmpty())
+                            <div class="text-muted">{{ __('messages.N/A') }}</div>
+                        @else
+                            <div class="table-responsive">
+                                <table class="table table-bordered align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>{{ __('messages.color_code') }}</th>
+                                            <th>{{ __('messages.occurrences') ?? 'عدد التكرارات' }}</th>
+                                            <th>{{ __('messages.details') ?? 'التفاصيل' }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $rowNum = 1; @endphp
+                                        @foreach ($duplicateGroups as $code => $group)
+                                            <tr>
+                                                <td>{{ $rowNum++ }}</td>
+                                                <td>{{ $code ?? 'غير محدد' }}</td>
+                                                <td><span class="badge bg-danger">{{ $group->count() }}</span></td>
+                                                <td>
+                                                    {{-- جدول صغير داخل الخلية يوضح كل الصفوف المكررة لهذا الكود --}}
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm table-bordered mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>{{ __('messages.name') }}</th>
+                                                                    <th>{{ __('messages.code') }}</th>
+                                                                    <th>{{ __('messages.size_code') }}</th>
+                                                                    <th>{{ __('messages.size') }}</th>
+                                                                    <th>{{ __('messages.location') }}</th>
+                                                                    <th>{{ __('messages.date_of_shooting') }}</th>
+                                                                    <th>{{ __('messages.date_of_delivery') }}</th>
+                                                                    <th>{{ __('messages.sessions') }}</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($group as $dup)
+                                                                    <tr>
+                                                                        <td>{{ $dup->name ?? '-' }}</td>
+                                                                        <td>{{ $dup->code ?? '-' }}</td>
+                                                                        <td>{{ $dup->size_code ?? '-' }}</td>
+                                                                        <td>{{ $dup->size_name ?? '-' }}</td>
+                                                                        <td>{{ $dup->location ?? '-' }}</td>
+                                                                        <td>{{ $dup->date_of_shooting ?? '-' }}</td>
+                                                                        <td>{{ $dup->date_of_delivery ?? '-' }}</td>
+                                                                        <td>
+                                                                            @if ($dup->sessions && $dup->sessions->count())
+                                                                                @foreach ($dup->sessions as $s)
+                                                                                    <span
+                                                                                        class="badge bg-light text-dark">{{ $s->reference }}</span>
+                                                                                @endforeach
+                                                                            @else
+                                                                                <span class="text-muted">-</span>
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
