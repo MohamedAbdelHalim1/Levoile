@@ -53,7 +53,6 @@
 
                                 <td>
                                     @php
-                                        // أسماء المنتجات المرتبطة بالسيشن ده
                                         $names = collect($sessionProductsByRef[$session->reference] ?? []);
                                         $count = $names->count();
                                     @endphp
@@ -64,7 +63,6 @@
                                         <span class="badge bg-light text-dark">{{ $names->first() }}</span>
                                     @else
                                         <span class="badge bg-secondary">جميع منتجات السيشن</span>
-                                        {{-- Tooltip اختياري يعرض قائمة الأسماء --}}
                                         <span class="ms-1 text-muted" tabindex="0" data-bs-toggle="popover"
                                             data-bs-trigger="hover focus" data-bs-html="true"
                                             data-bs-content="{{ htmlentities($names->implode('، '), ENT_QUOTES, 'UTF-8') }}">
@@ -72,6 +70,7 @@
                                         </span>
                                     @endif
                                 </td>
+
 
                                 <td>
                                     <span class="d-flex align-items-center justify-content-between">
@@ -336,8 +335,7 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const list = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            list.forEach(function(el) {
+            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function(el) {
                 new bootstrap.Popover(el, {
                     html: true,
                     sanitize: false,

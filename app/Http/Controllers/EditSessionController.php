@@ -22,34 +22,25 @@ class EditSessionController extends Controller
 
         $refs = $sessions->pluck('reference')->unique()->values();
 
-        // الأفضل: باستخدام العلاقات (يفترض وجود علاقة productColors->product)
-        $sessionProductsByRef = ShootingSession::with(['productColors.product:id,name'])
+        // نجمع أسماء المنتجات لكل reference عبر العلاقات الموجودة: color -> product
+        $sessionProductsByRef = ShootingSession::with(['color.product:id,name'])
             ->whereIn('reference', $refs)
             ->get()
-            ->mapWithKeys(function ($s) {
-                $names = $s->productColors
-                    ->pluck('product.name')
+            ->groupBy('reference')
+            ->map(function ($group) {
+                return $group->map(function ($ss) {
+                    return optional(optional($ss->color)->product)->name;
+                })
                     ->filter()
                     ->unique()
                     ->values();
-
-                return [$s->reference => $names];
             });
 
-        // لو لسبب ما العلاقات مش مظبوطة عندك، استخدم SQL مباشر (عدّل اسم جدول الـpivot لو مختلف):
-        // $rows = DB::table('shooting_sessions as ss')
-        //     ->join('color_session as cs', 'cs.session_id', 'ss.id') // <-- غيّر الاسم لو مختلف
-        //     ->join('shooting_product_colors as spc', 'spc.id', 'cs.color_id')
-        //     ->join('shooting_products as p', 'p.id', 'spc.product_id')
-        //     ->whereIn('ss.reference', $refs)
-        //     ->distinct()
-        //     ->pluck('p.name', 'ss.reference')
-        //     ->groupBy('ss.reference');
-        // $sessionProductsByRef = collect($rows);
-
-        return view('shooting_products.edit_sessions.index', compact('sessions', 'sessionProductsByRef'));
+        return view(
+            'shooting_products.edit_sessions.index',
+            compact('sessions', 'sessionProductsByRef')
+        );
     }
-
 
     public function assignEditor(Request $request)
     {
