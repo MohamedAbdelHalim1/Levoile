@@ -62,7 +62,7 @@
                                     @elseif ($count === 1)
                                         <span class="badge bg-light text-dark">{{ $names->first() }}</span>
                                     @else
-                                        <span class="badge bg-secondary">جميع منتجات السيشن</span>
+                                        <span class="badge bg-secondary text-white">جميع منتجات السيشن</span>
                                         <span class="ms-1 text-muted" tabindex="0" data-bs-toggle="popover"
                                             data-bs-trigger="hover focus" data-bs-html="true"
                                             data-bs-content="{{ htmlentities($names->implode('، '), ENT_QUOTES, 'UTF-8') }}">

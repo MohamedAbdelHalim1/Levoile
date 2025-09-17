@@ -97,14 +97,36 @@
                                     </td>
 
                                     {{-- المحرر --}}
+                                    {{-- المحرر --}}
                                     <td>
                                         @php
-                                            $editors = json_decode($firstColor?->editor, true);
+                                            // هنجمع كل قيم editor لكل الألوان في الـ reference ده
+                                            $editorIds = collect($colors)
+                                                ->pluck('color.editor') // نجيب قيمة editor من كل لون
+                                                ->filter() // نشيل الفاضي
+                                                ->flatMap(function ($val) {
+                                                    // نفك JSON ونتعامل مع الحالات المختلفة
+                                                    $decoded = is_string($val) ? json_decode($val, true) : $val;
+
+                                                    if (is_array($decoded)) {
+                                                        return $decoded;
+                                                    } // [1,2,3]
+                                                    if (is_numeric($decoded)) {
+                                                        return [(int) $decoded];
+                                                    } // 7 (مخزّن رقم فقط)
+
+                                                    if (is_numeric($val)) {
+                                                        return [(int) $val];
+                                                    } // احتياط لو القيمة نفسها رقم كسلسلة
+                                                    return [];
+                                                })
+                                                ->unique()
+                                                ->values();
                                         @endphp
 
-                                        @if (is_array($editors) && count($editors))
+                                        @if ($editorIds->isNotEmpty())
                                             <ul class="list-unstyled mb-0">
-                                                @foreach ($editors as $id)
+                                                @foreach ($editorIds as $id)
                                                     <li>{{ optional(\App\Models\User::find($id))->name }}</li>
                                                 @endforeach
                                             </ul>
@@ -112,6 +134,7 @@
                                             <span>-</span>
                                         @endif
                                     </td>
+
 
                                     <td>
                                         {{ $colors->first()->color->date_of_shooting ?? '-' }}
