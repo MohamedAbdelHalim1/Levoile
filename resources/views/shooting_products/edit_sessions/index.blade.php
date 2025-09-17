@@ -22,6 +22,7 @@
                             {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                             <th>{{ __('messages.reference') }}</th>
                             {{-- <th>{{ __('messages.session_link') }}</th> --}}
+                            <th>{{ __('messages.session_scope') }}</th>
                             <th>{{ __('messages.edit_link') }}</th>
                             <th>{{ __('messages.editor') }}</th>
                             <th>{{ __('messages.status') }}</th>
@@ -49,12 +50,37 @@
                                         <span class="text-muted">{{ __('messages.N/A') }}</span>
                                     @endif
                                 </td> --}}
+
+                                <td>
+                                    @php
+                                        // أسماء المنتجات المرتبطة بالسيشن ده
+                                        $names = collect($sessionProductsByRef[$session->reference] ?? []);
+                                        $count = $names->count();
+                                    @endphp
+
+                                    @if ($count === 0)
+                                        <span class="text-muted">-</span>
+                                    @elseif ($count === 1)
+                                        <span class="badge bg-light text-dark">{{ $names->first() }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">جميع منتجات السيشن</span>
+                                        {{-- Tooltip اختياري يعرض قائمة الأسماء --}}
+                                        <span class="ms-1 text-muted" tabindex="0" data-bs-toggle="popover"
+                                            data-bs-trigger="hover focus" data-bs-html="true"
+                                            data-bs-content="{{ htmlentities($names->implode('، '), ENT_QUOTES, 'UTF-8') }}">
+                                            ({{ $count }})
+                                        </span>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <span class="d-flex align-items-center justify-content-between">
                                         @if ($session->drive_link)
-                                            <a href="{{ $session->drive_link }}" target="_blank">{{ __('messages.open') }}</a>
-                                            <button class="btn btn-sm" style="padding: 0 4px;" title="{{ __('messages.edit') }}"
-                                                data-bs-toggle="modal" data-bs-target="#uploadDriveModal"
+                                            <a href="{{ $session->drive_link }}"
+                                                target="_blank">{{ __('messages.open') }}</a>
+                                            <button class="btn btn-sm" style="padding: 0 4px;"
+                                                title="{{ __('messages.edit') }}" data-bs-toggle="modal"
+                                                data-bs-target="#uploadDriveModal"
                                                 data-reference="{{ $session->reference }}"
                                                 data-receiving-date="{{ $session->receiving_date }}"
                                                 data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
@@ -66,7 +92,7 @@
                                                 data-reference="{{ $session->reference }}"
                                                 data-receiving-date="{{ $session->receiving_date }}"
                                                 data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
-                                                {{ __('messages.upload') }} 
+                                                {{ __('messages.upload') }}
                                             </button>
                                         @endif
                                     </span>
@@ -76,8 +102,9 @@
                                     @if ($session->user_id)
                                         <span class="d-flex align-items-center justify-content-between">
                                             {{ \App\Models\User::find($session->user_id)?->name ?? '---' }}
-                                            <button class="btn btn-sm" style="padding: 0 4px;" title="{{ __('messages.edit') }}"
-                                                data-bs-toggle="modal" data-bs-target="#assignEditorModal"
+                                            <button class="btn btn-sm" style="padding: 0 4px;"
+                                                title="{{ __('messages.edit') }}" data-bs-toggle="modal"
+                                                data-bs-target="#assignEditorModal"
                                                 data-reference="{{ $session->reference }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
@@ -85,7 +112,7 @@
                                     @else
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
-                                            {{ __('messages.assign_editor') }} 
+                                            {{ __('messages.assign_editor') }}
                                         </button>
                                     @endif
                                 </td>
@@ -121,7 +148,7 @@
                                     @endif
                                 </td>
                                 {{-- <td>{{ $session->note ?? '-' }}</td> --}}
-                               
+
 
                             </tr>
                         @endforeach
@@ -142,8 +169,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" name="drive_link" class="form-control"
-                        required>
+                    <input type="text" name="drive_link" class="form-control" required>
 
                     <div id="noteWrapper" style="display: none;">
                         <label for="note">{{ __('messages.delay_reasons') }} :</label>
@@ -239,11 +265,11 @@
                 const receivingDate = button.getAttribute('data-receiving-date');
                 const hasEditor = button.getAttribute('data-has-editor') === 'true'; // هنا هنستخدمها
 
-                    if (!hasEditor) {
-                        alert('{{ __('messages.assign_editor_first') }}');
-                        event.preventDefault(); // يمنع فتح المودال
-                        return;
-                    }
+                if (!hasEditor) {
+                    alert('{{ __('messages.assign_editor_first') }}');
+                    event.preventDefault(); // يمنع فتح المودال
+                    return;
+                }
 
 
                 const today = new Date().toISOString().split('T')[0];
@@ -306,6 +332,18 @@
                     <input type="date" name="dates[${ref}]" class="form-control">
                 </div>
             `).join('');
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const list = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            list.forEach(function(el) {
+                new bootstrap.Popover(el, {
+                    html: true,
+                    sanitize: false,
+                    trigger: 'hover focus'
+                });
+            });
         });
     </script>
 @endsection
