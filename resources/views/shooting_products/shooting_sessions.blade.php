@@ -97,43 +97,49 @@
                                     </td>
 
                                     {{-- المحرر --}}
-                                    {{-- المحرر --}}
                                     <td>
                                         @php
-                                            // هنجمع كل قيم editor لكل الألوان في الـ reference ده
-                                            $editorIds = collect($colors)
-                                                ->pluck('color.editor') // نجيب قيمة editor من كل لون
-                                                ->filter() // نشيل الفاضي
-                                                ->flatMap(function ($val) {
-                                                    // نفك JSON ونتعامل مع الحالات المختلفة
-                                                    $decoded = is_string($val) ? json_decode($val, true) : $val;
+                                            /** @var \Illuminate\Support\Collection $edits */
+                                            $edits = $editsByRef[$session->reference] ?? collect();
 
-                                                    if (is_array($decoded)) {
-                                                        return $decoded;
-                                                    } // [1,2,3]
-                                                    if (is_numeric($decoded)) {
-                                                        return [(int) $decoded];
-                                                    } // 7 (مخزّن رقم فقط)
+                                            // IDs المحررين المعيّنين على السيشن ده
+                                            $editorIds = $edits->pluck('user_id')->filter()->unique()->values();
 
-                                                    if (is_numeric($val)) {
-                                                        return [(int) $val];
-                                                    } // احتياط لو القيمة نفسها رقم كسلسلة
-                                                    return [];
-                                                })
-                                                ->unique()
-                                                ->values();
+                                            // أول لينك تعديل (لو موجود) + تاريخ الاستلام (لو موجود)
+                                            $editDriveLink = optional($edits->firstWhere('drive_link', '!=', null))
+                                                ->drive_link;
+                                            $receivingDate = optional(
+                                                optional($edits->first())->receiving_date,
+                                            )->format('Y-m-d');
                                         @endphp
 
                                         @if ($editorIds->isNotEmpty())
-                                            <ul class="list-unstyled mb-0">
-                                                @foreach ($editorIds as $id)
-                                                    <li>{{ optional(\App\Models\User::find($id))->name }}</li>
+                                            <div class="d-flex align-items-center flex-wrap" style="gap:6px;">
+                                                {{-- لو فيه لينك تعديل خليه يظهر زي صفحة المنتجات --}}
+                                                @if (!empty($editDriveLink))
+                                                    <a href="{{ $editDriveLink }}" target="_blank"
+                                                        class="badge bg-success text-decoration-none">
+                                                        <i class="fe fe-link-2"></i> {{ __('messages.edit_link') }}
+                                                    </a>
+                                                @endif
+
+                                                {{-- أسماء المحررين --}}
+                                                @foreach ($editorIds as $uid)
+                                                    <span class="badge bg-info">
+                                                        {{ optional(\App\Models\User::find($uid))->name ?? '---' }}
+                                                    </span>
                                                 @endforeach
-                                            </ul>
+
+                                                {{-- تاريخ الاستلام (اختياري) --}}
+                                                @if (!empty($receivingDate))
+                                                    <span class="badge bg-secondary">{{ $receivingDate }}</span>
+                                                @endif
+                                            </div>
                                         @else
                                             <span>-</span>
                                         @endif
                                     </td>
+
 
 
                                     <td>
