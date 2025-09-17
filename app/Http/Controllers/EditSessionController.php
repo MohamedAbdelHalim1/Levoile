@@ -47,7 +47,7 @@ class EditSessionController extends Controller
     {
         $request->validate([
             'reference'  => 'required|string|exists:edit_sessions,reference',
-            'drive_link' => 'required|url',
+            'drive_link' => 'required|string',
             'note'       => 'nullable|string',
         ]);
 
