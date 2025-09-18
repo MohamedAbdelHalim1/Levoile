@@ -161,9 +161,9 @@
                             <th>{{ __('messages.photographer') }}</th>
                             <th>{{ __('messages.date_of_edit') }}</th>
                             <th>{{ __('messages.editors') }}</th>
-                            <th>{{ __('messages.date_of_delivery') }} </th>
+                            {{-- <th>{{ __('messages.date_of_delivery') }} </th>
                             <th>{{ __('messages.remaining_time') }}</th>
-                            <th>{{ __('messages.way_of_shooting') }}</th>
+                            <th>{{ __('messages.way_of_shooting') }}</th> --}}
                             <th>{{ __('messages.status_of_data') }}</th>
                             <th>{{ __('messages.review') }}</th>
                             {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
@@ -468,7 +468,9 @@
                                     }
                                 @endphp
 
-                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_delivery', 'time_left', 'shooting_method', 'date_of_editing', 'editor'] as $field)
+                                {{-- @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_delivery', 'time_left', 'shooting_method', 'date_of_editing', 'editor'] as $field) --}}
+
+                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_editing', 'editor'] as $field)
                                     <td>
                                         @foreach ($sessionsGrouped as $ref => $colors)
                                             @php
@@ -519,11 +521,11 @@
                                                         @endif
                                                     @break
 
-                                                    @case('date_of_delivery')
+                                                    {{-- @case('date_of_delivery')
                                                         <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
-                                                    @break
+                                                    @break --}}
 
-                                                    @case('time_left')
+                                                    {{-- @case('time_left')
                                                         @php
                                                             $date = $firstColor?->date_of_delivery
                                                                 ? \Carbon\Carbon::parse($firstColor->date_of_delivery)
@@ -565,7 +567,7 @@
                                                         @else
                                                             <span class="d-block">-</span>
                                                         @endif
-                                                    @break
+                                                    @break --}}
                                                 @endswitch
                                             </div>
                                         @endforeach
