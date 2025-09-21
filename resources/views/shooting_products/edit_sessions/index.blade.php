@@ -19,139 +19,120 @@
                 <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
-                            {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                             <th>{{ __('messages.reference') }}</th>
-                            {{-- <th>{{ __('messages.session_link') }}</th> --}}
-                            <th>{{ __('messages.session_scope') }}</th>
+                            <th>{{ __('messages.product') }} / {{ __('messages.number_of_colors') }}</th>
                             <th>{{ __('messages.edit_link') }}</th>
                             <th>{{ __('messages.editor') }}</th>
                             <th>{{ __('messages.status') }}</th>
                             <th>{{ __('messages.receiving_date') }}</th>
-                            <th>{{ __('messages.remaining_time') }} </th>
-                            {{-- <th>{{ __('messages.notes') }}</th> --}}
-                            {{-- <th>المراجعة</th> --}}
+                            <th>{{ __('messages.remaining_time') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($sessions as $session)
-                            <tr>
-                                {{-- <td><input type="checkbox" class="session-checkbox" value="{{ $session->reference }}"></td> --}}
 
+                    <tbody>
+                        @foreach ($items as $row)
+                            @php
+                                // نجيب EditSession بتاع نفس الـ reference
+                                $es = $sessions->firstWhere('reference', $row->reference);
+
+                                $status = $es->status ?? 'جديد';
+                                $recvDate = $es?->receiving_date;
+                                $diffText = '-';
+
+                                if ($recvDate && $status === 'جديد') {
+                                    $date = \Carbon\Carbon::parse($recvDate);
+                                    $diff = now()->diffInDays($date, false);
+                                    $diffText =
+                                        $diff > 0
+                                            ? "بعد {$diff} يوم"
+                                            : ($diff === 0
+                                                ? 'اليوم'
+                                                : 'متأخر ' . abs($diff) . ' يوم');
+                                }
+                            @endphp
+
+                            <tr>
+                                {{-- Reference --}}
                                 <td>
-                                    <a href="{{ route('shooting-sessions.show', $session->reference) }}"
+                                    <a href="{{ route('shooting-sessions.show', $row->reference) }}"
                                         class="btn btn-sm btn-info">
-                                        {{ $session->reference }}
+                                        {{ $row->reference }}
                                     </a>
                                 </td>
-                                {{-- <td>
-                                    @if ($session->photo_drive_link)
-                                        <a href="{{ $session->photo_drive_link }}" target="_blank">{{ __('messages.open') }}</a>
-                                    @else
-                                        <span class="text-muted">{{ __('messages.N/A') }}</span>
-                                    @endif
-                                </td> --}}
 
+                                {{-- المنتج + عدد الألوان المميّزة داخل نفس السيشن --}}
                                 <td>
-                                    @php
-                                        $names = collect($sessionProductsByRef[$session->reference] ?? []);
-                                        $count = $names->count();
-                                    @endphp
-
-                                    @if ($count === 0)
-                                        <span class="text-muted">-</span>
-                                    @elseif ($count === 1)
-                                        <span class="badge bg-light text-dark">{{ $names->first() }}</span>
-                                    @else
-                                        <span class="badge bg-secondary text-white">جميع منتجات السيشن</span>
-                                        <span class="ms-1 text-muted" tabindex="0" data-bs-toggle="popover"
-                                            data-bs-trigger="hover focus" data-bs-html="true"
-                                            data-bs-content="{{ htmlentities($names->implode('، '), ENT_QUOTES, 'UTF-8') }}">
-                                            ({{ $count }})
-                                        </span>
-                                    @endif
+                                    <span class="badge bg-light text-dark">{{ $row->product }}</span>
+                                    <span class="badge bg-primary ms-1">{{ $row->colors }}</span>
                                 </td>
 
-
+                                {{-- لينك التعديل الخاص بهذا (product_id, reference) فقط --}}
                                 <td>
                                     <span class="d-flex align-items-center justify-content-between">
-                                        @if ($session->drive_link)
-                                            <a href="{{ $session->drive_link }}"
-                                                target="_blank">{{ __('messages.open') }}</a>
+                                        @if (!empty($row->drive_link))
+                                            {{-- بنعرض القيمة كما هي بدون أي helpers عشان ما يتحطش الدومين قبلها --}}
+                                            <a href="{{ $row->drive_link }}" target="_blank">{{ __('messages.open') }}</a>
+
                                             <button class="btn btn-sm" style="padding: 0 4px;"
                                                 title="{{ __('messages.edit') }}" data-bs-toggle="modal"
-                                                data-bs-target="#uploadDriveModal"
-                                                data-reference="{{ $session->reference }}"
-                                                data-receiving-date="{{ $session->receiving_date }}"
-                                                data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
+                                                data-bs-target="#uploadDriveModal" data-reference="{{ $row->reference }}"
+                                                data-product-id="{{ $row->product_id }}"
+                                                data-receiving-date="{{ $recvDate }}"
+                                                data-has-editor="{{ $es?->user_id ? 'true' : 'false' }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @else
                                             <button class="btn btn-sm btn-success" data-bs-toggle="modal"
-                                                data-bs-target="#uploadDriveModal"
-                                                data-reference="{{ $session->reference }}"
-                                                data-receiving-date="{{ $session->receiving_date }}"
-                                                data-has-editor="{{ $session->user_id ? 'true' : 'false' }}">
+                                                data-bs-target="#uploadDriveModal" data-reference="{{ $row->reference }}"
+                                                data-product-id="{{ $row->product_id }}"
+                                                data-receiving-date="{{ $recvDate }}"
+                                                data-has-editor="{{ $es?->user_id ? 'true' : 'false' }}">
                                                 {{ __('messages.upload') }}
                                             </button>
                                         @endif
                                     </span>
                                 </td>
 
+                                {{-- المحرر (من EditSession على مستوى الـ reference) --}}
                                 <td>
-                                    @if ($session->user_id)
+                                    @if ($es?->user_id)
                                         <span class="d-flex align-items-center justify-content-between">
-                                            {{ \App\Models\User::find($session->user_id)?->name ?? '---' }}
+                                            {{ \App\Models\User::find($es->user_id)?->name ?? '---' }}
                                             <button class="btn btn-sm" style="padding: 0 4px;"
                                                 title="{{ __('messages.edit') }}" data-bs-toggle="modal"
-                                                data-bs-target="#assignEditorModal"
-                                                data-reference="{{ $session->reference }}">
+                                                data-bs-target="#assignEditorModal" data-reference="{{ $row->reference }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         </span>
                                     @else
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
+                                            data-bs-target="#assignEditorModal" data-reference="{{ $row->reference }}">
                                             {{ __('messages.assign_editor') }}
                                         </button>
                                     @endif
                                 </td>
 
+                                {{-- الحالة --}}
                                 <td>
-                                    <span class="badge bg-{{ $session->status === 'تم التعديل' ? 'success' : 'warning' }}">
-                                        {{ $session->status }}
+                                    <span class="badge bg-{{ $status === 'تم التعديل' ? 'success' : 'warning' }}">
+                                        {{ $status }}
                                     </span>
                                 </td>
+
+                                {{-- receiving_date --}}
+                                <td>{{ $recvDate ? \Carbon\Carbon::parse($recvDate)->format('Y-m-d') : '-' }}</td>
+
+                                {{-- الوقت المتبقي --}}
                                 <td>
-                                    {{ $session->receiving_date ? \Carbon\Carbon::parse($session->receiving_date)->format('Y-m-d') : '-' }}
+                                    <span
+                                        class="{{ $diffText === 'اليوم' ? 'text-warning' : (str_starts_with($diffText, 'بعد') ? 'text-success' : (str_starts_with($diffText, 'متأخر') ? 'text-danger' : 'text-muted')) }}">
+                                        {{ $diffText }}
+                                    </span>
                                 </td>
-                                <td>
-                                    @if ($session->receiving_date)
-                                        @if ($session->status === 'جديد')
-                                            @php
-                                                $date = \Carbon\Carbon::parse($session->receiving_date);
-                                                $diff = now()->diffInDays($date, false); // false: to keep sign
-                                            @endphp
-
-                                            @if ($diff > 0)
-                                                <span class="text-success">بعد {{ $diff }} يوم</span>
-                                            @elseif ($diff === 0)
-                                                <span class="text-warning">اليوم</span>
-                                            @else
-                                                <span class="text-danger">متأخر {{ abs($diff) }} يوم</span>
-                                            @endif
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                {{-- <td>{{ $session->note ?? '-' }}</td> --}}
-
-
                             </tr>
                         @endforeach
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -163,6 +144,8 @@
             <form method="POST" action="{{ route('edit-sessions.upload-drive-link') }}" class="modal-content">
                 @csrf
                 <input type="hidden" name="reference" id="driveModalReference">
+                <input type="hidden" name="product_id" id="driveModalProductId">
+
                 <div class="modal-header">
                     <h5 class="modal-title">{{ __('messages.upload_drive_link') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -255,12 +238,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const driveModal = document.getElementById('uploadDriveModal');
             const driveModalRef = document.getElementById('driveModalReference');
+                const driveModalPid = document.getElementById('driveModalProductId');
+
             const noteWrapper = document.getElementById('noteWrapper');
             const noteInput = document.getElementById('noteInput');
 
             driveModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
                 const reference = button.getAttribute('data-reference');
+                        const productId = button.getAttribute('data-product-id');
+
                 const receivingDate = button.getAttribute('data-receiving-date');
                 const hasEditor = button.getAttribute('data-has-editor') === 'true'; // هنا هنستخدمها
 
@@ -274,6 +261,7 @@
                 const today = new Date().toISOString().split('T')[0];
 
                 driveModalRef.value = reference;
+                driveModalPid.value = productId;
 
                 if (receivingDate && receivingDate < today) {
                     noteWrapper.style.display = 'block';
