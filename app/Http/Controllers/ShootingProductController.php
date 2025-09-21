@@ -1648,22 +1648,29 @@ class ShootingProductController extends Controller
     public function shootingSessions()
     {
         // كل السيشنات مجمّعة بالـ reference
-        $sessions = ShootingSession::select('reference')
+        $sessions = \App\Models\ShootingSession::select('reference')
             ->groupBy('reference')
-            // رتبهم بأحدث created_at داخل الجروب (اختياري)
-            ->orderByDesc(DB::raw('MAX(created_at)'))
+            ->orderByDesc(\DB::raw('MAX(created_at)'))
             ->get();
 
-        // هنجمع المراجع ونسحب edit_sessions لها مرة واحدة
         $refs = $sessions->pluck('reference')->unique()->values();
 
-        $editsByRef = EditSession::whereIn('reference', $refs)
-            ->select('reference', 'user_id', 'drive_link', 'receiving_date')
+        // روابط اللينكات لكل (reference, product_id)
+        $linksByRefProd = \App\Models\ProductSessionDriveLink::whereIn('reference', $refs)
             ->get()
-            ->groupBy('reference');  // => Collection keyed by reference
+            ->groupBy(function ($r) {
+                return $r->reference . '|' . $r->product_id;
+            });
 
-        return view('shooting_products.shooting_sessions', compact('sessions', 'editsByRef'));
+        // المحرّر المعيّن على مستوى الـ reference
+        $editSessionsByRef = \App\Models\EditSession::whereIn('reference', $refs)
+            ->with('user:id,name') // جِب الاسم
+            ->get()
+            ->keyBy('reference');
+
+        return view('shooting_products.shooting_sessions', compact('sessions', 'linksByRefProd', 'editSessionsByRef'));
     }
+
 
 
     public function showShootingSession($reference)

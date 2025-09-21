@@ -100,64 +100,83 @@ class EditSessionController extends Controller
     {
         $request->validate([
             'reference'  => 'required|string|exists:edit_sessions,reference',
+            'product_id' => 'required|integer|exists:shooting_products,id',
             'drive_link' => 'required|string',
             'note'       => 'nullable|string',
         ]);
 
         DB::transaction(function () use ($request) {
 
-            // 1) حدِّث سجل الـ EditSession
-            EditSession::where('reference', $request->reference)
-                ->update([
+            // 1) خزن/حدّث لينك هذا (product_id, reference)
+            ProductSessionDriveLink::updateOrCreate(
+                [
+                    'product_id' => $request->product_id,
+                    'reference'  => $request->reference,
+                ],
+                [
                     'drive_link' => $request->drive_link,
-                    'status'     => 'تم التعديل',
-                    'note'       => $request->note,
-                ]);
+                ]
+            );
 
-            // 2) هات كل السيشنات اللي ليها نفس الـ reference ومعاها المنتج
+            // 2) ملاحظة على الـ EditSession (اختياري)
+            EditSession::where('reference', $request->reference)
+                ->update(['note' => $request->note]);
+
+            // 3) علّم السيشنات/الألوان الخاصة بهذا المنتج فقط داخل نفس الـ reference "completed"
             $sessions = ShootingSession::with('color.shootingProduct')
                 ->where('reference', $request->reference)
                 ->get();
 
-            // IDs المنتجات المشاركة في الـ reference
-            $productIds = $sessions->pluck('color.shootingProduct.id')
-                ->filter()
+            $targetColorIds = $sessions
+                ->filter(fn($s) => optional($s->color?->shootingProduct)->id == $request->product_id)
+                ->pluck('shooting_product_color_id')
                 ->unique()
                 ->values();
 
-            // (اختياري لكن مُستحب) علِّم السيشنات والألوان لنفس الـ reference completed
-            ShootingSession::where('reference', $request->reference)
-                ->update(['status' => 'completed', 'updated_at' => now()]);
+            if ($targetColorIds->isNotEmpty()) {
+                ShootingSession::where('reference', $request->reference)
+                    ->whereIn('shooting_product_color_id', $targetColorIds)
+                    ->update(['status' => 'completed', 'updated_at' => now()]);
 
-            $colorIdsInRef = $sessions->pluck('shooting_product_color_id')->unique();
-            ShootingProductColor::whereIn('id', $colorIdsInRef)
-                ->update(['status' => 'completed', 'updated_at' => now()]);
-
-            // 3) علِّم المنتجات نفسها completed
-            if ($productIds->isNotEmpty()) {
-                ShootingProduct::whereIn('id', $productIds)
+                ShootingProductColor::whereIn('id', $targetColorIds)
                     ->update(['status' => 'completed', 'updated_at' => now()]);
             }
 
-            // 4) ابعت المنتجات لمسؤول الموقع (لو مش موجودة)
-            foreach ($productIds as $pid) {
-                $product = ShootingProduct::find($pid);
-                if (!$product) continue;
+            // 4) لو كل ألوان هذا المنتج خلصت، علم المنتج نفسه "completed"
+            $allStatuses = ShootingProductColor::where('shooting_product_id', $request->product_id)
+                ->pluck('status');
 
-                WebsiteAdminProduct::firstOrCreate(
-                    ['shooting_product_id' => $product->id],
-                    ['name' => $product->name, 'status' => 'new']
-                );
+            if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+                ShootingProduct::where('id', $request->product_id)
+                    ->update(['status' => 'completed', 'updated_at' => now()]);
+            }
+
+            // 5) لو كل المنتجات داخل نفس الـ reference أصبح لها لينك -> حول EditSession إلى "تم التعديل"
+            $allProductIdsInRef = $sessions
+                ->pluck('color.shootingProduct.id')
+                ->filter()
+                ->unique();
+
+            $linkedProductIds = ProductSessionDriveLink::where('reference', $request->reference)
+                ->pluck('product_id')
+                ->unique();
+
+            $missing = $allProductIdsInRef->diff($linkedProductIds);
+
+            if ($missing->isEmpty()) {
+                EditSession::where('reference', $request->reference)
+                    ->update(['status' => 'تم التعديل', 'updated_at' => now()]);
             }
         });
 
         return back()->with(
             'success',
             auth()->user()->current_lang == 'ar'
-                ? 'تم رفع لينك درايف، وتم إنهاء المنتجات الخاصة بهذه الجلسة'
-                : 'Drive link uploaded; related products marked completed'
+                ? 'تم حفظ لينك المنتج داخل الجلسة'
+                : 'Drive link saved for this product in the session'
         );
     }
+
 
 
     // public function uploadDriveLink(Request $request)

@@ -29,7 +29,6 @@
                                 <th>{{ __('messages.type_of_shooting') }} </th>
                                 <th>{{ __('messages.location') }} </th>
                                 <th>{{ __('messages.photographer') }}</th>
-                                <th>{{ __('messages.editors') }}</th>
                                 <th>{{ __('messages.date_of_shooting') }} </th>
                                 <th>{{ __('messages.date_of_delivery') }} </th>
                                 <th>{{ __('messages.remaining_time') }} </th>
@@ -55,35 +54,50 @@
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                     <td>
                                         @php
-                                            // نفس الكويري اللي عندك
-                                            $colors = \App\Models\ShootingSession::where(
-                                                'reference',
-                                                $session->reference,
-                                            )
-                                                ->with('color.shootingProduct')
+                                            // هات السيشنات الخام لنفس الـ reference مع المنتج
+                                            $rows = \App\Models\ShootingSession::where('reference', $session->reference)
+                                                ->with('color.shootingProduct:id,name')
                                                 ->get();
 
-                                            // نجمع حسب المنتج
-                                            $byProduct = $colors
-                                                ->filter(fn($s) => optional($s->color)->shootingProduct) // بس اللي ليها منتج فعلاً
+                                            // نجمع حسب المنتج داخل نفس السيشن
+                                            $byProduct = $rows
+                                                ->filter(fn($s) => optional($s->color)->shootingProduct) // بس اللي ليها منتج
                                                 ->groupBy(fn($s) => $s->color->shootingProduct->id)
-                                                ->map(function ($group) {
+                                                ->map(function ($group) use (
+                                                    $session,
+                                                    $linksByRefProd,
+                                                    $editSessionsByRef,
+                                                ) {
                                                     $product = $group->first()->color->shootingProduct;
+                                                    $prodId = $product->id;
+                                                    $ref = $session->reference;
 
-                                                    // لو عايز تحسب “أكواد الألوان المميزة” جوّه نفس السيشن:
+                                                    // عدد أكواد الألوان المميزة داخل نفس السيشن لنفس المنتج
                                                     $distinctColorCodes = $group
                                                         ->pluck('color.color_code')
                                                         ->filter()
                                                         ->unique()
                                                         ->count();
+                                                    $colorCount =
+                                                        $distinctColorCodes > 0 ? $distinctColorCodes : $group->count();
+
+                                                    // لينك (reference, product_id)
+                                                    $key = $ref . '|' . $prodId;
+                                                    $linkRec = optional($linksByRefProd->get($key))[0] ?? null;
+                                                    $drive = $linkRec->drive_link ?? null;
+
+                                                    // المحرّر على مستوى الـ reference
+                                                    $es = $editSessionsByRef->get($ref);
+                                                    $editor = optional($es?->user)->name;
 
                                                     return [
+                                                        'id' => $prodId,
                                                         'name' => $product->name,
-                                                        // لو فيه color_code بنحسب المميز، وإلا بنرجع عدد العناصر العادي
-                                                        'count' =>
-                                                            $distinctColorCodes > 0
-                                                                ? $distinctColorCodes
-                                                                : $group->count(),
+                                                        'count' => $colorCount,
+                                                        'editor' => $editor,
+                                                        'drive' => $drive,
+                                                        'hasEditor' => !empty($es?->user_id),
+                                                        'recvDate' => optional($es?->receiving_date)?->format('Y-m-d'),
                                                     ];
                                                 })
                                                 ->values();
@@ -93,20 +107,60 @@
                                             <span class="badge bg-secondary">0</span>
                                         @else
                                             <div class="table-responsive">
-                                                <table class="table table-sm table-bordered mb-0">
+                                                <table class="table table-sm table-bordered mb-0 align-middle">
                                                     <thead class="table-light">
                                                         <tr>
                                                             <th>{{ __('messages.product') }}</th>
-                                                            <th>{{ __('messages.number_of_colors') }}</th>
+                                                            <th class="text-center">{{ __('messages.number_of_colors') }}
+                                                            </th>
+                                                            <th>{{ __('messages.editor') }}</th>
+                                                            <th class="text-center">{{ __('messages.edit_link') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($byProduct as $row)
                                                             <tr>
-                                                                <td class="text-nowrap">{{ $row['name'] ?? '-' }}</td>
+                                                                <td class="text-nowrap">{{ $row['name'] }}</td>
                                                                 <td class="text-center">
                                                                     <span
                                                                         class="badge bg-primary">{{ $row['count'] }}</span>
+                                                                </td>
+                                                                <td class="text-nowrap">
+                                                                    @if ($row['editor'])
+                                                                        <span
+                                                                            class="badge bg-info">{{ $row['editor'] }}</span>
+                                                                    @else
+                                                                        <span class="text-muted">-</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    @if (!empty($row['drive']))
+                                                                        {{-- اعرض القيمة كما هي بدون helpers عشان ما يتحطش الدومين قبلها --}}
+                                                                        <a href="{{ $row['drive'] }}" target="_blank"
+                                                                            class="btn btn-success btn-sm">
+                                                                            <i class="fa fa-link"></i>
+                                                                        </a>
+                                                                        <button class="btn btn-sm" style="padding:0 4px"
+                                                                            title="{{ __('messages.edit') }}"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#uploadDriveModal"
+                                                                            data-reference="{{ $session->reference }}"
+                                                                            data-product-id="{{ $row['id'] }}"
+                                                                            data-receiving-date="{{ $row['recvDate'] }}"
+                                                                            data-has-editor="{{ $row['hasEditor'] ? 'true' : 'false' }}">
+                                                                            <i class="fa fa-pencil"></i>
+                                                                        </button>
+                                                                    @else
+                                                                        <button class="btn btn-sm btn-success"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#uploadDriveModal"
+                                                                            data-reference="{{ $session->reference }}"
+                                                                            data-product-id="{{ $row['id'] }}"
+                                                                            data-receiving-date="{{ $row['recvDate'] }}"
+                                                                            data-has-editor="{{ $row['hasEditor'] ? 'true' : 'false' }}">
+                                                                            {{ __('messages.upload') }}
+                                                                        </button>
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -115,6 +169,7 @@
                                             </div>
                                         @endif
                                     </td>
+
 
                                     @php
                                         $groupedSessions = \App\Models\ShootingSession::where(
@@ -158,50 +213,7 @@
                                         @endif
                                     </td>
 
-                                    {{-- المحرر --}}
-                                    <td>
-                                        @php
-                                            /** @var \Illuminate\Support\Collection $edits */
-                                            $edits = $editsByRef[$session->reference] ?? collect();
-
-                                            // IDs المحررين المعيّنين على السيشن ده
-                                            $editorIds = $edits->pluck('user_id')->filter()->unique()->values();
-
-                                            // أول لينك تعديل (لو موجود) + تاريخ الاستلام (لو موجود)
-                                            $editDriveLink = optional($edits->firstWhere('drive_link', '!=', null))
-                                                ->drive_link;
-                                            $receivingDate = optional(
-                                                optional($edits->first())->receiving_date,
-                                            )->format('Y-m-d');
-                                        @endphp
-
-                                        @if ($editorIds->isNotEmpty())
-                                            <div class="d-flex align-items-center flex-wrap" style="gap:6px;">
-                                                {{-- لو فيه لينك تعديل خليه يظهر زي صفحة المنتجات --}}
-                                                @if (!empty($editDriveLink))
-                                                    <a href="{{ $editDriveLink }}" target="_blank"
-                                                        class="badge bg-success text-decoration-none">
-                                                        <i class="fe fe-link-2"></i> {{ __('messages.edit_link') }}
-                                                    </a>
-                                                @endif
-
-                                                {{-- أسماء المحررين --}}
-                                                @foreach ($editorIds as $uid)
-                                                    <span class="badge bg-info">
-                                                        {{ optional(\App\Models\User::find($uid))->name ?? '---' }}
-                                                    </span>
-                                                @endforeach
-
-                                                {{-- تاريخ الاستلام (اختياري) --}}
-                                                @if (!empty($receivingDate))
-                                                    <span class="badge bg-secondary">{{ $receivingDate }}</span>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <span>-</span>
-                                        @endif
-                                    </td>
-
+                                   
 
 
                                     <td>
