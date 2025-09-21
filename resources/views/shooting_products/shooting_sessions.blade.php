@@ -53,7 +53,69 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
-                                    <td><span class="badge bg-primary">{{ $colors->count() }}</span></td>
+                                    <td>
+                                        @php
+                                            // نفس الكويري اللي عندك
+                                            $colors = \App\Models\ShootingSession::where(
+                                                'reference',
+                                                $session->reference,
+                                            )
+                                                ->with('color.shootingProduct')
+                                                ->get();
+
+                                            // نجمع حسب المنتج
+                                            $byProduct = $colors
+                                                ->filter(fn($s) => optional($s->color)->shootingProduct) // بس اللي ليها منتج فعلاً
+                                                ->groupBy(fn($s) => $s->color->shootingProduct->id)
+                                                ->map(function ($group) {
+                                                    $product = $group->first()->color->shootingProduct;
+
+                                                    // لو عايز تحسب “أكواد الألوان المميزة” جوّه نفس السيشن:
+                                                    $distinctColorCodes = $group
+                                                        ->pluck('color.color_code')
+                                                        ->filter()
+                                                        ->unique()
+                                                        ->count();
+
+                                                    return [
+                                                        'name' => $product->name,
+                                                        // لو فيه color_code بنحسب المميز، وإلا بنرجع عدد العناصر العادي
+                                                        'count' =>
+                                                            $distinctColorCodes > 0
+                                                                ? $distinctColorCodes
+                                                                : $group->count(),
+                                                    ];
+                                                })
+                                                ->values();
+                                        @endphp
+
+                                        @if ($byProduct->isEmpty())
+                                            <span class="badge bg-secondary">0</span>
+                                        @else
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-bordered mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>{{ __('messages.product') }}</th>
+                                                            <th>{{ __('messages.number_of_colors') }}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($byProduct as $row)
+                                                            <tr>
+                                                                <td class="text-nowrap">{{ $row['name'] ?? '-' }}</td>
+                                                                <td class="text-center">
+                                                                    <span
+                                                                        class="badge bg-primary">{{ $row['count'] }}</span>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endif
+                                    </td>
+
                                     @php
                                         $groupedSessions = \App\Models\ShootingSession::where(
                                             'reference',
