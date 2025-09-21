@@ -151,15 +151,7 @@
                                                                             <i class="fa fa-pencil"></i>
                                                                         </button>
                                                                     @else
-                                                                        <button class="btn btn-sm btn-success"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#uploadDriveModal"
-                                                                            data-reference="{{ $session->reference }}"
-                                                                            data-product-id="{{ $row['id'] }}"
-                                                                            data-receiving-date="{{ $row['recvDate'] }}"
-                                                                            data-has-editor="{{ $row['hasEditor'] ? 'true' : 'false' }}">
-                                                                            {{ __('messages.upload') }}
-                                                                        </button>
+                                                                        -
                                                                     @endif
                                                                 </td>
                                                             </tr>
