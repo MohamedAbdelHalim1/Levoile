@@ -140,16 +140,6 @@
                                                                             class="btn btn-success btn-sm">
                                                                             <i class="fa fa-link"></i>
                                                                         </a>
-                                                                        <button class="btn btn-sm" style="padding:0 4px"
-                                                                            title="{{ __('messages.edit') }}"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#uploadDriveModal"
-                                                                            data-reference="{{ $session->reference }}"
-                                                                            data-product-id="{{ $row['id'] }}"
-                                                                            data-receiving-date="{{ $row['recvDate'] }}"
-                                                                            data-has-editor="{{ $row['hasEditor'] ? 'true' : 'false' }}">
-                                                                            <i class="fa fa-pencil"></i>
-                                                                        </button>
                                                                     @else
                                                                         -
                                                                     @endif
