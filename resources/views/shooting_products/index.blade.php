@@ -360,7 +360,7 @@
                                     @endforeach
                                 </td>
 
-                                {{-- @php
+                                @php
                                     $sessionsGrouped = [];
                                     foreach ($product->shootingProductColors as $color) {
                                         foreach ($color->sessions as $session) {
@@ -368,6 +368,7 @@
                                         }
                                     }
                                 @endphp
+                                {{-- 
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
