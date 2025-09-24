@@ -65,4 +65,9 @@ class ShootingProduct extends Model
     {
         return $this->hasMany(ProductSessionDriveLink::class, 'product_id');
     }
+
+    public function productEditors()
+    {
+        return $this->hasMany(\App\Models\ProductSessionEditor::class, 'product_id');
+    }
 }

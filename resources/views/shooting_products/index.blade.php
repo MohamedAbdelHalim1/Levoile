@@ -168,7 +168,7 @@
                             <th>{{ __('messages.review') }}</th>
                             {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
                             {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
-                            <th>{{ __('messages.assign_editor') }}</th>
+                            {{-- <th>{{ __('messages.assign_editor') }}</th> --}}
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
@@ -509,12 +509,29 @@
                                                     @break
 
                                                     @case('editor')
-                                                        @php $editors = json_decode($firstColor?->editor, true); @endphp
-                                                        @if (is_array($editors))
+                                                        @php
+                                                            // نجيب صف المحرر لهذا المنتج داخل نفس الـ reference
+                                                            // $ref جاي من اللوب الخارجي sessionsGrouped as $ref => $colors
+                                                            $assigned = optional($product->productEditors)->firstWhere(
+                                                                'reference',
+                                                                $ref,
+                                                            );
+                                                            $editorName = optional($assigned?->user)->name;
+                                                            $recv = $assigned?->receiving_date;
+                                                            $st = $assigned?->status;
+                                                        @endphp
+
+                                                        @if ($editorName)
                                                             <span class="d-block">
-                                                                @foreach ($editors as $id)
-                                                                    <span>{{ optional(\App\Models\User::find($id))->name }}</span>
-                                                                @endforeach
+                                                                <span class="badge bg-info">{{ $editorName }}</span>
+                                                                @if ($recv)
+                                                                    <span
+                                                                        class="badge bg-secondary">{{ \Carbon\Carbon::parse($recv)->format('Y-m-d') }}</span>
+                                                                @endif
+                                                                @if ($st)
+                                                                    <span
+                                                                        class="badge bg-light text-dark">{{ $st }}</span>
+                                                                @endif
                                                             </span>
                                                         @else
                                                             <span class="d-block">-</span>
@@ -600,7 +617,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     @php
                                         // كل مراجع السيشن للمنتج
                                         $allSessions = $product->shootingProductColors->flatMap(
@@ -630,22 +647,19 @@
                                         $hasAnyEditor = $payloadEditors->contains(fn($i) => $i['has_editor']);
                                     @endphp
 
-                                    {{-- عرض سريع لحالة كل Reference --}}
-                                    {{-- عرض سريع لحالة كل Reference --}}
+                                    
                                     @forelse ($payloadEditors as $it)
                                         <div class="d-flex align-items-center mb-1" style="gap:6px;">
                                             <span class="badge bg-light text-dark">{{ $it['reference'] }}</span>
 
                                             @if ($it['has_editor'])
                                                 @if (!empty($it['link']))
-                                                    {{-- لو فيه لينك: خليه هو اللي ظاهر بدل "محرر" --}}
                                                     <a href="{{ $it['link'] }}" target="_blank"
                                                         class="badge bg-success text-decoration-none">
                                                         <i class="fe fe-link-2"></i>
                                                         {{ __('messages.edit_link') }}
                                                     </a>
                                                 @else
-                                                    {{-- مفيش لينك: رجّع العرض القديم (اسم المحرر/كلمة محرر) --}}
                                                     <span class="badge bg-success">
                                                         {{ $it['editor_name'] ?? __('messages.editor') }}
                                                     </span>
@@ -663,7 +677,6 @@
                                     @endforelse
 
 
-                                    {{-- زر التعيين/التعديل --}}
                                     @if ($refs->isNotEmpty())
                                         <button type="button"
                                             class="btn btn-outline-primary btn-sm mt-1 open-product-assign-editor-modal"
@@ -671,7 +684,7 @@
                                             {{ $hasAnyEditor ? __('messages.edit') : __('messages.assign_editor') }}
                                         </button>
                                     @endif
-                                </td>
+                                </td>  --}}
 
 
 

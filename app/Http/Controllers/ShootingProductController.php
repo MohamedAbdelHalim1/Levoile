@@ -29,10 +29,12 @@ class ShootingProductController extends Controller
     public function index(Request $request)
     {
         $query = ShootingProduct::with([
-            'shootingProductColors.sessions.editSessions',  // eager load
+            'shootingProductColors.sessions.editSessions',
             'shootingProductColors',
-            'productSessionLinks',
+            'productSessionLinks.user',
+            'productEditors.user',   // <-- المهم للعمود
         ]);
+
         // Filters
         if ($request->filled('name')) {
             $query->where('name', 'LIKE', '%' . $request->name . '%');
