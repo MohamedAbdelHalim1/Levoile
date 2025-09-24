@@ -151,7 +151,6 @@
                             <th>{{ __('messages.number_of_sessions') }}</th>
                             <th>{{ __('messages.sessions') }}</th>
                             <th>{{ __('messages.status_of_sessions') }}</th>
-                            {{-- <th>{{ __('messages.editors_of_sessions') }}</th> --}}
                             <th>{{ __('messages.photo_link') }}</th>
                             <th>{{ __('messages.edit_link') }}</th>
                             <th>{{ __('messages.status_of_edit') }}</th>
@@ -159,16 +158,9 @@
                             <th>{{ __('messages.location') }}</th>
                             <th>{{ __('messages.date_of_shooting') }}</th>
                             <th>{{ __('messages.photographer') }}</th>
-                            {{-- <th>{{ __('messages.date_of_edit') }}</th> --}}
                             <th>{{ __('messages.editors') }}</th>
-                            {{-- <th>{{ __('messages.date_of_delivery') }} </th>
-                            <th>{{ __('messages.remaining_time') }}</th>
-                            <th>{{ __('messages.way_of_shooting') }}</th> --}}
                             <th>{{ __('messages.status_of_data') }}</th>
                             <th>{{ __('messages.review') }}</th>
-                            {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
-                            {{-- <th>{{ __('messages.product_drive_link') }}</th> --}}
-                            {{-- <th>{{ __('messages.assign_editor') }}</th> --}}
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
@@ -368,26 +360,7 @@
                                         }
                                     }
                                 @endphp
-                                {{-- 
 
-                                <td>
-                                    @foreach ($sessionsGrouped as $ref => $colors)
-                                        @php
-                                            $session = $colors[0]->sessions->firstWhere('reference', $ref);
-                                            $editSessions = $session?->editSessions ?? collect();
-                                        @endphp
-                                        <div
-                                            style="border: 1px solid #bce0fd; border-radius: 6px; padding: 4px; margin-bottom: 6px;">
-                                            @forelse ($editSessions as $edit)
-                                                <div>
-                                                    {{ optional(\App\Models\User::find($edit->user_id))->name ?? 'غير معروف' }}
-                                                </div>
-                                            @empty
-                                                <div>{{ __('messages.N/A') }}</div>
-                                            @endforelse
-                                        </div>
-                                    @endforeach
-                                </td> --}}
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
@@ -469,9 +442,8 @@
                                     }
                                 @endphp
 
-                                {{-- @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_delivery', 'time_left', 'shooting_method', 'date_of_editing', 'editor'] as $field) --}}
 
-                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'date_of_editing', 'editor'] as $field)
+                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'editor'] as $field)
                                     <td>
                                         @foreach ($sessionsGrouped as $ref => $colors)
                                             @php
@@ -505,10 +477,6 @@
                                                         @endif
                                                     @break
 
-                                                    {{-- @case('date_of_editing')
-                                                        <span class="d-block">{{ $firstColor?->date_of_editing ?? '-' }}</span>
-                                                    @break --}}
-
                                                     @case('editor')
                                                         @php
                                                             // نجيب صف المحرر لهذا المنتج داخل نفس الـ reference
@@ -538,54 +506,6 @@
                                                             <span class="d-block">-</span>
                                                         @endif
                                                     @break
-
-                                                    {{-- @case('date_of_delivery')
-                                                        <span class="d-block">{{ $firstColor?->date_of_delivery ?? '-' }}</span>
-                                                    @break --}}
-
-                                                    {{-- @case('time_left')
-                                                        @php
-                                                            $date = $firstColor?->date_of_delivery
-                                                                ? \Carbon\Carbon::parse($firstColor->date_of_delivery)
-                                                                : null;
-                                                            $remaining = $date
-                                                                ? \Carbon\Carbon::now()->diffInDays($date, false)
-                                                                : null;
-
-                                                            // نجيب السيشنات ونشوف لو كلهم مكتملين
-                                                            $sessionRefs = collect($colors)
-                                                                ->flatMap(fn($c) => $c->sessions)
-                                                                ->pluck('status');
-                                                            $allSessionsCompleted =
-                                                                $sessionRefs->count() > 0 &&
-                                                                $sessionRefs->every(fn($s) => $s === 'completed');
-                                                        @endphp
-
-                                                        <span class="d-block">
-                                                            @if ($allSessionsCompleted)
-                                                                -
-                                                            @elseif (is_null($date))
-                                                                -
-                                                            @elseif ($remaining > 0)
-                                                                {{ $remaining }} {{ __('messages.day_remaining') }}
-                                                            @elseif ($remaining == 0)
-                                                                {{ __('messages.today') }}
-                                                            @else
-                                                                {{ __('messages.day_overdue') }} {{ abs($remaining) }}
-                                                            @endif
-                                                        </span>
-                                                    @break
-
-                                                    @case('shooting_method')
-                                                        @if (!empty($firstColor?->shooting_method))
-                                                            <a href="{{ $firstColor->shooting_method }}" target="_blank"
-                                                                class="d-block text-success">
-                                                                <i class="fe fe-link"></i>
-                                                            </a>
-                                                        @else
-                                                            <span class="d-block">-</span>
-                                                        @endif
-                                                    @break --}}
                                                 @endswitch
                                             </div>
                                         @endforeach
@@ -617,75 +537,6 @@
                                             data-id="{{ $product->id }}">
                                     @endif
                                 </td>
-
-                                {{-- <td>
-                                    @php
-                                        // كل مراجع السيشن للمنتج
-                                        $allSessions = $product->shootingProductColors->flatMap(
-                                            fn($c) => $c->sessions ?? collect(),
-                                        );
-                                        $refs = $allSessions->pluck('reference')->unique()->values();
-
-                                        // لو فيه EditSession على أي ref نعرض اسمه
-                                        $editSessionsMap = \App\Models\EditSession::whereIn('reference', $refs)
-                                            ->get()
-                                            ->keyBy('reference');
-
-                                        // payload للمودال (reference + editor name لو موجود)
-                                        $payloadEditors = $refs
-                                            ->map(function ($r) use ($editSessionsMap) {
-                                                $es = $editSessionsMap->get($r);
-                                                return [
-                                                    'reference' => $r,
-                                                    'editor_name' => optional(optional($es)->user)->name,
-                                                    'has_editor' => (bool) optional($es)->user_id,
-                                                    'date' => optional(optional($es)->receiving_date)->format('Y-m-d'),
-                                                    'link' => optional($es)->drive_link, // <--- الجديد
-                                                ];
-                                            })
-                                            ->values();
-
-                                        $hasAnyEditor = $payloadEditors->contains(fn($i) => $i['has_editor']);
-                                    @endphp
-
-                                    
-                                    @forelse ($payloadEditors as $it)
-                                        <div class="d-flex align-items-center mb-1" style="gap:6px;">
-                                            <span class="badge bg-light text-dark">{{ $it['reference'] }}</span>
-
-                                            @if ($it['has_editor'])
-                                                @if (!empty($it['link']))
-                                                    <a href="{{ $it['link'] }}" target="_blank"
-                                                        class="badge bg-success text-decoration-none">
-                                                        <i class="fe fe-link-2"></i>
-                                                        {{ __('messages.edit_link') }}
-                                                    </a>
-                                                @else
-                                                    <span class="badge bg-success">
-                                                        {{ $it['editor_name'] ?? __('messages.editor') }}
-                                                    </span>
-                                                @endif
-
-                                                @if (!empty($it['date']))
-                                                    <span class="badge bg-info">{{ $it['date'] }}</span>
-                                                @endif
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </div>
-                                    @empty
-                                        <span class="text-muted">{{ __('messages.N/A') }}</span>
-                                    @endforelse
-
-
-                                    @if ($refs->isNotEmpty())
-                                        <button type="button"
-                                            class="btn btn-outline-primary btn-sm mt-1 open-product-assign-editor-modal"
-                                            data-sessions='@json($payloadEditors)'>
-                                            {{ $hasAnyEditor ? __('messages.edit') : __('messages.assign_editor') }}
-                                        </button>
-                                    @endif
-                                </td>  --}}
 
 
 
