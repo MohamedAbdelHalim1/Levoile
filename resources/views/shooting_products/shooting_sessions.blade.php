@@ -54,19 +54,17 @@
                                     <td><span class="badge bg-dark">{{ $session->reference }}</span></td>
                                     <td>
                                         @php
-                                            // هات السيشنات الخام لنفس الـ reference مع المنتج
                                             $rows = \App\Models\ShootingSession::where('reference', $session->reference)
                                                 ->with('color.shootingProduct:id,name')
                                                 ->get();
 
-                                            // نجمع حسب المنتج داخل نفس السيشن
                                             $byProduct = $rows
-                                                ->filter(fn($s) => optional($s->color)->shootingProduct) // بس اللي ليها منتج
+                                                ->filter(fn($s) => optional($s->color)->shootingProduct)
                                                 ->groupBy(fn($s) => $s->color->shootingProduct->id)
                                                 ->map(function ($group) use (
                                                     $session,
                                                     $linksByRefProd,
-                                                    $editSessionsByRef,
+                                                    $editorsByRefProd,
                                                 ) {
                                                     $product = $group->first()->color->shootingProduct;
                                                     $prodId = $product->id;
@@ -86,22 +84,29 @@
                                                     $linkRec = optional($linksByRefProd->get($key))[0] ?? null;
                                                     $drive = $linkRec->drive_link ?? null;
 
-                                                    // المحرّر على مستوى الـ reference
-                                                    $es = $editSessionsByRef->get($ref);
-                                                    $editor = optional($es?->user)->name;
+                                                    // ✅ المحرر الخاص بهذا (reference, product_id)
+                                                    $editorRec = optional($editorsByRefProd->get($key))[0] ?? null;
+                                                    $editor = optional(optional($editorRec)->user)->name;
+                                                    $recvDate = optional($editorRec)->receiving_date
+                                                        ? \Carbon\Carbon::parse($editorRec->receiving_date)->format(
+                                                            'Y-m-d',
+                                                        )
+                                                        : null;
+                                                    $edStatus = $editorRec->status ?? null;
 
                                                     return [
                                                         'id' => $prodId,
                                                         'name' => $product->name,
                                                         'count' => $colorCount,
                                                         'editor' => $editor,
+                                                        'recvDate' => $recvDate,
+                                                        'edStatus' => $edStatus,
                                                         'drive' => $drive,
-                                                        'hasEditor' => !empty($es?->user_id),
-                                                        'recvDate' => optional($es?->receiving_date)?->format('Y-m-d'),
                                                     ];
                                                 })
                                                 ->values();
                                         @endphp
+
 
                                         @if ($byProduct->isEmpty())
                                             <span class="badge bg-secondary">0</span>
@@ -129,10 +134,19 @@
                                                                     @if ($row['editor'])
                                                                         <span
                                                                             class="badge bg-info">{{ $row['editor'] }}</span>
+                                                                        @if ($row['recvDate'])
+                                                                            <span
+                                                                                class="badge bg-secondary">{{ $row['recvDate'] }}</span>
+                                                                        @endif
+                                                                        @if ($row['edStatus'])
+                                                                            <span
+                                                                                class="badge bg-light text-dark">{{ $row['edStatus'] }}</span>
+                                                                        @endif
                                                                     @else
                                                                         <span class="text-muted">-</span>
                                                                     @endif
                                                                 </td>
+
                                                                 <td class="text-center">
                                                                     @if (!empty($row['drive']))
                                                                         {{-- اعرض القيمة كما هي بدون helpers عشان ما يتحطش الدومين قبلها --}}
@@ -195,7 +209,7 @@
                                         @endif
                                     </td>
 
-                                   
+
 
 
                                     <td>

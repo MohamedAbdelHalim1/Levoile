@@ -1664,13 +1664,24 @@ class ShootingProductController extends Controller
                 return $r->reference . '|' . $r->product_id;
             });
 
-        // المحرّر المعيّن على مستوى الـ reference
+        // ✅ المحرّر المُعيّن لكل (reference, product_id)
+        $editorsByRefProd = \App\Models\ProductSessionEditor::with('user:id,name')
+            ->whereIn('reference', $refs)
+            ->get()
+            ->groupBy(function ($r) {
+                return $r->reference . '|' . $r->product_id;
+            });
+
+        // (اختياري) لو لسه محتاج محرر على مستوى الـ reference كله
         $editSessionsByRef = \App\Models\EditSession::whereIn('reference', $refs)
-            ->with('user:id,name') // جِب الاسم
+            ->with('user:id,name')
             ->get()
             ->keyBy('reference');
 
-        return view('shooting_products.shooting_sessions', compact('sessions', 'linksByRefProd', 'editSessionsByRef'));
+        return view(
+            'shooting_products.shooting_sessions',
+            compact('sessions', 'linksByRefProd', 'editorsByRefProd', 'editSessionsByRef')
+        );
     }
 
 
