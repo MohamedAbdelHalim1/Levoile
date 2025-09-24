@@ -138,10 +138,7 @@
                                                                             <span
                                                                                 class="badge bg-secondary">{{ $row['recvDate'] }}</span>
                                                                         @endif
-                                                                        @if ($row['edStatus'])
-                                                                            <span
-                                                                                class="badge bg-light text-dark">{{ $row['edStatus'] }}</span>
-                                                                        @endif
+                                                                       
                                                                     @else
                                                                         <span class="text-muted">-</span>
                                                                     @endif
