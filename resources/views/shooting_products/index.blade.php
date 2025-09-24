@@ -159,7 +159,7 @@
                             <th>{{ __('messages.location') }}</th>
                             <th>{{ __('messages.date_of_shooting') }}</th>
                             <th>{{ __('messages.photographer') }}</th>
-                            <th>{{ __('messages.date_of_edit') }}</th>
+                            {{-- <th>{{ __('messages.date_of_edit') }}</th> --}}
                             <th>{{ __('messages.editors') }}</th>
                             {{-- <th>{{ __('messages.date_of_delivery') }} </th>
                             <th>{{ __('messages.remaining_time') }}</th>
@@ -504,9 +504,9 @@
                                                         @endif
                                                     @break
 
-                                                    @case('date_of_editing')
+                                                    {{-- @case('date_of_editing')
                                                         <span class="d-block">{{ $firstColor?->date_of_editing ?? '-' }}</span>
-                                                    @break
+                                                    @break --}}
 
                                                     @case('editor')
                                                         @php
