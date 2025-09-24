@@ -151,7 +151,7 @@
                             <th>{{ __('messages.number_of_sessions') }}</th>
                             <th>{{ __('messages.sessions') }}</th>
                             <th>{{ __('messages.status_of_sessions') }}</th>
-                            <th>{{ __('messages.editors_of_sessions') }}</th>
+                            {{-- <th>{{ __('messages.editors_of_sessions') }}</th> --}}
                             <th>{{ __('messages.photo_link') }}</th>
                             <th>{{ __('messages.edit_link') }}</th>
                             <th>{{ __('messages.status_of_edit') }}</th>
@@ -360,7 +360,7 @@
                                     @endforeach
                                 </td>
 
-                                @php
+                                {{-- @php
                                     $sessionsGrouped = [];
                                     foreach ($product->shootingProductColors as $color) {
                                         foreach ($color->sessions as $session) {
@@ -386,7 +386,7 @@
                                             @endforelse
                                         </div>
                                     @endforeach
-                                </td>
+                                </td> --}}
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
