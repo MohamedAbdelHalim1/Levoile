@@ -31,7 +31,7 @@ class ShootingProductController extends Controller
         $query = ShootingProduct::with([
             'shootingProductColors.sessions.editSessions',
             'shootingProductColors',
-            'productSessionLinks.user',
+            'productSessionLinks',
             'productEditors.user',   // <-- المهم للعمود
         ]);
 
