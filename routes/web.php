@@ -350,6 +350,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/edit-sessions/assign-from-shooting', [EditSessionController::class, 'assignFromShooting'])
     ->name('edit-sessions.assign-from-shooting');
 
+    Route::post('/edit-sessions/assign-product-editor', [EditSessionController::class,'assignProductEditor'])
+    ->name('edit-sessions.assign-product-editor');
+
+
 
 
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');

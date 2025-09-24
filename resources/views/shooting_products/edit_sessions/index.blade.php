@@ -95,22 +95,24 @@
 
                                 {{-- المحرر (من EditSession على مستوى الـ reference) --}}
                                 <td>
-                                    @if ($es?->user_id)
-                                        <span class="d-flex align-items-center justify-content-between">
-                                            {{ \App\Models\User::find($es->user_id)?->name ?? '---' }}
-                                            <button class="btn btn-sm" style="padding: 0 4px;"
-                                                title="{{ __('messages.edit') }}" data-bs-toggle="modal"
-                                                data-bs-target="#assignEditorModal" data-reference="{{ $row->reference }}">
-                                                <i class="fa fa-pencil"></i>
-                                            </button>
+                                    <span class="d-flex align-items-center justify-content-between">
+                                        <span>
+                                            {{ $row->editor_name ?? '—' }}
+                                            @if ($row->editor_date)
+                                                <span
+                                                    class="badge bg-light text-dark ms-1">{{ \Carbon\Carbon::parse($row->editor_date)->format('Y-m-d') }}</span>
+                                            @endif
                                         </span>
-                                    @else
-                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#assignEditorModal" data-reference="{{ $row->reference }}">
-                                            {{ __('messages.assign_editor') }}
+
+                                        <button class="btn btn-sm" style="padding:0 4px;" title="{{ __('messages.edit') }}"
+                                            data-bs-toggle="modal" data-bs-target="#assignProductEditorModal"
+                                            data-reference="{{ $row->reference }}"
+                                            data-product-id="{{ $row->product_id }}">
+                                            <i class="fa fa-pencil"></i>
                                         </button>
-                                    @endif
+                                    </span>
                                 </td>
+
 
                                 {{-- الحالة --}}
                                 <td>
@@ -166,33 +168,41 @@
     </div>
 
     <!-- Modal: تعيين محرر -->
-    <div class="modal fade" id="assignEditorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="assignProductEditorModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('edit-sessions.assign-editor') }}" class="modal-content">
+            <form method="POST" action="{{ route('edit-sessions.assign-product-editor') }}" class="modal-content">
                 @csrf
-                <input type="hidden" name="reference" id="editorModalReference">
+                <input type="hidden" name="reference" id="apemReference">
+                <input type="hidden" name="product_id" id="apemProductId">
+
                 <div class="modal-header">
                     <h5 class="modal-title">{{ __('messages.assign_editor') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <select name="user_id" class="form-select" required>
-                        <option value="">{{ __('messages.assign_editor') }}</option>
-                        @foreach (\App\Models\User::where('role_id', 7)->get() as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('messages.assign_editor') }}</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">{{ __('messages.assign_editor') }}</option>
+                            @foreach (\App\Models\User::where('role_id', 7)->orderBy('name')->get() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">{{ __('messages.receiving_date') }}</label>
+                        <input type="date" name="receiving_date" class="form-control" required>
+                    </div>
                 </div>
-                <div>
-                    <label for="receiving_date" class="form-label">{{ __('messages.receiving_date') }} </label>
-                    <input type="date" name="receiving_date" class="form-control" required>
-                </div>
+
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                 </div>
             </form>
         </div>
     </div>
+
 
     <!-- Modal: التعيين الجماعي -->
     <div class="modal fade" id="bulkAssignModal" tabindex="-1" aria-hidden="true">
@@ -238,7 +248,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const driveModal = document.getElementById('uploadDriveModal');
             const driveModalRef = document.getElementById('driveModalReference');
-                const driveModalPid = document.getElementById('driveModalProductId');
+            const driveModalPid = document.getElementById('driveModalProductId');
 
             const noteWrapper = document.getElementById('noteWrapper');
             const noteInput = document.getElementById('noteInput');
@@ -246,7 +256,7 @@
             driveModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
                 const reference = button.getAttribute('data-reference');
-                        const productId = button.getAttribute('data-product-id');
+                const productId = button.getAttribute('data-product-id');
 
                 const receivingDate = button.getAttribute('data-receiving-date');
                 const hasEditor = button.getAttribute('data-has-editor') === 'true'; // هنا هنستخدمها
@@ -329,6 +339,16 @@
                     sanitize: false,
                     trigger: 'hover focus'
                 });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const m = document.getElementById('assignProductEditorModal');
+            m.addEventListener('show.bs.modal', function(e) {
+                const btn = e.relatedTarget;
+                document.getElementById('apemReference').value = btn.getAttribute('data-reference');
+                document.getElementById('apemProductId').value = btn.getAttribute('data-product-id');
             });
         });
     </script>

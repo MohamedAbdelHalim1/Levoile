@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EditSession;
 use App\Models\ProductSessionDriveLink;
+use App\Models\ProductSessionEditor;
 use App\Models\ShootingProduct;
 use App\Models\ShootingProductColor;
 use App\Models\ShootingSession;
@@ -17,83 +18,150 @@ use Illuminate\Support\Facades\DB;
 class EditSessionController extends Controller
 {
 
+    // public function index()
+    // {
+    //     // السيشنز الجاهزة (زي ما هي)
+    //     $sessions = EditSession::where('status', 'جديد')->latest()->get();
+
+    //     // هنجمع كل المنتجات لكل reference ونحوّلهم لصفوف منفصلة
+    //     $refs = $sessions->pluck('reference')->unique()->values();
+
+    //     // نسحب السيشنات ومعاها اللون والمنتج
+    //     $ss = ShootingSession::with(['color.shootingProduct:id,name'])
+    //         ->whereIn('reference', $refs)
+    //         ->get();
+
+    //     // جدول مساعد: link لكل (reference, product_id) من product_session_drive_links
+    //     $links = ProductSessionDriveLink::whereIn(
+    //         'product_id',
+    //         $ss->pluck('color.shootingProduct.id')->filter()->unique()
+    //     )
+    //         ->get()
+    //         ->groupBy(function ($r) {
+    //             return $r->product_id . '|' . $r->reference;
+    //         });
+
+    //     // نحضّر العناصر: كل عنصر = صف للجدول (Reference + Product)
+    //     $items = $ss
+    //         ->filter(fn($row) => optional($row->color)->shootingProduct) // فقط اللي ليها منتج
+    //         ->groupBy(fn($row) => $row->reference . '|' . $row->color->shootingProduct->id) // نجمع ألوان نفس المنتج داخل نفس الـreference
+    //         ->map(function ($group) use ($links) {
+    //             $first      = $group->first();
+    //             $reference  = $first->reference;
+    //             $product    = $first->color->shootingProduct;
+    //             $productId  = $product->id;
+    //             $colorCount = $group->pluck('color.color_code')->filter()->unique()->count(); // المميز
+
+    //             // لينك المنتج لو متخزن في ProductSessionDriveLink
+    //             $lk = optional($links->get($productId . '|' . $reference))[0] ?? null;
+
+    //             return (object)[
+    //                 'reference'   => $reference,
+    //                 'product_id'  => $productId,
+    //                 'product'     => $product->name,
+    //                 'colors'      => $colorCount > 0 ? $colorCount : $group->count(),
+    //                 'edit_session' => null, // سيبناها لو عايز لاحقًا
+    //                 'drive_link'  => $lk->drive_link ?? null,
+    //                 'receiving_date' => optional($lk)->receiving_date, // لو عندك عمود تاريخ
+    //             ];
+    //         })
+    //         ->values();
+
+    //     return view('shooting_products.edit_sessions.index', [
+    //         'sessions' => $sessions,           // لسه محتاجينه لباقي الأعمدة الحالية
+    //         'items'    => $items,              // الصفوف الجديدة (Reference+Product)
+    //     ]);
+    // }
+
     public function index()
     {
-        // السيشنز الجاهزة (زي ما هي)
+        // زي ما هو:
         $sessions = EditSession::where('status', 'جديد')->latest()->get();
-
-        // هنجمع كل المنتجات لكل reference ونحوّلهم لصفوف منفصلة
         $refs = $sessions->pluck('reference')->unique()->values();
 
-        // نسحب السيشنات ومعاها اللون والمنتج
         $ss = ShootingSession::with(['color.shootingProduct:id,name'])
             ->whereIn('reference', $refs)
             ->get();
 
-        // جدول مساعد: link لكل (reference, product_id) من product_session_drive_links
+        // روابط الDrive لكل (product_id|reference) زي ما كنت عامل:
         $links = ProductSessionDriveLink::whereIn(
             'product_id',
             $ss->pluck('color.shootingProduct.id')->filter()->unique()
-        )
-            ->get()
-            ->groupBy(function ($r) {
-                return $r->product_id . '|' . $r->reference;
-            });
+        )->get()->groupBy(fn($r) => $r->product_id . '|' . $r->reference);
 
-        // نحضّر العناصر: كل عنصر = صف للجدول (Reference + Product)
-        $items = $ss
-            ->filter(fn($row) => optional($row->color)->shootingProduct) // فقط اللي ليها منتج
-            ->groupBy(fn($row) => $row->reference . '|' . $row->color->shootingProduct->id) // نجمع ألوان نفس المنتج داخل نفس الـreference
-            ->map(function ($group) use ($links) {
+        // تعيينات المحرر لكل (product_id|reference)
+        $assignments = ProductSessionEditor::whereIn('reference', $refs)
+            ->get()
+            ->keyBy(fn($r) => $r->product_id . '|' . $r->reference);
+
+        $items = $ss->filter(fn($row) => optional($row->color)->shootingProduct)
+            ->groupBy(fn($row) => $row->reference . '|' . $row->color->shootingProduct->id)
+            ->map(function ($group) use ($links, $assignments) {
                 $first      = $group->first();
                 $reference  = $first->reference;
                 $product    = $first->color->shootingProduct;
                 $productId  = $product->id;
-                $colorCount = $group->pluck('color.color_code')->filter()->unique()->count(); // المميز
+                $colorCount = $group->pluck('color.color_code')->filter()->unique()->count();
 
-                // لينك المنتج لو متخزن في ProductSessionDriveLink
-                $lk = optional($links->get($productId . '|' . $reference))[0] ?? null;
+                $lk  = optional($links->get($productId . '|' . $reference))[0] ?? null;
+                $asn = $assignments->get($productId . '|' . $reference);
 
                 return (object)[
-                    'reference'   => $reference,
-                    'product_id'  => $productId,
-                    'product'     => $product->name,
-                    'colors'      => $colorCount > 0 ? $colorCount : $group->count(),
-                    'edit_session' => null, // سيبناها لو عايز لاحقًا
-                    'drive_link'  => $lk->drive_link ?? null,
-                    'receiving_date' => optional($lk)->receiving_date, // لو عندك عمود تاريخ
+                    'reference'       => $reference,
+                    'product_id'      => $productId,
+                    'product'         => $product->name,
+                    'colors'          => $colorCount > 0 ? $colorCount : $group->count(),
+                    'drive_link'      => $lk->drive_link ?? null,
+                    // البيانات الخاصة بالمحرر *لهذا المنتج داخل نفس السيشن*
+                    'editor_user_id'  => optional($asn)->user_id,
+                    'editor_name'     => optional(optional($asn)->user)->name,
+                    'editor_date'     => optional($asn)->receiving_date,
+                    'editor_status'   => $asn->status ?? 'جديد',
                 ];
-            })
-            ->values();
+            })->values();
 
-        return view('shooting_products.edit_sessions.index', [
-            'sessions' => $sessions,           // لسه محتاجينه لباقي الأعمدة الحالية
-            'items'    => $items,              // الصفوف الجديدة (Reference+Product)
-        ]);
+        return view('shooting_products.edit_sessions.index', compact('sessions', 'items'));
     }
 
 
 
-    public function assignEditor(Request $request)
+    // public function assignEditor(Request $request)
+    // {
+    //     $request->validate([
+    //         'reference' => 'required|string|exists:edit_sessions,reference',
+    //         'user_id' => 'required|exists:users,id',
+    //         'receiving_date' => 'required|date',
+
+    //     ]);
+
+    //     EditSession::where('reference', $request->reference)
+    //         ->update([
+    //             'user_id' => $request->user_id,
+    //             'receiving_date' => $request->receiving_date,
+    //         ]);
+
+    //     return redirect()->back()->with(
+    //         'success',
+    //         auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully'
+    //     );
+    // }
+    public function assignProductEditor(Request $request)
     {
-        $request->validate([
-            'reference' => 'required|string|exists:edit_sessions,reference',
-            'user_id' => 'required|exists:users,id',
+        $data = $request->validate([
+            'reference'      => 'required|string',
+            'product_id'     => 'required|exists:shooting_products,id',
+            'user_id'        => 'required|exists:users,id',
             'receiving_date' => 'required|date',
-
         ]);
 
-        EditSession::where('reference', $request->reference)
-            ->update([
-                'user_id' => $request->user_id,
-                'receiving_date' => $request->receiving_date,
-            ]);
-
-        return redirect()->back()->with(
-            'success',
-            auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully'
+        ProductSessionEditor::updateOrCreate(
+            ['reference' => $data['reference'], 'product_id' => $data['product_id']],
+            ['user_id' => $data['user_id'], 'receiving_date' => $data['receiving_date']]
         );
+
+        return back()->with('success', auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر لهذا المنتج داخل الجلسة' : 'Editor assigned for this product in the session');
     }
+
 
 
     public function uploadDriveLink(Request $request)
