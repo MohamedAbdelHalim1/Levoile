@@ -497,10 +497,7 @@
                                                                     <span
                                                                         class="badge bg-secondary">{{ \Carbon\Carbon::parse($recv)->format('Y-m-d') }}</span>
                                                                 @endif
-                                                                @if ($st)
-                                                                    <span
-                                                                        class="badge bg-light text-dark">{{ $st }}</span>
-                                                                @endif
+                                                               
                                                             </span>
                                                         @else
                                                             <span class="d-block">-</span>
