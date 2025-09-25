@@ -302,7 +302,7 @@
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#moveToEditModal" data-reference="{{ $session->reference }}">
-                                            {{ __('messages.move_to_editor'); /* اكتبها: ابدأ التعديل */ }}
+                                            {{ __('messages.move_to_editor') /* اكتبها: ابدأ التعديل */ }}
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
