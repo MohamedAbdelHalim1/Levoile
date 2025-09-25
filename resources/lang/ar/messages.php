@@ -466,6 +466,7 @@ return [
     'duplicate_color_codes' => 'كود لون مكرر',
     'occurrences' => 'التكرارات',
     'details' => 'التفاصيل',
+    'move_to_editor' => 'انتقل الى المحرر',
     
 
 ];

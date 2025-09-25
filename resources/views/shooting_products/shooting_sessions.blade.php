@@ -138,7 +138,6 @@
                                                                             <span
                                                                                 class="badge bg-secondary">{{ $row['recvDate'] }}</span>
                                                                         @endif
-                                                                       
                                                                     @else
                                                                         <span class="text-muted">-</span>
                                                                     @endif
@@ -302,8 +301,8 @@
 
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#assignEditorModal" data-reference="{{ $session->reference }}">
-                                            {{ __('messages.assign_editor') }}
+                                            data-bs-target="#moveToEditModal" data-reference="{{ $session->reference }}">
+                                            {{ __('messages.move_to_editor'); /* اكتبها: ابدأ التعديل */ }}
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
@@ -321,40 +320,27 @@
             </div>
         </div>
     </div>
-    <!-- Modal: تعيين محرر (صفحة جلسات التصوير) -->
-    <div class="modal fade" id="assignEditorModal" tabindex="-1" aria-hidden="true">
+    <!-- Modal: نقل إلى جاهز للتعديل -->
+    <div class="modal fade" id="moveToEditModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('shooting-sessions.assign-editor') }}" class="modal-content">
+            <form method="POST" action="{{ route('shooting-sessions.move-to-edit') }}" class="modal-content">
                 @csrf
-                <input type="hidden" name="reference" id="editorModalReference">
+                <input type="hidden" name="reference" id="moveEditReference">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ __('messages.assign_editor') }}</h5>
+                    <h5 class="modal-title">بدء التعديل</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">{{ __('messages.assign_editor') }}</label>
-                        <select name="user_id" class="form-select" required>
-                            <option value="">{{ __('messages.assign_editor') }}</option>
-                            @foreach (\App\Models\User::where('role_id', 7)->orderBy('name')->get() as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">{{ __('messages.receiving_date') }}</label>
-                        <input type="date" name="receiving_date" class="form-control" required>
-                    </div>
+                    هل تريد نقل هذه الجلسة إلى قائمة "جاهز للتعديل"؟
                 </div>
-
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                    <button type="submit" class="btn btn-primary">نعم، انقل</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">إلغاء</button>
                 </div>
             </form>
         </div>
     </div>
+
 
 @endsection
 
@@ -430,6 +416,13 @@
             .addEventListener('show.bs.modal', function(e) {
                 const btn = e.relatedTarget;
                 document.getElementById('editorModalReference').value = btn.getAttribute('data-reference');
+            });
+    </script>
+    <script>
+        document.getElementById('moveToEditModal')
+            .addEventListener('show.bs.modal', function(e) {
+                const ref = e.relatedTarget.getAttribute('data-reference');
+                document.getElementById('moveEditReference').value = ref;
             });
     </script>
 @endsection

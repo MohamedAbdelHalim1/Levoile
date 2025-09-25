@@ -353,7 +353,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/edit-sessions/assign-product-editor', [EditSessionController::class,'assignProductEditor'])
     ->name('edit-sessions.assign-product-editor');
 
-
+Route::post('/shooting-sessions/move-to-edit', [EditSessionController::class, 'moveToEditQueue'])
+    ->name('shooting-sessions.move-to-edit');
 
 
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');

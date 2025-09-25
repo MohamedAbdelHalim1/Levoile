@@ -470,7 +470,7 @@ return [
     'duplicate_color_codes' => 'Duplicate Color Codes',
     'occurrences' => 'Occurrences',
     'details' => 'Details',
-    
+    'move_to_editor' => 'Move To Editor',
 
 
 

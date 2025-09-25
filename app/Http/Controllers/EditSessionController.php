@@ -312,29 +312,54 @@ class EditSessionController extends Controller
         }
     }
 
-    public function assignFromShooting(Request $request)
+    // public function assignFromShooting(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'reference'      => 'required|string|exists:shooting_sessions,reference',
+    //         'user_id'        => 'required|exists:users,id',
+    //         'receiving_date' => 'required|date',
+    //     ]);
+
+    //     // لو الـ reference ملوش EditSession، انشئه
+    //     \App\Models\EditSession::updateOrCreate(
+    //         ['reference' => $data['reference']],
+    //         [
+    //             'user_id'        => $data['user_id'],
+    //             'receiving_date' => $data['receiving_date'],
+    //             'status'         => 'جديد', // سيبه “جديد” لحد ما المحرر يرفع اللينك
+    //         ]
+    //     );
+
+    //     return back()->with(
+    //         'success',
+    //         auth()->user()->current_lang == 'ar'
+    //             ? 'تم تعيين المحرر بنجاح'
+    //             : 'Editor assigned successfully'
+    //     );
+    // }
+
+    public function moveToEditQueue(Request $request)
     {
         $data = $request->validate([
-            'reference'      => 'required|string|exists:shooting_sessions,reference',
-            'user_id'        => 'required|exists:users,id',
-            'receiving_date' => 'required|date',
+            'reference' => 'required|string|exists:shooting_sessions,reference',
         ]);
 
-        // لو الـ reference ملوش EditSession، انشئه
+        // لو الجلسة مش موجودة في جدول EditSession هنضيفها كـ "جديد"
+        // ولو موجودة هنخليها "جديد" برضه ونفك أي تعيين محرر/تاريخ (حسب رغبتك)
         \App\Models\EditSession::updateOrCreate(
             ['reference' => $data['reference']],
             [
-                'user_id'        => $data['user_id'],
-                'receiving_date' => $data['receiving_date'],
-                'status'         => 'جديد', // سيبه “جديد” لحد ما المحرر يرفع اللينك
+                'status'         => 'جديد',
+                'user_id'        => null,        // ممكن تسيبهم زي ما هم لو مش عايز تفك التعيين
+                'receiving_date' => null,
             ]
         );
 
         return back()->with(
             'success',
             auth()->user()->current_lang == 'ar'
-                ? 'تم تعيين المحرر بنجاح'
-                : 'Editor assigned successfully'
+                ? 'تم نقل الجلسة إلى "جاهز للتعديل"'
+                : 'Session moved to Ready-to-Edit'
         );
     }
 }
