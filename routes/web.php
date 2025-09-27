@@ -9,7 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\DesignMaterialController;
 use App\Http\Controllers\DesignSampleController;
-
+use Illuminate\Http\Request;
 use App\Http\Controllers\EditSessionController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\MaterialController;
@@ -280,6 +280,28 @@ Route::middleware('auth')->group(function () {
         ->name('design-sample-products.add-comment');
 
 
+    Route::get('/products/tarha', function (Request $request, ProductController $controller) {
+        $request->merge(['main_category' => 1]);
+        return $controller->index($request);
+    })->name('products.tarha');
+
+    Route::get('/products/malabes', function (Request $request, ProductController $controller) {
+        $request->merge(['main_category' => 2]);
+        return $controller->index($request);
+    })->name('products.malabes');
+
+    Route::get('/products/esdal', function (Request $request, ProductController $controller) {
+        $request->merge(['main_category' => 3]);
+        return $controller->index($request);
+    })->name('products.esdal');
+
+    Route::get('/products/accessories', function (Request $request, ProductController $controller) {
+        $request->merge(['main_category' => 4]);
+        return $controller->index($request);
+    })->name('products.accessories');
+
+    // ==== قيد الـ {product} إنه رقمي + بعديها الـ resource ====
+    Route::pattern('product', '[0-9]+');
 
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class);
@@ -321,17 +343,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/assign-materials', [ProductController::class, 'assignMaterials'])->name('products.assign.materials');
     Route::get('/products/get-materials/{variant_id}', [ProductController::class, 'getMaterials']);
     Route::delete('/delete-material/{id}', [ProductController::class, 'deleteMaterial']);
-    Route::get('/products/tarha', [ProductController::class, 'index'])
-        ->name('products.tarha')->defaults('main_category', 1);
 
-    Route::get('/products/malabes', [ProductController::class, 'index'])
-        ->name('products.malabes')->defaults('main_category', 2);
-
-    Route::get('/products/esdal', [ProductController::class, 'index'])
-        ->name('products.esdal')->defaults('main_category', 3);
-
-    Route::get('/products/accessories', [ProductController::class, 'index'])
-        ->name('products.accessories')->defaults('main_category', 4);
 
     Route::resource('shooting-products', ShootingProductController::class);
     Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
