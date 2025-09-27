@@ -468,6 +468,7 @@ return [
     'details' => 'التفاصيل',
     'move_to_editor' => 'انتقل الى المحرر',
     'main_category' => 'القسم الرئيسي',
+    'choose'=>'اختر',
     
 
 ];
