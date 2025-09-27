@@ -170,6 +170,7 @@
                             <th>{{ __('#') }}</th>
                             <th>{{ __('messages.image') }}</th>
                             <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.main_category') }}</th>
                             <th>{{ __('messages.category') }}</th>
                             <th>{{ __('messages.season') }}</th>
                             <th>{{ __('messages.order_status') }}</th>
@@ -231,6 +232,7 @@
                                     </div>
                                 </td> --}}
                                 <td>{{ $product->description }}</td>
+                                <td>{{ $product->category->mainCategory->name ?? __('messages.N/A') }}</td>
                                 <td>{{ $product->category->name ?? __('messages.N/A') }}</td>
                                 <td>{{ $product->season->name ?? __('messages.N/A') }}</td>
                                 <td>
