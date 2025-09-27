@@ -191,23 +191,39 @@
                                 class="side-menu__icon ri-bubble-chart-line"></i><span
                                 class="side-menu__label">{{ __('messages.products') }}</span><i
                                 class="angle fe fe-chevron-right"></i></a>
+                        {{-- في ملف الـ sidebar blade --}}
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="side">
                                             <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a
-                                                        href="javascript:void(0)">{{ __('messages.products') }}</a>
+                                                <li class="side-menu-label1">
+                                                    <a href="javascript:void(0)">{{ __('messages.products') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('products.index') }}" class="slide-item">
-                                                        {{ __('messages.all_products') }}</a></li>
+
+                                                <li>
+                                                    <a href="{{ route('products.index') }}" class="slide-item">
+                                                        {{ __('messages.all_products') }}
+                                                    </a>
+                                                </li>
+
+                                                <li><a href="{{ route('products.tarha') }}"
+                                                        class="slide-item">الطرحه</a></li>
+                                                <li><a href="{{ route('products.malabes') }}"
+                                                        class="slide-item">الملابس</a></li>
+                                                <li><a href="{{ route('products.esdal') }}"
+                                                        class="slide-item">الاسدال</a></li>
+                                                <li><a href="{{ route('products.accessories') }}"
+                                                        class="slide-item">الإكسسوارات</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </li>
                         </ul>
+
+
                     </li>
                 @endif
 
@@ -372,16 +388,16 @@
                                                     <a href="{{ route('shooting-deliveries.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_deliveries') }}</a>
                                                 </li>
-                                                
+
                                                 <li>
                                                     <a href="{{ route('ready-to-shoot.index') }}" class="slide-item">
                                                         {{ __('messages.ready_to_shoot') }}</a>
                                                 </li>
-                                                
+
                                                 <li><a href="{{ route('shooting-sessions.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_sessions') }}</a>
                                                 </li>
-                                                
+
                                                 <li><a href="{{ route('shooting-products.index') }}"
                                                         class="slide-item">{{ __('messages.shooting_products') }}</a>
                                                 </li>
@@ -390,8 +406,8 @@
                                                         {{ __('messages.edit_sessions') }}
                                                     </a>
                                                 </li>
-                                                
-                                                
+
+
                                             </ul>
                                         </div>
                                     </div>

@@ -321,7 +321,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/products/assign-materials', [ProductController::class, 'assignMaterials'])->name('products.assign.materials');
     Route::get('/products/get-materials/{variant_id}', [ProductController::class, 'getMaterials']);
     Route::delete('/delete-material/{id}', [ProductController::class, 'deleteMaterial']);
+    Route::get('/products/tarha', [ProductController::class, 'index'])
+        ->name('products.tarha')->defaults('main_category', 1);
 
+    Route::get('/products/malabes', [ProductController::class, 'index'])
+        ->name('products.malabes')->defaults('main_category', 2);
+
+    Route::get('/products/esdal', [ProductController::class, 'index'])
+        ->name('products.esdal')->defaults('main_category', 3);
+
+    Route::get('/products/accessories', [ProductController::class, 'index'])
+        ->name('products.accessories')->defaults('main_category', 4);
 
     Route::resource('shooting-products', ShootingProductController::class);
     Route::post('/shooting-products/start', [ShootingProductController::class, 'startShooting'])
@@ -348,13 +358,13 @@ Route::middleware('auth')->group(function () {
     )->name('shooting-sessions.assign-editor');
 
     Route::post('/edit-sessions/assign-from-shooting', [EditSessionController::class, 'assignFromShooting'])
-    ->name('edit-sessions.assign-from-shooting');
+        ->name('edit-sessions.assign-from-shooting');
 
-    Route::post('/edit-sessions/assign-product-editor', [EditSessionController::class,'assignProductEditor'])
-    ->name('edit-sessions.assign-product-editor');
+    Route::post('/edit-sessions/assign-product-editor', [EditSessionController::class, 'assignProductEditor'])
+        ->name('edit-sessions.assign-product-editor');
 
-Route::post('/shooting-sessions/move-to-edit', [EditSessionController::class, 'moveToEditQueue'])
-    ->name('shooting-sessions.move-to-edit');
+    Route::post('/shooting-sessions/move-to-edit', [EditSessionController::class, 'moveToEditQueue'])
+        ->name('shooting-sessions.move-to-edit');
 
 
     Route::get('shooting-products/{id}/complete', [ShootingProductController::class, 'completePage'])->name('shooting-products.complete.page');

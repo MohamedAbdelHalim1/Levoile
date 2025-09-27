@@ -13,6 +13,8 @@
             <!-- Filters Section -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-4">
                 <form method="GET" action="{{ route('products.index') }}">
+                    <input type="hidden" name="main_category"
+                        value="{{ request()->route('main_category') ?? request('main_category') }}">
                     <div class="row">
                         <!-- Category Filter -->
                         <div class="col-md-4">
@@ -281,108 +283,109 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($product->productColors as $productColor)
-                                            @if ($productColor->productcolorvariants->isNotEmpty())
-                                                @php
-                                                    $variant = $productColor->productcolorvariants->last();
-                                                    $remainingDays = $variant
-                                                        ? \Carbon\Carbon::parse(
-                                                            $variant->expected_delivery,
-                                                        )->diffInDays(now(), false)
-                                                        : null;
-                                                    // i want to get  the quantity of parent productcolorvariant by productcolor id and summation of all recevied quantity
-                                                    $totalReceivedQuantity = $productColor->productcolorvariants->sum(
-                                                        'receiving_quantity',
-                                                    );
-                                                    $totalExpectedQuantity = $productColor->productcolorvariants
-                                                        ->where('parent_id', null)
-                                                        ->sum('quantity');
+                                                @if ($productColor->productcolorvariants->isNotEmpty())
+                                                    @php
+                                                        $variant = $productColor->productcolorvariants->last();
+                                                        $remainingDays = $variant
+                                                            ? \Carbon\Carbon::parse(
+                                                                $variant->expected_delivery,
+                                                            )->diffInDays(now(), false)
+                                                            : null;
+                                                        // i want to get  the quantity of parent productcolorvariant by productcolor id and summation of all recevied quantity
+                                                        $totalReceivedQuantity = $productColor->productcolorvariants->sum(
+                                                            'receiving_quantity',
+                                                        );
+                                                        $totalExpectedQuantity = $productColor->productcolorvariants
+                                                            ->where('parent_id', null)
+                                                            ->sum('quantity');
 
-                                                @endphp
-                                                <tr>
-                                                    <!-- Color Name -->
-                                                    <td>{{ $productColor->color->name }}</td>
-                                                    @if ($variant)
-                                                        <td>{{ $variant->sku ?? '-' }}</td>
-                                                        <!-- Manufacturing Status -->
-                                                        <td>
-                                                            @switch($variant->status)
-                                                                @case('new')
-                                                                    {{ __('messages.not_started') }}
-                                                                @break
-
-                                                                @case('processing')
-                                                                    {{ __('messages.processing') }}
-                                                                @break
-
-                                                                @case('postponed')
-                                                                    {{ __('messages.postponed') }}
-                                                                @break
-
-                                                                @case('partial')
-                                                                    {{ __('messages.partial') }}
-                                                                @break
-
-                                                                @case('complete')
-                                                                    {{ __('messages.complete') }}
-                                                                @break
-
-                                                                @case('cancel')
-                                                                    {{ __('messages.cancel') }}
-                                                                @break
-
-                                                                @case('stop')
-                                                                    {{ __('messages.stop') }}
-                                                                @break
-
-                                                                @default
-                                                                    {{ __('messages.unknown') }}
-                                                            @endswitch
-                                                        </td>
-                                                    @else
-                                                        <td colspan="6" class="text-center text-muted">
-                                                            {{ __('messages.N/A') }}
-                                                        </td>
-                                                    @endif
-
-                                                    <!-- Receiving Status with Remaining/Overdue Days -->
-                                                    <td>
-                                                        @php
-                                                            $remainingDays = $variant
-                                                                ? \Carbon\Carbon::parse(
-                                                                    $variant->expected_delivery,
-                                                                )->diffInDays(now(), false)
-                                                                : null;
-                                                        @endphp
+                                                    @endphp
+                                                    <tr>
+                                                        <!-- Color Name -->
+                                                        <td>{{ $productColor->color->name }}</td>
                                                         @if ($variant)
-                                                            @if ($variant->receiving_status === 'new')
-                                                                <span>-</span>
-                                                            @elseif ($variant->receiving_status === 'pending')
-                                                                @if ($remainingDays > 0)
-                                                                    <span class="badge bg-danger">{{ $remainingDays }}
-                                                                        {{ __('messages.day_overdue') }}</span>
-                                                                @elseif ($remainingDays === 0)
-                                                                    <span
-                                                                        class="badge bg-warning">{{ __('messages.today') }}</span>
-                                                                @else
-                                                                    <span
-                                                                        class="badge bg-success">{{ abs($remainingDays) }}
-                                                                        {{ __('messages.day_remaining') }}
-                                                                    </span>
-                                                                @endif
-                                                            @elseif ($variant->receiving_status === 'complete')
-                                                                <span
-                                                                    class="badge bg-danger">{{ __('messages.received_completely') }}</span>
-                                                            @elseif ($variant->receiving_status === 'postponed')
-                                                                <span>-</span>
-                                                            @endif
-                                                        @endif
-                                                    </td>
+                                                            <td>{{ $variant->sku ?? '-' }}</td>
+                                                            <!-- Manufacturing Status -->
+                                                            <td>
+                                                                @switch($variant->status)
+                                                                    @case('new')
+                                                                        {{ __('messages.not_started') }}
+                                                                    @break
 
-                                                    <!-- Quantity -->
-                                                    <td>{{ $totalExpectedQuantity ?? 0 }}</td>
-                                                    <td>{{ $totalReceivedQuantity ?? 0 }}</td>
-                                                </tr>
-                                            @endif
+                                                                    @case('processing')
+                                                                        {{ __('messages.processing') }}
+                                                                    @break
+
+                                                                    @case('postponed')
+                                                                        {{ __('messages.postponed') }}
+                                                                    @break
+
+                                                                    @case('partial')
+                                                                        {{ __('messages.partial') }}
+                                                                    @break
+
+                                                                    @case('complete')
+                                                                        {{ __('messages.complete') }}
+                                                                    @break
+
+                                                                    @case('cancel')
+                                                                        {{ __('messages.cancel') }}
+                                                                    @break
+
+                                                                    @case('stop')
+                                                                        {{ __('messages.stop') }}
+                                                                    @break
+
+                                                                    @default
+                                                                        {{ __('messages.unknown') }}
+                                                                @endswitch
+                                                            </td>
+                                                        @else
+                                                            <td colspan="6" class="text-center text-muted">
+                                                                {{ __('messages.N/A') }}
+                                                            </td>
+                                                        @endif
+
+                                                        <!-- Receiving Status with Remaining/Overdue Days -->
+                                                        <td>
+                                                            @php
+                                                                $remainingDays = $variant
+                                                                    ? \Carbon\Carbon::parse(
+                                                                        $variant->expected_delivery,
+                                                                    )->diffInDays(now(), false)
+                                                                    : null;
+                                                            @endphp
+                                                            @if ($variant)
+                                                                @if ($variant->receiving_status === 'new')
+                                                                    <span>-</span>
+                                                                @elseif ($variant->receiving_status === 'pending')
+                                                                    @if ($remainingDays > 0)
+                                                                        <span
+                                                                            class="badge bg-danger">{{ $remainingDays }}
+                                                                            {{ __('messages.day_overdue') }}</span>
+                                                                    @elseif ($remainingDays === 0)
+                                                                        <span
+                                                                            class="badge bg-warning">{{ __('messages.today') }}</span>
+                                                                    @else
+                                                                        <span
+                                                                            class="badge bg-success">{{ abs($remainingDays) }}
+                                                                            {{ __('messages.day_remaining') }}
+                                                                        </span>
+                                                                    @endif
+                                                                @elseif ($variant->receiving_status === 'complete')
+                                                                    <span
+                                                                        class="badge bg-danger">{{ __('messages.received_completely') }}</span>
+                                                                @elseif ($variant->receiving_status === 'postponed')
+                                                                    <span>-</span>
+                                                                @endif
+                                                            @endif
+                                                        </td>
+
+                                                        <!-- Quantity -->
+                                                        <td>{{ $totalExpectedQuantity ?? 0 }}</td>
+                                                        <td>{{ $totalReceivedQuantity ?? 0 }}</td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -558,96 +561,4 @@
             }
         });
     </script>
-
-
-    {{-- <script>
-        $(document).ready(function() {
-            function filterTable() {
-                const category = $('#categoryFilter').val().toLowerCase();
-                const season = $('#seasonFilter').val().toLowerCase();
-                const factory = $('#factoryFilter').val().toLowerCase();
-                const color = $('#colorFilter').val().toLowerCase();
-                const status = $('#statusFilter').val().toLowerCase();
-                const startDate = $('#expectedDeliveryStart').val();
-                const endDate = $('#expectedDeliveryEnd').val();
-
-                $('#file-datatable tbody tr').each(function() {
-                    const row = $(this);
-
-                    // Extract row-level data for filtering
-                    const rowCategory = row.find('td:nth-child(4)').text().toLowerCase();
-                    const rowSeason = row.find('td:nth-child(5)').text().toLowerCase();
-                    const rowFactory = row.find('td:nth-child(6)').text().toLowerCase();
-                    const rowStatus = row.find('td:nth-child(8) span').text().toLowerCase();
-
-                    // Nested color table filtering
-                    let matchesColor = !color; // Default to true if no color filter is selected
-                    let matchesDate = true; // Default to true if no date range is applied
-                    let hasMatchingNestedRows = false; // Tracks if the nested table has any visible rows
-
-                    // Loop through nested rows in the color table
-                    row.find('td:nth-child(7) table tbody tr').each(function() {
-                        const nestedRow = $(this);
-                        const nestedColor = nestedRow.find('td:nth-child(1)').text().toLowerCase();
-                        const nestedDate = nestedRow.find('td:nth-child(2)').text();
-
-                        // Check if nested row matches the color filter
-                        const isColorMatch = !color || nestedColor.includes(color);
-
-                        // Check if nested row matches the date range filter
-                        const isDateMatch =
-                            (!startDate || nestedDate >= startDate) &&
-                            (!endDate || nestedDate <= endDate);
-
-                        // If both color and date match, show this nested row
-                        if (isColorMatch && isDateMatch) {
-                            matchesColor = true;
-                            hasMatchingNestedRows = true;
-                            nestedRow.show();
-                        } else {
-                            nestedRow.hide();
-                        }
-                    });
-
-                    // Row-level filters
-                    const matchesCategory = !category || rowCategory.includes(category);
-                    const matchesSeason = !season || rowSeason.includes(season);
-                    const matchesFactory = !factory || rowFactory.includes(factory);
-                    const matchesStatus = !status || rowStatus.includes(status);
-
-                    // Show or hide the entire row based on all conditions
-                    if (
-                        matchesCategory &&
-                        matchesSeason &&
-                        matchesFactory &&
-                        matchesStatus &&
-                        matchesColor &&
-                        (hasMatchingNestedRows || !
-                        color) // Keep row visible if there are no color filters applied
-                    ) {
-                        row.show();
-                    } else {
-                        row.hide();
-                    }
-                });
-            }
-
-            function resetFilters() {
-                // Reset all filters
-                $('#categoryFilter, #seasonFilter, #factoryFilter, #colorFilter, #statusFilter').val('');
-                $('#expectedDeliveryStart, #expectedDeliveryEnd').val('');
-
-                // Show all rows and reset nested tables
-                $('#file-datatable tbody tr').each(function() {
-                    const row = $(this);
-                    row.show();
-                    row.find('td:nth-child(7) table tbody tr').show(); // Show all nested rows
-                });
-            }
-
-            // Attach events to Filter and Reset buttons
-            $('#applyFilterBtn').on('click', filterTable);
-            $('#resetFilterBtn').on('click', resetFilters);
-        });
-    </script> --}}
 @endsection

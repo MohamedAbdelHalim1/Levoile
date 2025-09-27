@@ -11,6 +11,17 @@
                     <label for="name" class="form-label">{{ __('messages.name') }}</label>
                     <input type="text" class="form-control" id="name" name="name" required>
                 </div>
+                <div class="mb-3">
+                    <label for="main_category_id" class="form-label">{{ __('messages.main_category') }}</label>
+                    <select id="main_category_id" name="main_category_id" class="form-select" required>
+                        <option value="" disabled selected>-- {{ __('messages.choose') }} --</option>
+                        @foreach ($mainCategories as $mc)
+                            <option value="{{ $mc->id }}" {{ old('main_category_id') == $mc->id ? 'selected' : '' }}>
+                                {{ $mc->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">{{ __('messages.add') }}</button>
             </form>
         </div>

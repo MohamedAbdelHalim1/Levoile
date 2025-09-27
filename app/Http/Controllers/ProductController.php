@@ -23,46 +23,41 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        // Fetch all unique filterable data
         $categories = Category::all();
-        $seasons = Season::all();
-        $factories = Factory::all();
-        $colors = Color::all();
-        $materials = Material::all();
+        $seasons    = Season::all();
+        $factories  = Factory::all();
+        $colors     = Color::all();
+        $materials  = Material::all();
 
-        // Start the query for fetching products
         $query = Product::with([
             'category',
             'season',
             'productColors.color',
-            'productColors.productcolorvariants' => function ($query) {
-                $query->orderBy('expected_delivery', 'asc');
+            'productColors.productcolorvariants' => function ($q) {
+                $q->orderBy('expected_delivery', 'asc');
             }
         ]);
 
-        // Apply filters based on user input
+        // ✅ فلترة بالـ Main Category (لو جت من الراوت أو من الكويري)
+        $mainCategoryId = $request->route('main_category') ?? $request->input('main_category');
+        if (!empty($mainCategoryId)) {
+            $query->whereHas('category', function ($q) use ($mainCategoryId) {
+                $q->where('main_category_id', $mainCategoryId);
+            });
+        }
+
+        // بقية الفلاتر زي ما هي
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('name', $request->category);
             });
         }
-        // if ($request->filled('material')) {
-        //     $query->whereHas('material', function ($q) use ($request) {
-        //         $q->where('name', $request->material);
-        //     });
-        // }
 
         if ($request->filled('season')) {
             $query->whereHas('season', function ($q) use ($request) {
                 $q->where('name', $request->season);
             });
         }
-
-        // if ($request->filled('factory')) {
-        //     $query->whereHas('factory', function ($q) use ($request) {
-        //         $q->where('name', $request->factory);
-        //     });
-        // }
 
         if ($request->filled('color')) {
             $query->whereHas('productColors.color', function ($q) use ($request) {
@@ -84,23 +79,24 @@ class ProductController extends Controller
             });
         }
 
-
         if ($request->filled('expected_delivery_start') || $request->filled('expected_delivery_end')) {
             $query->whereHas('productColors.productcolorvariants', function ($q) use ($request) {
                 if ($request->filled('expected_delivery_start')) {
-                    $q->where('status', 'processing')->where('expected_delivery', '>=', $request->expected_delivery_start);
+                    $q->where('status', 'processing')
+                        ->where('expected_delivery', '>=', $request->expected_delivery_start);
                 }
                 if ($request->filled('expected_delivery_end')) {
-                    $q->where('status', 'processing')->where('expected_delivery', '<=', $request->expected_delivery_end);
+                    $q->where('status', 'processing')
+                        ->where('expected_delivery', '<=', $request->expected_delivery_end);
                 }
             });
         }
 
-        // Fetch the filtered products
         $products = $query->orderBy('id', 'desc')->get();
 
         return view('products.index', compact('products', 'categories', 'seasons', 'factories', 'colors', 'materials'));
     }
+
 
 
     public function receive(Product $product)
