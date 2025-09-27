@@ -23,6 +23,7 @@
                     <thead>
                         <tr>
                             <th>{{ __('messages.name') }}</th>
+                            <th>{{ __('messages.main_category') }}</th> 
                             <th>{{ __('messages.operations') }}</th>
                         </tr>
                     </thead>
@@ -30,6 +31,7 @@
                         @foreach ($categories as $category)
                             <tr>
                                 <td>{{ $category->name }}</td>
+                                <td>{{ optional($category->mainCategory)->name ?? '-' }}</td> 
                                 <td>
                                     @if (auth()->user()->hasPermission('عرض قسم'))
                                         <a href="{{ route('categories.show', $category->id) }}"
@@ -42,10 +44,12 @@
                                     @endif
                                     @if (auth()->user()->hasPermission('حذف قسم'))
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('{{ __('messages.confirm_delete_category') }}')">
+                                            class="d-inline"
+                                            onsubmit="return confirm('{{ __('messages.confirm_delete_category') }}')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">{{ __('messages.delete') }}</button>
+                                            <button type="submit"
+                                                class="btn btn-danger">{{ __('messages.delete') }}</button>
                                         </form>
                                     @endif
                                 </td>

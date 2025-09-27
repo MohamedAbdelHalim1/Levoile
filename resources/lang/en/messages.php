@@ -471,7 +471,7 @@ return [
     'occurrences' => 'Occurrences',
     'details' => 'Details',
     'move_to_editor' => 'Move To Editor',
-
+    'main_category' => 'Main Category',
 
 
 

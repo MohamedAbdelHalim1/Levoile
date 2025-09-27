@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\MainCategory;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -12,76 +13,72 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all(); // Fetch all categories
+        $categories = Category::with('mainCategory')->get();
         return view('categories.index', compact('categories'));
     }
 
     /**
      * Show the form for creating a new category.
      */
+
     public function create()
     {
-        return view('categories.create');
+        $mainCategories = MainCategory::orderBy('name')->get();
+        return view('categories.create', compact('mainCategories'));
     }
 
-    /**
-     * Store a newly created category in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'name'=>'required|string|max:255',
+            'main_category_id' => 'required|exists:main_categories,id',
         ]);
 
         $category = new Category();
         $category->name = $request->name;
-
+        $category->main_category_id = $request->main_category_id;
         $category->save();
 
-        return redirect()->route('categories.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully') ;
+        return redirect()->route('categories.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم الإضافة بنجاح' : 'Added successfully'
+        );
     }
 
-    /**
-     * Display the specified category.
-     */
     public function show(Category $category)
     {
         return view('categories.show', compact('category'));
     }
 
-    /**
-     * Show the form for editing the specified category.
-     */
     public function edit(Category $category)
     {
-        return view('categories.edit', compact('category'));
+        $mainCategories = MainCategory::orderBy('name')->get();
+        return view('categories.edit', compact('category', 'mainCategories'));
     }
 
-    /**
-     * Update the specified category in storage.
-     */
     public function update(Request $request, Category $category)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'main_category_id' => 'required|exists:main_categories,id',
         ]);
 
         $category->name = $request->name;
-
+        $category->main_category_id = $request->main_category_id;
         $category->save();
 
-        return redirect()->route('categories.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully');
+        return redirect()->route('categories.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم التعديل بنجاح' : 'Edited successfully'
+        );
     }
 
-    /**
-     * Remove the specified category from storage.
-     */
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')->with('success',
-        auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully');
+        return redirect()->route('categories.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم الحذف بنجاح' : 'Deleted successfully'
+        );
     }
 }
