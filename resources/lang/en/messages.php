@@ -473,6 +473,7 @@ return [
     'move_to_editor' => 'Move To Editor',
     'main_category' => 'Main Category',
     'choose'=>'Choose',
+    'copy_path' => 'Copy Path',
 
 
 

@@ -71,10 +71,25 @@
                                     <span class="d-flex align-items-center justify-content-between">
                                         @if (!empty($row->drive_link))
                                             {{-- بنعرض القيمة كما هي بدون أي helpers عشان ما يتحطش الدومين قبلها --}}
-                                            <a href="{{ $row->drive_link }}"
-                                                onclick="window.open('{{ $row->drive_link }}','_blank'); return false;">
-                                                {{ __('messages.open') }}
-                                            </a>
+                                            @php
+                                                $link = trim($row->drive_link);
+                                                $isWeb = preg_match('~^(https?|ftp)://~i', $link);
+                                            @endphp
+
+                                            @if ($isWeb)
+                                                <a href="{{ $link }}" target="_blank" rel="noopener noreferrer">
+                                                    {{ __('messages.open') }}
+                                                </a>
+                                            @else
+                                                <button type="button" class="btn btn-outline-secondary btn-sm copy-path"
+                                                    data-path="{{ $link }}">
+                                                    {{ __('messages.copy_path') }}
+                                                </button>
+                                                <span class="text-muted small d-block mt-1">
+                                                    المتصفح يمنع فتح المسارات المحلية مباشرة
+                                                </span>
+                                            @endif
+
 
                                             <button class="btn btn-sm" style="padding: 0 4px;"
                                                 title="{{ __('messages.edit') }}" data-bs-toggle="modal"
@@ -353,6 +368,20 @@
                 document.getElementById('apemReference').value = btn.getAttribute('data-reference');
                 document.getElementById('apemProductId').value = btn.getAttribute('data-product-id');
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.copy-path');
+            if (!btn) return;
+            const path = btn.dataset.path || '';
+            if (navigator.clipboard && path) {
+                navigator.clipboard.writeText(path).then(() => {
+                    alert('تم نسخ المسار — الصقه في File Explorer لفتحه.');
+                }, () => alert('لم يتم النسخ، انسخ يدويًا: ' + path));
+            } else {
+                alert('المتصفح لا يدعم النسخ التلقائي، انسخ يدويًا: ' + path);
+            }
         });
     </script>
 @endsection
