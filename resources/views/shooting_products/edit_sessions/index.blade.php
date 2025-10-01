@@ -77,16 +77,16 @@
                                                 title="{{ __('messages.edit') }}" data-bs-toggle="modal"
                                                 data-bs-target="#uploadDriveModal" data-reference="{{ $row->reference }}"
                                                 data-product-id="{{ $row->product_id }}"
-                                                data-receiving-date="{{ $recvDate }}"
-                                                data-has-editor="{{ $es?->user_id ? 'true' : 'false' }}">
+                                                data-receiving-date="{{ $row->editor_date }}"
+                                                data-has-editor="{{ $row->editor_user_id ? 'true' : 'false' }}">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @else
                                             <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                                 data-bs-target="#uploadDriveModal" data-reference="{{ $row->reference }}"
                                                 data-product-id="{{ $row->product_id }}"
-                                                data-receiving-date="{{ $recvDate }}"
-                                                data-has-editor="{{ $es?->user_id ? 'true' : 'false' }}">
+                                                data-receiving-date="{{ $row->editor_date }}" 
+                                                data-has-editor="{{ $row->editor_user_id ? 'true' : 'false' }}">
                                                 {{ __('messages.upload') }}
                                             </button>
                                         @endif
