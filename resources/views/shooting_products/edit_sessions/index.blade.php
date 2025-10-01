@@ -71,7 +71,10 @@
                                     <span class="d-flex align-items-center justify-content-between">
                                         @if (!empty($row->drive_link))
                                             {{-- بنعرض القيمة كما هي بدون أي helpers عشان ما يتحطش الدومين قبلها --}}
-                                            <a href="{{ $row->drive_link }}" target="_blank">{{ __('messages.open') }}</a>
+                                            <a href="{{ $row->drive_link }}"
+                                                onclick="window.open('{{ $row->drive_link }}','_blank'); return false;">
+                                                {{ __('messages.open') }}
+                                            </a>
 
                                             <button class="btn btn-sm" style="padding: 0 4px;"
                                                 title="{{ __('messages.edit') }}" data-bs-toggle="modal"
@@ -85,7 +88,7 @@
                                             <button class="btn btn-sm btn-success" data-bs-toggle="modal"
                                                 data-bs-target="#uploadDriveModal" data-reference="{{ $row->reference }}"
                                                 data-product-id="{{ $row->product_id }}"
-                                                data-receiving-date="{{ $row->editor_date }}" 
+                                                data-receiving-date="{{ $row->editor_date }}"
                                                 data-has-editor="{{ $row->editor_user_id ? 'true' : 'false' }}">
                                                 {{ __('messages.upload') }}
                                             </button>
