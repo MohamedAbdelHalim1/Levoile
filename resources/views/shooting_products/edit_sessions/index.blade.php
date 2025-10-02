@@ -203,7 +203,7 @@
                         <label class="form-label">{{ __('messages.assign_editor') }}</label>
                         <select name="user_id" class="form-select" required>
                             <option value="">{{ __('messages.assign_editor') }}</option>
-                            @foreach (\App\Models\User::where('role_id', 7)->orderBy('name')->get() as $user)
+                            @foreach (\App\Models\User::where('role_id', 8)->orderBy('name')->get() as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
