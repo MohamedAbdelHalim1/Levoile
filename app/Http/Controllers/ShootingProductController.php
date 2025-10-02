@@ -1697,20 +1697,46 @@ class ShootingProductController extends Controller
 
     public function removeColor($sessionId)
     {
-        $session = ShootingSession::findOrFail($sessionId);
-        $color = $session->color;
+        DB::transaction(function () use ($sessionId) {
+            $session = ShootingSession::with('color.shootingProduct')->findOrFail($sessionId);
+            $color   = $session->color;           // ShootingProductColor
+            $product = $color?->shootingProduct;  // ShootingProduct
 
-        // 1. احذف السيشن نفسه
-        $session->delete();
+            // 1) احذف السيشن
+            $session->delete();
 
-        // 2. عدل حالة اللون لـ new
-        if ($color) {
-            $color->update(['status' => 'new']);
-        }
+            if ($color) {
+                // 2) رجّع حالة اللون
+                $color->update(['status' => 'new']);
+
+                // 3) رجّعه لـ ready_to_shoot
+                // item_no = code في جدول ShootingProductColor
+                $itemNo = $color->code;
+
+                // لو موجود بنفس الـ item_no والـ product إدخاله "جديد" فقط
+                $ready = ReadyToShoot::firstOrNew([
+                    'shooting_product_id' => $color->shooting_product_id,
+                    'item_no'             => $itemNo,
+                ]);
+
+                // لو لسه جديد بنكمّل بيانات افتراضية بسيطة
+                if (!$ready->exists) {
+                    $ready->description      = $product?->name; // المتاح قدامنا هنا
+                    $ready->quantity         = $ready->quantity ?? 1;
+                    $ready->type_of_shooting = null;
+                }
+
+                // المهم الحالة تبقى "جديد"
+                $ready->status = 'جديد';
+                $ready->save();
+            }
+        });
 
         return back()->with(
             'success',
-            auth()->user()->current_lang == 'ar' ? 'تم حذف اللون من الجلسة وإعادة حالته إلى جديد.' : 'Color removed from session and status changed to new.'
+            auth()->user()->current_lang == 'ar'
+                ? 'تم حذف اللون من الجلسة وإرجاعه إلى جاهز للتصوير.'
+                : 'Color removed from session and returned to Ready to Shoot.'
         );
     }
 
@@ -1815,13 +1841,13 @@ class ShootingProductController extends Controller
     public function bulkRemoveColors(Request $request, $reference)
     {
         $ids = $request->input('ids', []);
-
         if (empty($ids) || !is_array($ids)) {
             return back()->with('error', __('messages.select_at_least_one'));
         }
 
-        // تأكيد إن السجلات المطلوبة بتتبع نفس الـ reference
-        $sessions = ShootingSession::whereIn('id', $ids)
+        // هات السجلات المطلوبة وتأكد إنها لنفس الـ reference + حمّل اللون والمنتج
+        $sessions = ShootingSession::with('color.shootingProduct')
+            ->whereIn('id', $ids)
             ->where('reference', $reference)
             ->get();
 
@@ -1829,22 +1855,48 @@ class ShootingProductController extends Controller
             return back()->with('error', __('messages.not_found'));
         }
 
-        // المسموح مسحه فقط اللي مش completed
-        $blocked = $sessions->where('status', 'completed')->pluck('id')->all();
-        $deletable = $sessions->where('status', '!=', 'completed')->pluck('id')->all();
+        $blocked   = $sessions->where('status', 'completed');          // لا تُحذف
+        $deletable = $sessions->where('status', '!=', 'completed');    // يُحذف
 
-        if (!empty($deletable)) {
-            ShootingSession::whereIn('id', $deletable)->delete();
-        }
+        DB::transaction(function () use ($deletable) {
+            foreach ($deletable as $session) {
+                $color   = $session->color;             // ShootingProductColor
+                $product = $color?->shootingProduct;    // ShootingProduct
 
+                // احذف السطر من الجلسات
+                $session->delete();
+
+                if ($color) {
+                    // رجّع حالة اللون لـ new
+                    $color->update(['status' => 'new']);
+
+                    // رجّعه إلى ready_to_shoot (item_no = code)
+                    ReadyToShoot::updateOrCreate(
+                        [
+                            'shooting_product_id' => $color->shooting_product_id,
+                            'item_no'             => $color->code,
+                        ],
+                        [
+                            // لو كان موجود قبل كده بأي حالة، خلّيها "جديد"
+                            'status'            => 'جديد',
+                            // لو أول مرة يتسجل، كمّل شوية بيانات معقولة
+                            'description'       => $product?->name ?? '',
+                            'quantity'          => DB::raw('COALESCE(quantity, 1)'), // اترك القديمة لو موجودة
+                            'type_of_shooting'  => null,
+                        ]
+                    );
+                }
+            }
+        });
+
+        // رسالة النتيجة
         $msgParts = [];
-        if (count($deletable)) {
-            $msgParts[] = __('messages.deleted_count', ['count' => count($deletable)]);
+        if ($deletable->count()) {
+            $msgParts[] = __('messages.deleted_count', ['count' => $deletable->count()]);
         }
-        if (count($blocked)) {
-            $msgParts[] = __('messages.skipped_completed_count', ['count' => count($blocked)]);
+        if ($blocked->count()) {
+            $msgParts[] = __('messages.skipped_completed_count', ['count' => $blocked->count()]);
         }
-
         $message = $msgParts ? implode(' - ', $msgParts) : __('messages.nothing_to_delete');
 
         return back()->with('success', $message);
