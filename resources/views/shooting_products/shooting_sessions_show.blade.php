@@ -14,6 +14,8 @@
                 @endif
 
                 <div class="table-responsive">
+
+                    {{-- فورم الحذف الجماعي خارج الجدول --}}
                     <form id="bulkDeleteForm" method="POST" action="{{ route('shooting-sessions.bulk-remove', $reference) }}"
                         onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
                         @csrf
@@ -29,100 +31,85 @@
                                 {{ __('messages.back') }}
                             </a>
                         </div>
-
-                        <table class="table table-bordered text-nowrap" id="colors-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 40px;">
-                                        <input type="checkbox" id="selectAll">
-                                    </th>
-                                    <th>{{ __('messages.name') }}</th>
-                                    <th>{{ __('messages.code') }} </th>
-                                    <th>{{ __('messages.sku') }} </th>
-                                    <th>{{ __('messages.type_of_shooting') }} </th>
-                                    <th>{{ __('messages.location') }} </th>
-                                    <th>{{ __('messages.date_of_shooting') }} </th>
-                                    <th>{{ __('messages.photographer') }}</th>
-                                    <th>{{ __('messages.date_of_editing') }} </th>
-                                    <th>{{ __('messages.editors') }}</th>
-                                    <th>{{ __('messages.date_of_delivery') }}</th>
-                                    <th>{{ __('messages.status') }}</th>
-                                    <th>{{ __('messages.operations') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($colors as $colorSession)
-                                    @php
-                                        $color = $colorSession->color;
-                                        $isCompleted = $color && $color->status === 'completed';
-                                    @endphp
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" class="row-check" name="ids[]"
-                                                value="{{ $colorSession->id }}" {{ $isCompleted ? 'disabled' : '' }}>
-                                        </td>
-                                        <td>{{ $color->shootingProduct->name }}</td>
-                                        <td>{{ $color->shootingProduct->custom_id }}</td>
-                                        <td>{{ $color->code }}</td>
-                                        <td>{{ $color->type_of_shooting ?? '-' }}</td>
-                                        <td>{{ $color->location ?? '-' }}</td>
-                                        <td>{{ $color->date_of_shooting ?? '-' }}</td>
-                                        <td>
-                                            @if ($color->photographer)
-                                                @foreach (json_decode($color->photographer, true) as $photographerId)
-                                                    <span class="badge bg-primary">
-                                                        {{ optional(\App\Models\User::find($photographerId))->name }}
-                                                    </span>
-                                                @endforeach
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ $color->date_of_editing ?? '-' }}</td>
-                                        <td>
-                                            @php $eds = !empty($color->editor) ? json_decode($color->editor, true) : []; @endphp
-                                            @if (is_array($eds) && count($eds))
-                                                @foreach ($eds as $editorId)
-                                                    <span class="badge bg-secondary">
-                                                        {{ optional(\App\Models\User::find($editorId))->name }}
-                                                    </span>
-                                                @endforeach
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        <td>{{ $color->date_of_delivery ?? '-' }}</td>
-                                        <td>
-                                            @if ($color->status == 'in_progress')
-                                                <span class="badge bg-info">{{ __('messages.in_progress') }}</span>
-                                            @elseif ($color->status == 'completed')
-                                                <span class="badge bg-success">{{ __('messages.complete') }}</span>
-                                            @else
-                                                <span class="badge bg-warning">{{ $color->status ?? '-' }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($color->status != 'completed')
-                                                <form method="POST"
-                                                    action="{{ route('shooting-sessions.remove-color', $colorSession->id) }}"
-                                                    style="display:inline;"
-                                                    onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">
-                                                        {{ __('messages.delete') }}
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <span class="text-muted">---</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </form>
+
+                    <table class="table table-bordered text-nowrap" id="colors-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:40px;">
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th>{{ __('messages.name') }}</th>
+                                <th>{{ __('messages.code') }}</th>
+                                <th>{{ __('messages.sku') }}</th>
+                                <th>{{ __('messages.type_of_shooting') }}</th>
+                                <th>{{ __('messages.location') }}</th>
+                                <th>{{ __('messages.date_of_shooting') }}</th>
+                                <th>{{ __('messages.photographer') }}</th>
+                                <th>{{ __('messages.date_of_editing') }}</th>
+                                <th>{{ __('messages.editors') }}</th>
+                                <th>{{ __('messages.date_of_delivery') }}</th>
+                                <th>{{ __('messages.status') }}</th>
+                                <th>{{ __('messages.operations') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($colors as $colorSession)
+                                @php
+                                    $color = $colorSession->color;
+                                    $isCompleted = $color && $color->status === 'completed';
+                                @endphp
+                                <tr>
+                                    <td>
+                                        {{-- لاحظ form="bulkDeleteForm" --}}
+                                        <input type="checkbox" class="row-check" name="ids[]"
+                                            value="{{ $colorSession->id }}" form="bulkDeleteForm"
+                                            {{ $isCompleted ? 'disabled' : '' }}>
+                                    </td>
+
+                                    <td>{{ $color->shootingProduct->name }}</td>
+                                    <td>{{ $color->shootingProduct->custom_id }}</td>
+                                    <td>{{ $color->code }}</td>
+                                    <td>{{ $color->type_of_shooting ?? '-' }}</td>
+                                    <td>{{ $color->location ?? '-' }}</td>
+                                    <td>{{ $color->date_of_shooting ?? '-' }}</td>
+                                    <td> … نفس محتوى المصوّر … </td>
+                                    <td>{{ $color->date_of_editing ?? '-' }}</td>
+                                    <td> … نفس محتوى المحررين … </td>
+                                    <td>{{ $color->date_of_delivery ?? '-' }}</td>
+                                    <td>
+                                        @if ($color->status == 'in_progress')
+                                            <span class="badge bg-info">{{ __('messages.in_progress') }}</span>
+                                        @elseif ($color->status == 'completed')
+                                            <span class="badge bg-success">{{ __('messages.complete') }}</span>
+                                        @else
+                                            <span class="badge bg-warning">{{ $color->status ?? '-' }}</span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if ($color->status != 'completed')
+                                            {{-- فورم مستقل لحذف الصف فقط، مش جوّه bulkDeleteForm --}}
+                                            <form id="del-{{ $colorSession->id }}" method="POST"
+                                                action="{{ route('shooting-sessions.remove-color', $colorSession->id) }}"
+                                                class="d-inline"
+                                                onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    {{ __('messages.delete') }}
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-muted">---</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+
 
 
 

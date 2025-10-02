@@ -1705,40 +1705,43 @@ class ShootingProductController extends Controller
             Log::info('removeColor called', ['session_id' => $sessionId]);
 
             $session = \App\Models\ShootingSession::with('color.shootingProduct')->find($sessionId);
-
             if (!$session) {
-                Log::warning('Session not found', ['session_id' => $sessionId]);
                 return back()->with('error', 'Session not found (ID: ' . $sessionId . ')');
             }
 
-            $color   = $session->color;           // ShootingProductColor
-            $product = $color?->shootingProduct;  // ShootingProduct
+            $ref     = $session->reference;
+            $color   = $session->color;
+            $product = $color?->shootingProduct;
 
-            // احذف سطر الجلسة
-            $session->delete();
-            Log::info('Session row deleted', ['session_id' => $sessionId]);
+            DB::transaction(function () use ($session, $ref, $color, $product) {
+                // احذف سطر الجلسة
+                $session->delete();
 
-            if ($color) {
-                // رجّع حالة اللون
-                $color->update(['status' => 'new']);
-                Log::info('Color status back to new', ['color_id' => $color->id]);
+                // رجّع اللون لـ new + أضِف/حدّث ReadyToShoot
+                if ($color) {
+                    $color->update(['status' => 'new']);
 
-                // أضِف/حدّث في ready_to_shoot
-                $ready = \App\Models\ReadyToShoot::firstOrNew([
-                    'shooting_product_id' => $color->shooting_product_id,
-                    'item_no'             => $color->code,
-                ]);
-
-                if (!$ready->exists) {
-                    $ready->description      = $product?->name ?? '';
-                    $ready->quantity         = $ready->quantity ?: 1;
-                    $ready->type_of_shooting = null;
+                    $ready = \App\Models\ReadyToShoot::firstOrNew([
+                        'shooting_product_id' => $color->shooting_product_id,
+                        'item_no'             => $color->code,
+                    ]);
+                    if (!$ready->exists) {
+                        $ready->description      = $product?->name ?? '';
+                        $ready->quantity         = $ready->quantity ?: 1;
+                        $ready->type_of_shooting = null;
+                    }
+                    $ready->status = 'جديد';
+                    $ready->save();
                 }
 
-                $ready->status = 'جديد';
-                $ready->save();
-                Log::info('ReadyToShoot upserted', ['rts_id' => $ready->id ?? null, 'item_no' => $color->code]);
-            }
+                // لو السيشن فاضية تمامًا احذف الكيانات المرتبطة بها
+                $left = \App\Models\ShootingSession::where('reference', $ref)->exists();
+                if (!$left) {
+                    \App\Models\EditSession::where('reference', $ref)->delete();
+                    \App\Models\ProductSessionDriveLink::where('reference', $ref)->delete();
+                    \App\Models\ProductSessionEditor::where('reference', $ref)->delete();
+                }
+            });
 
             return back()->with(
                 'success',
@@ -1747,10 +1750,11 @@ class ShootingProductController extends Controller
                     : 'Color removed from session and returned to Ready to Shoot.'
             );
         } catch (Throwable $e) {
-            Log::error('removeColor failed', ['session_id' => $sessionId, 'err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            Log::error('removeColor failed', ['session_id' => $sessionId, 'err' => $e->getMessage()]);
             return back()->with('error', 'removeColor ERROR: ' . $e->getMessage());
         }
     }
+
 
 
 
@@ -1857,64 +1861,71 @@ class ShootingProductController extends Controller
     {
         try {
             $ids = $request->input('ids', []);
-            Log::info('bulkRemoveColors called', ['ref' => $reference, 'ids' => $ids]);
 
             if (empty($ids) || !is_array($ids)) {
                 return back()->with('error', __('messages.select_at_least_one'));
             }
 
+            // هات السطور المطلوبة وتأكد إنها لنفس الـ reference + حمّل اللون والمنتج
             $sessions = \App\Models\ShootingSession::with('color.shootingProduct')
                 ->whereIn('id', $ids)
                 ->where('reference', $reference)
                 ->get();
 
             if ($sessions->isEmpty()) {
-                Log::warning('No sessions found for given ids/ref', ['ref' => $reference, 'ids' => $ids]);
                 return back()->with('error', __('messages.not_found'));
             }
 
+            // الممنوع حذفها (completed) والمسموح
             $blocked   = $sessions->where('status', 'completed');
             $deletable = $sessions->where('status', '!=', 'completed');
 
-            \DB::beginTransaction();
+            DB::transaction(function () use ($deletable, $reference) {
+                foreach ($deletable as $session) {
+                    $color   = $session->color;            // ShootingProductColor
+                    $product = $color?->shootingProduct;   // ShootingProduct
 
-            foreach ($deletable as $session) {
-                $color   = $session->color;
-                $product = $color?->shootingProduct;
+                    // 1) احذف صف الجلسة
+                    $session->delete();
 
-                $session->delete();
-                Log::info('Session deleted', ['sid' => $session->id]);
+                    // 2) رجّع حالة اللون "new"
+                    if ($color) {
+                        $color->update(['status' => 'new']);
 
-                if ($color) {
-                    $color->update(['status' => 'new']);
-                    Log::info('Color new', ['cid' => $color->id]);
+                        // 3) أضِف/حدّث في ready_to_shoot (item_no = code)
+                        $ready = \App\Models\ReadyToShoot::firstOrNew([
+                            'shooting_product_id' => $color->shooting_product_id,
+                            'item_no'             => $color->code,
+                        ]);
 
-                    $ready = \App\Models\ReadyToShoot::firstOrNew([
-                        'shooting_product_id' => $color->shooting_product_id,
-                        'item_no'             => $color->code,
-                    ]);
+                        // لو أول مرة يتسجل قيّم شوية حقول منطقية
+                        if (!$ready->exists) {
+                            $ready->description      = $product?->name ?? '';
+                            $ready->quantity         = $ready->quantity ?: 1;
+                            $ready->type_of_shooting = null;
+                        }
 
-                    if (!$ready->exists) {
-                        $ready->description      = $product?->name ?? '';
-                        $ready->quantity         = $ready->quantity ?: 1;
-                        $ready->type_of_shooting = null;
+                        // أهم حاجة: الحالة ترجع "جديد"
+                        $ready->status = 'جديد';
+                        $ready->save();
                     }
-
-                    $ready->status = 'جديد';
-                    $ready->save();
-                    Log::info('ReadyToShoot upserted (bulk)', ['rts_id' => $ready->id ?? null, 'item_no' => $color->code]);
                 }
-            }
 
-            \DB::commit();
+                // 4) لو مفيش أي صفوف تاني بنفس الـ reference امسح الكيانات المرتبطة
+                $stillHasRows = \App\Models\ShootingSession::where('reference', $reference)->exists();
+                if (!$stillHasRows) {
+                    \App\Models\EditSession::where('reference', $reference)->delete();
+                    \App\Models\ProductSessionDriveLink::where('reference', $reference)->delete();
+                    \App\Models\ProductSessionEditor::where('reference', $reference)->delete();
+                }
+            });
 
+            // رسالة النتيجة
             $msg = [];
             if ($deletable->count()) $msg[] = __('messages.deleted_count', ['count' => $deletable->count()]);
             if ($blocked->count())   $msg[] = __('messages.skipped_completed_count', ['count' => $blocked->count()]);
             return back()->with('success', $msg ? implode(' - ', $msg) : __('messages.nothing_to_delete'));
         } catch (Throwable $e) {
-            \DB::rollBack();
-            Log::error('bulkRemoveColors failed', ['ref' => $reference, 'err' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return back()->with('error', 'bulkRemoveColors ERROR: ' . $e->getMessage());
         }
     }
