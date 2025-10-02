@@ -6,6 +6,13 @@
             <div class="bg-white shadow sm:rounded-lg p-4">
                 <h4 class="mb-4">{{ __('messages.shooting_sessions') }} : {{ $reference }}</h4>
 
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
                 <div class="table-responsive">
                     <form id="bulkDeleteForm" method="POST" action="{{ route('shooting-sessions.bulk-remove', $reference) }}"
                         onsubmit="return confirm('{{ __('messages.are_you_sure') }}');">
@@ -117,7 +124,7 @@
                     </form>
                 </div>
 
-         
+
 
 
                 <a href="{{ route('shooting-sessions.index') }}"
@@ -128,29 +135,28 @@
 @endsection
 
 @section('scripts')
-           <script>
-                        (function() {
-                            const selectAll = document.getElementById('selectAll');
-                            const checks = Array.from(document.querySelectorAll('.row-check'));
-                            const bulkBtn = document.getElementById('bulkDeleteBtn');
+    <script>
+        (function() {
+            const selectAll = document.getElementById('selectAll');
+            const checks = Array.from(document.querySelectorAll('.row-check'));
+            const bulkBtn = document.getElementById('bulkDeleteBtn');
 
-                            function refreshButton() {
-                                const anyChecked = checks.some(ch => ch.checked);
-                                bulkBtn.disabled = !anyChecked;
-                            }
+            function refreshButton() {
+                const anyChecked = checks.some(ch => ch.checked);
+                bulkBtn.disabled = !anyChecked;
+            }
 
-                            if (selectAll) {
-                                selectAll.addEventListener('change', function() {
-                                    checks.forEach(ch => {
-                                        if (!ch.disabled) ch.checked = selectAll.checked;
-                                    });
-                                    refreshButton();
-                                });
-                            }
+            if (selectAll) {
+                selectAll.addEventListener('change', function() {
+                    checks.forEach(ch => {
+                        if (!ch.disabled) ch.checked = selectAll.checked;
+                    });
+                    refreshButton();
+                });
+            }
 
-                            checks.forEach(ch => ch.addEventListener('change', refreshButton));
-                            refreshButton();
-                        })();
-                    </script>
-
+            checks.forEach(ch => ch.addEventListener('change', refreshButton));
+            refreshButton();
+        })();
+    </script>
 @endsection
