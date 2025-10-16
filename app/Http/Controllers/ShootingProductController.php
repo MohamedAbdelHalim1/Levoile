@@ -1929,4 +1929,47 @@ class ShootingProductController extends Controller
             return back()->with('error', 'bulkRemoveColors ERROR: ' . $e->getMessage());
         }
     }
+
+    public function quickUpdateReference(Request $request)
+    {
+        $data = $request->validate([
+            'reference'         => 'required|string|exists:shooting_sessions,reference',
+            'type_of_shooting'  => 'nullable|string|max:255',
+            'location'          => 'nullable|string|max:255',
+            'date_of_shooting'  => 'nullable|date',
+            'date_of_delivery'  => 'nullable|date',
+            'photographer'      => 'nullable|array',
+            'photographer.*'    => 'integer|exists:users,id',
+        ]);
+
+        DB::transaction(function () use ($data) {
+            // هات IDs ألوان الجلسة كلها
+            $colorIds = ShootingSession::where('reference', $data['reference'])
+                ->pluck('shooting_product_color_id')
+                ->filter()
+                ->unique();
+
+            if ($colorIds->isEmpty()) return;
+
+            // جهّز القيم اللي هتتكتب (بس لو مبعوتة)
+            $payload = [];
+            foreach (['type_of_shooting', 'location', 'date_of_shooting', 'date_of_delivery'] as $f) {
+                if (array_key_exists($f, $data)) $payload[$f] = $data[$f] ?? null;
+            }
+            if (array_key_exists('photographer', $data)) {
+                $payload['photographer'] = $data['photographer'] ? json_encode($data['photographer']) : null;
+            }
+
+            if (!empty($payload)) {
+                ShootingProductColor::whereIn('id', $colorIds)->update($payload);
+            }
+        });
+
+        return back()->with(
+            'success',
+            auth()->user()->current_lang == 'ar'
+                ? 'تم تحديث بيانات الجلسة.'
+                : 'Session details updated.'
+        );
+    }
 }

@@ -231,31 +231,26 @@
 
                                     {{-- الوقت المتبقي --}}
                                     <td>
-                                        @if ($firstLink)
+                                        @if ($allCompleted)
                                             <span>-</span>
                                         @else
                                             @php
                                                 $deliveryDate = $colors->first()?->color->date_of_delivery;
                                                 $remaining = $deliveryDate
-                                                    ? \Carbon\Carbon::now()->diffInDays(
-                                                        \Carbon\Carbon::parse($deliveryDate),
-                                                        false,
-                                                    )
+                                                    ? now()->diffInDays(\Carbon\Carbon::parse($deliveryDate), false)
                                                     : null;
                                             @endphp
 
                                             @if (is_null($deliveryDate))
                                                 <span>-</span>
+                                            @elseif ($remaining > 0)
+                                                <span class="badge bg-primary">{{ $remaining }}
+                                                    {{ __('messages.day_remaining') }}</span>
+                                            @elseif ($remaining == 0)
+                                                <span class="badge bg-warning">{{ __('messages.today') }}</span>
                                             @else
-                                                @if ($remaining > 0)
-                                                    <span class="badge bg-primary">{{ $remaining }}
-                                                        {{ __('messages.day_remaining') }}</span>
-                                                @elseif ($remaining == 0)
-                                                    <span class="badge bg-warning">{{ __('messages.today') }} </span>
-                                                @else
-                                                    <span class="badge bg-danger"> {{ __('messages.day_overdue') }}
-                                                        {{ abs($remaining) }} </span>
-                                                @endif
+                                                <span class="badge bg-danger">{{ __('messages.day_overdue') }}
+                                                    {{ abs($remaining) }}</span>
                                             @endif
                                         @endif
                                     </td>
@@ -302,7 +297,24 @@
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#moveToEditModal" data-reference="{{ $session->reference }}">
-                                            {{ __('messages.move_to_editor') /* اكتبها: ابدأ التعديل */ }}
+                                            {{ __('messages.move_to_editor'); /* اكتبها: ابدأ التعديل */ }}
+                                        </button>
+                                        {{-- زرار Edit --}}
+                                        @php
+                                            $first = $colors->first()?->color;
+                                            $photographers =
+                                                $first && $first->photographer
+                                                    ? json_decode($first->photographer, true)
+                                                    : [];
+                                        @endphp
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#quickEditModal" data-reference="{{ $session->reference }}"
+                                            data-type="{{ $first?->type_of_shooting }}"
+                                            data-location="{{ $first?->location }}"
+                                            data-dateshoot="{{ $first?->date_of_shooting }}"
+                                            data-datedelivery="{{ $first?->date_of_delivery }}"
+                                            data-photographers='@json($photographers)'>
+                                            {{ __('messages.edit') }}
                                         </button>
                                         <a href="{{ route('shooting-sessions.show', $session->reference) }}"
                                             class="btn btn-info btn-sm">
@@ -341,7 +353,57 @@
         </div>
     </div>
 
+    {{-- Quick Edit Modal --}}
+    <div class="modal fade" id="quickEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('shooting-sessions.quick-update') }}" class="modal-content">
+                @csrf
+                <input type="hidden" name="reference" id="qe_reference">
 
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('messages.edit') }} ({{ __('messages.shooting_sessions') }})</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label">{{ __('messages.type_of_shooting') }}</label>
+                        <input type="text" class="form-control" name="type_of_shooting" id="qe_type">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">{{ __('messages.location') }}</label>
+                        <input type="text" class="form-control" name="location" id="qe_location">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">{{ __('messages.photographer') }}</label>
+                        <select name="photographer[]" id="qe_photographers" class="form-select" multiple>
+                            @foreach (\App\Models\User::whereHas('role', fn($q) => $q->where('name', 'photographer'))->orderBy('name')->get() as $u)
+                                <option value="{{ $u->id }}">{{ $u->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">{{ __('messages.date_of_shooting') }}</label>
+                        <input type="date" class="form-control" name="date_of_shooting" id="qe_dateshoot">
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">{{ __('messages.date_of_delivery') }}</label>
+                        <input type="date" class="form-control" name="date_of_delivery" id="qe_datedelivery">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary">{{ __('messages.save') }}</button>
+                    <button type="button" class="btn btn-light"
+                        data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 
@@ -423,6 +485,33 @@
             .addEventListener('show.bs.modal', function(e) {
                 const ref = e.relatedTarget.getAttribute('data-reference');
                 document.getElementById('moveEditReference').value = ref;
+            });
+    </script>
+
+    <script>
+        document.getElementById('quickEditModal')
+            .addEventListener('show.bs.modal', function(e) {
+                const btn = e.relatedTarget;
+                const ref = btn.getAttribute('data-reference');
+                const type = btn.getAttribute('data-type') || '';
+                const loc = btn.getAttribute('data-location') || '';
+                const ds = btn.getAttribute('data-dateshoot') || '';
+                const dd = btn.getAttribute('data-datedelivery') || '';
+                const phs = JSON.parse(btn.getAttribute('data-photographers') || '[]');
+
+                document.getElementById('qe_reference').value = ref;
+                document.getElementById('qe_type').value = type;
+                document.getElementById('qe_location').value = loc;
+                document.getElementById('qe_dateshoot').value = ds || '';
+                document.getElementById('qe_datedelivery').value = dd || '';
+
+                // اختيارات المصورين (لو بتستعمل Select2 هيظبطها برضه)
+                const sel = document.getElementById('qe_photographers');
+                Array.from(sel.options).forEach(o => o.selected = phs.includes(parseInt(o.value)));
+                // لو عندك Select2:
+                if ($(sel).data('select2')) {
+                    $(sel).trigger('change');
+                }
             });
     </script>
 @endsection
