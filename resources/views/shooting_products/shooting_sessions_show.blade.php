@@ -73,9 +73,40 @@
                                     <td>{{ $color->type_of_shooting ?? '-' }}</td>
                                     <td>{{ $color->location ?? '-' }}</td>
                                     <td>{{ $color->date_of_shooting ?? '-' }}</td>
-                                    <td> … نفس محتوى المصوّر … </td>
+                                    <td>
+                                        @php
+                                            $pIds = $color->photographer ? json_decode($color->photographer, true) : [];
+                                        @endphp
+
+                                        @if (is_array($pIds) && count($pIds))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach ($pIds as $pid)
+                                                    <li>{{ optional(\App\Models\User::find($pid))->name ?? '—' }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
                                     <td>{{ $color->date_of_editing ?? '-' }}</td>
-                                    <td> … نفس محتوى المحررين … </td>
+                                    {{-- المحررون --}}
+                                    <td>
+                                        @php
+                                            // editor عندك مخزنة JSON ids برضه
+                                            $eIds = $color->editor ? json_decode($color->editor, true) : [];
+                                        @endphp
+
+                                        @if (is_array($eIds) && count($eIds))
+                                            <ul class="list-unstyled mb-0">
+                                                @foreach ($eIds as $eid)
+                                                    <li>{{ optional(\App\Models\User::find($eid))->name ?? '—' }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
+
                                     <td>{{ $color->date_of_delivery ?? '-' }}</td>
                                     <td>
                                         @if ($color->status == 'in_progress')
