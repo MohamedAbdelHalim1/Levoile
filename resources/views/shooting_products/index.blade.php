@@ -386,7 +386,7 @@
                                     @endforeach
                                 </td>
 
-                                <td>
+                                {{-- <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
                                         @php
                                             $session = $colors[0]->sessions->firstWhere('reference', $ref);
@@ -408,7 +408,51 @@
                                             @endforelse
                                         </div>
                                     @endforeach
+                                </td> --}}
+
+                                <td>
+                                    @foreach ($sessionsGrouped as $ref => $colors)
+                                        @php
+                                            // لينك التعديل لهذا المنتج داخل نفس الـ reference
+                                            $linkRec = optional($product->productSessionLinks)->firstWhere(
+                                                'reference',
+                                                $ref,
+                                            );
+                                            $link = $linkRec->drive_link ?? null;
+                                        @endphp
+
+                                        <div
+                                            style="border:1px solid #bce0fd;border-radius:6px;padding:4px;margin-bottom:6px;">
+                                            @if ($link)
+                                                @php
+                                                    $trim = trim($link);
+                                                    $isWeb = preg_match('~^(https?|ftp)://~i', $trim);
+                                                @endphp
+
+                                                @if ($isWeb)
+                                                    <a href="{{ $trim }}" target="_blank"
+                                                        rel="noopener noreferrer" class="btn btn-sm btn-outline-success"
+                                                        title="{{ __('messages.open') }}">
+                                                        <i class="fa fa-link"></i>
+                                                    </a>
+                                                @else
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary copy-path"
+                                                        data-path="{{ $trim }}"
+                                                        title="{{ __('messages.copy_path') }}">
+                                                        <i class="fa fa-copy"></i>
+                                                    </button>
+                                                    <small class="text-muted d-block mt-1">
+                                                        {{ __('messages.browser_block_local_paths') ?? 'المتصفح يمنع فتح المسارات المحلية مباشرة' }}
+                                                    </small>
+                                                @endif
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 </td>
+
 
                                 <td>
                                     @foreach ($sessionsGrouped as $ref => $colors)
@@ -443,7 +487,7 @@
                                 @endphp
 
 
-                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer', 'editor'] as $field)
+                                @foreach (['type_of_shooting', 'location', 'date_of_shooting', 'photographer'] as $field)
                                     <td>
                                         @foreach ($sessionsGrouped as $ref => $colors)
                                             @php
@@ -477,6 +521,7 @@
                                                         @endif
                                                     @break
 
+                                                    {{-- 
                                                     @case('editor')
                                                         @php
                                                             // نجيب صف المحرر لهذا المنتج داخل نفس الـ reference
@@ -497,17 +542,48 @@
                                                                     <span
                                                                         class="badge bg-secondary">{{ \Carbon\Carbon::parse($recv)->format('Y-m-d') }}</span>
                                                                 @endif
-                                                               
+
                                                             </span>
                                                         @else
                                                             <span class="d-block">-</span>
                                                         @endif
-                                                    @break
+                                                    @break --}}
                                                 @endswitch
                                             </div>
                                         @endforeach
                                     </td>
                                 @endforeach
+
+                                <td>
+                                    @foreach ($sessionsGrouped as $ref => $colors)
+                                        @php
+                                            $assigned = optional($product->productEditors)->firstWhere(
+                                                'reference',
+                                                $ref,
+                                            );
+                                            $editorName = optional($assigned?->user)->name;
+                                            $recv = $assigned?->receiving_date;
+                                            $status = $assigned?->status; // لو حابب تعرضه
+                                        @endphp
+
+                                        <div
+                                            style="border:1px solid #bce0fd;border-radius:6px;padding:4px;margin-bottom:6px;">
+                                            @if ($editorName)
+                                                <span class="badge bg-info">{{ $editorName }}</span>
+                                                @if ($recv)
+                                                    <span class="badge bg-secondary">
+                                                        {{ \Carbon\Carbon::parse($recv)->format('Y-m-d') }}
+                                                    </span>
+                                                @endif
+                                                {{-- لو عايز الحالة --}}
+                                                {{-- @if ($status) <span class="badge bg-light text-dark">{{ $status }}</span> @endif --}}
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </td>
+
 
                                 @php
                                     $hasAllColorNames = $product->shootingProductColors->every(function ($color) {
@@ -1040,5 +1116,21 @@
                 new bootstrap.Modal(modalEl).show();
             });
         })();
+    </script>
+
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.copy-path');
+            if (!btn) return;
+            const path = btn.dataset.path || '';
+            if (!path) return;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(path)
+                    .then(() => alert('تم نسخ المسار — الصقه في File Explorer لفتحه.'))
+                    .catch(() => alert('لم يتم النسخ، انسخ يدويًا: ' + path));
+            } else {
+                alert('انسخ يدويًا: ' + path);
+            }
+        });
     </script>
 @endsection
