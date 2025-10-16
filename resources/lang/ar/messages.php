@@ -470,6 +470,7 @@ return [
     'main_category' => 'القسم الرئيسي',
     'choose'=>'اختر',
     'copy_path' => 'نسخ الرابط',
+    'browser_block_local_paths' => 'المتصفح يمنع فتح المسارات المحلية مباشرة',
     
 
 ];
