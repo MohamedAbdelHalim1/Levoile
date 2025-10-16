@@ -118,7 +118,10 @@ class EditSessionController extends Controller
                     'editor_date'     => optional($asn)->receiving_date,
                     'editor_status'   => $asn->status ?? 'جديد',
                 ];
-            })->values();
+            })
+            // ⬅️ هنا السطر المهم: هنسيب بس الصفوف اللي "لسه مرفوعش لها لينك"
+            ->filter(fn($row) => empty($row->drive_link))
+            ->values();
 
         return view('shooting_products.edit_sessions.index', compact('sessions', 'items'));
     }
