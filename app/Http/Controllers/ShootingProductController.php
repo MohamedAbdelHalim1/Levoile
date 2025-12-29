@@ -1597,7 +1597,7 @@ class ShootingProductController extends Controller
                                 }
                             }
 
-                            dd($exists);
+                           
 
                             $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
                                 ->pluck('color_code')->unique()->count();
