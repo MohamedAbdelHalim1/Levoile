@@ -1551,18 +1551,47 @@ class ShootingProductController extends Controller
                                     ]);
 
                                 // ✅ check if this item already exists in ready_to_shoot with "جديد"
-                                $alreadyExists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
-                                    ->where('item_no', $itemNo)
-                                    ->where('status', 'جديد')
-                                    ->exists();
+                                // $alreadyExists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
+                                //     ->where('item_no', $itemNo)
+                                //     ->where('status', 'جديد')
+                                //     ->exists();
 
-                                if (!$alreadyExists) {
+                                // if (!$alreadyExists) {
+                                //     \App\Models\ReadyToShoot::create([
+                                //         'shooting_product_id' => $existingProduct->id,
+                                //         'item_no' => $itemNo,
+                                //         'description' => $color['description'],
+                                //         'quantity' => $color['quantity'],
+                                //         'status' => 'جديد',
+                                //         'type_of_shooting' => null,
+                                //     ]);
+                                // }
+
+                                $status = 'جديد';
+
+                                if ($status == 'جديد') {
+
+                                    $exists = \App\Models\ReadyToShoot::where('item_no', $itemNo)->exists();
+
+                                    if (!$exists) {
+                                        \App\Models\ReadyToShoot::create([
+                                            'shooting_product_id' => $existingProduct->id,
+                                            'item_no' => $itemNo,
+                                            'description' => $color['description'],
+                                            'quantity' => $color['quantity'],
+                                            'status' => 'جديد',
+                                            'type_of_shooting' => null,
+                                        ]);
+                                    }
+                                } else {
+
+                                    // أي حالة غير "جديد"
                                     \App\Models\ReadyToShoot::create([
                                         'shooting_product_id' => $existingProduct->id,
                                         'item_no' => $itemNo,
                                         'description' => $color['description'],
                                         'quantity' => $color['quantity'],
-                                        'status' => 'جديد',
+                                        'status' => $status,
                                         'type_of_shooting' => null,
                                     ]);
                                 }
