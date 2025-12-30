@@ -471,6 +471,7 @@ return [
     'choose'=>'اختر',
     'copy_path' => 'نسخ الرابط',
     'browser_block_local_paths' => 'المتصفح يمنع فتح المسارات المحلية مباشرة',
+    'remove' => 'حذف',
     
 
 ];
