@@ -120,7 +120,7 @@
                                                             </th>
                                                             <th>{{ __('messages.editor') }}</th>
                                                             <th class="text-center">{{ __('messages.edit_link') }}</th>
-                                                            <th class="text-center">{{ __('remove') }}</th>
+                                                            <th class="text-center">{{ __('messages.delete') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
