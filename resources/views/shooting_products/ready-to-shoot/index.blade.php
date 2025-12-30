@@ -17,14 +17,18 @@
                         <select name="type_of_shooting" class="form-select" onchange="this.form.submit()">
                             <option value="">{{ __('messages.all_types_of_shooting') }}</option>
                             <option value="تصوير منتج" {{ request('type_of_shooting') == 'تصوير منتج' ? 'selected' : '' }}>
-                                 {{ __('messages.product_shooting') }}</option>
+                                {{ __('messages.product_shooting') }}</option>
                             <option value="تصوير موديل"
-                                {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>{{ __('messages.model_shooting') }} </option>
+                                {{ request('type_of_shooting') == 'تصوير موديل' ? 'selected' : '' }}>
+                                {{ __('messages.model_shooting') }} </option>
                             <option value="تصوير انفلونسر"
-                                {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>{{ __('messages.inflo_shooting') }} 
+                                {{ request('type_of_shooting') == 'تصوير انفلونسر' ? 'selected' : '' }}>
+                                {{ __('messages.inflo_shooting') }}
                             </option>
-                            <option value="تصوير ريلز" {{ request('type_of_shooting') == 'تصوير ريلز' ? 'selected' : '' }}>{{ __('messages.reels_shooting') }} </option>
-                            <option value="تصوير ساره" {{ request('type_of_shooting') == 'تصوير ساره' ? 'selected' : '' }}>{{ __('messages.sara_shooting') }} </option>
+                            <option value="تصوير ريلز" {{ request('type_of_shooting') == 'تصوير ريلز' ? 'selected' : '' }}>
+                                {{ __('messages.reels_shooting') }} </option>
+                            <option value="تصوير ساره" {{ request('type_of_shooting') == 'تصوير ساره' ? 'selected' : '' }}>
+                                {{ __('messages.sara_shooting') }} </option>
                             <option value="تعديل لون" {{ request('type_of_shooting') == 'تعديل لون' ? 'selected' : '' }}>
                                 {{ __('messages.change_color') }} </option>
                         </select>
@@ -32,13 +36,15 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select" onchange="this.form.submit()">
                             <option value="">{{ __('messages.all_statuses') }}</option>
-                            <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>{{ __('messages.new') }}</option>
+                            <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>
+                                {{ __('messages.new') }}</option>
                             <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>
                                 {{ __('messages.processing') }}</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <a href="{{ route('ready-to-shoot.index') }}" class="btn btn-secondary">{{ __('messages.reset') }}</a>
+                        <a href="{{ route('ready-to-shoot.index') }}"
+                            class="btn btn-secondary">{{ __('messages.reset') }}</a>
                     </div>
                 </form>
 
@@ -53,6 +59,14 @@
                             {{ __('messages.bulk_shooting_type_assign') }}
                         </button>
 
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <input type="text" id="liveSearchInput" class="form-control"
+                                    placeholder="🔎 ابحث باسم المنتج أو بالكود...">
+                            </div>
+                        </div>
+
+
                         <table class="table table-bordered text-nowrap key-buttons border-bottom">
                             <thead class="table-light">
                                 <tr>
@@ -64,7 +78,8 @@
                                     <th>{{ __('messages.type_of_shooting') }} </th>
                                     <th>{{ __('messages.operations') }}</th>
                                     <th>
-                                        {{ __('messages.assign_type_of_shooting') }}<input type="checkbox" id="bulkCheckAll">
+                                        {{ __('messages.assign_type_of_shooting') }}<input type="checkbox"
+                                            id="bulkCheckAll">
                                     </th>
                                 </tr>
                             </thead>
@@ -77,7 +92,6 @@
                                             '|' .
                                             ($item->status ?? '-');
                                     });
-
                                 @endphp
 
                                 @foreach ($grouped as $key => $items)
@@ -87,7 +101,10 @@
                                         $colorCodes = $items->pluck('item_no');
                                     @endphp
 
-                                    <tr data-type="{{ $type }}" data-status="{{ $status }}">
+                                    <tr data-type="{{ $type }}" data-status="{{ $status }}"
+                                        data-name="{{ strtolower($product->name) }}"
+                                        data-code="{{ strtolower($product->custom_id) }}">
+
                                         <td>
                                             @if ($status !== 'قيد التصوير')
                                                 <input type="checkbox" name="selected_products[]"
@@ -201,7 +218,8 @@
                 <input type="hidden" name="product_ids" id="bulk_product_ids">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.assign_type_of_shooting') }} ({{ __('messages.bulk') }})</h5>
+                        <h5 class="modal-title">{{ __('messages.assign_type_of_shooting') }} ({{ __('messages.bulk') }})
+                        </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -380,9 +398,10 @@
             document.querySelectorAll('.refresh-variants-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.getAttribute('data-product-id');
-                        if (!confirm('{{ __('messages.do_you_want_to_restore_all_similar_products') }}')) {
-                            return;
-                        }
+                    if (!confirm(
+                            '{{ __('messages.do_you_want_to_restore_all_similar_products') }}')) {
+                        return;
+                    }
 
 
                     fetch("{{ route('ready-to-shoot.refresh-variants') }}", {
@@ -401,7 +420,8 @@
                             return response.json();
                         })
                         .then(data => {
-                            alert(data.message || '{{ __('messages.restored_successfully') }}');
+                            alert(data.message ||
+                                '{{ __('messages.restored_successfully') }}');
                             // ممكن تعمل reload أو تحديث جزء من الصفحة
                             location.reload(); // أو أعملها تحديث ذكي لاحقًا
                         })
@@ -410,6 +430,23 @@
                             console.error(error);
                         });
                 });
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('liveSearchInput').addEventListener('input', function() {
+            const value = this.value.toLowerCase().trim();
+
+            document.querySelectorAll('tbody tr').forEach(row => {
+                const name = row.dataset.name || '';
+                const code = row.dataset.code || '';
+
+                if (name.includes(value) || code.includes(value)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         });
     </script>
