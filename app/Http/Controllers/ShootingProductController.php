@@ -304,8 +304,8 @@ class ShootingProductController extends Controller
                     ->unique()
                     ->toArray();
 
-                \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
-                    ->delete();
+                // \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
+                //     ->delete();
 
 
                 foreach ($productIds as $productId) {
