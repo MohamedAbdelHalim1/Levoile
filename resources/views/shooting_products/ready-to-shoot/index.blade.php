@@ -53,7 +53,7 @@
                             {{ __('messages.bulk_shooting_type_assign') }}
                         </button>
 
-                        <table id="file-datatable" class="table table-bordered text-nowrap key-buttons border-bottom">
+                        <table class="table table-bordered text-nowrap key-buttons border-bottom">
                             <thead class="table-light">
                                 <tr>
                                     <th><input type="checkbox" id="checkAllStartShooting"></th>
