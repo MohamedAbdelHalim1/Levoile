@@ -120,6 +120,7 @@
                                                             </th>
                                                             <th>{{ __('messages.editor') }}</th>
                                                             <th class="text-center">{{ __('messages.edit_link') }}</th>
+                                                            <th class="text-center">{{ __('delete') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -154,6 +155,25 @@
                                                                         -
                                                                     @endif
                                                                 </td>
+                                                                <td class="text-center">
+                                                                    @if (empty($row['drive']))
+                                                                        <form method="POST"
+                                                                            action="{{ route('shooting-sessions.delete-product-from-session') }}"
+                                                                            onsubmit="return confirm('هل أنت متأكد من حذف هذا المنتج من الجلسة؟');">
+                                                                            @csrf
+                                                                            <input type="hidden" name="reference"
+                                                                                value="{{ $session->reference }}">
+                                                                            <input type="hidden" name="product_id"
+                                                                                value="{{ $row['id'] }}">
+                                                                            <button class="btn btn-danger btn-sm">
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        -
+                                                                    @endif
+                                                                </td>
+
                                                             </tr>
                                                         @endforeach
                                                     </tbody>

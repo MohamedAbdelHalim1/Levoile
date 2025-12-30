@@ -1597,7 +1597,7 @@ class ShootingProductController extends Controller
                                 }
                             }
 
-                           
+
 
                             $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
                                 ->pluck('color_code')->unique()->count();
@@ -2002,5 +2002,24 @@ class ShootingProductController extends Controller
                 ? 'تم تحديث بيانات الجلسة.'
                 : 'Session details updated.'
         );
+    }
+
+    public function deleteProductFromSession(Request $request)
+    {
+        $request->validate([
+            'reference' => 'required',
+            'product_id' => 'required|integer',
+        ]);
+
+        // احضر كل الألوان التابعة للمنتج
+        $colorIds = ShootingProductColor::where('shooting_product_id', $request->product_id)
+            ->pluck('id');
+
+        // احذف السيشنات الخاصة بهذا المنتج داخل هذا الـ reference
+        ShootingSession::where('reference', $request->reference)
+            ->whereIn('shooting_product_color_id', $colorIds)
+            ->delete();
+
+        return back()->with('success', 'تم حذف المنتج من الجلسة بنجاح.');
     }
 }

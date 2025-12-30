@@ -416,6 +416,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-sessions/quick-update', [ShootingProductController::class, 'quickUpdateReference'])
         ->name('shooting-sessions.quick-update');
 
+    Route::post(
+        '/shooting-sessions/delete-product',
+        [ShootingProductController::class, 'deleteProductFromSession']
+    )->name('shooting-sessions.delete-product-from-session');
+
     Route::get('/edit-sessions', [EditSessionController::class, 'index'])->name('edit-sessions.index');
     Route::post('/edit-sessions/assign-editor', [EditSessionController::class, 'assignEditor'])->name('edit-sessions.assign-editor');
     Route::post('/edit-sessions/upload-drive-link', [EditSessionController::class, 'uploadDriveLink'])->name('edit-sessions.upload-drive-link');
