@@ -347,6 +347,13 @@ class ShootingProductController extends Controller
                     $product->save();
                 }
 
+                // تحديث حالة المنتجات في صفحة جاهز للتصوير
+                \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
+                    ->update([
+                        'status' => 'قيد التصوير'
+                    ]);
+
+
                 // Generate new reference
                 $today = Carbon::now()->format('Y-m-d');
 
