@@ -66,6 +66,12 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <button id="sortByTypeBtn" class="btn btn-outline-primary">
+                                ترتيب حسب نوع التصوير
+                            </button>
+                        </div>
+
 
                         <table class="table table-bordered text-nowrap key-buttons border-bottom">
                             <thead class="table-light">
@@ -448,6 +454,49 @@
                     row.style.display = 'none';
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const btn = document.getElementById('sortByTypeBtn');
+            const tbody = document.querySelector('tbody');
+            const originalRows = Array.from(tbody.children);
+            let sorted = false;
+
+            btn.addEventListener('click', function() {
+
+                if (!sorted) {
+                    const rows = Array.from(tbody.children);
+
+                    rows.sort((a, b) => {
+                        const aType = a.dataset.type && a.dataset.type !== '-' ? 1 : 0;
+                        const bType = b.dataset.type && b.dataset.type !== '-' ? 1 : 0;
+                        return bType - aType; // اللي عنده نوع تصوير يطلع فوق
+                    });
+
+                    tbody.innerHTML = '';
+                    rows.forEach(row => tbody.appendChild(row));
+
+                    btn.classList.remove('btn-outline-primary');
+                    btn.classList.add('btn-danger');
+                    btn.textContent = 'إعادة الوضع الطبيعي';
+
+                    sorted = true;
+                } else {
+                    tbody.innerHTML = '';
+                    originalRows.forEach(row => tbody.appendChild(row));
+
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-outline-primary');
+                    btn.textContent = 'ترتيب حسب نوع التصوير';
+
+                    sorted = false;
+                }
+
+            });
+
         });
     </script>
 @endsection
