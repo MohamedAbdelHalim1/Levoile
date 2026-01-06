@@ -67,9 +67,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <button id="sortByTypeBtn" class="btn btn-outline-primary">
+                            <button type="button" id="sortByTypeBtn" class="btn btn-outline-primary">
                                 ترتيب حسب نوع التصوير
                             </button>
+
                         </div>
 
 
