@@ -66,12 +66,16 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3 d-flex gap-2 flex-wrap">
                             <button type="button" id="sortByTypeBtn" class="btn btn-outline-primary">
                                 ترتيب حسب نوع التصوير
                             </button>
 
+                            <button type="button" id="sortByNewBtn" class="btn btn-outline-secondary">
+                                ترتيب حسب الجديد
+                            </button>
                         </div>
+
 
 
                         <table class="table table-bordered text-nowrap key-buttons border-bottom">
@@ -458,7 +462,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
 
             const btn = document.getElementById('sortByTypeBtn');
@@ -496,6 +500,103 @@
                     sorted = false;
                 }
 
+            });
+
+        });
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const tbody = document.querySelector('tbody');
+            const originalRows = Array.from(tbody.children);
+
+            const btnType = document.getElementById('sortByTypeBtn');
+            const btnNew = document.getElementById('sortByNewBtn');
+
+            let activeMode = null; // null | 'type' | 'new'
+
+            function resetTable() {
+                tbody.innerHTML = '';
+                originalRows.forEach(r => tbody.appendChild(r));
+
+                // reset buttons UI
+                btnType.classList.remove('btn-danger');
+                btnType.classList.add('btn-outline-primary');
+                btnType.textContent = 'ترتيب حسب نوع التصوير';
+
+                btnNew.classList.remove('btn-danger');
+                btnNew.classList.add('btn-outline-secondary');
+                btnNew.textContent = 'ترتيب حسب الجديد';
+
+                activeMode = null;
+            }
+
+            function hasType(row) {
+                const t = (row.dataset.type || '').trim();
+                return t !== '' && t !== '-' && t.toLowerCase() !== 'null';
+            }
+
+            function applySort(mode) {
+                const rows = Array.from(tbody.children);
+
+                rows.sort((a, b) => {
+                    const aHas = hasType(a) ? 1 : 0;
+                    const bHas = hasType(b) ? 1 : 0;
+
+                    // mode 'type' => اللي عنده نوع تصوير فوق
+                    if (mode === 'type') return bHas - aHas;
+
+                    // mode 'new'  => اللي مالوش نوع تصوير فوق
+                    return aHas - bHas;
+                });
+
+                tbody.innerHTML = '';
+                rows.forEach(r => tbody.appendChild(r));
+            }
+
+            btnType.addEventListener('click', function() {
+                if (activeMode === 'type') {
+                    resetTable();
+                    return;
+                }
+
+                // لو زرار الجديد شغال، رجّع الأصل وبعدين طبق النوع
+                resetTable();
+                applySort('type');
+
+                btnType.classList.remove('btn-outline-primary');
+                btnType.classList.add('btn-danger');
+                btnType.textContent = 'إعادة الوضع الطبيعي';
+
+                // خلّي زرار الجديد يرجع لشكل الطبيعي
+                btnNew.classList.remove('btn-danger');
+                btnNew.classList.add('btn-outline-secondary');
+                btnNew.textContent = 'ترتيب حسب الجديد';
+
+                activeMode = 'type';
+            });
+
+            btnNew.addEventListener('click', function() {
+                if (activeMode === 'new') {
+                    resetTable();
+                    return;
+                }
+
+                // لو زرار النوع شغال، رجّع الأصل وبعدين طبق الجديد
+                resetTable();
+                applySort('new');
+
+                btnNew.classList.remove('btn-outline-secondary');
+                btnNew.classList.add('btn-danger');
+                btnNew.textContent = 'إعادة الوضع الطبيعي';
+
+                // خلّي زرار النوع يرجع لشكل الطبيعي
+                btnType.classList.remove('btn-danger');
+                btnType.classList.add('btn-outline-primary');
+                btnType.textContent = 'ترتيب حسب نوع التصوير';
+
+                activeMode = 'new';
             });
 
         });
