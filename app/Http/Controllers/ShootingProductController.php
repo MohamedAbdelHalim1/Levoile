@@ -1539,7 +1539,11 @@ class ShootingProductController extends Controller
                                 $colorCode = substr($itemNo, -5, 3);
                                 $sizeCode = substr($itemNo, -2);
 
-                                $existingColor = ShootingProductColor::where('code', $itemNo)->first();
+                                // $existingColor = ShootingProductColor::where('code', $itemNo)->first();
+                                $existingColor = ShootingProductColor::where('shooting_product_id', $existingProduct->id)
+                                    ->where('code', $itemNo)
+                                    ->first();
+
 
                                 if (!$existingColor) {
                                     ShootingProductColor::create([
@@ -1578,7 +1582,10 @@ class ShootingProductController extends Controller
 
                                 if ($status == 'جديد') {
 
-                                    $exists = \App\Models\ReadyToShoot::where('item_no', $itemNo)->exists();
+                                    // $exists = \App\Models\ReadyToShoot::where('item_no', $itemNo)->exists();
+                                    $exists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
+                                        ->where('item_no', $itemNo)
+                                        ->exists();
 
                                     if (!$exists) {
                                         \App\Models\ReadyToShoot::create([
