@@ -1506,9 +1506,21 @@ class ShootingProductController extends Controller
                 $grouped = [];
                 $addedCodes = [];
 
+
                 foreach ($selectedIndexes as $index) {
                     $row = $rows[$index];
                     $itemNo = $row['item_no'];
+
+                    dd([
+                        'selectedIndexes' => $selectedIndexes,
+                        'first_index' => $index,
+                        'row_exists' => isset($rows[$index]),
+                        'row' => $row,
+                        'itemNo' => $itemNo,
+                        'itemNo_type' => gettype($itemNo),
+                        'primaryId' => substr((string)$itemNo, 3, 6),
+                    ]);
+
 
                     if (isset($addedCodes[$itemNo])) {
                         continue;
@@ -1525,12 +1537,35 @@ class ShootingProductController extends Controller
                         'quantity' => $quantity,
                     ];
                 }
+                dd([
+                    'grouped_keys' => array_keys($grouped),
+                    'grouped_sample' => $grouped,
+                ]);
+
 
                 foreach ($grouped as $primaryId => $items) {
                     $firstItem = $items[0];
                     $description = $firstItem['description'];
 
                     $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
+                    if ($existingProduct) {
+                        dd([
+                            'primaryId' => $primaryId,
+                            'db_product_id' => $existingProduct->id,
+                            'db_name' => $existingProduct->name,
+                            'excel_desc' => $description,
+                            'db_normalized' => Str::lower(Str::squish($existingProduct->name)),
+                            'excel_normalized' => Str::lower(Str::squish($description)),
+                            'is_match' => Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description)),
+                        ]);
+                    } else {
+                        dd([
+                            'primaryId' => $primaryId,
+                            'existingProduct' => null,
+                            'excel_desc' => $description,
+                        ]);
+                    }
+
 
                     if ($existingProduct) {
                         if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
