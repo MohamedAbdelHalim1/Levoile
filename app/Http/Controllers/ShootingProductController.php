@@ -517,6 +517,14 @@ class ShootingProductController extends Controller
             if (!$stillNotCompleted) {
                 $product->status = 'completed';
                 $product->save();
+
+                // ✅ خليه يظهر في ready_to_shoot "مكتمل"
+                \App\Models\ReadyToShoot::where('shooting_product_id', $product->id)
+                    ->update(['status' => 'مكتمل']);
+            } else {
+                // لو لسه فيه ألوان مش مكتملة يبقى قيد التصوير
+                \App\Models\ReadyToShoot::where('shooting_product_id', $product->id)
+                    ->update(['status' => 'قيد التصوير']);
             }
         });
 
