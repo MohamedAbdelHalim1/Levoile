@@ -1511,15 +1511,15 @@ class ShootingProductController extends Controller
                     $row = $rows[$index];
                     $itemNo = $row['item_no'];
 
-                    dd([
-                        'selectedIndexes' => $selectedIndexes,
-                        'first_index' => $index,
-                        'row_exists' => isset($rows[$index]),
-                        'row' => $row,
-                        'itemNo' => $itemNo,
-                        'itemNo_type' => gettype($itemNo),
-                        'primaryId' => substr((string)$itemNo, 3, 6),
-                    ]);
+                    // dd([
+                    //     'selectedIndexes' => $selectedIndexes,
+                    //     'first_index' => $index,
+                    //     'row_exists' => isset($rows[$index]),
+                    //     'row' => $row,
+                    //     'itemNo' => $itemNo,
+                    //     'itemNo_type' => gettype($itemNo),
+                    //     'primaryId' => substr((string)$itemNo, 3, 6),
+                    // ]);
 
 
                     if (isset($addedCodes[$itemNo])) {
