@@ -1548,7 +1548,7 @@ class ShootingProductController extends Controller
                     $description = $firstItem['description'];
 
                     $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
-                    
+
                     // if ($existingProduct) {
                     //     dd([
                     //         'primaryId' => $primaryId,
@@ -1569,101 +1569,52 @@ class ShootingProductController extends Controller
 
 
                     if ($existingProduct) {
-                        if (Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description))) {
-                            foreach ($items as $color) {
-                                $itemNo = $color['item_no'];
-                                $colorCode = substr($itemNo, -5, 3);
-                                $sizeCode = substr($itemNo, -2);
 
-                                // $existingColor = ShootingProductColor::where('code', $itemNo)->first();
-                                $existingColor = ShootingProductColor::where('shooting_product_id', $existingProduct->id)
-                                    ->where('code', $itemNo)
-                                    ->first();
+                        foreach ($items as $color) {
+                            $itemNo = $color['item_no'];
+                            $colorCode = substr($itemNo, -5, 3);
+                            $sizeCode  = substr($itemNo, -2);
 
+                            $existingColor = ShootingProductColor::where('shooting_product_id', $existingProduct->id)
+                                ->where('code', $itemNo)
+                                ->first();
 
-                                if (!$existingColor) {
-                                    ShootingProductColor::create([
-                                        'shooting_product_id' => $existingProduct->id,
-                                        'code' => $itemNo,
-                                        'color_code' => $colorCode,
-                                        'size_code' => $sizeCode,
-                                    ]);
-                                }
-
-                                ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                                    ->where('item_no', $itemNo)
-                                    ->update([
-                                        'is_received' => 1,
-                                        'status' => 'old',
-                                    ]);
-
-                                // ✅ check if this item already exists in ready_to_shoot with "جديد"
-                                // $alreadyExists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
-                                //     ->where('item_no', $itemNo)
-                                //     ->where('status', 'جديد')
-                                //     ->exists();
-
-                                // if (!$alreadyExists) {
-                                //     \App\Models\ReadyToShoot::create([
-                                //         'shooting_product_id' => $existingProduct->id,
-                                //         'item_no' => $itemNo,
-                                //         'description' => $color['description'],
-                                //         'quantity' => $color['quantity'],
-                                //         'status' => 'جديد',
-                                //         'type_of_shooting' => null,
-                                //     ]);
-                                // }
-
-                                $status = 'جديد';
-
-                                if ($status == 'جديد') {
-
-                                    // $exists = \App\Models\ReadyToShoot::where('item_no', $itemNo)->exists();
-                                    $exists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
-                                        ->where('item_no', $itemNo)
-                                        ->exists();
-
-                                    if (!$exists) {
-                                        \App\Models\ReadyToShoot::create([
-                                            'shooting_product_id' => $existingProduct->id,
-                                            'item_no' => $itemNo,
-                                            'description' => $color['description'],
-                                            'quantity' => $color['quantity'],
-                                            'status' => 'جديد',
-                                            'type_of_shooting' => null,
-                                        ]);
-                                    }
-                                } else {
-
-                                    // أي حالة غير "جديد"
-                                    \App\Models\ReadyToShoot::create([
-                                        'shooting_product_id' => $existingProduct->id,
-                                        'item_no' => $itemNo,
-                                        'description' => $color['description'],
-                                        'quantity' => $color['quantity'],
-                                        'status' => $status,
-                                        'type_of_shooting' => null,
-                                    ]);
-                                }
+                            if (!$existingColor) {
+                                ShootingProductColor::create([
+                                    'shooting_product_id' => $existingProduct->id,
+                                    'code' => $itemNo,
+                                    'color_code' => $colorCode,
+                                    'size_code' => $sizeCode,
+                                ]);
                             }
 
+                            ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
+                                ->where('item_no', $itemNo)
+                                ->update([
+                                    'is_received' => 1,
+                                    'status' => 'old',
+                                ]);
 
+                            $exists = \App\Models\ReadyToShoot::where('shooting_product_id', $existingProduct->id)
+                                ->where('item_no', $itemNo)
+                                ->exists();
 
-                            $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
-                                ->pluck('color_code')->unique()->count();
-                            $existingProduct->save();
-                            $existingProduct->refreshStatusBasedOnColors();
-                        } else {
-                            foreach ($items as $color) {
-                                ShootingDeliveryContent::where('shooting_delivery_id', $delivery->id)
-                                    ->where('item_no', $color['item_no'])
-                                    ->update([
-                                        'is_received' => 1,
-                                        'status' => 'old',
-                                    ]);
+                            if (!$exists) {
+                                \App\Models\ReadyToShoot::create([
+                                    'shooting_product_id' => $existingProduct->id,
+                                    'item_no' => $itemNo,
+                                    'description' => $color['description'],
+                                    'quantity' => $color['quantity'],
+                                    'status' => 'جديد',
+                                    'type_of_shooting' => null,
+                                ]);
                             }
-                            continue;
                         }
+
+                        $existingProduct->number_of_colors = $existingProduct->shootingProductColors()
+                            ->pluck('color_code')->unique()->count();
+                        $existingProduct->save();
+                        $existingProduct->refreshStatusBasedOnColors();
                     } else {
                         $uniqueColors = collect($items)->map(function ($item) {
                             return substr($item['item_no'], -5, 3);
