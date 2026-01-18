@@ -1537,10 +1537,10 @@ class ShootingProductController extends Controller
                         'quantity' => $quantity,
                     ];
                 }
-                dd([
-                    'grouped_keys' => array_keys($grouped),
-                    'grouped_sample' => $grouped,
-                ]);
+                // dd([
+                //     'grouped_keys' => array_keys($grouped),
+                //     'grouped_sample' => $grouped,
+                // ]);
 
 
                 foreach ($grouped as $primaryId => $items) {
