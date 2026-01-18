@@ -1548,23 +1548,24 @@ class ShootingProductController extends Controller
                     $description = $firstItem['description'];
 
                     $existingProduct = ShootingProduct::where('custom_id', $primaryId)->first();
-                    if ($existingProduct) {
-                        dd([
-                            'primaryId' => $primaryId,
-                            'db_product_id' => $existingProduct->id,
-                            'db_name' => $existingProduct->name,
-                            'excel_desc' => $description,
-                            'db_normalized' => Str::lower(Str::squish($existingProduct->name)),
-                            'excel_normalized' => Str::lower(Str::squish($description)),
-                            'is_match' => Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description)),
-                        ]);
-                    } else {
-                        dd([
-                            'primaryId' => $primaryId,
-                            'existingProduct' => null,
-                            'excel_desc' => $description,
-                        ]);
-                    }
+                    
+                    // if ($existingProduct) {
+                    //     dd([
+                    //         'primaryId' => $primaryId,
+                    //         'db_product_id' => $existingProduct->id,
+                    //         'db_name' => $existingProduct->name,
+                    //         'excel_desc' => $description,
+                    //         'db_normalized' => Str::lower(Str::squish($existingProduct->name)),
+                    //         'excel_normalized' => Str::lower(Str::squish($description)),
+                    //         'is_match' => Str::lower(Str::squish($existingProduct->name)) === Str::lower(Str::squish($description)),
+                    //     ]);
+                    // } else {
+                    //     dd([
+                    //         'primaryId' => $primaryId,
+                    //         'existingProduct' => null,
+                    //         'excel_desc' => $description,
+                    //     ]);
+                    // }
 
 
                     if ($existingProduct) {
