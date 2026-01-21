@@ -2016,19 +2016,34 @@ class ShootingProductController extends Controller
     public function deleteProductFromSession(Request $request)
     {
         $request->validate([
-            'reference' => 'required',
+            'reference'  => 'required',
             'product_id' => 'required|integer',
         ]);
 
-        // احضر كل الألوان التابعة للمنتج
-        $colorIds = ShootingProductColor::where('shooting_product_id', $request->product_id)
-            ->pluck('id');
+        DB::transaction(function () use ($request) {
 
-        // احذف السيشنات الخاصة بهذا المنتج داخل هذا الـ reference
-        ShootingSession::where('reference', $request->reference)
-            ->whereIn('shooting_product_color_id', $colorIds)
-            ->delete();
+            // احضر كل ألوان المنتج
+            $colorIds = ShootingProductColor::where('shooting_product_id', $request->product_id)
+                ->pluck('id');
 
-        return back()->with('success', 'تم حذف المنتج من الجلسة بنجاح.');
+            // احذف السيشنات الخاصة بهذا المنتج داخل هذا الـ reference
+            ShootingSession::where('reference', $request->reference)
+                ->whereIn('shooting_product_color_id', $colorIds)
+                ->delete();
+
+            // ✅ رجّع حالة الألوان new (عشان مايفضلش in_progress / completed)
+            ShootingProductColor::whereIn('id', $colorIds)
+                ->update(['status' => 'new']);
+
+            // ✅ رجّع ready_to_shoot للأصل (جديد + type_of_shooting null)
+            \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
+                ->update([
+                    'status' => 'جديد',
+                    'type_of_shooting' => null,
+                    'updated_at' => now(),
+                ]);
+        });
+
+        return back()->with('success', 'تم حذف المنتج من الجلسة وإرجاعه إلى جاهز للتصوير.');
     }
 }
