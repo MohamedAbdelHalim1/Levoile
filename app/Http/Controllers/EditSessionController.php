@@ -18,60 +18,7 @@ use Illuminate\Support\Facades\DB;
 class EditSessionController extends Controller
 {
 
-    // public function index()
-    // {
-    //     // السيشنز الجاهزة (زي ما هي)
-    //     $sessions = EditSession::where('status', 'جديد')->latest()->get();
 
-    //     // هنجمع كل المنتجات لكل reference ونحوّلهم لصفوف منفصلة
-    //     $refs = $sessions->pluck('reference')->unique()->values();
-
-    //     // نسحب السيشنات ومعاها اللون والمنتج
-    //     $ss = ShootingSession::with(['color.shootingProduct:id,name'])
-    //         ->whereIn('reference', $refs)
-    //         ->get();
-
-    //     // جدول مساعد: link لكل (reference, product_id) من product_session_drive_links
-    //     $links = ProductSessionDriveLink::whereIn(
-    //         'product_id',
-    //         $ss->pluck('color.shootingProduct.id')->filter()->unique()
-    //     )
-    //         ->get()
-    //         ->groupBy(function ($r) {
-    //             return $r->product_id . '|' . $r->reference;
-    //         });
-
-    //     // نحضّر العناصر: كل عنصر = صف للجدول (Reference + Product)
-    //     $items = $ss
-    //         ->filter(fn($row) => optional($row->color)->shootingProduct) // فقط اللي ليها منتج
-    //         ->groupBy(fn($row) => $row->reference . '|' . $row->color->shootingProduct->id) // نجمع ألوان نفس المنتج داخل نفس الـreference
-    //         ->map(function ($group) use ($links) {
-    //             $first      = $group->first();
-    //             $reference  = $first->reference;
-    //             $product    = $first->color->shootingProduct;
-    //             $productId  = $product->id;
-    //             $colorCount = $group->pluck('color.color_code')->filter()->unique()->count(); // المميز
-
-    //             // لينك المنتج لو متخزن في ProductSessionDriveLink
-    //             $lk = optional($links->get($productId . '|' . $reference))[0] ?? null;
-
-    //             return (object)[
-    //                 'reference'   => $reference,
-    //                 'product_id'  => $productId,
-    //                 'product'     => $product->name,
-    //                 'colors'      => $colorCount > 0 ? $colorCount : $group->count(),
-    //                 'edit_session' => null, // سيبناها لو عايز لاحقًا
-    //                 'drive_link'  => $lk->drive_link ?? null,
-    //                 'receiving_date' => optional($lk)->receiving_date, // لو عندك عمود تاريخ
-    //             ];
-    //         })
-    //         ->values();
-
-    //     return view('shooting_products.edit_sessions.index', [
-    //         'sessions' => $sessions,           // لسه محتاجينه لباقي الأعمدة الحالية
-    //         'items'    => $items,              // الصفوف الجديدة (Reference+Product)
-    //     ]);
-    // }
 
     public function index()
     {
@@ -127,27 +74,6 @@ class EditSessionController extends Controller
     }
 
 
-
-    // public function assignEditor(Request $request)
-    // {
-    //     $request->validate([
-    //         'reference' => 'required|string|exists:edit_sessions,reference',
-    //         'user_id' => 'required|exists:users,id',
-    //         'receiving_date' => 'required|date',
-
-    //     ]);
-
-    //     EditSession::where('reference', $request->reference)
-    //         ->update([
-    //             'user_id' => $request->user_id,
-    //             'receiving_date' => $request->receiving_date,
-    //         ]);
-
-    //     return redirect()->back()->with(
-    //         'success',
-    //         auth()->user()->current_lang == 'ar' ? 'تم تعيين المحرر بنجاح' : 'Editor assigned successfully'
-    //     );
-    // }
     public function assignProductEditor(Request $request)
     {
         $data = $request->validate([
@@ -217,10 +143,24 @@ class EditSessionController extends Controller
             $allStatuses = ShootingProductColor::where('shooting_product_id', $request->product_id)
                 ->pluck('status');
 
+            // if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+            //     ShootingProduct::where('id', $request->product_id)
+            //         ->update(['status' => 'completed', 'updated_at' => now()]);
+            // }
             if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+
                 ShootingProduct::where('id', $request->product_id)
                     ->update(['status' => 'completed', 'updated_at' => now()]);
+
+                // ✅ خلي المنتج في ready_to_shoot "مكتمل" + امسح نوع التصوير عشان ينفع يتعاد تاني
+                \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
+                    ->update([
+                        'status' => 'مكتمل',
+                        'type_of_shooting' => null,
+                        'updated_at' => now(),
+                    ]);
             }
+
 
             // 5) لو كل المنتجات داخل نفس الـ reference أصبح لها لينك -> حول EditSession إلى "تم التعديل"
             $allProductIdsInRef = $sessions
@@ -250,35 +190,7 @@ class EditSessionController extends Controller
 
 
 
-    // public function uploadDriveLink(Request $request)
-    // {
-    //     $request->validate([
-    //         'reference' => 'required|string|exists:edit_sessions,reference',
-    //         'drive_link' => 'required|url',
-    //         'note' => 'nullable|string',
-    //     ]);
 
-    //     EditSession::where('reference', $request->reference)
-    //         ->update([
-    //             'drive_link' => $request->drive_link,
-    //             'status' => 'تم التعديل',
-    //             'note' => $request->note
-    //         ]);
-
-    //     return redirect()->back()->with('success', 'تم رفع لينك درايف بنجاح');
-    // }
-
-    // public function markReviewed(Request $request)
-    // {
-    //     $request->validate([
-    //         'reference' => 'required|string|exists:edit_sessions,reference',
-    //     ]);
-
-    //     EditSession::where('reference', $request->reference)
-    //         ->update(['is_reviewed' => 1]);
-
-    //     return redirect()->back()->with('success', 'تم مراجعة الجلسة وتكويدها بنجاح');
-    // }
 
     public function bulkAssign(Request $request)
     {
@@ -315,31 +227,7 @@ class EditSessionController extends Controller
         }
     }
 
-    // public function assignFromShooting(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'reference'      => 'required|string|exists:shooting_sessions,reference',
-    //         'user_id'        => 'required|exists:users,id',
-    //         'receiving_date' => 'required|date',
-    //     ]);
 
-    //     // لو الـ reference ملوش EditSession، انشئه
-    //     \App\Models\EditSession::updateOrCreate(
-    //         ['reference' => $data['reference']],
-    //         [
-    //             'user_id'        => $data['user_id'],
-    //             'receiving_date' => $data['receiving_date'],
-    //             'status'         => 'جديد', // سيبه “جديد” لحد ما المحرر يرفع اللينك
-    //         ]
-    //     );
-
-    //     return back()->with(
-    //         'success',
-    //         auth()->user()->current_lang == 'ar'
-    //             ? 'تم تعيين المحرر بنجاح'
-    //             : 'Editor assigned successfully'
-    //     );
-    // }
 
     public function moveToEditQueue(Request $request)
     {
