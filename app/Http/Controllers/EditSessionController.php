@@ -93,6 +93,101 @@ class EditSessionController extends Controller
 
 
 
+    // public function uploadDriveLink(Request $request)
+    // {
+    //     $request->validate([
+    //         'reference'  => 'required|string|exists:edit_sessions,reference',
+    //         'product_id' => 'required|integer|exists:shooting_products,id',
+    //         'drive_link' => 'required|string',
+    //         'note'       => 'nullable|string',
+    //     ]);
+
+    //     DB::transaction(function () use ($request) {
+
+    //         // 1) خزن/حدّث لينك هذا (product_id, reference)
+    //         ProductSessionDriveLink::updateOrCreate(
+    //             [
+    //                 'product_id' => $request->product_id,
+    //                 'reference'  => $request->reference,
+    //             ],
+    //             [
+    //                 'drive_link' => $request->drive_link,
+    //             ]
+    //         );
+
+    //         // 2) ملاحظة على الـ EditSession (اختياري)
+    //         EditSession::where('reference', $request->reference)
+    //             ->update(['note' => $request->note]);
+
+    //         // 3) علّم السيشنات/الألوان الخاصة بهذا المنتج فقط داخل نفس الـ reference "completed"
+    //         $sessions = ShootingSession::with('color.shootingProduct')
+    //             ->where('reference', $request->reference)
+    //             ->get();
+
+    //         $targetColorIds = $sessions
+    //             ->filter(fn($s) => optional($s->color?->shootingProduct)->id == $request->product_id)
+    //             ->pluck('shooting_product_color_id')
+    //             ->unique()
+    //             ->values();
+
+    //         if ($targetColorIds->isNotEmpty()) {
+    //             ShootingSession::where('reference', $request->reference)
+    //                 ->whereIn('shooting_product_color_id', $targetColorIds)
+    //                 ->update(['status' => 'completed', 'updated_at' => now()]);
+
+    //             ShootingProductColor::whereIn('id', $targetColorIds)
+    //                 ->update(['status' => 'completed', 'updated_at' => now()]);
+    //         }
+
+    //         // 4) لو كل ألوان هذا المنتج خلصت، علم المنتج نفسه "completed"
+    //         $allStatuses = ShootingProductColor::where('shooting_product_id', $request->product_id)
+    //             ->pluck('status');
+
+    //         // if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+    //         //     ShootingProduct::where('id', $request->product_id)
+    //         //         ->update(['status' => 'completed', 'updated_at' => now()]);
+    //         // }
+    //         if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+
+    //             ShootingProduct::where('id', $request->product_id)
+    //                 ->update(['status' => 'completed', 'updated_at' => now()]);
+
+    //             // ✅ خلي المنتج في ready_to_shoot "مكتمل" + امسح نوع التصوير عشان ينفع يتعاد تاني
+    //             \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
+    //                 ->update([
+    //                     'status' => 'مكتمل',
+    //                     'type_of_shooting' => null,
+    //                     'updated_at' => now(),
+    //                 ]);
+    //         }
+
+
+    //         // 5) لو كل المنتجات داخل نفس الـ reference أصبح لها لينك -> حول EditSession إلى "تم التعديل"
+    //         $allProductIdsInRef = $sessions
+    //             ->pluck('color.shootingProduct.id')
+    //             ->filter()
+    //             ->unique();
+
+    //         $linkedProductIds = ProductSessionDriveLink::where('reference', $request->reference)
+    //             ->pluck('product_id')
+    //             ->unique();
+
+    //         $missing = $allProductIdsInRef->diff($linkedProductIds);
+
+    //         if ($missing->isEmpty()) {
+    //             EditSession::where('reference', $request->reference)
+    //                 ->update(['status' => 'تم التعديل', 'updated_at' => now()]);
+    //         }
+    //     });
+
+    //     return back()->with(
+    //         'success',
+    //         auth()->user()->current_lang == 'ar'
+    //             ? 'تم حفظ لينك المنتج داخل الجلسة'
+    //             : 'Drive link saved for this product in the session'
+    //     );
+    // }
+
     public function uploadDriveLink(Request $request)
     {
         $request->validate([
@@ -131,28 +226,47 @@ class EditSessionController extends Controller
                 ->values();
 
             if ($targetColorIds->isNotEmpty()) {
+
                 ShootingSession::where('reference', $request->reference)
                     ->whereIn('shooting_product_color_id', $targetColorIds)
                     ->update(['status' => 'completed', 'updated_at' => now()]);
 
                 ShootingProductColor::whereIn('id', $targetColorIds)
                     ->update(['status' => 'completed', 'updated_at' => now()]);
+
+                // ✅ (تعديل 1) حدّث ready_to_shoot للفاريانتس اللي اتقفلت في الرفع ده فقط
+                // افتراض: shooting_product_colors.code == ready_to_shoot.item_no
+                $codesInThisUpload = ShootingProductColor::whereIn('id', $targetColorIds)
+                    ->pluck('code')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                if ($codesInThisUpload->isNotEmpty()) {
+                    \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
+                        ->whereIn('item_no', $codesInThisUpload)
+                        ->update([
+                            'status' => 'مكتمل',
+                            'type_of_shooting' => null,
+                            'updated_at' => now(),
+                        ]);
+                }
             }
 
             // 4) لو كل ألوان هذا المنتج خلصت، علم المنتج نفسه "completed"
-            $allStatuses = ShootingProductColor::where('shooting_product_id', $request->product_id)
-                ->pluck('status');
+            // ✅ (تعديل 2) نجيب كل ألوان المنتج (أضمن من pluck على طول)
+            $product = ShootingProduct::with('shootingProductColors:id,shooting_product_id,status')
+                ->find($request->product_id);
 
-            // if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
-            //     ShootingProduct::where('id', $request->product_id)
-            //         ->update(['status' => 'completed', 'updated_at' => now()]);
-            // }
-            if ($allStatuses->count() > 0 && $allStatuses->every(fn($st) => $st === 'completed')) {
+            $allCompleted = $product
+                && $product->shootingProductColors->count() > 0
+                && $product->shootingProductColors->every(fn($c) => $c->status === 'completed');
 
-                ShootingProduct::where('id', $request->product_id)
-                    ->update(['status' => 'completed', 'updated_at' => now()]);
+            if ($allCompleted) {
 
-                // ✅ خلي المنتج في ready_to_shoot "مكتمل" + امسح نوع التصوير عشان ينفع يتعاد تاني
+                $product->update(['status' => 'completed', 'updated_at' => now()]);
+
+                // ✅ لو المنتج كله اكتمل: خلّي كل صفوفه في ready_to_shoot مكتمل + امسح نوع التصوير
                 \App\Models\ReadyToShoot::where('shooting_product_id', $request->product_id)
                     ->update([
                         'status' => 'مكتمل',
@@ -160,7 +274,6 @@ class EditSessionController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-
 
             // 5) لو كل المنتجات داخل نفس الـ reference أصبح لها لينك -> حول EditSession إلى "تم التعديل"
             $allProductIdsInRef = $sessions
