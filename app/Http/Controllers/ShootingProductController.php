@@ -39,9 +39,26 @@ class ShootingProductController extends Controller
         ]);
 
         // Filters
-        if ($request->filled('name')) {
-            $query->where('name', 'LIKE', '%' . $request->name . '%');
+        // if ($request->filled('name')) {
+        //     $query->where('name', 'LIKE', '%' . $request->name . '%');
+        // }
+        if ($request->filled('code_or_sku')) {
+            $term = trim($request->code_or_sku);
+
+            $query->where(function ($q) use ($term) {
+
+                // ✅ البحث بالكود (custom_id) في shooting_products
+                $q->where('custom_id', 'LIKE', '%' . $term . '%');
+
+                // ✅ أو البحث بالـ SKU داخل ألوان المنتج (حسب اسم العمود عندك)
+                // لو الـ SKU هو item_no أو code في جدول shooting_product_colors غيّر الاسم المناسب
+                $q->orWhereHas('shootingProductColors', function ($qq) use ($term) {
+                    $qq->where('item_no', 'LIKE', '%' . $term . '%')
+                        ->orWhere('code', 'LIKE', '%' . $term . '%');
+                });
+            });
         }
+
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);

@@ -14,10 +14,16 @@
                 <form method="GET" action="{{ route('shooting-products.index') }}" class="mb-4">
                     <div class="row">
                         <!-- Text & Dropdown Filters -->
-                        <div class="col-md-3">
+                        {{-- <div class="col-md-3">
                             <label>{{ __('messages.name') }}</label>
                             <input type="text" name="name" class="form-control" value="{{ request('name') }}">
+                        </div> --}}
+                        <div class="col-md-3">
+                            <label>كود / SKU</label>
+                            <input type="text" name="code_or_sku" class="form-control"
+                                value="{{ request('code_or_sku') }}" placeholder="اكتب الكود أو الـ SKU">
                         </div>
+
 
                         <div class="col-md-3">
                             <label>{{ __('messages.status') }}</label>
