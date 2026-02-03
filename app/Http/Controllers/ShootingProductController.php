@@ -53,8 +53,7 @@ class ShootingProductController extends Controller
                 // ✅ أو البحث بالـ SKU داخل ألوان المنتج (حسب اسم العمود عندك)
                 // لو الـ SKU هو item_no أو code في جدول shooting_product_colors غيّر الاسم المناسب
                 $q->orWhereHas('shootingProductColors', function ($qq) use ($term) {
-                    $qq->where('item_no', 'LIKE', '%' . $term . '%')
-                        ->orWhere('code', 'LIKE', '%' . $term . '%');
+                    $qq->where('code', 'LIKE', '%' . $term . '%');
                 });
             });
         }
