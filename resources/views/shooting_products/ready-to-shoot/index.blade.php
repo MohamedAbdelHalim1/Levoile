@@ -114,7 +114,8 @@
 
                                     <tr data-type="{{ $type }}" data-status="{{ $status }}"
                                         data-name="{{ strtolower($product->name) }}"
-                                        data-code="{{ strtolower($product->custom_id) }}">
+                                        data-code="{{ strtolower($product->custom_id) }}"
+                                        data-sku="{{ strtolower($colorCodes->implode(' ')) }}">
 
                                         <td>
                                             @if ($status !== 'قيد التصوير')
@@ -445,7 +446,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.getElementById('liveSearchInput').addEventListener('input', function() {
             const value = this.value.toLowerCase().trim();
 
@@ -460,7 +461,25 @@
                 }
             });
         });
+    </script> --}}
+    <script>
+        document.getElementById('liveSearchInput').addEventListener('input', function() {
+            const value = this.value.toLowerCase().trim();
+
+            document.querySelectorAll('tbody tr').forEach(row => {
+                const name = row.dataset.name || '';
+                const code = row.dataset.code || '';
+                const sku = row.dataset.sku || '';
+
+                if (name.includes(value) || code.includes(value) || sku.includes(value)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     </script>
+
 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
