@@ -548,6 +548,14 @@
     <script src="{{ asset('build/assets/plugins/datatable/responsive.bootstrap5.min.js') }}"></script>
     @vite('resources/assets/js/table-data.js')
 
+    <script>
+        $('#file-datatable').DataTable({
+            order: [
+                [0, 'desc']
+            ] // العمود الأول (# أو ID) ترتيب تنازلي
+        });
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
