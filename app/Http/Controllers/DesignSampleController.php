@@ -31,7 +31,7 @@ class DesignSampleController extends Controller
             $query->where('status', $request->status);
         }
 
-        $samples = $query->get();
+        $samples = $query->orderByDesc('id')->get();
         $materials = DesignMaterial::all();
         $patternests = \App\Models\User::where('role_id', 11)->get();
 
