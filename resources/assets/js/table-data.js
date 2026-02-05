@@ -27,6 +27,7 @@ $(function(e) {
 
     //______File-Export Data Table
     var table = $('#file-datatable').DataTable({
+        order: [[0, 'desc']], 
         buttons: ['copy', 'excel', 'pdf', 'colvis'],
         language: {
             searchPlaceholder: 'Search...',
