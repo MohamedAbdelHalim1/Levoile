@@ -278,6 +278,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/design-sample-products/{sample}/comments', [DesignSampleController::class, 'addComment'])
         ->name('design-sample-products.add-comment');
+    Route::post('design-sample-products/{id}/add-sample-sizes', [DesignSampleController::class, 'addSampleSizes'])
+        ->name('design-sample-products.add-sample-sizes');
+
 
 
     Route::get('/products/tarha', function (Request $request, ProductController $controller) {

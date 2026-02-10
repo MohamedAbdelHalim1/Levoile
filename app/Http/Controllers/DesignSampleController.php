@@ -331,4 +331,28 @@ class DesignSampleController extends Controller
             auth()->user()->current_lang == 'ar' ? 'تم إضافة التيكنيكال شيت بنجاح.' : 'Technical sheet added successfully.'
         );
     }
+
+    public function addSampleSizes(Request $request, $id)
+    {
+        $request->validate([
+            'sample_sizes_file' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:10240', // 10MB
+        ]);
+
+        $sample = DesignSample::findOrFail($id);
+
+        $file = $request->file('sample_sizes_file');
+        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('files/sample_sizes'), $fileName);
+
+        $sample->update([
+            'sample_sizes_file' => 'files/sample_sizes/' . $fileName,
+            // لو عايز تغيّر status اعملها هنا
+            // 'status' => 'تم اضافة المقاسات'
+        ]);
+
+        return redirect()->route('design-sample-products.index')->with(
+            'success',
+            auth()->user()->current_lang == 'ar' ? 'تم إضافة مقاسات العينة بنجاح.' : 'Sample sizes uploaded successfully.'
+        );
+    }
 }

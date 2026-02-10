@@ -18,6 +18,7 @@ class DesignSample extends Model
         'marker_image',
         'is_reviewed',
         'marker_consumption',
+        'sample_sizes_file',
         'marker_unit',
         'delivery_date',
     ];
