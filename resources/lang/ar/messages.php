@@ -173,7 +173,7 @@ return [
     'added_technical_file' => 'تم اضافه الملف التيكنيكال',
     'are_you_sure' => 'هل انت متاكد؟',
     'add_materials' => 'اضافة خامات',
-    'add_technical_file' => 'اضافة الملف التيكنيكال',
+    'add_technical_file' => 'اضافة ملف العينه',
     'assign_patternest' => 'تعيين الباترنيست',
     'add_marker' => 'اضافة الماركر',
     'review' => 'مراجعة',

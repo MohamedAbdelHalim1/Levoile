@@ -172,7 +172,7 @@ return [
     'added_technical_file' => 'Added Technical File',
     'are_you_sure' => 'Are You Sure?',
     'add_materials' => 'Add Materials',
-    'add_technical_file' => 'Add Technical File',
+    'add_technical_file' => 'Add Sample Sheet',
     'assign_patternest' => 'Assign Patternest',
     'add_marker' => 'Add Marker',
     'review' => 'Review',
