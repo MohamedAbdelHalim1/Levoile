@@ -16,7 +16,8 @@
                 <h4 class="mb-4">
                     {{ __('messages.multi_start') }}
                     <span class="text-muted" style="font-size:14px;">
-                        ({{ __('messages.number_of_products') }} : {{ $productsCount }} | {{ __('messages.number_of_colors') }} : {{ $colorsCount }})
+                        ({{ __('messages.number_of_products') }} : {{ $productsCount }} |
+                        {{ __('messages.number_of_colors') }} : {{ $colorsCount }})
                     </span>
                 </h4>
 
@@ -75,7 +76,7 @@
                         </div>
                         {{-- طريقة التصوير --}}
                         <div class="col-md-3 mt-3 d-none" id="shootingMethodSection">
-                            <label>{{ __('messages.shooting_method') }}  </label>
+                            <label>{{ __('messages.shooting_method') }} </label>
                             <input type="text" name="shooting_method" class="form-control"
                                 placeholder="{{ __('messages.shooting_method') }}">
                         </div>
@@ -137,14 +138,17 @@
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->item_no }}</td>
                                             <td>
-                                                @if ($color->status == 'new')
-                                                    <span class="badge bg-warning">جديد</span>
-                                                @elseif ($color->status == 'partial' || $color->status == 'in_progress')
-                                                    <span class="badge bg-secondary text-white">قديم</span>
-                                                @elseif ($color->status == 'completed')
-                                                    <span class="badge bg-success">قديم</span>
+                                                @php
+                                                    $hasSession = $product->productSessionLinks()->exists();
+                                                @endphp
+
+                                                @if (!$hasSession)
+                                                    <span class="badge bg-success">جديد</span>
+                                                @else
+                                                    <span class="badge bg-secondary">قديم</span>
                                                 @endif
                                             </td>
+
                                         </tr>
                                     @endforeach
                                 @endforeach
@@ -154,7 +158,8 @@
                     </div>
 
                     <button type="submit" class="btn btn-success mt-4"> {{ __('messages.start') }}</button>
-                    <a href="{{ route('shooting-products.index') }}" class="btn btn-secondary mt-4">{{ __('messages.cancel') }}</a>
+                    <a href="{{ route('shooting-products.index') }}"
+                        class="btn btn-secondary mt-4">{{ __('messages.cancel') }}</a>
                 </form>
             </div>
         </div>
