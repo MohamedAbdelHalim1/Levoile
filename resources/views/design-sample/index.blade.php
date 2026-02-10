@@ -492,7 +492,7 @@
                                                             <div class="mb-3">
                                                                 <label>{{ __('messages.technical_file') }} </label>
                                                                 <input type="file" name="marker_file"
-                                                                    class="form-control" accept=".pdf,.zip,.rar" required>
+                                                                    class="form-control" accept=".pdf,image/*" required>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
