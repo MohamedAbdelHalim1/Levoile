@@ -133,7 +133,7 @@
                 @endif
 
 
-                @if (auth()->user()->role_id == 1)
+                @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 13)
                     <li class="sub-category">
                         <h3> {{ __('messages.design') }}</h3>
                     </li>
