@@ -139,7 +139,14 @@
                                             <td>{{ $color->item_no }}</td>
                                             <td>
                                                 @php
-                                                    $hasSession = $color->sessions()->exists();
+                                                    // $color هنا = ReadyToShoot record
+                                                    $matchedColor = $color->shootingProduct?->shootingProductColors?->firstWhere(
+                                                        'item_no',
+                                                        $color->item_no,
+                                                    );
+
+                                                    $hasSession =
+                                                        $matchedColor && $matchedColor->sessions->isNotEmpty();
                                                 @endphp
 
                                                 @if (!$hasSession)
@@ -148,6 +155,7 @@
                                                     <span class="badge bg-secondary">قديم</span>
                                                 @endif
                                             </td>
+
 
 
                                         </tr>
