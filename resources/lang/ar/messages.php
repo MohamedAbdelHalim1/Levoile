@@ -173,7 +173,7 @@ return [
     'added_technical_file' => 'تم اضافه ملف العينه',
     'are_you_sure' => 'هل انت متاكد؟',
     'add_materials' => 'اضافة خامات',
-    'add_sample_and_sizes' => 'اضافة عينة منتج والمقاسات',
+    'add_sample_and_size' => 'اضافة عينة منتج والمقاسات',
     'add_technical_file' => 'اضافة ملف العينه',
     'assign_patternest' => 'تعيين الباترنيست',
     'add_marker' => 'اضافة الماركر',
