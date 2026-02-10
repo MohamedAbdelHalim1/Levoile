@@ -170,7 +170,7 @@ return [
     'reviewed' => 'تم المراجعة',
     'postponed' => 'تاجيل',
     'added_materials' => 'تم اضافه خامه',
-    'added_technical_file' => 'تم اضافه الملف التيكنيكال',
+    'added_technical_file' => 'تم اضافه ملف العينه',
     'are_you_sure' => 'هل انت متاكد؟',
     'add_materials' => 'اضافة خامات',
     'add_technical_file' => 'اضافة ملف العينه',

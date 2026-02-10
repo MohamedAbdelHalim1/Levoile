@@ -169,7 +169,7 @@ return [
     'reviewed' => 'Reviewed',
     'postponed' => 'Postponed',
     'added_materials' => 'Added Materials',
-    'added_technical_file' => 'Added Technical File',
+    'added_technical_file' => 'Added sample sheet',
     'are_you_sure' => 'Are You Sure?',
     'add_materials' => 'Add Materials',
     'add_technical_file' => 'Add Sample Sheet',
