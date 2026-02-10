@@ -691,9 +691,9 @@
                 const allowedActionsByStatus = {
                     'جديد': ['addMaterials'],
                     'تم اضافة الخامات': ['addMaterials', 'addTechnical'],
-                    'تم اضافة التيكنيكال': ['addMaterials', 'addTechnical', 'assignPatternest'],
-                    'تم التوزيع': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker'],
-                    'قيد المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
+                    'تم اضافة التيكنيكال': ['addMaterials', 'addTechnical', 'addSampleSizes', 'assignPatternest'],
+                    'تم التوزيع': ['addMaterials', 'addTechnical', 'addSampleSizes', 'assignPatternest', 'addMarker'],
+                    'قيد المراجعه': ['addMaterials', 'addTechnical', 'addSampleSizes', 'assignPatternest', 'addMarker',
                         'review'
                     ],
                     'تم المراجعه': ['addMaterials', 'addTechnical', 'assignPatternest', 'addMarker',
@@ -713,6 +713,7 @@
                 const messages = {
                     'addTechnical': '{{ __('messages.add_materials_first') }}',
                     'assignPatternest': '{{ __('messages.add_technical_file_first') }}',
+                    'addSampleSizes': '{{ __('messages.add_technical_file_first') }}', // أو الرسالة اللي تعجبك
                     'addMarker': '{{ __('messages.assign_patternest_first') }}',
                     'review': '{{ __('messages.add_marker_first') }}',
                 };
