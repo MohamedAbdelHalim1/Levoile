@@ -252,96 +252,62 @@
                                                 onclick="return confirm('{{ __('messages.are_you_sure') }}')">{{ __('messages.delete') }}</button>
                                         </form>
                                         <!-- زر إضافة خامات -->
-                                        {{-- <button type="button" class="btn btn-dark btn-sm"
+                                        <button type="button" class="btn btn-dark btn-sm"
                                             data-bs-target="#addMaterialsModal{{ $sample->id }}"
                                             data-action="addMaterials" data-status="{{ $sample->status }}">
                                             {{ __('messages.add_materials') }}
-                                        </button> --}}
-                                        <button type="button" class="btn btn-dark btn-sm open-materials"
-                                            data-action="addMaterials" data-status="{{ $sample->status }}"
-                                            data-id="{{ $sample->id }}"
-                                            data-selected="{{ $sample->materials->pluck('design_material_id')->implode(',') }}"
-                                            data-bs-toggle="modal" data-bs-target="#addMaterialsModal">
-                                            {{ __('messages.add_materials') }}
                                         </button>
+                                        
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة تيكنيكال شيت -->
-                                            {{-- <button type="button" class="btn btn-info btn-sm"
+                                            <button type="button" class="btn btn-info btn-sm"
                                                 data-bs-target="#addTechnicalSheetModal{{ $sample->id }}"
                                                 data-action="addTechnical" data-status="{{ $sample->status }}">
                                                 {{ __('messages.add_technical_file') }}
-                                            </button> --}}
-                                            <button type="button" class="btn btn-info btn-sm open-technical"
-                                                data-action="addTechnical" data-status="{{ $sample->status }}"
-                                                data-id="{{ $sample->id }}"
-                                                data-current="{{ $sample->marker_file ? asset($sample->marker_file) : '' }}"
-                                                data-bs-toggle="modal" data-bs-target="#addTechnicalSheetModal">
-                                                {{ __('messages.add_technical_file') }}
                                             </button>
+                                            
 
 
                                             <!-- ✅ زر مقاسات العينة -->
-                                            {{-- <button type="button" class="btn btn-outline-primary btn-sm"
+                                            <button type="button" class="btn btn-outline-primary btn-sm"
                                                 data-bs-target="#addSampleSizesModal{{ $sample->id }}"
                                                 data-action="addSampleSizes" data-status="{{ $sample->status }}">
                                                 {{ __('messages.sample_sizes') }}
-                                            </button> --}}
-
-                                            <button type="button" class="btn btn-outline-primary btn-sm open-sizes"
-                                                data-id="{{ $sample->id }}"
-                                                data-current="{{ $sample->sample_sizes_file ? asset($sample->sample_sizes_file) : '' }}"
-                                                data-bs-toggle="modal" data-bs-target="#addSampleSizesModal">
-                                                {{ __('messages.sample_sizes') }}
                                             </button>
+
+                                            
                                         @endif
 
                                         <!-- زر تعيين باترنيست -->
-                                        {{-- <button type="button" class="btn btn-primary btn-sm"
+                                        <button type="button" class="btn btn-primary btn-sm"
                                             data-bs-target="#assignPatternestModal{{ $sample->id }}"
                                             data-action="assignPatternest" data-status="{{ $sample->status }}">
                                             {{ __('messages.assign_patternest') }}
-                                        </button> --}}
-
-                                        <button type="button" class="btn btn-primary btn-sm open-patternest"
-                                            data-action="assignPatternest" data-status="{{ $sample->status }}"
-                                            data-id="{{ $sample->id }}"
-                                            data-current="{{ $sample->patternest_id ?? '' }}" data-bs-toggle="modal"
-                                            data-bs-target="#assignPatternestModal">
-                                            {{ __('messages.assign_patternest') }}
                                         </button>
+
+                                       
 
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
                                             <!-- زر إضافة ماركر -->
-                                            {{-- <button type="button" class="btn btn-secondary btn-sm"
+                                            <button type="button" class="btn btn-secondary btn-sm"
                                                 data-bs-target="#addMarkerModal{{ $sample->id }}"
                                                 data-action="addMarker" data-status="{{ $sample->status }}">
                                                 {{ __('messages.add_marker') }}
-                                            </button> --}}
-
-                                            <button type="button" class="btn btn-secondary btn-sm open-marker"
-                                                data-action="addMarker" data-status="{{ $sample->status }}"
-                                                data-id="{{ $sample->id }}" data-bs-toggle="modal"
-                                                data-bs-target="#addMarkerModal">
-                                                {{ __('messages.add_marker') }}
                                             </button>
+
                                         @endif
                                         <!-- زر مراجعة -->
-                                        {{-- <button type="button" class="btn btn-outline-success btn-sm"
+                                        <button type="button" class="btn btn-outline-success btn-sm"
                                             data-bs-target="#reviewModal{{ $sample->id }}" data-action="review"
                                             data-status="{{ $sample->status }}">
                                             {{ __('messages.review') }}
-                                        </button> --}}
-                                        <button type="button" class="btn btn-outline-success btn-sm open-review"
-                                            data-action="review" data-status="{{ $sample->status }}"
-                                            data-id="{{ $sample->id }}" data-bs-toggle="modal"
-                                            data-bs-target="#reviewModal">
-                                            {{ __('messages.review') }}
                                         </button>
+                                        
 
 
-                                        {{-- <!-- Modal إضافة الخامات -->
+                                        <!-- Modal إضافة الخامات -->
                                         <div class="modal fade" id="addMaterialsModal{{ $sample->id }}" tabindex="-1"
                                             aria-labelledby="addMaterialsLabel{{ $sample->id }}" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -658,7 +624,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -669,239 +635,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="addMaterialsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="materialsForm" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.add_materials') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <label>{{ __('messages.materials') }}</label>
-                        <select class="form-control" name="materials[]" id="materialsSelect" multiple required>
-                            @foreach ($materials as $material)
-                                <option value="{{ $material->id }}">{{ $material->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal fade" id="addTechnicalSheetModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="technicalForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.add_technical_sheet') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label>{{ __('messages.technical_file') }}</label>
-                            <input type="file" name="marker_file" class="form-control" accept=".pdf,.zip,.rar"
-                                required>
-                        </div>
-
-                        <div id="technicalCurrentWrap" class="d-none">
-                            <small class="text-muted d-block mb-1">الملف الحالي:</small>
-                            <a id="technicalCurrentLink" target="_blank" class="btn btn-sm btn-light border">فتح /
-                                تحميل</a>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal fade" id="addSampleSizesModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered">
-            <form id="sizesForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.sample_sizes') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">ارفع ملف المقاسات (PDF أو صورة)</label>
-                            <input type="file" name="sample_sizes_file" class="form-control" accept=".pdf,image/*"
-                                required>
-                        </div>
-
-                        <div id="sizesCurrentWrap" class="d-none">
-                            <small class="text-muted d-block mb-1">الملف الحالي:</small>
-                            <a id="sizesCurrentLink" target="_blank" class="btn btn-sm btn-light border">فتح / تحميل</a>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal fade" id="assignPatternestModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="patternestForm" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.assign_patternest') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <label>{{ __('messages.patternest') }}</label>
-                        <select class="form-control" name="patternest_id" id="patternestSelect" required>
-                            <option value="">{{ __('messages.select_patternest') }}</option>
-                            @foreach ($patternests as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal fade" id="addMarkerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="markerForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.add_marker') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label>{{ __('messages.marker_number') }}</label>
-                            <input type="text" name="marker_number" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>{{ __('messages.marker_image') }}</label>
-                            <input type="file" name="marker_image" class="form-control" accept="image/*" required>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-9 mb-3">
-                                <label>{{ __('messages.consumption') }}</label>
-                                <input type="text" name="marker_consumption" class="form-control">
-                            </div>
-                            <div class="col-3 mb-3">
-                                <label>{{ __('messages.unit') }}</label>
-                                <select name="marker_unit" class="form-control">
-                                    <option value="">{{ __('messages.select_unit') }}</option>
-                                    <option value="كيلوجرام">{{ __('messages.kg') }}</option>
-                                    <option value="متر">{{ __('messages.meter') }}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>{{ __('messages.delivery_date') }}</label>
-                            <input type="date" name="delivery_date" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="reviewForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ __('messages.review') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="mb-2 d-block">{{ __('messages.status') }}:</label>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status"
-                                    value="{{ __('messages.reviewed') }}" checked>
-                                <label class="form-check-label">{{ __('messages.reviewed') }}</label>
-                            </div>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status"
-                                    value="{{ __('messages.postponed') }}">
-                                <label class="form-check-label">{{ __('messages.postponed') }}</label>
-                            </div>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status"
-                                    value="{{ __('messages.cancel') }}">
-                                <label class="form-check-label">{{ __('messages.cancel') }}</label>
-                            </div>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status"
-                                    value="{{ __('messages.edit') }}">
-                                <label class="form-check-label">{{ __('messages.edit') }}</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>{{ __('messages.comment') }}:</label>
-                            <input type="text" class="form-control" name="content"
-                                placeholder="{{ __('messages.add_comment') }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>{{ __('messages.image') }} ({{ __('messages.optional') }})</label>
-                            <input type="file" class="form-control" name="image" accept="image/*">
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.close') }}</button>
-                        <button type="submit" class="btn btn-success">{{ __('messages.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    
 @endsection
 
 @section('scripts')
@@ -998,124 +732,5 @@
             });
         });
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // ✅ TomSelect لمودال الخامات (مرة واحدة)
-            const materialsTS = new TomSelect('#materialsSelect', {
-                placeholder: "{{ __('messages.choose_material') }}"
-            });
-
-            // ✅ TomSelect للباترنيست (مرة واحدة)
-            const patternestTS = new TomSelect('#patternestSelect', {
-                placeholder: "{{ __('messages.select_patternest') }}"
-            });
-
-            // ====== Helpers ======
-            const setCurrentLink = (wrapId, linkId, url) => {
-                const wrap = document.getElementById(wrapId);
-                const link = document.getElementById(linkId);
-                if (!wrap || !link) return;
-
-                if (url) {
-                    wrap.classList.remove('d-none');
-                    link.href = url;
-                } else {
-                    wrap.classList.add('d-none');
-                    link.removeAttribute('href');
-                }
-            };
-
-            // ====== Materials ======
-            document.querySelectorAll('.open-materials').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const selected = (btn.dataset.selected || '').split(',').filter(Boolean).map(
-                        Number);
-
-                    // set form action
-                    document.getElementById('materialsForm').action =
-                        `{{ url('design-sample-products') }}/${id}/attach-materials`;
-
-                    // set selected materials
-                    materialsTS.clear(true);
-                    materialsTS.setValue(selected, true);
-                });
-            });
-
-            // ====== Technical ======
-            document.querySelectorAll('.open-technical').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const current = btn.dataset.current || '';
-
-                    document.getElementById('technicalForm').action =
-                        `{{ url('design-sample-products') }}/${id}/add-technical-sheet`;
-
-                    setCurrentLink('technicalCurrentWrap', 'technicalCurrentLink', current);
-                });
-            });
-
-            // ====== Sizes ======
-            document.querySelectorAll('.open-sizes').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const current = btn.dataset.current || '';
-
-                    document.getElementById('sizesForm').action =
-                        `{{ url('design-sample-products') }}/${id}/add-sample-sizes`;
-
-                    setCurrentLink('sizesCurrentWrap', 'sizesCurrentLink', current);
-                });
-            });
-
-            // ====== Patternest ======
-            document.querySelectorAll('.open-patternest').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const current = btn.dataset.current || '';
-
-                    document.getElementById('patternestForm').action =
-                        `{{ url('design-sample-products') }}/${id}/assign-patternest`;
-
-                    patternestTS.setValue(current ? [Number(current)] : [], true);
-                });
-            });
-
-            // ====== Marker ======
-            document.querySelectorAll('.open-marker').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-
-                    document.getElementById('markerForm').action =
-                        `{{ url('design-sample-products') }}/${id}/add-marker`;
-
-                    // optional: clear inputs each time
-                    document.querySelector('#addMarkerModal input[name="marker_number"]').value =
-                    '';
-                    document.querySelector('#addMarkerModal input[name="marker_consumption"]')
-                        .value = '';
-                    document.querySelector('#addMarkerModal input[name="delivery_date"]').value =
-                    '';
-                    document.querySelector('#addMarkerModal select[name="marker_unit"]').value = '';
-                    document.querySelector('#addMarkerModal input[name="marker_image"]').value = '';
-                });
-            });
-
-            // ====== Review ======
-            document.querySelectorAll('.open-review').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-
-                    document.getElementById('reviewForm').action =
-                        `{{ url('design-sample-products') }}/${id}/review`;
-
-                    // optional: clear comment & image
-                    document.querySelector('#reviewModal input[name="content"]').value = '';
-                    document.querySelector('#reviewModal input[name="image"]').value = '';
-                });
-            });
-
-        });
-    </script>
+    
 @endsection
