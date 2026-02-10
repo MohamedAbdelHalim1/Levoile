@@ -93,67 +93,77 @@
         let colorIndex = 1;
 
         function applyTomSelect(scope = document) {
+            // scope لازم يكون DOM element (مش string)
             scope.querySelectorAll('.color-name-select').forEach(el => {
-                // لو معمول له init قبل كده، متعملش تاني
+                // لو معمول init قبل كده متعملش تاني
                 if (el.tomselect) return;
 
                 new TomSelect(el, {
                     create: false,
                     placeholder: "{{ __('messages.choose_color') }}",
-                    // دي بتضمن إن search شغال حتى لو options قليلة
                     searchField: ['text'],
                 });
             });
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            // أول تحميل
+            applyTomSelect();
 
-        applyTomSelect(); // أول تحميل
+            // إضافة لون
+            $('#add-color').on('click', function() {
+                const rowHtml = `
+                <div class="row mb-2 color-row">
+                    <div class="col-md-2">
+                        <select name="colors[${colorIndex}][name]" class="form-control color-name-select" required>
+                            <option value="">{{ __('messages.choose_color') }}</option>
+                            @foreach ($colors as $color)
+                                <option value="{{ $color->name }}">{{ $color->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-        $('#add-color').click(function() {
-            let row = `
-            <div class="row mb-2 color-row">
-                <div class="col-md-2">
-                    <select name="colors[${colorIndex}][name]" class="form-control color-name-select" required>
-                        <option value="">اختر اللون</option>
-                        @foreach ($colors as $color)
-                            <option value="{{ $color->name }}">{{ $color->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="col-md-2">
+                        <input type="text" name="colors[${colorIndex}][code]" class="form-control"
+                            placeholder="{{ __('messages.color_code') }}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control"
+                            placeholder="{{ __('messages.current_quantity') }}" step="any">
+                    </div>
+
+                    <div class="col-md-2">
+                        <select name="colors[${colorIndex}][unit]" class="form-control">
+                            <option value="kg">{{ __('messages.kg') }}</option>
+                            <option value="meter">{{ __('messages.meter') }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <input type="text" name="colors[${colorIndex}][code]" class="form-control" placeholder="{{ __('messages.color_code') }} ">
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="colors[${colorIndex}][current_quantity]" class="form-control" placeholder="{{ __('messages.current_quantity') }} " step="any">
-                </div>
-                <div class="col-md-2">
-                    <select name="colors[${colorIndex}][unit]" class="form-control">
-                        <option value="kg">{{ __('messages.kg') }}</option>
-                        <option value="meter">{{ __('messages.meter') }}</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
-                </div>
-            </div>
-        `;
-            const $row = $(rowHtml); // ✅ بقى element
-            $('#colors-area').append($row);
+            `;
 
-            applyTomSelect($row[0]); // ✅ هنا $row[0] DOM element صح
-            colorIndex++;
+                const $row = $(rowHtml); // ✅ حولناها لعنصر DOM
+                $('#colors-area').append($row);
 
-        });
+                applyTomSelect($row[0]); // ✅ فعل TomSelect على الصف الجديد بس
+                colorIndex++;
+            });
 
-        $(document).on('click', '.remove-color', function() {
-            const row = $(this).closest('.color-row');
-            const select = row.find('.color-name-select')[0];
+            // حذف لون
+            $(document).on('click', '.remove-color', function() {
+                const $row = $(this).closest('.color-row');
+                const selectEl = $row.find('.color-name-select')[0];
 
-            if (select && select.tomselect) {
-                select.tomselect.destroy(); // ✅ مهم
-            }
+                if (selectEl && selectEl.tomselect) {
+                    selectEl.tomselect.destroy(); // ✅ مهم قبل remove
+                }
 
-            row.remove();
+                $row.remove();
+            });
         });
     </script>
 @endsection
