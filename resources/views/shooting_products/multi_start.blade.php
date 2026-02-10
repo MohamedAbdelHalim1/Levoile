@@ -139,7 +139,7 @@
                                             <td>{{ $color->item_no }}</td>
                                             <td>
                                                 @php
-                                                    $hasSession = $product->productSessionLinks()->exists();
+                                                    $hasSession = $color->sessions()->exists();
                                                 @endphp
 
                                                 @if (!$hasSession)
@@ -148,6 +148,7 @@
                                                     <span class="badge bg-secondary">قديم</span>
                                                 @endif
                                             </td>
+
 
                                         </tr>
                                     @endforeach
