@@ -161,7 +161,7 @@ return [
     'marker_image' => 'Marker Image',
     'consumption' => 'Consumption',
     'unit' => 'Unit',
-    'technical_file' => 'Technical File',
+    'technical_file' => 'sample sheet',
     'materials_of_product' => 'Materials Of Product',
     'unknown_or_deleted_materials' => 'Unknown Or Deleted Materials',
     'distributed' => 'Distribute',

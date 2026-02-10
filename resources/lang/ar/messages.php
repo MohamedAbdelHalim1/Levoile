@@ -162,7 +162,7 @@ return [
     'marker_image' => 'صورة الماركر',
     'consumption' => 'استهلاك القطعه',
     'unit' => 'وحدة القطعه',
-    'technical_file' => 'الملف التيكنيكال',
+    'technical_file' => 'ملف العينه',
     'materials_of_product' => 'الخامات المرتبطة بهذا المنتج',
     'unknown_or_deleted_materials' => 'خامات غير معروفة او محذوفة',
     'distributed' => 'تم التوزيع',
