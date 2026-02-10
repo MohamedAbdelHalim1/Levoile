@@ -119,6 +119,12 @@
                                 <th>{{ __('messages.technical_file') }}</th>
                                 <th>{{ __('messages.sample_sizes') }}</th>
                                 <th>{{ __('messages.operations') }}</th>
+                                <th>{{ __('messages.add_materials') }}</th>
+                                <th>{{ __('messages.add_sample_and_size') }}</th>
+                                <th>{{ __('messages.add_patternest') }}</th>
+                                <th>{{ __('messages.add_marker') }}</th>
+                                <th>{{ __('messages.add_review') }}</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -251,12 +257,17 @@
                                             <button type="submit" class="btn btn-danger btn-sm"
                                                 onclick="return confirm('{{ __('messages.are_you_sure') }}')">{{ __('messages.delete') }}</button>
                                         </form>
+
+                                    </td>
+                                    <td>
                                         <!-- زر إضافة خامات -->
                                         <button type="button" class="btn btn-dark btn-sm"
                                             data-bs-target="#addMaterialsModal{{ $sample->id }}"
                                             data-action="addMaterials" data-status="{{ $sample->status }}">
                                             {{ __('messages.add_materials') }}
                                         </button>
+                                    </td>
+                                    <td>
                                         
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
@@ -279,6 +290,9 @@
                                             
                                         @endif
 
+                                    </td>
+                                    <td>
+
                                         <!-- زر تعيين باترنيست -->
                                         <button type="button" class="btn btn-primary btn-sm"
                                             data-bs-target="#assignPatternestModal{{ $sample->id }}"
@@ -286,7 +300,8 @@
                                             {{ __('messages.assign_patternest') }}
                                         </button>
 
-                                       
+                                    </td>
+                                    <td>
 
 
                                         @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 11)
@@ -298,6 +313,8 @@
                                             </button>
 
                                         @endif
+                                    </td>
+                                    <td>
                                         <!-- زر مراجعة -->
                                         <button type="button" class="btn btn-outline-success btn-sm"
                                             data-bs-target="#reviewModal{{ $sample->id }}" data-action="review"
@@ -305,7 +322,7 @@
                                             {{ __('messages.review') }}
                                         </button>
                                         
-
+                                    </td>
 
                                         <!-- Modal إضافة الخامات -->
                                         <div class="modal fade" id="addMaterialsModal{{ $sample->id }}" tabindex="-1"
