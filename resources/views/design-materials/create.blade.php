@@ -137,8 +137,10 @@
                 </div>
             </div>
         `;
-            $('#colors-area').append(row);
-            applyTomSelect(row[0]);
+            const $row = $(rowHtml); // ✅ بقى element
+            $('#colors-area').append($row);
+
+            applyTomSelect($row[0]); // ✅ هنا $row[0] DOM element صح
             colorIndex++;
 
         });
