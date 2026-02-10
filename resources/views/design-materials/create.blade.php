@@ -67,14 +67,17 @@
                                     placeholder="{{ __('messages.delivery_date') }}">
                             </div> --}}
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
+                                <button type="button"
+                                    class="btn btn-danger remove-color">{{ __('messages.delete') }}</button>
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+ {{ __('messages.add_color') }} </button>
+                    <button type="button" id="add-color" class="btn btn-secondary mt-2 mb-4">+
+                        {{ __('messages.add_color') }} </button>
                     <div>
                         <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
-                        <a href="{{ route('design-materials.index') }}" class="btn btn-secondary">{{ __('messages.cancel') }}</a>
+                        <a href="{{ route('design-materials.index') }}"
+                            class="btn btn-secondary">{{ __('messages.cancel') }}</a>
                     </div>
                 </form>
             </div>
@@ -83,27 +86,31 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet" />
 
-<script>
-    let colorIndex = 1;
+    <script>
+        let colorIndex = 1;
 
-    function applyTomSelect() {
-        document.querySelectorAll('.color-name-select').forEach(el => {
-            if (!el.classList.contains('ts-hidden')) {
+        function applyTomSelect(scope = document) {
+            scope.querySelectorAll('.color-name-select').forEach(el => {
+                // لو معمول له init قبل كده، متعملش تاني
+                if (el.tomselect) return;
+
                 new TomSelect(el, {
                     create: false,
                     placeholder: "{{ __('messages.choose_color') }}",
+                    // دي بتضمن إن search شغال حتى لو options قليلة
+                    searchField: ['text'],
                 });
-            }
-        });
-    }
+            });
+        }
 
-    applyTomSelect(); // أول تحميل
 
-    $('#add-color').click(function () {
-        let row = `
+        applyTomSelect(); // أول تحميل
+
+        $('#add-color').click(function() {
+            let row = `
             <div class="row mb-2 color-row">
                 <div class="col-md-2">
                     <select name="colors[${colorIndex}][name]" class="form-control color-name-select" required>
@@ -130,14 +137,21 @@
                 </div>
             </div>
         `;
-        $('#colors-area').append(row);
-        colorIndex++;
+            $('#colors-area').append(row);
+            applyTomSelect(row[0]);
+            colorIndex++;
 
-        applyTomSelect(); // فعل التوم سليكت على العنصر الجديد
-    });
+        });
 
-    $(document).on('click', '.remove-color', function () {
-        $(this).closest('.color-row').remove();
-    });
-</script>
+        $(document).on('click', '.remove-color', function() {
+            const row = $(this).closest('.color-row');
+            const select = row.find('.color-name-select')[0];
+
+            if (select && select.tomselect) {
+                select.tomselect.destroy(); // ✅ مهم
+            }
+
+            row.remove();
+        });
+    </script>
 @endsection
