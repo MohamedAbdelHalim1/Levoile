@@ -1,6 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+    .materials-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 180px;   /* عشان الجدول يفضل منظم */
+}
+
+.material-chip {
+    background: #f5f7fa;
+    color: #2f3b52;
+    border: 1px solid #e1e6ef;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.material-more {
+    background: #0d6efd;   /* Bootstrap primary */
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: help;
+}
+
+</style>
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-8 bg-white shadow sm:rounded-lg border border-gray-200">
@@ -110,14 +139,25 @@
                                         @if ($materialNames->isEmpty())
                                             <span class="text-muted">-</span>
                                         @else
-                                            <div class="d-flex flex-wrap gap-1">
-                                                @foreach ($materialNames as $name)
-                                                    <span
-                                                        class="badge bg-light text-dark border">{{ $name }}</span>
+                                            <div class="materials-cell">
+                                                @foreach ($materialNames as $i => $name)
+                                                    @if ($i < 2)
+                                                        <span class="material-chip" title="{{ $name }}">
+                                                            {{ $name }}
+                                                        </span>
+                                                    @endif
                                                 @endforeach
+
+                                                @if ($materialNames->count() > 2)
+                                                    <span class="material-more"
+                                                        title="{{ $materialNames->implode('، ') }}">
+                                                        +{{ $materialNames->count() - 2 }}
+                                                    </span>
+                                                @endif
                                             </div>
                                         @endif
                                     </td>
+
 
                                     <td>
                                         @if ($sample->status === 'جديد')
@@ -150,7 +190,7 @@
                                     <td>
                                         @if ($sample->image)
                                             <img src="{{ asset($sample->image) }}" alt="{{ __('messages.image') }}"
-                                                width="50">
+                                                width="50" loading="lazy">
                                         @endif
                                     </td>
                                     <td>
@@ -167,7 +207,7 @@
                                             <a href="{{ asset($sample->marker_image) }}" target="_blank">
                                                 <img src="{{ asset($sample->marker_image) }}"
                                                     alt="{{ __('messages.marker_image') }}" width="40" height="40"
-                                                    style="object-fit:cover; border-radius:5px;">
+                                                    style="object-fit:cover; border-radius:5px;" loading="lazy">
                                             </a>
                                         @else
                                             <span class="text-muted">-</span>
