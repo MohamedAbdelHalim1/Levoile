@@ -99,42 +99,26 @@
                                     <td>{{ $sample->category?->name }}</td>
                                     <td>{{ $sample->season?->name }}</td>
                                     <td>
-                                        <a href="#" data-bs-toggle="modal"
-                                            data-bs-target="#materialsModal{{ $sample->id }}">
-                                            {{ $sample->materials->count() }}
-                                        </a>
-                                        <!-- Modal استعراض الخامات -->
-                                        <div class="modal fade" id="materialsModal{{ $sample->id }}" tabindex="-1"
-                                            aria-labelledby="materialsModalLabel{{ $sample->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title"
-                                                            id="materialsModalLabel{{ $sample->id }}">
-                                                            {{ __('messages.materials_of_product') }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <ul>
-                                                            @foreach ($sample->materials as $m)
-                                                                @if ($m->material)
-                                                                    <li>{{ $m->material->name }} <a
-                                                                            href="{{ route('design-materials.show', $m->material->id) }}">(
-                                                                            {{ $m->material->colors->count() }} )</a></li>
-                                                                @else
-                                                                    <li class="text-danger">
-                                                                        {{ __('messages.unknown_or_deleted_materials') }}
-                                                                    </li>
-                                                                @endif
-                                                            @endforeach
+                                        @php
+                                            $materialNames = $sample->materials
+                                                ->map(fn($m) => $m->material?->name)
+                                                ->filter()
+                                                ->unique()
+                                                ->values();
+                                        @endphp
 
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                        @if ($materialNames->isEmpty())
+                                            <span class="text-muted">-</span>
+                                        @else
+                                            <div class="d-flex flex-wrap gap-1">
+                                                @foreach ($materialNames as $name)
+                                                    <span
+                                                        class="badge bg-light text-dark border">{{ $name }}</span>
+                                                @endforeach
                                             </div>
-                                        </div>
+                                        @endif
                                     </td>
+
                                     <td>
                                         @if ($sample->status === 'جديد')
                                             <span class="badge bg-success">{{ __('messages.new') }}</span>
