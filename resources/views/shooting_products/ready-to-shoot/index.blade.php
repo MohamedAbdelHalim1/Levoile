@@ -33,7 +33,7 @@
                                 {{ __('messages.change_color') }} </option>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    {{-- <div class="col-md-3">
                         <select name="status" class="form-select" onchange="this.form.submit()">
                             <option value="">{{ __('messages.all_statuses') }}</option>
                             <option value="جديد" {{ request('status') == 'جديد' ? 'selected' : '' }}>
@@ -41,7 +41,7 @@
                             <option value="قيد التصوير" {{ request('status') == 'قيد التصوير' ? 'selected' : '' }}>
                                 {{ __('messages.processing') }}</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="col-md-3">
                         <a href="{{ route('ready-to-shoot.index') }}"
                             class="btn btn-secondary">{{ __('messages.reset') }}</a>
