@@ -248,7 +248,7 @@ class ShootingProductController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($selectedColorIds, $request) {
+            DB::transaction(function () use ($selectedColorIds, $request, $readyIds) {
                 $finalColorIds = [];
 
                 foreach ($selectedColorIds as $colorId) {
@@ -320,8 +320,10 @@ class ShootingProductController extends Controller
                     ->unique()
                     ->toArray();
 
-                \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
-                    ->delete();
+                // \App\Models\ReadyToShoot::whereIn('shooting_product_id', $productIds)
+                //     ->delete();
+                \App\Models\ReadyToShoot::whereIn('id', $readyIds)->delete();
+
 
 
                 foreach ($productIds as $productId) {
