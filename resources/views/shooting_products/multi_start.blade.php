@@ -119,7 +119,7 @@
                                     <th>#</th>
                                     <th>{{ __('messages.name') }}</th>
                                     <th>{{ __('messages.code') }} </th>
-                                    <th>الحاله</th>
+                                    {{-- <th>الحاله</th> --}}
 
                                 </tr>
                             </thead>
@@ -137,7 +137,7 @@
                                             <td>{{ $variantIndex++ }}</td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $color->item_no }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 @php
                                                     // $color هنا = ReadyToShoot record
                                                     $matchedColor = $color->shootingProduct?->shootingProductColors?->firstWhere(
@@ -154,7 +154,7 @@
                                                 @else
                                                     <span class="badge bg-secondary">قديم</span>
                                                 @endif
-                                            </td>
+                                            </td> --}}
 
 
 

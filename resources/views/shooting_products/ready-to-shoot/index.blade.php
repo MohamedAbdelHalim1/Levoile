@@ -85,7 +85,7 @@
                                     <th>{{ __('messages.product') }}</th>
                                     <th>{{ __('messages.code') }} </th>
                                     <th>{{ __('messages.number_of_colors') }} </th>
-                                    <th>{{ __('messages.status') }}</th>
+                                    {{-- <th>{{ __('messages.status') }}</th> --}}
                                     <th>{{ __('messages.type_of_shooting') }} </th>
                                     <th>{{ __('messages.operations') }}</th>
                                     <th>
@@ -167,7 +167,7 @@
                                                 {{ $colorCodes->count() }}
                                             </span>
                                         </td> --}}
-                                        <td><span class="badge bg-success">{{ $status ?? '-' }}</span></td>
+                                        {{-- <td><span class="badge bg-success">{{ $status ?? '-' }}</span></td> --}}
                                         <td>{{ $type ?? '-' }}</td>
                                         <td>
                                             @if ($status !== 'قيد التصوير')
