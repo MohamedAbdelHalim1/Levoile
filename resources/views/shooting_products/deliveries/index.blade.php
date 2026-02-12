@@ -3,7 +3,7 @@
 @section('content')
     <div class="p-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="bg-white shadow sm:rounded-lg p-4">
+            <div class="bg-white shadow sm:rounded-lg p-4 table-responsive">
                 <div class="d-flex justify-content-between mb-3">
                     <h4>{{ __('messages.shooting_delivery_file') }}</h4>
                     <a href="{{ route('shooting-deliveries.upload.create') }}" class="btn btn-primary">{{ __('messages.upload_new_sheet') }}</a>
