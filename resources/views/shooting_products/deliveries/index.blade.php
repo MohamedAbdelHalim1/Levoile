@@ -6,10 +6,11 @@
             <div class="bg-white shadow sm:rounded-lg p-4 table-responsive">
                 <div class="d-flex justify-content-between mb-3">
                     <h4>{{ __('messages.shooting_delivery_file') }}</h4>
-                    <a href="{{ route('shooting-deliveries.upload.create') }}" class="btn btn-primary">{{ __('messages.upload_new_sheet') }}</a>
+                    <a href="{{ route('shooting-deliveries.upload.create') }}"
+                        class="btn btn-primary">{{ __('messages.upload_new_sheet') }}</a>
                 </div>
 
-                @if(session('success'))
+                @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @elseif(session('error'))
                     <div class="alert alert-danger">{{ session('error') }}</div>
@@ -36,10 +37,31 @@
                         @foreach ($deliveries as $delivery)
                             <tr>
                                 <td>{{ $delivery->created_at->format('Y-m-d H:i') }}</td>
-                                <td>
+                                {{-- <td>
                                     <span
                                         class="badge bg-{{ $delivery->status == 'تم ألنشر' ? 'warning' : 'success' }}">{{ $delivery->status }}</span>
+                                </td> --}}
+                                @php
+                                    $isAr = auth()->user()->current_lang === 'ar';
+
+                                    $statusText =
+                                        $delivery->status == 'تم ألنشر'
+                                            ? ($isAr
+                                                ? 'تم النشر'
+                                                : 'Published')
+                                            : ($isAr
+                                                ? 'تم الرفع'
+                                                : 'Uploaded');
+
+                                    $badgeClass = $delivery->status == 'تم ألنشر' ? 'warning' : 'success';
+                                @endphp
+
+                                <td>
+                                    <span class="badge bg-{{ $badgeClass }}">
+                                        {{ $statusText }}
+                                    </span>
                                 </td>
+
                                 <td>{{ $delivery->unique_products }}</td>
                                 <td>{{ $delivery->actual_rows }}</td>
                                 <td>{{ $delivery->repeated_items ?? 0 }}</td>
@@ -64,14 +86,14 @@
                                         <a href="{{ route('shooting-deliveries.show', $delivery->id) }}"
                                             class="btn btn-info">عرض</a>
                                     @else --}}
-                                        <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
-                                            class="btn btn-warning">
-                                            @if ($delivery->status == 'تم ألنشر')
+                                    <a href="{{ route('shooting-deliveries.send.page', $delivery->id) }}"
+                                        class="btn btn-warning">
+                                        @if ($delivery->status == 'تم ألنشر')
                                             {{ __('messages.republish') }}
-                                            @else
+                                        @else
                                             {{ __('messages.publish') }}
-                                            @endif
-                                        </a>
+                                        @endif
+                                    </a>
                                     {{-- @endif --}}
                                 </td>
 
@@ -84,5 +106,3 @@
         </div>
     </div>
 @endsection
-
-
