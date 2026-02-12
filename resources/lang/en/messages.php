@@ -479,6 +479,8 @@ return [
     'copy_path' => 'Copy Path',
     'browser_block_local_paths' => 'The browser blocks direct access to local paths',
     'sample_sizes' => 'Sample Sizes',
+    'sortbytype' => 'Sort By Type',
+    'sortbynew'=>'Sort By New',
 
 
 ];

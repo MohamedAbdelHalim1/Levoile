@@ -62,17 +62,17 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <input type="text" id="liveSearchInput" class="form-control"
-                                    placeholder="🔎 ابحث باسم المنتج أو بالكود...">
+                                    placeholder="{{ __('messages.search') }}">
                             </div>
                         </div>
 
                         <div class="mb-3 d-flex gap-2 flex-wrap">
                             <button type="button" id="sortByTypeBtn" class="btn btn-outline-primary">
-                                ترتيب حسب نوع التصوير
+                               {{ __('messages.sortbytype') }}
                             </button>
 
                             <button type="button" id="sortByNewBtn" class="btn btn-outline-secondary">
-                                ترتيب حسب الجديد
+                                {{ __('messages.sortbynew') }}
                             </button>
                         </div>
 

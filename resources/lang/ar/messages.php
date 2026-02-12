@@ -475,6 +475,8 @@ return [
     'copy_path' => 'نسخ الرابط',
     'browser_block_local_paths' => 'المتصفح يمنع فتح المسارات المحلية مباشرة',
     'sample_sizes' => 'مقاسات العينة',
+    'sortbytype' => 'ترتيب حسب النوع',
+    'sortbynew' => 'ترتيب حسب الحديث',
     
 
 ];
