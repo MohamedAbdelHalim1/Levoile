@@ -131,7 +131,7 @@
                                 </a>
                             </div>
                             <!-- Theme-Layout -->
-							<div>
+							{{-- <div>
 								<li class="nav-item dropdown">
 									@php
 										$locale = app()->getLocale();
@@ -143,7 +143,7 @@
 										{{ $label }}
 									</a>
 								</li>
-							</div>
+							</div> --}}
                             {{-- <div class="dropdown d-flex shopping-cart">
 												<a class="nav-link icon text-center" data-bs-toggle="dropdown">
 													<i class="ri-shopping-bag-line"></i><span
