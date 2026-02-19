@@ -365,7 +365,7 @@ class ShootingProductController extends Controller
                     $product->save();
                 }
 
-               
+
 
                 // Generate new reference
                 $today = Carbon::now()->format('Y-m-d');
@@ -558,27 +558,50 @@ class ShootingProductController extends Controller
         return view('shooting_products.manual', compact('photographers', 'editors', 'waysOfShooting'));
     }
 
-    public function findColorsByName(Request $request)
+
+    public function findColors(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'query' => 'required|string',
         ]);
 
-        // جيب المنتجات المطابقة بالاسم ومعاها كل الألوان
-        $products = ShootingProduct::with(['shootingProductColors' => function ($q) {
-            $q->select('id', 'shooting_product_id', 'code', 'name'); // code + اسم اللون
-        }])
-            ->where('name', 'LIKE', '%' . $request->name . '%')
-            ->get(['id', 'name']); // بس الأعمدة المطلوبة
+        $q = trim($request->query);
 
-        // جمع كل الألوان في Array واحدة
+        // 1) لو المستخدم كتب كود لون/فاريانت (shooting_product_colors.code)
+        $colorsByVariantCode = \App\Models\ShootingProductColor::with('shootingProduct:id,name,custom_id')
+            ->where('code', $q)
+            ->get(['id', 'shooting_product_id', 'code', 'name']);
+
+        if ($colorsByVariantCode->isNotEmpty()) {
+            $colors = $colorsByVariantCode->map(function ($color) {
+                return [
+                    'id'         => $color->id,
+                    'code'       => $color->code,
+                    'color_name' => $color->name,
+                    'product'    => optional($color->shootingProduct)->name,
+                ];
+            })->values();
+
+            return response()->json(['found' => true, 'colors' => $colors]);
+        }
+
+        // 2) لو المستخدم كتب SKU / كود المنتج (custom_id) أو اسم المنتج
+        $products = \App\Models\ShootingProduct::with(['shootingProductColors' => function ($qq) {
+            $qq->select('id', 'shooting_product_id', 'code', 'name');
+        }])
+            ->where(function ($qq) use ($q) {
+                $qq->where('custom_id', $q)                 // SKU exact
+                    ->orWhere('name', 'LIKE', "%{$q}%");     // name like
+            })
+            ->get(['id', 'name', 'custom_id']);
+
         $colors = $products->flatMap(function ($product) {
             return $product->shootingProductColors->map(function ($color) use ($product) {
                 return [
                     'id'         => $color->id,
-                    'code'       => $color->code,        // كود اللون/الفاريانت
-                    'color_name' => $color->name,        // اسم اللون
-                    'product'    => $product->name,      // اسم المنتج
+                    'code'       => $color->code,
+                    'color_name' => $color->name,
+                    'product'    => $product->name,
                 ];
             });
         })->values();
@@ -592,6 +615,42 @@ class ShootingProductController extends Controller
             'colors' => $colors,
         ]);
     }
+
+
+    // public function findColorsByName(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string',
+    //     ]);
+
+    //     // جيب المنتجات المطابقة بالاسم ومعاها كل الألوان
+    //     $products = ShootingProduct::with(['shootingProductColors' => function ($q) {
+    //         $q->select('id', 'shooting_product_id', 'code', 'name'); // code + اسم اللون
+    //     }])
+    //         ->where('name', 'LIKE', '%' . $request->name . '%')
+    //         ->get(['id', 'name']); // بس الأعمدة المطلوبة
+
+    //     // جمع كل الألوان في Array واحدة
+    //     $colors = $products->flatMap(function ($product) {
+    //         return $product->shootingProductColors->map(function ($color) use ($product) {
+    //             return [
+    //                 'id'         => $color->id,
+    //                 'code'       => $color->code,        // كود اللون/الفاريانت
+    //                 'color_name' => $color->name,        // اسم اللون
+    //                 'product'    => $product->name,      // اسم المنتج
+    //             ];
+    //         });
+    //     })->values();
+
+    //     if ($colors->isEmpty()) {
+    //         return response()->json(['found' => false]);
+    //     }
+
+    //     return response()->json([
+    //         'found'  => true,
+    //         'colors' => $colors,
+    //     ]);
+    // }
 
     // public function findColorByCode(Request $request)
     // {

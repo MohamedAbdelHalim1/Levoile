@@ -145,15 +145,17 @@
             if (e.which === 13) {
                 e.preventDefault();
 
-                const name = $(this).val().trim();
-                if (!name) return;
+                //const name = $(this).val().trim();
+                //if (!name) return;
+                const query = $(this).val().trim();
+                if (!query) return;
 
                 $.ajax({
                     url: "{{ route('shooting-products.manual.findColorByName') }}",
                     type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        name: name
+                        query: query
                     },
                     success: function(res) {
                         if (!res.found) {
