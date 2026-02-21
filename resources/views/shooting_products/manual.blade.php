@@ -199,11 +199,28 @@
                         $('#colorsTableBody').append(rows);
                         $('#colorCodeInput').val('').focus();
                     },
-                    error: function() {
-                        $('#colorResult').html(
-                            `<div class="alert alert-danger">{{ __('messages.something_went_wrong') }}</div>`
-                        );
+                    error: function(xhr) {
+                        console.log('STATUS:', xhr.status);
+                        console.log('RESPONSE:', xhr.responseText);
+
+                        let msg = 'Something Went Wrong';
+
+                        // لو السيرفر بيرجع JSON
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.message) msg = xhr.responseJSON.message;
+
+                            // أخطاء validation
+                            if (xhr.responseJSON.errors) {
+                                msg = Object.values(xhr.responseJSON.errors).flat().join('<br>');
+                            }
+                        } else if (xhr.responseText) {
+                            // لو بيرجع HTML/نص
+                            msg = xhr.responseText;
+                        }
+
+                        $('#colorResult').html(`<div class="alert alert-danger">${msg}</div>`);
                     }
+
                 });
             }
         });
