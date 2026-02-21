@@ -357,7 +357,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/shooting-product/manual/save', [ShootingProductController::class, 'manualSave'])->name('shooting-products.manual.save');
     Route::post(
         '/shooting-products/manual/find-color-by-name',
-        [ShootingProductController::class, 'findColorsByName']
+        [ShootingProductController::class, 'findColors']
     )->name('shooting-products.manual.findColorByName');
     //Route::post('/shooting-products/manual/find-color', [ShootingProductController::class, 'findColorByCode'])->name('shooting-products.manual.findColor');
     Route::post('/shooting-products/save-size-weight', [ShootingProductController::class, 'saveSizeWeight'])
