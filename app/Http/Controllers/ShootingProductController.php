@@ -565,7 +565,7 @@ class ShootingProductController extends Controller
             'query' => 'required|string',
         ]);
 
-        $q = trim($request->query);
+        $q = trim($request->input('query'));
 
         // 1) لو المستخدم كتب كود لون/فاريانت (shooting_product_colors.code)
         $colorsByVariantCode = \App\Models\ShootingProductColor::with('shootingProduct:id,name,custom_id')
